@@ -197,7 +197,7 @@ import CryptoJS from "crypto-js";
 
 /** URL de base de l'API Django (variable d'environnement) */
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://shed-croak-unending.ngrok-free.dev";
+  process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev";
 
 /** Clé d'encryption pour sécuriser les tokens côté client */
 const ENCRYPTION_KEY =
@@ -265,6 +265,7 @@ export const apiPublic = axios.create({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
+    "ngrok-skip-browser-warning": "true",
   },
 });
 
@@ -277,6 +278,7 @@ export const apiPrivate = axios.create({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
+    "ngrok-skip-browser-warning": "true",
   },
 });
 

@@ -65,7 +65,7 @@ export const login = async (
   data: LoginRequest
 ): Promise<Result<LoginResponse>> => {
   try {
-    const response = await apiPrivate.post<LoginResponse>("/api/connexion/", data);
+    const response = await apiPublic.post<LoginResponse>("/api/connexion/", data);
     return { ok: true, data: response.data };
 
   } catch (error) {
