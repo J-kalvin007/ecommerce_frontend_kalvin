@@ -1,0 +1,87 @@
+.admin-theme {
+  min-height: 100vh;
+  background: #fffaf5;
+  color: #1f2937;
+}
+
+.admin-theme [class*="bg-[#0a0a0f]"],
+.admin-theme [class*="bg-[#0f0f18]"],
+.admin-theme [class*="bg-[#12121a]"] {
+  background: #fffaf5 !important;
+}
+
+.admin-theme [class*="bg-white/[0.02]"],
+.admin-theme [class*="bg-white/[0.03]"],
+.admin-theme [class*="bg-white/5"],
+.admin-theme [class*="bg-white/[0.04]"],
+.admin-theme [class*="bg-surface-elevated"] {
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 20px 40px -30px rgba(234, 122, 22, 0.16) !important;
+}
+
+.admin-theme [class*="border-white/5"],
+.admin-theme [class*="border-white/10"],
+.admin-theme [class*="border-border"] {
+  border-color: rgba(226, 232, 240, 0.95) !important;
+}
+
+.admin-theme [class*="text-white"] {
+  color: #1f2937 !important;
+}
+
+.admin-theme [class*="text-white/80"] {
+  color: #334155 !important;
+}
+
+.admin-theme [class*="text-white/70"],
+.admin-theme [class*="text-white/60"],
+.admin-theme [class*="text-white/50"],
+.admin-theme [class*="text-white/40"],
+.admin-theme [class*="text-white/30"] {
+  color: #64748b !important;
+}
+
+.admin-theme [class*="placeholder:text-white/30"]::placeholder {
+  color: #94a3b8 !important;
+}
+
+.admin-theme table thead tr,
+.admin-theme table tbody tr {
+  background: transparent !important;
+}
+
+.admin-theme table tbody tr:hover {
+  background: rgba(234, 122, 22, 0.05) !important;
+}
+
+.admin-theme input,
+.admin-theme select,
+.admin-theme textarea {
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #1f2937 !important;
+  border-color: rgba(226, 232, 240, 0.98) !important;
+}
+
+.admin-theme button {
+  transition: all 0.2s ease;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

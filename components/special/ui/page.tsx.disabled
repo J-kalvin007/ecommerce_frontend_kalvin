@@ -1,0 +1,1082 @@
+'use client';
+
+/**
+ * ════════════════════════════════════════════════════════════════════════════
+ * ORGANISATION DES CATÉGORIES - Interface Premium de Gestion
+ * ════════════════════════════════════════════════════════════════════════════
+ * 
+ * @description Interface sophistiquée pour visualiser et réorganiser
+ *              l'arborescence des catégories produits
+ * @version 1.0.0
+ * @design Lotus Design System - Bleu Nocturne #071217 + Vert Émeraude #23BE31
+ */
+
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+    FolderTree, ChevronRight, ChevronDown, Plus, Edit, Trash2,
+    Save, RefreshCw, Package, Layers, CheckCircle,
+    ArrowUp, ArrowDown, Search, Eye, EyeOff, FolderPlus, X, TrendingUp, BarChart, Activity
+} from 'lucide-react';
+import { useTheme } from '@/hooks/useTheme';
+import CategorieAPI from '@/lib/api/api_categorie';
+import { Categorie, CategorieFamily, CategoryReorganization, CategoryTreeWithStats } from '@/types/type_categorie';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ConfirmDialog from '@/components/ConfirmDialog';
+import { showToast } from '@/lib/toast-utils';
+import { Toaster } from 'react-hot-toast';
+
+/**
+ * Types Locaux
+ * Note: CategoryNode uses Omit to properly override the `children` and `parentId` types
+ * since CategorieFamily has `parentId: null` and `children: Categorie[]`, but we need
+ * to handle children with the `isExpanded` UI property and allow nested structures.
+ */
+interface CategoryNode extends Omit<CategorieFamily, 'children' | 'parentId'> {
+    parentId: number | null;
+    children?: (Categorie & { isExpanded?: boolean })[];
+    isExpanded?: boolean;
+}
+
+/**
+ * COMPONENT PRINCIPAL
+ */
+export default function OrganisationPage() {
+
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
+
+    // State Management
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [families, setFamilies] = useState<CategoryNode[]>([]);
+    const [originalFamilies, setOriginalFamilies] = useState<CategoryNode[]>([]);
+    const [hasChanges, setHasChanges] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showInactive, setShowInactive] = useState(false);
+    const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
+
+    // Stats
+    const [totalCategories, setTotalCategories] = useState(0);
+    const [activeCategories, setActiveCategories] = useState(0);
+    const [treeStats, setTreeStats] = useState<CategoryTreeWithStats | null>(null);
+
+    // Modal states
+    const [showCategoryModal, setShowCategoryModal] = useState(false);
+    const [editingCategory, setEditingCategory] = useState<Categorie | null>(null);
+    const [parentForNewCategory, setParentForNewCategory] = useState<number | null>(null);
+
+    // Explorer state
+    const [showExplorer, setShowExplorer] = useState(false);
+    const [explorerFamily, setExplorerFamily] = useState<CategoryNode | null>(null);
+
+    // Stats Modal state
+    const [showStatsModal, setShowStatsModal] = useState(false);
+    const [statsCategory, setStatsCategory] = useState<Categorie | null>(null);
+
+    // Confirm Dialog
+    const [confirmDialog, setConfirmDialog] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        type: 'warning' as 'warning' | 'danger' | 'info' | 'success' | 'question',
+        onConfirm: () => { },
+        isLoading: false
+    });
+
+    // Data Loading
+    const loadCategories = useCallback(async () => {
+        try {
+            setLoading(true);
+            const response = await CategorieAPI.getFamilies({
+                includeInactive: showInactive,
+                withStats: true,
+                withProductCount: true
+            });
+
+            if (response.success && response.data) {
+                const familiesWithExpanded = response.data.map(f => ({
+                    ...f,
+                    isExpanded: expandedIds.has(f.id)
+                }));
+                setFamilies(familiesWithExpanded);
+                setOriginalFamilies(JSON.parse(JSON.stringify(familiesWithExpanded)));
+
+                // Calculate stats
+                let total = response.data.length;
+                let active = response.data.filter(f => f.isActive).length;
+                response.data.forEach(f => {
+                    if (f.children) {
+                        total += f.children.length;
+                        active += f.children.filter(c => c.isActive).length;
+                    }
+                });
+                setTotalCategories(total);
+                setActiveCategories(active);
+            }
+
+            // Fetch Tree Stats concurrently
+            try {
+                console.log('Fetching tree stats with params:', { includeInactive: showInactive, period: 30 });
+                const statsResponse = await CategorieAPI.getCategoryTreeWithStats({
+                    includeInactive: showInactive,
+                    period: 30 // Default period
+                });
+                console.log('Tree stats response:', statsResponse);
+
+                // The API returns CategoryTreeWithStats directly (not wrapped in success/data)
+                // Check if we have the expected structure
+                if (statsResponse && typeof statsResponse === 'object') {
+                    // Handle both possible response formats
+                    const data = 'data' in statsResponse ? (statsResponse as any).data : statsResponse;
+                    setTreeStats(data as CategoryTreeWithStats);
+                    console.log('✅ Stats tree loaded successfully:', data);
+                } else {
+                    console.error('❌ Stats tree response invalid:', statsResponse);
+                }
+            } catch (statsError) {
+                console.error('❌ Erreur chargement stats tree:', statsError);
+            }
+
+        } catch (error) {
+            console.error('Erreur chargement catégories:', error);
+            showToast.error('Erreur lors du chargement des catégories');
+        } finally {
+            setLoading(false);
+        }
+    }, [showInactive, expandedIds]);
+
+    // Helper pour trouver une catégorie par nom dans l'arborescence stats
+    const findCategoryInStatsTree = useCallback((name: string): Categorie | null => {
+        if (!treeStats) return null;
+
+        const search = (items: Categorie[]): Categorie | null => {
+            for (const item of items) {
+                if (item.name === name) return item;
+                if (item.children && item.children.length > 0) {
+                    const found = search(item.children);
+                    if (found) return found;
+                }
+            }
+            return null;
+        };
+
+        return search(treeStats.categories);
+    }, [treeStats]);
+
+    // Aggrégation des stats globales
+    const aggregatedStats = treeStats ? {
+        totalProducts: treeStats.categories.reduce((acc, cat) => acc + (cat.stats?.products_count || 0), 0),
+        totalVariations: treeStats.categories.reduce((acc, cat) => acc + (cat.stats?.variations_count || 0), 0),
+        totalSales: treeStats.categories.reduce((acc, cat) => acc + (cat.stats?.total_sales || 0), 0),
+        avgMargin: treeStats.categories.length > 0
+            ? treeStats.categories.reduce((acc, cat) => acc + (Number(cat.stats?.avg_margin) || 0), 0) / treeStats.categories.length
+            : 0,
+        totalCategoriesCount: treeStats.metadata?.total_categories || totalCategories,
+        analysisPeriod: treeStats.metadata?.period_days || 30
+    } : {
+        totalProducts: 0,
+        totalVariations: 0,
+        totalSales: 0,
+        avgMargin: 0,
+        totalCategoriesCount: totalCategories,
+        analysisPeriod: 30
+    };
+
+    useEffect(() => {
+        loadCategories();
+    }, [loadCategories]);
+
+    // Expansion Toggle
+    const toggleExpand = async (familyId: number) => {
+        const newExpanded = new Set(expandedIds);
+        if (newExpanded.has(familyId)) {
+            newExpanded.delete(familyId);
+        } else {
+            newExpanded.add(familyId);
+            const family = families.find(f => f.id === familyId);
+            if (family && (!family.children || family.children.length === 0)) {
+                try {
+                    const response = await CategorieAPI.getSubFamilies(familyId, {
+                        includeInactive: showInactive,
+                        recursive: false,
+                        withProductCount: true
+                    });
+                    if (response.success && response.data) {
+                        setFamilies(prev => prev.map(f =>
+                            f.id === familyId ? { ...f, children: response.data as any } : f
+                        ));
+                    }
+                } catch (error) {
+                    console.error('Erreur chargement sous-familles:', error);
+                }
+            }
+        }
+        setExpandedIds(newExpanded);
+    };
+
+    // Reordering Logic
+    const moveCategory = (categoryId: number, direction: 'up' | 'down', parentId: number | null) => {
+        if (parentId === null) {
+            const index = families.findIndex(f => f.id === categoryId);
+            if ((direction === 'up' && index === 0) || (direction === 'down' && index === families.length - 1)) {
+                return;
+            }
+
+            const newFamilies = [...families];
+            const targetIndex = direction === 'up' ? index - 1 : index + 1;
+            [newFamilies[index], newFamilies[targetIndex]] = [newFamilies[targetIndex], newFamilies[index]];
+            newFamilies.forEach((f, i) => f.sortOrder = i);
+            setFamilies(newFamilies);
+            setHasChanges(true);
+        } else {
+            setFamilies(prev => prev.map(family => {
+                if (family.id === parentId && family.children) {
+                    const children = [...family.children];
+                    const index = children.findIndex(c => c.id === categoryId);
+                    if ((direction === 'up' && index === 0) || (direction === 'down' && index === children.length - 1)) {
+                        return family;
+                    }
+
+                    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+                    [children[index], children[targetIndex]] = [children[targetIndex], children[index]];
+                    children.forEach((c, i) => c.sortOrder = i);
+                    return { ...family, children };
+                }
+                return family;
+            }));
+            setHasChanges(true);
+        }
+    };
+
+    // Save Reorganization
+    const handleSaveReorganization = async () => {
+        setConfirmDialog({
+            isOpen: true,
+            title: 'Sauvegarder l\'organisation',
+            message: 'Êtes-vous sûr de vouloir sauvegarder les modifications apportées à l\'organisation des catégories ?',
+            type: 'question',
+            isLoading: false,
+            onConfirm: async () => {
+                setConfirmDialog(prev => ({ ...prev, isLoading: true }));
+                try {
+                    const categoriesToUpdate: CategoryReorganization['categories'] = [];
+                    families.forEach((family, familyIndex) => {
+                        categoriesToUpdate.push({ id: family.id, parentId: null, sortOrder: familyIndex });
+                        if (family.children) {
+                            family.children.forEach((child, childIndex) => {
+                                categoriesToUpdate.push({ id: child.id, parentId: family.id, sortOrder: childIndex });
+                            });
+                        }
+                    });
+
+                    await CategorieAPI.reorganizeCategories({ categories: categoriesToUpdate });
+                    showToast.success('Organisation sauvegardée avec succès');
+                    setHasChanges(false);
+                    setOriginalFamilies(JSON.parse(JSON.stringify(families)));
+                } catch (error) {
+                    console.error('Erreur sauvegarde:', error);
+                    showToast.error('Erreur lors de la sauvegarde');
+                } finally {
+                    setConfirmDialog(prev => ({ ...prev, isOpen: false, isLoading: false }));
+                }
+            }
+        });
+    };
+
+    // Cancel Changes
+    const handleCancelChanges = () => {
+        setFamilies(JSON.parse(JSON.stringify(originalFamilies)));
+        setHasChanges(false);
+        showToast.info('Modifications annulées');
+    };
+
+    // Delete Category
+    const handleDeleteCategory = (category: Categorie) => {
+        setConfirmDialog({
+            isOpen: true,
+            title: 'Supprimer la catégorie',
+            message: `Êtes-vous sûr de vouloir supprimer "${category.name}" ? Cette action est irréversible.`,
+            type: 'danger',
+            isLoading: false,
+            onConfirm: async () => {
+                setConfirmDialog(prev => ({ ...prev, isLoading: true }));
+                try {
+                    await CategorieAPI.deleteCategory(category.id);
+                    showToast.success('Catégorie supprimée');
+                    loadCategories();
+                } catch (error) {
+                    console.error('Erreur suppression:', error);
+                    showToast.error('Erreur lors de la suppression');
+                } finally {
+                    setConfirmDialog(prev => ({ ...prev, isOpen: false, isLoading: false }));
+                }
+            }
+        });
+    };
+
+    // Filtering
+    const filteredFamilies = families.filter(family => {
+        if (searchTerm) {
+            const matchesFamily = family.name.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesChild = family.children?.some(c => c.name.toLowerCase().includes(searchTerm.toLowerCase()));
+            return matchesFamily || matchesChild;
+        }
+        return true;
+    });
+
+    return (
+        <div className={`min-h-screen ${isDark ? 'bg-[#071217]' : 'bg-gray-50'} transition-colors duration-300`}>
+            <Toaster position="top-right" />
+
+            {/* Header */}
+            <div className={`sticky top-0 z-40 ${isDark ? 'bg-[#0C1419]/95' : 'bg-white/95'} backdrop-blur-xl border-b ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
+                <div className="px-8 py-6">
+                    <div className="flex items-center justify-between mb-8">
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#23BE31] to-[#1fa92c] flex items-center justify-center shadow-lg shadow-[#23BE31]/20">
+                                <FolderTree className="w-7 h-7 text-white" />
+                            </div>
+                            <div>
+                                <h1 className={`text-3xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>Organisation</h1>
+                                <p className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                    Gérez l'arborescence de vos catégories produits
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            {hasChanges && (
+                                <>
+                                    <button onClick={handleCancelChanges} className={`px-4 py-2 rounded-xl font-bold transition-colors ${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}>
+                                        Annuler
+                                    </button>
+                                    <motion.button
+                                        initial={{ scale: 0.9, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        onClick={handleSaveReorganization}
+                                        disabled={saving}
+                                        className="px-6 py-2 rounded-xl font-black bg-gradient-to-r from-[#23BE31] to-[#1fa92c] text-white shadow-lg shadow-[#23BE31]/20 flex items-center gap-2 hover:opacity-90 transition-opacity"
+                                    >
+                                        <Save className="w-4 h-4" />
+                                        Sauvegarder
+                                    </motion.button>
+                                </>
+                            )}
+                            <button onClick={loadCategories} disabled={loading} className={`p-2 rounded-xl transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                                <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''} ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Dashboard Stats */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div className={`p-6 rounded-3xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-100 shadow-sm'}`}>
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                                    <Layers className="w-5 h-5 text-blue-500" />
+                                </div>
+                                <span className={`text-xs font-black uppercase tracking-widest ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Catégories</span>
+                            </div>
+                            <div className="flex items-baseline gap-2">
+                                <span className={`text-2xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>{aggregatedStats.totalCategoriesCount}</span>
+                                <span className={`text-xs font-bold text-green-500`}>{activeCategories} actives</span>
+                            </div>
+                        </div>
+
+                        <div className={`p-6 rounded-3xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-100 shadow-sm'}`}>
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="w-10 h-10 rounded-xl bg-[#23BE31]/10 flex items-center justify-center">
+                                    <Package className="w-5 h-5 text-[#23BE31]" />
+                                </div>
+                                <span className={`text-xs font-black uppercase tracking-widest ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Produits</span>
+                            </div>
+                            <div className="flex items-baseline gap-2">
+                                <span className={`text-2xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>{aggregatedStats.totalProducts.toLocaleString()}</span>
+                                <span className={`text-xs font-bold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>SKUs</span>
+                            </div>
+                        </div>
+
+                        <div className={`p-6 rounded-3xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-100 shadow-sm'}`}>
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
+                                    <TrendingUp className="w-5 h-5 text-orange-500" />
+                                </div>
+                                <span className={`text-xs font-black uppercase tracking-widest ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Ventes</span>
+                            </div>
+                            <div className="flex items-baseline gap-1">
+                                <span className={`text-2xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>{aggregatedStats.totalSales.toLocaleString()}</span>
+                                <span className={`text-xs font-bold ${isDark ? 'text-gray-400' : 'text-gray-400'}`}>XOF</span>
+                            </div>
+                        </div>
+
+                        <div className={`p-6 rounded-3xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-100 shadow-sm'}`}>
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                                    <BarChart className="w-5 h-5 text-purple-500" />
+                                </div>
+                                <span className={`text-xs font-black uppercase tracking-widest ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Marge Moy.</span>
+                            </div>
+                            <div className="flex items-baseline gap-1">
+                                <span className={`text-2xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>{aggregatedStats.avgMargin.toFixed(1)}</span>
+                                <span className={`text-xs font-bold ${isDark ? 'text-gray-400' : 'text-gray-400'}`}>%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => { setEditingCategory(null); setParentForNewCategory(null); setShowCategoryModal(true); }}
+                                className="px-6 py-3 rounded-2xl font-black bg-[#23BE31] text-white shadow-lg shadow-[#23BE31]/20 flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                            >
+                                <Plus className="w-5 h-5" />
+                                Nouvelle Famille
+                            </button>
+
+                            <div className={`h-10 w-px ${isDark ? 'bg-white/10' : 'bg-gray-200'}`} />
+
+                            <label className="flex items-center gap-3 cursor-pointer group">
+                                <div className={`w-12 h-6 rounded-full p-1 transition-colors ${showInactive ? 'bg-[#23BE31]' : 'bg-gray-400'}`} onClick={() => setShowInactive(!showInactive)}>
+                                    <div className={`w-4 h-4 bg-white rounded-full transition-transform ${showInactive ? 'translate-x-6' : 'translate-x-0'}`} />
+                                </div>
+                                <span className={`text-sm font-bold ${isDark ? 'text-gray-400 group-hover:text-white' : 'text-gray-500 group-hover:text-gray-900'} transition-colors`}>
+                                    Afficher inactives
+                                </span>
+                            </label>
+                        </div>
+                        {/* Search */}
+                        <div className={`flex items-center gap-2 px-4 py-2 rounded-xl ${isDark ? 'bg-white/5' : 'bg-white'} border ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
+                            <Search className={`w-4 h-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                            <input
+                                type="text"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                placeholder="Rechercher..."
+                                className={`bg-transparent outline-none w-48 text-sm ${isDark ? 'text-white placeholder-gray-500' : 'text-gray-900 placeholder-gray-400'}`}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="px-8 py-8">
+                {loading ? (
+                    <div className="flex justify-center items-center py-32"><LoadingSpinner size="lg" /></div>
+                ) : filteredFamilies.length === 0 ? (
+                    <div className={`text-center py-32 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                        <FolderTree className="w-20 h-20 mx-auto mb-4 opacity-30" />
+                        <h3 className="text-xl font-bold mb-2">Aucune catégorie trouvée</h3>
+                        <p>Créez votre première famille de catégories pour commencer</p>
+                    </div>
+                ) : (
+                    <div className="space-y-4">
+                        <AnimatePresence>
+                            {filteredFamilies.map((family, familyIndex) => (
+                                <motion.div
+                                    key={family.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    transition={{ delay: familyIndex * 0.05 }}
+                                    className={`rounded-2xl overflow-hidden border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200'} shadow-sm`}
+                                >
+                                    {/* Family Header */}
+                                    <div className={`flex items-center gap-4 p-5 ${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'} transition-colors`}>
+                                        <button onClick={() => toggleExpand(family.id)} className={`p-2 rounded-lg ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'} transition-colors`}>
+                                            {expandedIds.has(family.id) ? <ChevronDown className={`w-5 h-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} /> : <ChevronRight className={`w-5 h-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />}
+                                        </button>
+
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${family.isActive ? 'bg-[#23BE31]/20' : 'bg-gray-500/20'}`}>
+                                            <Layers className={`w-6 h-6 ${family.isActive ? 'text-[#23BE31]' : 'text-gray-500'}`} />
+                                        </div>
+
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-3">
+                                                <h3 className={`text-lg font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>{family.name}</h3>
+                                                {!family.isActive && <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-gray-500/20 text-gray-500">Inactive</span>}
+                                            </div>
+                                            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{family.description || `Code: ${family.code}`}</p>
+                                        </div>
+
+                                        {/* Stats */}
+                                        <div className="flex items-center gap-6">
+                                            {family.stats.products_count !== undefined && (
+                                                <div className="text-center">
+                                                    <div className={`text-lg font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>{family.stats.products_count}</div>
+                                                    <div className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>produits</div>
+                                                </div>
+                                            )}
+                                            {family.children && (
+                                                <div className="text-center">
+                                                    <div className={`text-lg font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>{family.children.length}</div>
+                                                    <div className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>sous-familles</div>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Actions */}
+                                        <div className="flex items-center gap-1">
+                                            <button onClick={() => moveCategory(family.id, 'up', null)} disabled={familyIndex === 0} className={`p-2 rounded-lg transition-colors disabled:opacity-30 ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}><ArrowUp className="w-4 h-4" /></button>
+                                            <button onClick={() => moveCategory(family.id, 'down', null)} disabled={familyIndex === families.length - 1} className={`p-2 rounded-lg transition-colors disabled:opacity-30 ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}><ArrowDown className="w-4 h-4" /></button>
+                                            <button
+                                                onClick={() => {
+                                                    console.log('=== DEBUG: Opening Stats Modal ===');
+                                                    console.log('Family object:', family);
+                                                    console.log('Family name:', family.name);
+                                                    console.log('Family stats:', family.stats);
+                                                    console.log('TreeStats available:', !!treeStats);
+                                                    if (treeStats) {
+                                                        console.log('TreeStats categories:', treeStats.categories);
+                                                    }
+
+                                                    const cat = findCategoryInStatsTree(family.name);
+                                                    console.log('Found category from tree:', cat);
+                                                    console.log('Category stats:', cat?.stats);
+
+                                                    const finalCategory = cat || family as any;
+                                                    console.log('Final category to display:', finalCategory);
+                                                    console.log('Final category stats:', finalCategory.stats);
+
+                                                    setStatsCategory(finalCategory);
+                                                    setShowStatsModal(true);
+                                                }}
+                                                className={`p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-[#23BE31]' : 'hover:bg-[#23BE31]/10 text-[#23BE31]'}`}
+                                                title="Analytique & Stats"
+                                            >
+                                                <TrendingUp className="w-4 h-4" />
+                                            </button>
+                                            <button
+                                                onClick={() => { setExplorerFamily(family); setShowExplorer(true); }}
+                                                className={`p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-blue-400' : 'hover:bg-blue-50 text-blue-500'}`}
+                                                title="Sous-familles"
+                                            >
+                                                <Eye className="w-4 h-4" />
+                                            </button>
+                                            <button onClick={() => { setEditingCategory(null); setParentForNewCategory(family.id); setShowCategoryModal(true); }} className={`p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-[#23BE31]' : 'hover:bg-gray-100 text-[#23BE31]'}`} title="Ajouter sous-famille"><FolderPlus className="w-4 h-4" /></button>
+                                            <button onClick={() => { setEditingCategory(family as any); setShowCategoryModal(true); }} className={`p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}><Edit className="w-4 h-4" /></button>
+                                            <button onClick={() => handleDeleteCategory(family as any)} className={`p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-red-500/20 text-red-400' : 'hover:bg-red-50 text-red-500'}`}><Trash2 className="w-4 h-4" /></button>
+                                        </div>
+                                    </div>
+
+                                    {/* Children (Sub-families) */}
+                                    <AnimatePresence>
+                                        {expandedIds.has(family.id) && family.children && family.children.length > 0 && (
+                                            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className={`border-t ${isDark ? 'border-white/5' : 'border-gray-100'}`}>
+                                                {family.children.map((child, childIndex) => (
+                                                    <div key={child.id} className={`flex items-center gap-4 px-5 py-4 pl-20 ${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'} transition-colors ${childIndex < family.children!.length - 1 ? `border-b ${isDark ? 'border-white/5' : 'border-gray-50'}` : ''}`}>
+                                                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${child.isActive ? 'bg-blue-500/20' : 'bg-gray-500/20'}`}><Package className={`w-5 h-5 ${child.isActive ? 'text-blue-500' : 'text-gray-500'}`} /></div>
+
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center gap-2">
+                                                                <span className={`font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{child.name}</span>
+                                                                {!child.isActive && <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-gray-500/20 text-gray-500">Inactive</span>}
+                                                            </div>
+                                                            <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Code: {child.code}</p>
+                                                        </div>
+                                                        {/* Actions */}
+                                                        <div className="flex items-center gap-1">
+                                                            <button onClick={() => moveCategory(child.id, 'up', family.id)} disabled={childIndex === 0} className={`p-1.5 rounded-lg transition-colors disabled:opacity-30 ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}><ArrowUp className="w-3.5 h-3.5" /></button>
+                                                            <button onClick={() => moveCategory(child.id, 'down', family.id)} disabled={childIndex === family.children!.length - 1} className={`p-1.5 rounded-lg transition-colors disabled:opacity-30 ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}><ArrowDown className="w-3.5 h-3.5" /></button>
+                                                            <button onClick={() => { setEditingCategory(child); setShowCategoryModal(true); }} className={`p-1.5 rounded-lg transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}><Edit className="w-3.5 h-3.5" /></button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    const cat = findCategoryInStatsTree(child.name);
+                                                                    setStatsCategory(cat || child as any);
+                                                                    setShowStatsModal(true);
+                                                                }}
+                                                                className={`p-1.5 rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-[#23BE31]' : 'hover:bg-[#23BE31]/10 text-[#23BE31]'}`}
+                                                                title="Analytique & Stats"
+                                                            >
+                                                                <TrendingUp className="w-3.5 h-3.5" />
+                                                            </button>
+                                                            <button onClick={() => handleDeleteCategory(child)} className={`p-1.5 rounded-lg transition-colors ${isDark ? 'hover:bg-red-500/20 text-red-400' : 'hover:bg-red-50 text-red-500'}`}><Trash2 className="w-3.5 h-3.5" /></button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </div>
+                )}
+            </div>
+
+            {/* Category Modal */}
+            <AnimatePresence>
+                {showCategoryModal && (
+                    <CategoryModal
+                        isOpen={showCategoryModal}
+                        onClose={() => { setShowCategoryModal(false); setEditingCategory(null); setParentForNewCategory(null); }}
+                        onSuccess={() => { setShowCategoryModal(false); setEditingCategory(null); setParentForNewCategory(null); loadCategories(); }}
+                        initialData={editingCategory}
+                        parentId={parentForNewCategory}
+                        isDark={isDark}
+                    />
+                )}
+            </AnimatePresence>
+
+            {/* Confirm Dialog */}
+            <ConfirmDialog
+                isOpen={confirmDialog.isOpen}
+                onCancel={() => setConfirmDialog(prev => ({ ...prev, isOpen: false }))}
+                onConfirm={confirmDialog.onConfirm}
+                title={confirmDialog.title}
+                message={confirmDialog.message}
+                type={confirmDialog.type}
+                isLoading={confirmDialog.isLoading}
+            />
+
+            {/* Sub-families Explorer Modal */}
+            <AnimatePresence>
+                {showExplorer && explorerFamily && (
+                    <SubFamiliesExplorerModal
+                        family={explorerFamily}
+                        onClose={() => { setShowExplorer(false); setExplorerFamily(null); }}
+                        isDark={isDark}
+                    />
+                )}
+            </AnimatePresence>
+
+            {/* Branch Stats Modal */}
+            <AnimatePresence>
+                {showStatsModal && statsCategory && (
+                    <CategoryStatsModal
+                        category={statsCategory}
+                        metadata={treeStats?.metadata}
+                        onClose={() => { setShowStatsModal(false); setStatsCategory(null); }}
+                        isDark={isDark}
+                    />
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}
+
+/**
+ * EXPLORATEUR DE SOUS-FAMILLES
+ */
+function SubFamiliesExplorerModal({ family, onClose, isDark }: { family: CategoryNode, onClose: () => void, isDark: boolean }) {
+    const [loading, setLoading] = useState(true);
+    const [subFamilies, setSubFamilies] = useState<Categorie[]>([]);
+
+    useEffect(() => {
+        const fetchSubs = async () => {
+            try {
+                setLoading(true);
+                const response = await CategorieAPI.getSubFamilies(family.id, {
+                    includeInactive: true,
+                    withProductCount: true
+                });
+                if (response.success) {
+                    setSubFamilies(response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching subfamilies:', error);
+                showToast.error('Erreur lors du chargement des sous-familles');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchSubs();
+    }, [family.id]);
+
+    return (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                className={`${isDark ? 'bg-[#0C1419]' : 'bg-white'} rounded-3xl shadow-2xl w-full max-w-5xl overflow-hidden border ${isDark ? 'border-white/10' : 'border-gray-200'}`}
+            >
+                <div className={`p-8 border-b ${isDark ? 'border-white/10' : 'border-gray-100'} flex justify-between items-center bg-gradient-to-r ${isDark ? 'from-white/5 to-transparent' : 'from-gray-50 to-transparent'}`}>
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center">
+                            <Layers className="w-6 h-6 text-blue-500" />
+                        </div>
+                        <div>
+                            <h3 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>Sous-familles : {family.name}</h3>
+                            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Visualisation détaillée de la structure interne</p>
+                        </div>
+                    </div>
+                    <button onClick={onClose} className={`p-3 rounded-xl transition-colors ${isDark ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-gray-100 text-gray-500'}`}><X className="w-6 h-6" /></button>
+                </div>
+
+                <div className="p-8 max-h-[70vh] overflow-y-auto">
+                    {loading ? (
+                        <div className="flex flex-col items-center justify-center py-20 gap-4">
+                            <LoadingSpinner size="lg" />
+                            <p className={`text-sm font-bold animate-pulse ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Chargement des données...</p>
+                        </div>
+                    ) : subFamilies.length === 0 ? (
+                        <div className="text-center py-20">
+                            <Package className={`w-16 h-16 mx-auto mb-4 opacity-20 ${isDark ? 'text-white' : 'text-gray-900'}`} />
+                            <p className={`text-xl font-bold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Aucune sous-famille pour cette catégorie</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {subFamilies.map((sub) => (
+                                <motion.div
+                                    key={sub.id}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    className={`p-5 rounded-2xl border ${isDark ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-gray-50 border-gray-200 hover:bg-white hover:shadow-lg hover:border-blue-200'} transition-all duration-300 group`}
+                                >
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${sub.isActive ? 'bg-blue-500/20 text-blue-500' : 'bg-gray-500/20 text-gray-500'}`}>
+                                                <Package className="w-5 h-5" />
+                                            </div>
+                                            <div>
+                                                <h4 className={`font-black ${isDark ? 'text-white' : 'text-gray-900 group-hover:text-blue-600'} transition-colors`}>{sub.name}</h4>
+                                                <span className={`text-[10px] uppercase tracking-wider font-bold ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>CODE: {sub.code}</span>
+                                            </div>
+                                        </div>
+                                        <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase ${sub.isActive ? 'bg-[#23BE31]/20 text-[#23BE31]' : 'bg-gray-500/20 text-gray-500'}`}>
+                                            {sub.isActive ? 'Active' : 'Inactive'}
+                                        </div>
+                                    </div>
+
+                                    <p className={`text-sm mb-4 line-clamp-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{sub.description || 'Pas de description.'}</p>
+
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                        <div className={`p-3 rounded-xl ${isDark ? 'bg-black/20' : 'bg-white'} border ${isDark ? 'border-white/5' : 'border-gray-100 shadow-sm'}`}>
+                                            <p className={`text-[10px] font-bold uppercase mb-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Marge par defaut</p>
+                                            <p className={`text-lg font-black ${isDark ? 'text-[#23BE31]' : 'text-[#1fa92c]'}`}>{sub.defaultMargin}%</p>
+                                        </div>
+                                        <div className={`p-3 rounded-xl ${isDark ? 'bg-black/20' : 'bg-white'} border ${isDark ? 'border-white/5' : 'border-gray-100 shadow-sm'}`}>
+                                            <p className={`text-[10px] font-bold uppercase mb-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Commission</p>
+                                            <p className={`text-lg font-black ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>{sub.commissionRate}%</p>
+                                        </div>
+                                        <div className={`p-3 rounded-xl ${isDark ? 'bg-black/20' : 'bg-white'} border ${isDark ? 'border-white/5' : 'border-gray-100 shadow-sm'}`}>
+                                            <p className={`text-[10px] font-bold uppercase mb-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Niveau</p>
+                                            <p className={`text-lg font-black ${isDark ? 'text-purple-400' : 'text-purple-600'}`}>{sub.level}</p>
+                                        </div>
+                                        <div className={`p-3 rounded-xl ${isDark ? 'bg-black/20' : 'bg-white'} border ${isDark ? 'border-white/5' : 'border-gray-100 shadow-sm'}`}>
+                                            <p className={`text-[10px] font-bold uppercase mb-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Ordre</p>
+                                            <p className={`text-lg font-black ${isDark ? 'text-orange-400' : 'text-orange-600'}`}>{sub.sortOrder}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4 flex items-center justify-between pt-4 border-t border-dashed border-white/10">
+                                        <div className="flex flex-col gap-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className={`w-2 h-2 rounded-full ${sub.isActive ? 'bg-[#23BE31]' : 'bg-gray-500'}`} />
+                                                <span className={`text-[10px] font-bold ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>ID: {sub.id}</span>
+                                            </div>
+                                            <span className={`text-[10px] font-medium ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>Mis à jour : {new Date(sub.updatedAt!).toLocaleDateString('fr-FR')}</span>
+                                        </div>
+                                        <span className={`text-[10px] font-bold italic ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>Slug: {sub.slug}</span>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                <div className={`p-6 border-t ${isDark ? 'border-white/10' : 'border-gray-100'} flex justify-end bg-gradient-to-l ${isDark ? 'from-white/5 to-transparent' : 'from-gray-50 to-transparent'}`}>
+                    <button onClick={onClose} className="px-8 py-3 rounded-2xl font-black bg-blue-500 text-white shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                        Fermer l'explorateur
+                    </button>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
+
+interface CategoryModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onSuccess: () => void;
+    initialData?: Categorie | null;
+    parentId?: number | null;
+    isDark: boolean;
+}
+
+function CategoryModal({ isOpen, onClose, onSuccess, initialData, parentId, isDark }: CategoryModalProps) {
+    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({ name: '', description: '', isActive: true });
+
+    useEffect(() => {
+        if (initialData) {
+            setFormData({ name: initialData.name, description: initialData.description || '', isActive: initialData.isActive });
+        } else {
+            setFormData({ name: '', description: '', isActive: true });
+        }
+    }, [initialData, isOpen]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            if (initialData) {
+                await CategorieAPI.updateCategory(initialData.id, { name: formData.name, description: formData.description, isActive: formData.isActive, sortOrder: initialData.sortOrder });
+                showToast.success('Catégorie mise à jour');
+            } else {
+                await CategorieAPI.createCategory({ name: formData.name, description: formData.description, parentId: parentId || null, isActive: formData.isActive });
+                showToast.success('Catégorie créée');
+            }
+            onSuccess();
+        } catch (error) {
+            console.error('Erreur:', error);
+            showToast.error('Erreur lors de l\'enregistrement');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className={`${isDark ? 'bg-[#0C1419]' : 'bg-white'} rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
+                <div className={`p-6 border-b ${isDark ? 'border-white/10' : 'border-gray-100'} flex justify-between items-center`}>
+                    <h3 className={`text-xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>{initialData ? 'Modifier la catégorie' : (parentId ? 'Nouvelle sous-famille' : 'Nouvelle famille')}</h3>
+                    <button onClick={onClose} className={`p-2 rounded-lg ${isDark ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}><X className="w-5 h-5" /></button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                    <div>
+                        <label className={`block text-sm font-bold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Nom</label>
+                        <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className={`w-full px-4 py-3 rounded-xl ${isDark ? 'bg-white/5' : 'bg-gray-50'} border ${isDark ? 'border-white/10' : 'border-gray-200'} outline-none focus:border-[#23BE31] font-bold`} placeholder="Nom de la catégorie" />
+                    </div>
+
+                    <div>
+                        <label className={`block text-sm font-bold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Description</label>
+                        <textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className={`w-full px-4 py-3 rounded-xl ${isDark ? 'bg-white/5' : 'bg-gray-50'} border ${isDark ? 'border-white/10' : 'border-gray-200'} outline-none focus:border-[#23BE31] resize-none`} rows={3} placeholder="Description (optionnelle)" />
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <button type="button" onClick={() => setFormData({ ...formData, isActive: !formData.isActive })} className={`relative w-12 h-6 rounded-full transition-colors ${formData.isActive ? 'bg-[#23BE31]' : 'bg-gray-400'}`}>
+                            <span className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${formData.isActive ? 'left-7' : 'left-1'}`} />
+                        </button>
+                        <span className={`font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{formData.isActive ? 'Active' : 'Inactive'}</span>
+                    </div>
+
+                    <div className="flex justify-end gap-3 pt-4">
+                        <button type="button" onClick={onClose} className={`px-6 py-3 rounded-xl font-bold ${isDark ? 'bg-white/10 hover:bg-white/20' : 'bg-gray-100 hover:bg-gray-200'}`}>Annuler</button>
+                        <button type="submit" disabled={loading} className="px-6 py-3 rounded-xl font-black bg-gradient-to-r from-[#23BE31] to-[#1fa92c] text-white shadow-lg shadow-[#23BE31]/20 flex items-center gap-2 disabled:opacity-50">
+                            {loading ? <LoadingSpinner size="sm" /> : <Save className="w-4 h-4" />}
+                            {initialData ? 'Mettre à jour' : 'Créer'}
+                        </button>
+                    </div>
+                </form>
+            </motion.div>
+        </div>
+    );
+}
+
+/**
+ * MODAL DE STATISTIQUES DÉTAILLÉES (BRANCH STATS)
+ */
+function CategoryStatsModal({ category, metadata, onClose, isDark }: { category: Categorie, metadata: any, onClose: () => void, isDark: boolean }) {
+
+    console.log('CategoryStatsModal - category received:', category);
+    console.log('CategoryStatsModal - category.stats:', category.stats);
+
+    // Ensure stats exists and has valid values
+    // If category.stats is an empty object {}, all properties will be undefined
+    const stats = {
+        products_count: category.stats?.products_count ?? 0,
+        variations_count: category.stats?.variations_count ?? 0,
+        total_sales: category.stats?.total_sales ?? 0,
+        avg_margin: category.stats?.avg_margin ?? 0,
+        rotation_days: category.stats?.rotation_days ?? 0
+    };
+
+    console.log('CategoryStatsModal - processed stats:', stats);
+
+    // Helper to format keys and values
+    const statCards = [
+        {
+            label: "Produits",
+            value: stats.products_count || 0,
+            unit: "",
+            icon: Package,
+            color: "text-blue-500",
+            bg: "bg-blue-500/10"
+        },
+        {
+            label: "Variations",
+            value: stats.variations_count || 0,
+            unit: "",
+            icon: Layers,
+            color: "text-purple-500",
+            bg: "bg-purple-500/10"
+        },
+        {
+            label: "Ventes Totales",
+            value: stats.total_sales || 0,
+            unit: " XOF",
+            icon: TrendingUp,
+            color: "text-[#23BE31]",
+            bg: "bg-[#23BE31]/10"
+        },
+        {
+            label: "Marge Moyenne",
+            value: (Number(stats.avg_margin) || 0).toFixed(2),
+            unit: "%",
+            icon: BarChart,
+            color: "text-orange-500",
+            bg: "bg-orange-500/10"
+        },
+        {
+            label: "Rotation Stock",
+            value: stats.rotation_days || 0,
+            unit: " jours",
+            icon: RefreshCw,
+            color: "text-cyan-500",
+            bg: "bg-cyan-500/10"
+        },
+        {
+            label: "Commission",
+            value: category.commissionRate || "0",
+            unit: "%",
+            icon: Activity,
+            color: "text-red-500",
+            bg: "bg-red-500/10"
+        },
+    ];
+
+    return (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 30 }}
+                className={`${isDark ? 'bg-[#071217] border-white/10' : 'bg-white border-gray-200'} rounded-[2.5rem] shadow-2xl w-full max-w-4xl overflow-hidden border`}
+            >
+                {/* Header Section */}
+                <div className={`p-8 border-b ${isDark ? 'border-white/5' : 'border-gray-100'} bg-gradient-to-br ${isDark ? 'from-white/5 to-transparent' : 'from-[#23BE31]/5 to-transparent'} relative overflow-hidden`}>
+                    <div className="absolute top-0 right-0 p-8 opacity-10">
+                        <TrendingUp className={`w-32 h-32 ${isDark ? 'text-white' : 'text-[#23BE31]'}`} />
+                    </div>
+
+                    <div className="flex justify-between items-start relative z-10">
+                        <div className="flex gap-6">
+                            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-[#23BE31] to-[#1fa92c] flex items-center justify-center shadow-2xl shadow-[#23BE31]/30">
+                                <BarChart className="w-10 h-10 text-white" />
+                            </div>
+                            <div>
+                                <h3 className={`text-3xl font-black ${isDark ? 'text-white' : 'text-gray-900'} mb-1`}>Analytique : {category.name}</h3>
+                                <div className="flex items-center gap-3">
+                                    <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${isDark ? 'bg-white/10 text-gray-400' : 'bg-gray-100 text-gray-500'}`}>
+                                        CODE: {category.code}
+                                    </span>
+                                    {metadata && (
+                                        <span className="text-sm font-bold text-[#23BE31]">
+                                            Analyse sur {metadata.period_days} jours
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        <button onClick={onClose} className={`p-4 rounded-2xl transition-all ${isDark ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-gray-100 text-gray-500'}`}>
+                            <X className="w-6 h-6" />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Content Section */}
+                <div className="p-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {statCards.map((card, idx) => (
+                            <motion.div
+                                key={idx}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: idx * 0.05 }}
+                                className={`p-6 rounded-[2rem] border transition-all ${isDark ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-gray-50 border-gray-100 hover:bg-white hover:shadow-xl'}`}
+                            >
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className={`p-3 rounded-2xl ${card.bg}`}>
+                                        <card.icon className={`w-5 h-5 ${card.color}`} />
+                                    </div>
+                                    <p className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+                                        {card.label}
+                                    </p>
+                                </div>
+                                <div className="flex items-end gap-1">
+                                    <p className={`text-3xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                        {typeof card.value === 'number' ? card.value.toLocaleString() : card.value}
+                                    </p>
+                                    <span className={`text-sm font-bold mb-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>{card.unit}</span>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+
+                    <div className={`mt-8 p-6 rounded-2xl border ${isDark ? 'bg-white/5 border-white/5' : 'bg-gray-50 border-gray-200'}`}>
+                        <h4 className={`text-sm font-black uppercase tracking-widest mb-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Debug Information</h4>
+                        <div className={`space-y-2 text-xs font-mono ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <p>catégorie : {category.name}</p>
+                            <p>code : {category.code}</p>
+                            <p>description : {category.description}</p>
+                            <p>image : {category.image}</p>
+                            <p>commissionRate : {category.commissionRate}</p>
+                            <p>defaultMargin : {category.defaultMargin}</p>
+                            <p>metadata : {JSON.stringify(category.metadata)}</p>
+                            <p>stats : {JSON.stringify(category.stats)}</p>
+                            <p>isActive : {String(category.isActive)}</p>
+                            <p>sortOrder : {category.sortOrder}</p>
+                            <p>createdAt : {category.createdAt}</p>
+                            <p>updatedAt : {category.updatedAt}</p>
+                            <p>children : {JSON.stringify(category.children)}</p>
+                            <p>_count : {JSON.stringify(category._count)}</p>
+                            <div className="mt-4 pt-4 border-t border-dashed border-gray-300 dark:border-white/10">
+                                <p className="font-bold mb-2">Stats Breakdown:</p>
+                                <p>products_count: {stats.products_count}</p>
+                                <p>variations_count: {stats.variations_count}</p>
+                                <p>total_sales: {stats.total_sales}</p>
+                                <p>avg_margin: {stats.avg_margin}</p>
+                                <p>rotation_days: {stats.rotation_days}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Sub-families List */}
+                    {category.children && category.children.length > 0 && (
+                        <div className="mt-8 pt-8 border-t border-dashed border-gray-200 dark:border-white/10">
+                            <h4 className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-gray-500' : 'text-gray-400'} mb-4 flex items-center gap-2`}>
+                                <FolderTree className="w-4 h-4" />
+                                Sous-familles ({category.children.length})
+                            </h4>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                {category.children.map((child, cIdx) => (
+                                    <div
+                                        key={child.id}
+                                        className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${isDark ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-white border-gray-100 hover:shadow-md'}`}
+                                    >
+                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${child.isActive ? 'bg-[#23BE31]/10 text-[#23BE31]' : 'bg-gray-500/10 text-gray-500'}`}>
+                                            <Package className="w-5 h-5" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className={`text-sm font-black truncate ${isDark ? 'text-white' : 'text-gray-900'}`}>{child.name}</p>
+                                            <p className={`text-[10px] font-bold ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>{child.code}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+
+
+                {/* Footer Section */}
+                <div className={`p-8 border-t ${isDark ? 'border-white/5' : 'border-gray-100'} flex justify-between items-center bg-gradient-to-r ${isDark ? 'from-transparent to-white/5' : 'from-transparent to-gray-50'}`}>
+                    <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full bg-[#23BE31] animate-pulse`} />
+                        <span className={`text-xs font-bold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Calculé à partir de {category.children?.length || 0} sous-catégories</span>
+                    </div>
+                    <button onClick={onClose} className="px-10 py-4 rounded-[1.5rem] font-black bg-gradient-to-r from-[#23BE31] to-[#1fa92c] text-white shadow-xl shadow-[#23BE31]/20 hover:scale-[1.05] active:scale-[0.95] transition-all">
+                        Terminer l'analyse
+                    </button>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
