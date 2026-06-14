@@ -1,0 +1,46 @@
+Viewed package.json:1-46
+Listed directory site_atelier_du_terroir
+Viewed next.config.ts:1-8
+
+Le message d'erreur `⚠ Slow filesystem detected. The benchmark took 2532ms.` et l'extrême lenteur de votre application (plus de 60 secondes pour compiler une page !) sont des problèmes très courants avec Next.js (et particulièrement Turbopack) sous **Windows**. 
+
+Ce n'est pas un problème avec votre code, mais un **problème lié à votre système de fichiers Windows et souvent à votre Antivirus (Windows Defender)**.
+
+Voici pourquoi cela se produit et comment le réparer définitivement :
+
+### Cause principale : L'Antivirus (Windows Defender)
+Pendant que Next.js compile votre application, il crée, lit et modifie des milliers de petits fichiers par seconde dans le dossier `.next`. **Windows Defender intercepte et analyse chacun de ces fichiers en temps réel**, ce qui fait chuter les performances de votre disque dur (le benchmark de 2532ms devrait normalement être inférieur à 50ms !).
+
+### Solutions pour retrouver une application ultra rapide :
+
+#### Étape 1 : Ajouter une exclusion dans Windows Defender (La solution la plus importante)
+Vous devez dire à Windows de ne pas scanner votre dossier de développement.
+1. Ouvrez le menu Démarrer de Windows et cherchez **Sécurité Windows**.
+2. Allez dans **Protection contre les virus et menaces**.
+3. Sous "Paramètres de protection contre les virus et menaces", cliquez sur **Gérer les paramètres**.
+4. Descendez tout en bas jusqu'à la section "Exclusions" et cliquez sur **Ajouter ou supprimer des exclusions**.
+5. Cliquez sur **Ajouter une exclusion** -> **Dossier**.
+6. Sélectionnez votre dossier de projet complet : `C:\Travaux_informatiques\Next.js\site_atelier_du_terroir`
+
+#### Étape 2 : Nettoyer le cache corrompu/lent
+Maintenant que le dossier est exclu de l'antivirus, supprimez l'ancien cache pour repartir sur une base saine.
+1. Arrêtez votre serveur actuel (faites `Ctrl + C` dans votre terminal).
+2. Dans votre terminal PowerShell (à la racine de votre projet), tapez cette commande pour supprimer le cache :
+   ```powershell
+   Remove-Item -Recurse -Force .next
+   ```
+3. Relancez ensuite votre application :
+   ```powershell
+   npm run dev
+   ```
+
+#### Étape 3 (Optionnelle) : Désactiver Turbopack si le problème persiste
+Si après avoir fait les Étapes 1 et 2, Turbopack continue de bugger sous votre Windows, vous pouvez repasser sur le compilateur "Webpack" classique de Next.js, qui est parfois plus stable.
+Pour cela, ouvrez votre fichier `package.json` et modifiez le script de démarrage en ajoutant `--no-turbo` ou en enlevant `--turbo` (selon la version) :
+```json
+"scripts": {
+  "dev": "next dev", // <- Si vous avez un flag turbo ici, enlevez-le.
+}
+```
+
+**Commencez par l'Étape 1 et 2**, vous devriez voir le temps de compilation passer de `60s` à moins de `2s`, et votre navigation redeviendra ultra fluide !
