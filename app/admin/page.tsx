@@ -32,7 +32,7 @@
 // app/admin/page.tsx
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import AdminDashboard from "./AdminDashboard";
+import AdminDashboard from "./components/dashboard/AdminDashboard";
 import LoadingStyle from "@/components/special/loadingStyle";
 
 export const metadata: Metadata = {

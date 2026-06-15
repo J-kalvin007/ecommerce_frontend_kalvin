@@ -1,10 +1,5 @@
 
 
-
-
-
-
-
 // lib/axios.ts
 /**
  * Axios — Configuration HTTP pour le backend Django DRF
@@ -25,16 +20,16 @@ import axios, {
 import CryptoJS from "crypto-js";
 
 /** URL de base de l'API Django (variable d'environnement) */
-<<<<<<< HEAD
+
 // const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://shed-croak-unending.ngrok-free.dev";
 
 // const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.1.66:8000";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-=======
+// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev";
->>>>>>> d476a30987b8e511099408a86d323d1eba1eea99
+
 
 /** Clé d'encryption pour sécuriser les tokens côté client */
 const ENCRYPTION_KEY =
@@ -102,12 +97,8 @@ export const apiPublic = axios.create({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
-<<<<<<< HEAD
-    "ngrok-skip-browser-warning": "69420",
-=======
     "ngrok-skip-browser-warning": "true",
->>>>>>> d476a30987b8e511099408a86d323d1eba1eea99
-  },
+  }
 });
 
 /* ============================================================
@@ -119,11 +110,7 @@ export const apiPrivate = axios.create({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
-<<<<<<< HEAD
-    "ngrok-skip-browser-warning": "69420",
-=======
     "ngrok-skip-browser-warning": "true",
->>>>>>> d476a30987b8e511099408a86d323d1eba1eea99
   },
 });
 

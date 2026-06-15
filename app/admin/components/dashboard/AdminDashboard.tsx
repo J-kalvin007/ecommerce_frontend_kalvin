@@ -151,14 +151,14 @@ import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useAuthStore } from "@/store/authStore";
 import AdminShell from "./components/AdminShell";
-import OverviewSection from "./components/OverviewSection";
-import AccessDenied from "./AccessDenied";
+import OverviewSection from "./OverviewSection";
+import AccessDenied from "./components/AccessDenied";
 
-const ProductsSection = dynamic(() => import("./components/ProductsSection"), { ssr: false });
-const CategoriesSection = dynamic(() => import("./components/CategoriesSection"), { ssr: false });
-const OrdersSection = dynamic(() => import("./components/OrdersSection"), { ssr: false });
-const ClientsSection = dynamic(() => import("./components/ClientsSection"), { ssr: false });
-const SettingsSection = dynamic(() => import("./components/SettingsSection"), { ssr: false });
+const ProductsSection = dynamic(() => import("../produits/ProductsSection"), { ssr: false });
+const CategoriesSection = dynamic(() => import("../categories/CategoriesSection"), { ssr: false });
+const OrdersSection = dynamic(() => import("../commandes/OrdersSection"), { ssr: false });
+const ClientsSection = dynamic(() => import("../clients/ClientsSection"), { ssr: false });
+const SettingsSection = dynamic(() => import("../parametres/SettingsSection"), { ssr: false });
 
 export default function AdminDashboard() {
   const searchParams = useSearchParams();

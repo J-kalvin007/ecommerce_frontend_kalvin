@@ -43,6 +43,7 @@ export default function RootLayout({
       lang="fr"
       className={poppins.variable}
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
     >
       <body className="min-h-screen bg-background text-foreground antialiased">
         <Providers>

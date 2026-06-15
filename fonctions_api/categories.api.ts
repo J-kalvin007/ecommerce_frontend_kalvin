@@ -67,13 +67,20 @@ export const createAdminCategory = async (
       if (data.slug) formData.append("slug", data.slug);
       if (data.description) formData.append("description", data.description);
       formData.append("image", data.image);
-      if (data.parent) formData.append("parent", data.parent);
+      if (data.parent) {
+        formData.append("parent", data.parent);
+        formData.append("parent_id", data.parent); // Pour compatibilité
+      }
 
       response = await apiPrivate.post<Category>("/api/v1/catalog/admin/categories/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
     } else {
-      response = await apiPrivate.post<Category>("/api/v1/catalog/admin/categories/", data);
+      const payload = { ...data };
+      if (data.parent) {
+        payload.parent = data.parent;
+      }
+      response = await apiPrivate.post<Category>("/api/v1/catalog/admin/categories/", payload);
     }
     return { ok: true, data: response.data };
   } catch (error) {
@@ -93,13 +100,20 @@ export const updateAdminCategory = async (
       if (data.slug) formData.append("slug", data.slug);
       if (data.description) formData.append("description", data.description);
       formData.append("image", data.image);
-      if (data.parent) formData.append("parent", data.parent);
+      if (data.parent) {
+        formData.append("parent", data.parent);
+        formData.append("parent_id", data.parent);
+      }
 
       response = await apiPrivate.put<Category>(`/api/v1/catalog/admin/categories/${id}/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
     } else {
-      response = await apiPrivate.put<Category>(`/api/v1/catalog/admin/categories/${id}/`, data);
+      const payload = { ...data };
+      if (data.parent) {
+        payload.parent = data.parent;
+      }
+      response = await apiPrivate.put<Category>(`/api/v1/catalog/admin/categories/${id}/`, payload);
     }
     return { ok: true, data: response.data };
   } catch (error) {
@@ -119,13 +133,20 @@ export const patchAdminCategory = async (
       if (data.slug) formData.append("slug", data.slug);
       if (data.description) formData.append("description", data.description);
       formData.append("image", data.image);
-      if (data.parent) formData.append("parent", data.parent);
+      if (data.parent) {
+        formData.append("parent", data.parent);
+        formData.append("parent_id", data.parent);
+      }
 
       response = await apiPrivate.patch<Category>(`/api/v1/catalog/admin/categories/${id}/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
     } else {
-      response = await apiPrivate.patch<Category>(`/api/v1/catalog/admin/categories/${id}/`, data);
+      const payload = { ...data };
+      if (data.parent) {
+        payload.parent = data.parent;
+      }
+      response = await apiPrivate.patch<Category>(`/api/v1/catalog/admin/categories/${id}/`, payload);
     }
     return { ok: true, data: response.data };
   } catch (error) {
