@@ -1,97 +1,314 @@
-/**
- * LoyaltySection — Gestion du programme de fidélité
- * @module app/admin/components/LoyaltySection
- */
-
+// app/admin/components/fidelites/LoyaltySection.tsx
 "use client";
-
-import { Trophy, Star, Gift, Users, Edit3, Trash2, Settings } from "lucide-react";
+import { useEffect, useState, useMemo } from "react";
+import { motion } from "framer-motion";
+import { Sparkles, Crown, Search, LayoutGrid, List } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const TIERS = [
-  { id: "BRONZE", name: "Bronze", min_points: 0, discount: 0, users: 4500, color: "text-orange-400", bg: "bg-orange-500/10", border: "border-orange-500/20" },
-  { id: "SILVER", name: "Argent", min_points: 500, discount: 5, users: 2100, color: "text-slate-300", bg: "bg-slate-300/10", border: "border-slate-300/20" },
-  { id: "GOLD", name: "Or", min_points: 2000, discount: 10, users: 850, color: "text-yellow-400", bg: "bg-yellow-500/10", border: "border-yellow-500/20" },
-  { id: "PLATINUM", name: "Platine", min_points: 5000, discount: 15, users: 156, color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-400/20" },
-];
+import {
+    getAdminLoyaltyProfiles,
+    getLoyaltyTiers,
+    deleteAdminLoyaltyProfile,
+    deleteAdminLoyaltyTier,
+} from "@/fonctions_api/fidelites.api";
+import type { LoyaltyProfile, Tier } from "@/modeles/fidelites";
+import { computeLoyaltyStats } from "@/modeles/fidelites";
+
+// ─── Composants spéciaux partagés ────────────────────────────────────────────
+import Toast from "@/components/notifications/Toast";
+import LoadingKalvin from "@/components/special/loadingKalvin";
+import EmptyState from "@/components/special/EmptyState";
+import ErrorState from "@/components/special/ErrorState";
+import ConfirmDialog from "@/components/special/ConfirmDialog";
+
+// ─── Sous-composants fidélité ────────────────────────────────────────────────
+import { LoyaltyStatsBar } from "./components/LoyaltyStatsBar";
+import { LoyaltyProfileGrid } from "./components/LoyaltyProfileGrid";
+import { LoyaltyProfileDetailModal } from "./components/LoyaltyProfileDetailModal";
+import { LoyaltyAdjustPointsModal } from "./components/LoyaltyAdjustPointsModal";
+import { LoyaltyTiersPanel } from "./components/LoyaltyTiersPanel";
+import { LoyaltyTierFormModal } from "./components/LoyaltyTierFormModal";
+
+type TabType = "profiles" | "tiers";
 
 export default function LoyaltySection() {
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Programme de Fidélité</h1>
-          <p className="text-sm text-white/40">Gérez les paliers et les règles d'attribution des points.</p>
+    const [tab, setTab] = useState<TabType>("profiles");
+    const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+    // Données
+    const [profiles, setProfiles] = useState<LoyaltyProfile[]>([]);
+    const [tiers, setTiers] = useState<Tier[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // Filtres
+    const [search, setSearch] = useState("");
+
+    // Modales
+    const [detailProfile, setDetailProfile] = useState<LoyaltyProfile | null>(null);
+    const [adjustProfile, setAdjustProfile] = useState<LoyaltyProfile | null>(null);
+
+    // Confirmation suppression
+    const [deleteConfirm, setDeleteConfirm] = useState<LoyaltyProfile | null>(null);
+    const [deleteTierConfirm, setDeleteTierConfirm] = useState<Tier | null>(null);
+    const [deleting, setDeleting] = useState(false);
+
+    // Formulaire Palier
+    const [tierFormOpen, setTierFormOpen] = useState(false);
+    const [editingTier, setEditingTier] = useState<Tier | null>(null);
+
+    // Toast
+    const [toast, setToast] = useState<{ show: boolean; type: "success" | "error"; message: string }>
+        ({ show: false, type: "success", message: "" });
+
+    // ── Chargement ───────────────────────────────────────────────────────────
+    const loadData = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const [profilesRes, tiersRes] = await Promise.all([getAdminLoyaltyProfiles(), getLoyaltyTiers()]);
+
+            if (profilesRes.ok) {
+                setProfiles(profilesRes.data);
+            } else {
+                setError(profilesRes.error.message || "Erreur lors du chargement des profils");
+            }
+
+            if (tiersRes.ok) {
+                setTiers(tiersRes.data);
+            }
+        } catch {
+            setError("Impossible de charger les données.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => { loadData(); }, []);
+
+    // ── Stats ────────────────────────────────────────────────────────────────
+    const stats = useMemo(() => computeLoyaltyStats(profiles), [profiles]);
+
+    // ── Filtrage ─────────────────────────────────────────────────────────────
+    const filteredProfiles = useMemo(() => {
+        if (!search) return profiles;
+        const q = search.toLowerCase();
+        return profiles.filter(p =>
+            p.id.toLowerCase().includes(q) ||
+            p.tier_name.toLowerCase().includes(q)
+        );
+    }, [profiles, search]);
+
+    // ── Handler suppression ───────────────────────────────────────────────────
+    const handleDelete = async () => {
+        if (!deleteConfirm) return;
+        setDeleting(true);
+        const res = await deleteAdminLoyaltyProfile(deleteConfirm.id);
+        if (res.ok) {
+            setToast({ show: true, type: "success", message: "Profil de fidélité supprimé avec succès." });
+            setDetailProfile(null); // Fermer la modale si ouverte
+            loadData();
+        } else {
+            setToast({ show: true, type: "error", message: res.error.message || "Erreur lors de la suppression." });
+        }
+        setDeleting(false);
+        setDeleteConfirm(null);
+    };
+
+    const handleDeleteTier = async () => {
+        if (!deleteTierConfirm) return;
+        setDeleting(true);
+        const res = await deleteAdminLoyaltyTier(deleteTierConfirm.id);
+        if (res.ok) {
+            setToast({ show: true, type: "success", message: "Palier supprimé avec succès." });
+            loadData();
+        } else {
+            setToast({ show: true, type: "error", message: res.error.message || "Erreur lors de la suppression." });
+        }
+        setDeleting(false);
+        setDeleteTierConfirm(null);
+    };
+
+    // ── Erreur totale ─────────────────────────────────────────────────────────
+    if (error && !profiles.length) {
+        return <ErrorState message={error} onRetry={loadData} />;
+    }
+
+    return (
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* ── Toast ─────────────────────────────────────────────────────── */}
+            <Toast
+                show={toast.show}
+                type={toast.type}
+                message={toast.message}
+                onClose={() => setToast(p => ({ ...p, show: false }))}
+            />
+
+            {/* ── Confirm suppression ───────────────────────────────────────── */}
+            <ConfirmDialog
+                isOpen={!!deleteConfirm}
+                onCancel={() => setDeleteConfirm(null)}
+                onConfirm={handleDelete}
+                title="Supprimer le profil"
+                message="Êtes-vous sûr de vouloir supprimer définitivement ce profil de fidélité ? Ses points et avantages seront perdus. Cette action est irréversible."
+                confirmText="Supprimer"
+                type="danger"
+                isLoading={deleting}
+            />
+
+            {/* ── Confirm suppression Palier ───────────────────────────────────────── */}
+            <ConfirmDialog
+                isOpen={!!deleteTierConfirm}
+                onCancel={() => setDeleteTierConfirm(null)}
+                onConfirm={handleDeleteTier}
+                title="Supprimer le palier"
+                message={`Êtes-vous sûr de vouloir supprimer le palier "${deleteTierConfirm?.name}" ? Cette action est irréversible et peut impacter les utilisateurs s'ils y sont rattachés.`}
+                confirmText="Supprimer"
+                type="danger"
+                isLoading={deleting}
+            />
+
+            {/* ── Formulaire Palier ───────────────────────────────────────── */}
+            <LoyaltyTierFormModal
+                open={tierFormOpen}
+                onClose={() => setTierFormOpen(false)}
+                tier={editingTier}
+                onSuccess={() => {
+                    setTierFormOpen(false);
+                    setToast({ show: true, type: "success", message: "Palier sauvegardé avec succès." });
+                    loadData();
+                }}
+            />
+
+            {/* ── Modales ───────────────────────────────────────────────────── */}
+            <LoyaltyProfileDetailModal
+                profile={detailProfile}
+                tiers={tiers}
+                onClose={() => setDetailProfile(null)}
+                onAdjust={() => {
+                    if (detailProfile) {
+                        setAdjustProfile(detailProfile);
+                        setDetailProfile(null);
+                    }
+                }}
+                onDelete={() => {
+                    if (detailProfile) {
+                        setDeleteConfirm(detailProfile);
+                    }
+                }}
+            />
+
+            <LoyaltyAdjustPointsModal
+                open={!!adjustProfile}
+                onClose={() => setAdjustProfile(null)}
+                profile={adjustProfile}
+                onSuccess={loadData}
+            />
+
+            {/* ── En-tête ───────────────────────────────────────────────────── */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
+                        <Crown className="h-8 w-8 text-primary" />
+                        Programme de Fidélité
+                    </h1>
+                    <p className="mt-1.5 text-sm text-muted-foreground max-w-xl">
+                        Supervisez les points de vos clients, analysez la répartition par paliers et ajustez manuellement les soldes.
+                    </p>
+                </div>
+            </div>
+
+            {/* ── Stats globales ────────────────────────────────────────────── */}
+            <LoyaltyStatsBar stats={stats} />
+
+            {/* ── Onglets ───────────────────────────────────────────────────── */}
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-surface-elevated p-2 rounded-2xl border border-border shadow-sm">
+                <div className="flex gap-2 w-full sm:w-auto">
+                    {([
+                        { key: "profiles", label: "Profils clients", icon: <Sparkles className="h-4 w-4" /> },
+                        { key: "tiers", label: "Paliers & Avantages", icon: <Crown className="h-4 w-4" /> },
+                    ] as const).map(t => (
+                        <button
+                            key={t.key}
+                            onClick={() => setTab(t.key)}
+                            className={cn(
+                                "flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all",
+                                tab === t.key ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-surface-alt hover:text-foreground"
+                            )}
+                        >
+                            {t.icon} {t.label}
+                        </button>
+                    ))}
+                </div>
+
+                {tab === "profiles" && (
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <div className="relative w-full sm:w-64 shrink-0">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <input
+                                type="text"
+                                placeholder="Rechercher..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="h-10 w-full rounded-xl border border-border bg-surface pl-10 pr-4 text-sm font-medium outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
+                            />
+                        </div>
+                        <div className="flex bg-surface-alt rounded-lg p-1 border border-border">
+                            <button
+                                onClick={() => setViewMode("grid")}
+                                className={cn(
+                                    "p-1.5 rounded-md transition-colors",
+                                    viewMode === "grid" ? "bg-surface shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                                )}
+                                title="Vue Grille"
+                            >
+                                <LayoutGrid className="h-4 w-4" />
+                            </button>
+                            <button
+                                onClick={() => setViewMode("list")}
+                                className={cn(
+                                    "p-1.5 rounded-md transition-colors",
+                                    viewMode === "list" ? "bg-surface shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                                )}
+                                title="Vue Liste"
+                            >
+                                <List className="h-4 w-4" />
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* ── Contenu ───────────────────────────────────────────────────── */}
+            {loading ? (
+                <LoadingKalvin />
+            ) : tab === "profiles" ? (
+                filteredProfiles.length === 0 ? (
+                    <EmptyState
+                        title="Aucun profil de fidélité"
+                        description={search ? `Aucun résultat pour "${search}".` : "Il n'y a pas encore de clients inscrits au programme de fidélité."}
+                        icon={Sparkles}
+                    />
+                ) : (
+                    <LoyaltyProfileGrid
+                        profiles={filteredProfiles}
+                        tiers={tiers}
+                        onView={setDetailProfile}
+                        onAdjust={setAdjustProfile}
+                        viewMode={viewMode}
+                    />
+                )
+            ) : (
+                <div className="max-w-4xl">
+                    <LoyaltyTiersPanel 
+                        tiers={tiers} 
+                        isAdmin={true}
+                        onAdd={() => { setEditingTier(null); setTierFormOpen(true); }}
+                        onEdit={(tier) => { setEditingTier(tier); setTierFormOpen(true); }}
+                        onDelete={(tier) => setDeleteTierConfirm(tier)}
+                    />
+                </div>
+            )}
         </div>
-        <button className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white hover:bg-white/10">
-          <Settings className="h-4 w-4" /> Paramètres des points
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {TIERS.map((tier) => (
-          <div key={tier.id} className={cn("relative rounded-2xl border bg-white/[0.02] p-5 overflow-hidden", tier.border)}>
-            <div className={cn("absolute -right-4 -top-4 h-24 w-24 rounded-full blur-2xl opacity-20", tier.bg)} />
-
-            <div className={cn("mb-4 inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-bold", tier.bg, tier.color)}>
-              <Trophy className="h-4 w-4" /> {tier.name}
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <p className="text-[11px] font-medium uppercase text-white/40 mb-1">Seuil d'accès</p>
-                <p className="text-lg font-bold text-white flex items-center gap-2"><Star className="h-4 w-4 text-orange-400" /> {tier.min_points} pts</p>
-              </div>
-              <div>
-                <p className="text-[11px] font-medium uppercase text-white/40 mb-1">Avantage</p>
-                <p className="text-sm font-semibold text-white flex items-center gap-2"><Gift className="h-4 w-4 text-emerald-400" /> -{tier.discount}% sur tout</p>
-              </div>
-              <div className="pt-4 border-t border-white/5">
-                <p className="text-sm text-white/60 flex items-center justify-between">
-                  <span className="flex items-center gap-2"><Users className="h-4 w-4" /> Membres</span>
-                  <span className="font-bold text-white">{tier.users}</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-6">
-        <h3 className="mb-4 text-lg font-bold text-white">Règles d'acquisition</h3>
-        <div className="space-y-4 max-w-2xl">
-          <div className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/5">
-            <div>
-              <p className="font-semibold text-white">Achat de produits</p>
-              <p className="text-xs text-white/50">Points gagnés par euro dépensé</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-sm text-orange-400">1 f = 10 pts</span>
-              <button className="text-white/30 hover:text-white"><Edit3 className="h-4 w-4" /></button>
-            </div>
-          </div>
-          <div className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/5">
-            <div>
-              <p className="font-semibold text-white">Inscription</p>
-              <p className="text-xs text-white/50">Bonus de bienvenue</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-sm text-orange-400">+ 500 pts</span>
-              <button className="text-white/30 hover:text-white"><Edit3 className="h-4 w-4" /></button>
-            </div>
-          </div>
-          <div className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/5">
-            <div>
-              <p className="font-semibold text-white">Parrainage</p>
-              <p className="text-xs text-white/50">Points par filleul ayant commandé</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-sm text-orange-400">+ 1000 pts</span>
-              <button className="text-white/30 hover:text-white"><Edit3 className="h-4 w-4" /></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }

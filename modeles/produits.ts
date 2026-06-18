@@ -255,8 +255,8 @@ export interface ProductList {
   /** Nom de la catégorie — readOnly */
   readonly category_name: string;
 
-  /** URL de l'image principale — readOnly */
-  readonly primary_image: string;
+  /** URL ou objet de l'image principale — readOnly */
+  readonly primary_image: ProductImage | null;
 
   /**
    * Note moyenne du produit — readOnly

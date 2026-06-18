@@ -159,6 +159,12 @@ const CategoriesSection = dynamic(() => import("../categories/CategoriesSection"
 const OrdersSection = dynamic(() => import("../commandes/OrdersSection"), { ssr: false });
 const ClientsSection = dynamic(() => import("../clients/ClientsSection"), { ssr: false });
 const SettingsSection = dynamic(() => import("../parametres/SettingsSection"), { ssr: false });
+const LoyaltySection = dynamic(() => import("../fidelites/LoyaltySection"), { ssr: false });
+const WalletSection = dynamic(() => import("../wallets/WalletSection"), { ssr: false });
+const PromotionsSection = dynamic(() => import("../promotions/PromotionsSection"), { ssr: false });
+const BannersSection = dynamic(() => import("../bannieres_publicitaires/BannersSection"), { ssr: false });
+
+
 
 export default function AdminDashboard() {
   const searchParams = useSearchParams();
@@ -184,6 +190,14 @@ export default function AdminDashboard() {
         return <OrdersSection />;
       case "clients":
         return <ClientsSection />;
+      case "promotions":
+        return <PromotionsSection />;
+      case "fidelites":
+        return <LoyaltySection />;
+      case "wallets":
+        return <WalletSection />;
+      case "bannieres_publicitaires":
+        return <BannersSection />;
       case "settings":
         return <SettingsSection />;
       default:

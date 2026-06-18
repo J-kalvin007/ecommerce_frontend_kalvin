@@ -256,3 +256,33 @@ export const patchUser = async (
     return handleApiError(error);
   }
 };
+
+/**
+ * Récupère la liste de tous les utilisateurs (admin).
+ */
+export const getAllUsers = async (): Promise<Result<User[]>> => {
+  try {
+    const response = await apiPrivate.get<User[]>("/api/users/all-users/");
+    return { ok: true, data: response.data };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
+/**
+ * Active ou désactive un utilisateur via PATCH.
+ * @param id Identifiant de l'utilisateur
+ * @param isActive Nouvel état actif/inactif
+ */
+export const toggleUserActive = async (
+  id: number,
+  isActive: boolean
+): Promise<Result<User>> => {
+  try {
+    const response = await apiPrivate.patch<User>(`/api/users/${id}/`, { is_active: isActive });
+    return { ok: true, data: response.data };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
