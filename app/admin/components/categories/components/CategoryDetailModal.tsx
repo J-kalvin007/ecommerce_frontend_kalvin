@@ -157,9 +157,11 @@ import {
 } from "@/components/widgets_originaux/special/ui/Dialog";
 import type { Category } from "@/modeles/categories";
 
+import { mediaUrl } from "@/lib/mediaUrl";
+
 function SafeImage({ src, alt, ...props }: any) {
   const [error, setError] = useState(false);
-  const resolvedSrc = src ? (src.startsWith("http") ? src : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${src.startsWith("/") ? "" : "/"}${src}`) : null;
+  const resolvedSrc = src ? mediaUrl(src) : null;
 
   if (!resolvedSrc || error) {
     return <FolderTree className="h-1/2 w-1/2 text-primary opacity-50 m-auto" />;
@@ -279,7 +281,7 @@ export default function CategoryDetailModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] sm:max-w-5xl p-4 md:p-8 overflow-hidden border-none shadow-2xl rounded-2xl md:rounded-[2.5rem] bg-surface">
+      <DialogContent className="w-[95vw] sm:max-w-5xl p-4 md:p-8 overflow-hidden border-none shadow-2xl rounded-2xl md:rounded-[2.5rem] bg-white dark:bg-[#1e1e1e]">
         <DialogTitle className="sr-only">
           Détails de la catégorie {category.name}
         </DialogTitle>

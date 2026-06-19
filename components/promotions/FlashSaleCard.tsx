@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { formatCurrency } from "@/lib/utils";
+import { mediaUrl } from "@/lib/mediaUrl";
 import type { PublicFlashSale } from "@/lib/ecommerce-api";
 
 export function FlashSaleCard({ sale }: { sale: PublicFlashSale }) {
@@ -17,7 +18,7 @@ export function FlashSaleCard({ sale }: { sale: PublicFlashSale }) {
       <div className="relative aspect-[4/3] overflow-hidden bg-[#faf7f2]">
         {sale.product_image ? (
           <Image
-            src={sale.product_image}
+            src={mediaUrl(sale.product_image) || ''}
             alt={sale.product_name || "Produit en promotion"}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 280px"

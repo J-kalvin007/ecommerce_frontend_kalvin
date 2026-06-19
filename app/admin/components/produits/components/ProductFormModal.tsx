@@ -11,7 +11,7 @@ import { StepReview } from "./ProductFormSteps/StepReview";
 import type { ProductVariantAdmin } from "@/modeles/produits";
 import type { ProductFormErrors, ProductFormState, UploadedProductImage } from "../productsUtils";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Save, Sparkles, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, Sparkles, Star, Stars, X } from "lucide-react";
 
 const steps: Step[] = [
   { id: "general", label: "Général" },
@@ -187,19 +187,19 @@ export function ProductFormModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-[96vw] sm:max-w-3xl p-0 rounded-2xl md:rounded-[2rem] border border-border/30 shadow-2xl bg-surface overflow-hidden max-h-[95vh] flex flex-col">
+      <DialogContent className="w-[96vw] sm:max-w-3xl p-0 rounded-2xl md:rounded-[2rem] border border-border/30 shadow-2xl bg-white dark:bg-[#161616] overflow-hidden max-h-[95vh] flex flex-col">
         <DialogTitle className="sr-only">
           {isEditing ? "Modifier le produit" : "Nouveau produit"}
         </DialogTitle>
 
         {/* Header fixe */}
-        <div className="relative shrink-0 border-b border-border/50 bg-gradient-to-r from-primary/8 via-transparent to-transparent px-5 py-4 md:px-6 md:py-5">
+        <div className="relative shrink-0 border-b border-border/50 bg-gradient-to-r from-white via-transparent to-transparent px-5 py-4 md:px-6 md:py-5">
           {/* Déco */}
           <div className="absolute right-8 top-0 h-24 w-24 rounded-full bg-primary/5 blur-2xl pointer-events-none" />
           <div className="flex items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10">
-                <Sparkles className="h-4 w-4 text-primary" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white">
+                <Star className="h-4 w-4 text-primary" />
               </div>
               <div>
                 <h2 className="text-base font-bold text-foreground leading-tight">
@@ -210,12 +210,12 @@ export function ProductFormModal({
                 </p>
               </div>
             </div>
-            <button
+            {/* <button
               onClick={onClose}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-alt hover:text-foreground"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-foreground"
             >
               <X className="h-4 w-4" />
-            </button>
+            </button> */}
           </div>
           <StepIndicator
             steps={steps}
@@ -241,14 +241,14 @@ export function ProductFormModal({
         </div>
 
         {/* Footer fixe */}
-        <div className="shrink-0 flex items-center justify-between gap-3 border-t border-border/50 bg-surface-alt/30 px-5 py-4 md:px-6">
+        <div className="shrink-0 flex items-center justify-between gap-3 border-t border-border/50 bg-slate-50/50 dark:bg-slate-900/30 px-5 py-4 md:px-6">
           {/* Bouton précédent */}
           <motion.button
             onClick={prevStep}
             disabled={currentStep === 0}
             whileHover={currentStep > 0 ? { scale: 1.02 } : {}}
             whileTap={currentStep > 0 ? { scale: 0.97 } : {}}
-            className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-surface-alt disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center cursor-pointer gap-2 rounded-xl border border-border bg-white dark:bg-[#1e1e1e] px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="h-4 w-4" />
             Précédent
@@ -272,7 +272,7 @@ export function ProductFormModal({
               onClick={nextStep}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/25 transition-all hover:bg-primary/90"
+              className="flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/25 transition-all hover:bg-primary/90"
             >
               Suivant
               <ChevronRight className="h-4 w-4" />
@@ -283,7 +283,7 @@ export function ProductFormModal({
               disabled={isSaving}
               whileHover={!isSaving ? { scale: 1.02 } : {}}
               whileTap={!isSaving ? { scale: 0.97 } : {}}
-              className="flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/25 transition-all hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/25 transition-all hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />

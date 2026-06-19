@@ -683,12 +683,11 @@
 
 
 
-
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { mediaUrl } from "@/lib/mediaUrl";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
   LogOut,
@@ -1022,9 +1021,9 @@ export default function ProfileModal({
                       <div className="relative h-full w-full overflow-hidden rounded-full bg-white ring-4 ring-white/80">
                         {imagePreview ? (
                           <img
-                            src={imagePreview.replace(/^http:\/\//i, 'https://')}
-                            alt="Avatar"
-                            className="h-full w-full object-cover"
+                            src={mediaUrl(imagePreview) || ''}
+                            alt={profile.name}
+                            className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                           />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center text-3xl font-bold bg-neutral-100 text-black dark:bg-[#1e1e1e] dark:text-white">

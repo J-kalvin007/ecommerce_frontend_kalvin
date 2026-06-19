@@ -6,6 +6,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { mediaUrl } from "@/lib/mediaUrl";
 import type { ProductImage } from "@/modeles/produits";
 
 interface ProductImageCarouselProps {
@@ -20,11 +21,7 @@ export function ProductImageCarousel({ images, altText = "" }: ProductImageCarou
   if (!images.length) return null;
 
   const currentImageSrc = images[current]?.image;
-  const resolvedSrc = currentImageSrc 
-    ? (currentImageSrc.startsWith("http") 
-        ? currentImageSrc 
-        : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${currentImageSrc.startsWith("/") ? "" : "/"}${currentImageSrc}`) 
-    : null;
+  const resolvedSrc = mediaUrl(currentImageSrc);
 
   return (
     <div className="relative group">

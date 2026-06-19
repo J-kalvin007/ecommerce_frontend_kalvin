@@ -216,6 +216,7 @@ import { motion } from "framer-motion";
 import { ShoppingBag, Heart, Star, Eye } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
+import { mediaUrl } from "@/lib/mediaUrl";
 import type { EnrichedProduct } from "@/app/(storefront)/products/components/ProductsCatalogClient";
 
 type ProductCardProps = {
@@ -284,7 +285,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         <div className="relative aspect-square overflow-hidden bg-surface">
           {product.primary_image?.image ? (
             <Image
-              src={product.primary_image.image}
+              src={mediaUrl(product.primary_image.image) || ''}
               alt={product.name}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

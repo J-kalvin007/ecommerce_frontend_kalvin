@@ -526,6 +526,7 @@ import { useAuthStore } from "@/store/authStore";
 import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
 import { getToken } from "@/lib/axios";
 import ProfileModal from "@/components/layout/ProfileModal";
+import { mediaUrl } from "@/lib/mediaUrl";
 
 const LOGO_PATH = "/assets/images/LOGO.png";
 
@@ -608,7 +609,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
               onClick={onMenuClick}
               whileHover={{ scale: 1.06 }}
               whileTap={{ scale: 0.92 }}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-100 bg-white text-slate-500 shadow-sm transition-colors hover:border-primary/20 hover:text-primary lg:hidden"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-100 bg-white text-slate-500 shadow-sm transition-colors hover:border-primary/20 hover:text-primary lg:hidden"
               aria-label="Menu"
             >
               <Menu className="h-[18px] w-[18px]" />
@@ -645,7 +646,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
               onClick={toggleTheme}
               whileHover={{ scale: 1.06 }}
               whileTap={{ scale: 0.92 }}
-              className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-white text-slate-500 shadow-sm transition-colors hover:border-primary/20 hover:text-primary"
+              className="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-white text-slate-500 shadow-sm transition-colors hover:border-primary/20 hover:text-primary"
               aria-label="Changer de thème"
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -671,7 +672,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
               onClick={affichetoken}
               whileHover={{ scale: 1.06 }}
               whileTap={{ scale: 0.92 }}
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-slate-100 bg-white text-slate-500 shadow-sm transition-colors hover:border-primary/20 hover:text-primary"
+              className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-100 bg-white text-slate-500 shadow-sm transition-colors hover:border-primary/20 hover:text-primary"
             >
               <Bell className="h-[18px] w-[18px]" />
               <span className="absolute -right-1 -top-1 flex h-4 w-4">
@@ -689,12 +690,12 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                  className="flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-white py-1.5 pl-1.5 pr-3 shadow-sm transition-colors hover:border-primary/20"
+                  className="flex items-center gap-2. cursor-pointer rounded-2xl border border-slate-100 bg-white py-1.5 pl-1.5 pr-3 shadow-sm transition-colors hover:border-primary/20"
                 >
                   <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary to-highlight ring-2 ring-white shadow-sm">
                     {user?.profile_image ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={user.profile_image} alt="Avatar" className="h-full w-full object-cover" />
+                      <img src={mediaUrl(user.profile_image) || ''} alt="Avatar" className="h-full w-full object-cover" />
                     ) : (
                       <span className="text-xs font-bold text-white">{getInitials(user?.name || "U")}</span>
                     )}
@@ -730,7 +731,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
                       <div className="p-1.5">
                         <button
                           onClick={openProfileModal}
-                          className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                          className="flex w-full items-center cursor-pointer gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
                         >
                           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
                             <User className="h-3.5 w-3.5" />
@@ -739,7 +740,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
                         </button>
                         <button
                           onClick={handleLogout}
-                          className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 transition-colors hover:bg-red-50"
+                          className="flex w-full items-center cursor-pointer   gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 transition-colors hover:bg-red-50"
                         >
                           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-50 text-red-500">
                             <LogOut className="h-3.5 w-3.5" />
@@ -754,7 +755,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
             ) : (
               <Link
                 href="/auth/login"
-                className="rounded-xl bg-gradient-to-br from-primary to-highlight px-4 py-2 text-sm font-semibold text-white shadow-[0_4px_14px_-4px_rgba(15,23,42,0.35)] transition-transform hover:scale-[1.02]"
+                className="rounded-xl cursor-pointer bg-gradient-to-br from-primary to-highlight px-4 py-2 text-sm font-semibold text-white shadow-[0_4px_14px_-4px_rgba(15,23,42,0.35)] transition-transform hover:scale-[1.02]"
               >
                 Connexion
               </Link>

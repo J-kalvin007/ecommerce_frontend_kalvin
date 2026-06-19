@@ -638,20 +638,20 @@ export default function CategoriesSection() {
           <div className="flex rounded-lg border border-border bg-surface p-1">
             <button
               onClick={() => setViewMode("grid")}
-              className={cn("rounded-md p-1.5 transition-colors", viewMode === "grid" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground")}
+              className={cn("rounded-md p-1.5 cursor-pointer transition-colors", viewMode === "grid" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground")}
             >
               <LayoutGrid className="h-4 w-4" />
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={cn("rounded-md p-1.5 transition-colors", viewMode === "list" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground")}
+              className={cn("rounded-md p-1.5 cursor-pointer transition-colors", viewMode === "list" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground")}
             >
               <List className="h-4 w-4" />
             </button>
           </div>
           <button
             onClick={openCreateModal}
-            className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-primary/90"
+            className="flex items-center cursor-pointer gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" /> Créer
           </button>

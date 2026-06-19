@@ -20,6 +20,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
+import { mediaUrl } from "@/lib/mediaUrl";
 import AdminHeader from "./AdminHeader";
 import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
 
@@ -76,7 +77,7 @@ function NavButton({
       onClick={onClick}
       whileTap={{ scale: 0.97 }}
       className={cn(
-        "group relative flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-[13.5px] font-medium transition-colors duration-200",
+        "group relative flex w-full cursor-pointer items-center gap-3 rounded-2xl px-3 py-2.5 text-[13.5px] font-medium transition-colors duration-200",
         isActive ? "text-slate-900" : "text-slate-500 hover:text-slate-900"
       )}
     >
@@ -136,7 +137,7 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
     if (user?.profile_image) {
       return (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={user.profile_image} alt={adminDisplayName} className="h-full w-full object-cover" />
+        <img src={mediaUrl(user.profile_image) || ''} alt={adminDisplayName} className="h-full w-full object-cover" />
       );
     }
     return <span className="text-xs font-bold text-white">{adminInitial}</span>;
@@ -144,7 +145,7 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
 
   return (
     <>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-white dark:bg-[#121212]">
         <AdminHeader onMenuClick={toggleSidebar} />
 
         <div className="flex">
@@ -163,7 +164,7 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
               transition={{ type: "spring", stiffness: 300, damping: 22 }}
               whileHover={{ scale: 1.12 }}
               whileTap={{ scale: 0.92 }}
-              className="absolute -right-3 top-[72px] z-20 flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.18)] transition-colors hover:border-primary/30 hover:text-primary"
+              className="absolute -right-3 top-[72px] z-20 cursor-pointer flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.18)] transition-colors hover:border-primary/30 hover:text-primary"
               aria-label={collapsed ? "Déplier le menu" : "Réduire le menu"}
             >
               <ChevronLeft className="h-3.5 w-3.5" />
@@ -172,18 +173,26 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
             {/* Logo / marque */}
             <div className="relative flex h-[72px] items-center px-4">
               {!collapsed ? (
-                <Link href="/admin" className="group flex items-center gap-3 overflow-hidden">
+                <Link href="/admin" className="group flex items-center gap-3 cursor-pointer overflow-hidden">
                   <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-highlight p-[1.5px] shadow-[0_4px_14px_-4px_rgba(15,23,42,0.35)] transition-transform duration-300 group-hover:scale-105">
-                    <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-white">
+                    {/* <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-white">
                       <Image
-                        src={LOGO_PATH}
+                        // src={LOGO_PATH}
+                        src={mediaUrl(user.profile_image) || ''}
                         alt="Logo Atelier du Terroir"
                         width={22}
                         height={22}
                         className="h-[22px] w-[22px] object-contain"
                         priority
                       />
+                    </div> */}
+
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary to-highlight ring-2 ring-white shadow-sm">
+                      {getAvatar()}
                     </div>
+
+
+
                   </div>
                   <div className="flex min-w-0 flex-col">
                     <span className="truncate text-[13.5px] font-bold leading-none tracking-tight text-slate-900">
@@ -197,7 +206,7 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
               ) : (
                 <Link
                   href="/admin"
-                  className="group mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-highlight p-[1.5px] shadow-[0_4px_14px_-4px_rgba(15,23,42,0.35)] transition-transform duration-300 group-hover:scale-105"
+                  className="group mx-auto cursor-pointer flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-highlight p-[1.5px] shadow-[0_4px_14px_-4px_rgba(15,23,42,0.35)] transition-transform duration-300 group-hover:scale-105"
                 >
                   <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-white">
                     <Image src={LOGO_PATH} alt="Logo" width={20} height={20} className="h-5 w-5 object-contain" />
@@ -234,7 +243,7 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleLogoutClick}
-                  className="group flex w-full items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-2.5 shadow-sm transition-colors duration-200 hover:border-red-100 hover:bg-red-50/50"
+                  className="group flex w-full cursor-pointer items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-2.5 shadow-sm transition-colors duration-200 hover:border-red-100 hover:bg-red-50/50"
                 >
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary to-highlight ring-2 ring-white shadow-sm">
                     {getAvatar()}

@@ -52,7 +52,7 @@ function StatusDropdown({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -6, scale: 0.96 }}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      className="absolute right-0 top-full z-40 mt-2 w-56 overflow-hidden rounded-2xl border border-border/60 bg-surface-elevated shadow-2xl shadow-black/20 backdrop-blur-xl"
+      className="absolute right-0 top-full z-40 mt-2 w-56 overflow-hidden rounded-2xl border border-border/60 bg-white-elevated shadow-2xl shadow-black/20 backdrop-blur-xl"
     >
       {/* Header */}
       <div className="border-b border-border/40 px-4 py-3">
@@ -72,12 +72,12 @@ function StatusDropdown({
                 "group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold transition-all",
                 isCurrent
                   ? "cursor-not-allowed opacity-40"
-                  : "hover:bg-surface-alt"
+                  : "hover:bg-white-alt"
               )}
             >
               <span className={cn(
                 "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[10px]",
-                isCurrent ? `${cfg.bg} ${cfg.border}` : "border-border bg-surface group-hover:border-primary/30"
+                isCurrent ? `${cfg.bg} ${cfg.border}` : "border-border bg-white group-hover:border-primary/30"
               )}>
                 <span className={cn("h-2 w-2 rounded-full", isCurrent ? cfg.color.replace("text-", "bg-") : "bg-muted-foreground/30 group-hover:bg-primary/50")} />
               </span>
@@ -109,7 +109,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ type: "spring", stiffness: 320, damping: 28 }}
-        className="group relative flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-surface-elevated shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20"
+        className="group relative flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-white-elevated shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20"
       >
         {/* Top accent bar */}
         <div className={cn("absolute inset-x-0 top-0 h-px", cfg.bg.replace("/10", ""))} />
@@ -140,7 +140,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
           </div>
           {/* Reference tag — top-right */}
           <div className="absolute right-3 top-3">
-            <span className="rounded-xl border border-border/50 bg-surface-elevated/80 px-2 py-1 font-mono text-[10px] font-bold text-foreground/70 backdrop-blur-sm">
+            <span className="rounded-xl border border-border/50 bg-white-elevated/80 px-2 py-1 font-mono text-[10px] font-bold text-foreground/70 backdrop-blur-sm">
               {order.reference}
             </span>
           </div>
@@ -153,7 +153,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
             <span className="flex items-center gap-1.5">
               <Calendar className="h-3 w-3" /> {date}
             </span>
-            <span className="rounded-lg border border-border/50 bg-surface px-2 py-0.5 font-mono text-[10px] font-bold">
+            <span className="rounded-lg border border-border/50 bg-white px-2 py-0.5 font-mono text-[10px] font-bold">
               {itemCount} art.
             </span>
           </div>
@@ -188,7 +188,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
                   "flex items-center gap-1.5 rounded-xl border px-3 py-2 text-[11px] font-bold transition-all",
                   showStatus
                     ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-surface text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                    : "border-border bg-white text-muted-foreground hover:border-primary/40 hover:text-foreground"
                 )}
               >
                 <SlidersHorizontal className="h-3 w-3" />
@@ -232,7 +232,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -6 }}
       transition={{ type: "spring", stiffness: 350, damping: 32 }}
-      className="group relative overflow-hidden rounded-2xl border border-border/60 bg-surface-elevated shadow-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/15"
+      className="group relative overflow-hidden rounded-2xl border border-border/60 bg-white-elevated shadow-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/15"
     >
       {/* Left accent stripe */}
       <div className={cn("absolute inset-y-0 left-0 w-0.5 rounded-r-full transition-all duration-300 group-hover:w-1", cfg.bg.replace("/10", ""))} />
@@ -309,7 +309,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
                 "flex h-9 items-center gap-1.5 rounded-xl border px-3 text-[11px] font-bold transition-all",
                 showStatus
                   ? "border-primary bg-primary/10 text-primary"
-                  : "border-border bg-surface text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                  : "border-border bg-white text-muted-foreground hover:border-primary/40 hover:text-foreground"
               )}
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />

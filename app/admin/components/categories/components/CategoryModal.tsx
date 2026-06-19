@@ -229,7 +229,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/widgets_originaux/special/ui/Dialog";
+} from "@/components/special/ui/Dialog";
+import { mediaUrl } from "@/lib/mediaUrl";
 import type { Category } from "@/modeles/categories";
 
 interface CategoryModalProps {
@@ -320,7 +321,7 @@ export default function CategoryModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-xl p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-xl p-0 overflow-hidden bg-white dark:bg-[#1e1e1e]">
         <div className="relative flex flex-col max-h-[90vh]">
           <DialogHeader className="p-6 pb-0">
             <DialogTitle className="text-xl font-bold">
@@ -338,9 +339,9 @@ export default function CategoryModal({
           <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-5">
             <div>
               <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Image</label>
-              <label className="relative flex h-32 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-border bg-surface hover:border-primary/40 transition-colors">
+              <label className="relative flex h-32 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-border hover:border-primary/40 transition-colors">
                 {imagePreview ? (
-                  <Image src={imagePreview} alt="Preview" fill className="object-cover" />
+                  <Image src={mediaUrl(imagePreview) || ''} alt="Preview" fill className="object-cover" />
                 ) : (
                   <div className="text-center">
                     <Upload className="mx-auto h-6 w-6 text-muted" />
@@ -357,7 +358,7 @@ export default function CategoryModal({
                 <select
                   value={form.parent}
                   onChange={(e) => handleChange("parent", e.target.value)}
-                  className="h-10 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  className="h-10 w-full rounded-xl border border-border px-4 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="">Aucune (catégorie principale)</option>
                   {availableParents.map((cat) => (
@@ -374,7 +375,7 @@ export default function CategoryModal({
               <input
                 value={form.name}
                 onChange={(e) => handleChange("name", e.target.value)}
-                className="h-10 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="h-10 w-full rounded-xl border border-border px-4 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 required
               />
             </div>
@@ -384,7 +385,7 @@ export default function CategoryModal({
               <input
                 value={form.slug}
                 onChange={(e) => handleChange("slug", e.target.value)}
-                className="h-10 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="h-10 w-full rounded-xl border border-border px-4 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 required
               />
             </div>
@@ -395,7 +396,7 @@ export default function CategoryModal({
                 rows={4}
                 value={form.description}
                 onChange={(e) => handleChange("description", e.target.value)}
-                className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-xl border border-border px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
@@ -403,14 +404,14 @@ export default function CategoryModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-xl border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-surface-alt"
+                className="flex items-center cursor-pointer gap-2 rounded-xl border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-surface-alt"
               >
                 Annuler
               </button>
               <button
                 type="submit"
                 disabled={isSaving || !form.name.trim() || !form.slug.trim()}
-                className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2 text-sm font-semibold text-white shadow-md transition-colors hover:bg-primary/90 disabled:opacity-60"
+                className="flex items-center cursor-pointer gap-2 rounded-xl bg-primary px-5 py-2 text-sm font-semibold text-white shadow-md transition-colors hover:bg-primary/90 disabled:opacity-60"
               >
                 {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 {isEditing ? "Enregistrer" : "Créer"}

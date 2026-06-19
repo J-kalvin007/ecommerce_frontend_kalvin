@@ -162,7 +162,7 @@
 //       onHoverStart={() => setHovered(true)}
 //       onHoverEnd={() => setHovered(false)}
 //       onClick={handleClick}
-//       className="group relative flex cursor-pointer items-center gap-4 rounded-2xl border border-border/40 bg-surface overflow-hidden p-3 pr-4 transition-all duration-300"
+//       className="group relative flex cursor-pointer items-center gap-4 rounded-2xl border border-border/40  overflow-hidden p-3 pr-4 transition-all duration-300"
 //       style={{
 //         boxShadow: hovered
 //           ? "0 12px 32px -8px rgba(0,0,0,0.14)"
@@ -543,13 +543,14 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Category } from "@/modeles/categories";
+import { mediaUrl } from "@/lib/mediaUrl";
 
 /* ─── Composant image sécurisé (fallback si erreur) ─── */
 function SafeImage({ src, alt, className }: { src?: string | null; alt: string; className?: string }) {
   const [error, setError] = useState(false);
-  const secureSrc = src?.replace(/^http:\/\//i, 'https://');
+  const resolvedSrc = mediaUrl(src);
 
-  if (!secureSrc || error) {
+  if (!resolvedSrc || error) {
     return (
       <div className={cn("flex items-center justify-center bg-slate-100", className)}>
         <FolderTree className="h-1/2 w-1/2 text-slate-300" />
@@ -558,7 +559,7 @@ function SafeImage({ src, alt, className }: { src?: string | null; alt: string; 
   }
   return (
     <img
-      src={secureSrc}
+      src={resolvedSrc}
       alt={alt}
       className={cn("object-cover", className)}
       onError={() => setError(true)}
@@ -784,7 +785,7 @@ function ActionBtn({ icon, title, onClick }: { icon: React.ReactNode; title: str
       whileTap={{ scale: 0.9 }}
       onClick={onClick}
       title={title}
-      className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 shadow-sm transition-colors hover:border-slate-300 hover:text-slate-600"
+      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 shadow-sm transition-colors hover:border-slate-300 hover:text-slate-600"
     >
       {icon}
     </motion.button>

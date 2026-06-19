@@ -7,6 +7,7 @@ import { ProductImageCarousel } from "./ProductImageCarousel";
 import { VariantDetailModal } from "./VariantDetailModal";
 import { formatCurrency } from "@/lib/utils";
 import type { ProductDetail, ProductVariant } from "@/modeles/produits";
+import { mediaUrl } from "@/lib/mediaUrl";
 import { Star, Package, Tag, Layers, Calendar, Globe, Box, Weight, TrendingUp, Heart, Info, Clock, ExternalLink, Crown, ChevronRight, Image as ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -26,7 +27,7 @@ interface ProductDetailModalProps {
 
 function InfoBadge({ label, value, icon: Icon }: { label: string; value: React.ReactNode; icon: React.ElementType }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-surface-alt/60 px-4 py-3 hover:bg-surface-alt transition-colors">
+    <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-white dark:bg-[#1e1e1e] px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
         <Icon className="h-4 w-4" />
       </div>
@@ -82,7 +83,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
   return (
     <>
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className="w-[95vw] sm:max-w-5xl p-4 md:p-8 overflow-hidden border-none shadow-2xl rounded-2xl md:rounded-[2.5rem] bg-surface">
+        <DialogContent className="w-[95vw] sm:max-w-5xl p-4 md:p-8 overflow-hidden border-none shadow-2xl rounded-2xl md:rounded-[2.5rem] bg-white dark:bg-[#161616]">
           <DialogTitle className="sr-only">Détails du produit {product.name}</DialogTitle>
 
           <div className="relative flex flex-col max-h-[85vh] overflow-y-auto custom-scrollbar gap-6 md:gap-8 pr-1 md:pr-2">
@@ -90,7 +91,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
             <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-stretch shrink-0">
               {/* Gauche : Image / Carousel & Galerie */}
               <div className="w-full md:w-[45%] shrink-0 flex flex-col gap-5">
-                <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden bg-gradient-to-br from-surface-alt/80 to-surface-alt/30 border border-border/40 shadow-[inset_0_2px_20px_rgba(0,0,0,0.03)] flex flex-col">
+                <div className="relative rounded-2xl md:rounded-[2rem] overflow-hidden bg-slate-50 dark:bg-slate-900 border border-border/40 shadow-[inset_0_2px_20px_rgba(0,0,0,0.03)] flex flex-col">
                   <div className="flex-1 relative min-h-[300px] md:min-h-[400px]">
                     {/* Assuming ProductImageCarousel handles filling its container. If not, we wrap it. */}
                     <ProductImageCarousel images={product.images} altText={product.name} />
@@ -117,11 +118,13 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
                       Galerie d'images
                     </h4>
                     <div className="flex flex-wrap gap-3">
-                      {product.images.map((img) => (
-                        <div key={img.id} className="relative group rounded-xl overflow-hidden border border-border/50 shadow-sm bg-surface-alt">
+                      {product.images.map((img) => {
+                          const imgSrc = mediaUrl(img.image);
+                          return (
+                        <div key={img.id} className="relative group rounded-xl overflow-hidden border border-border/50 shadow-sm bg-slate-50 dark:bg-slate-800">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={img.image.startsWith("http") ? img.image : `${process.env.NEXT_PUBLIC_API_URL || ""}${img.image}`}
+                            src={imgSrc || ""}
                             alt={img.alt_text || "Image produit"}
                             className="h-16 w-16 object-cover group-hover:scale-110 transition-transform duration-500"
                           />
@@ -131,7 +134,8 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
                             </span>
                           )}
                         </div>
-                      ))}
+                          );
+                        })}
                     </div>
                   </div>
                 )}
@@ -148,7 +152,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
                   </h2>
                   <div className="flex flex-wrap items-center gap-3">
                     {/* Étoiles */}
-                    <div className="flex items-center gap-2 bg-surface-alt px-3 py-1.5 rounded-full border border-border/50">
+                    <div className="flex items-center gap-2 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-full border border-border/50">
                       <div className="flex items-center gap-0.5">
                         {[...Array(5)].map((_, i) => (
                           <Star key={i} className={cn("h-3.5 w-3.5", i < fullStars ? "fill-amber-400 text-amber-400" : "text-border")} />
@@ -159,7 +163,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
                       <span className="text-[10px] text-muted-foreground">({product.count_ratings} avis)</span>
                     </div>
                     {/* Favoris */}
-                    <div className="flex items-center gap-1.5 bg-surface-alt px-3 py-1.5 rounded-full border border-border/50">
+                    <div className="flex items-center gap-1.5 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-full border border-border/50">
                       <Heart className="h-3.5 w-3.5 text-rose-400 fill-rose-400" />
                       <span className="text-xs font-bold text-muted-foreground">{product.count_favorites}</span>
                     </div>
@@ -201,7 +205,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
                     <Info className="h-4 w-4" />
                     Description détaillée
                   </h4>
-                  <div className="rounded-2xl bg-surface-elevated p-6 border border-border/50 shadow-sm">
+                  <div className="rounded-2xl bg-white dark:bg-slate-900 p-6 border border-border/50 shadow-sm">
                     <p className="text-[13px] leading-relaxed text-muted-foreground whitespace-pre-wrap">
                       {product.description}
                     </p>
@@ -232,13 +236,13 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
                         transition={{ delay: idx * 0.05 }}
                         whileHover={{ y: -4, boxShadow: "0 12px 30px -8px rgba(0,0,0,0.15)" }}
                         whileTap={{ scale: 0.98 }}
-                        className="group relative flex flex-col text-left overflow-hidden rounded-[20px] border border-border/50 bg-surface shadow-sm hover:border-primary/40 transition-all duration-300"
+                        className="group relative flex flex-col text-left overflow-hidden rounded-[20px] border border-border/50 bg-white dark:bg-[#1e1e1e] shadow-sm hover:border-primary/40 transition-all duration-300"
                       >
                         {/* En-tête variante */}
                         <div className="bg-gradient-to-br from-surface-alt to-surface-alt/40 p-5 border-b border-border/40 flex items-start justify-between gap-4">
                           <div className="min-w-0">
                             <h5 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1">{v.name}</h5>
-                            <p className="text-[11px] font-mono text-muted-foreground mt-1.5 truncate bg-surface px-2 py-0.5 rounded-md border border-border/50 inline-block shadow-sm">{v.sku || "Sans SKU"}</p>
+                            <p className="text-[11px] font-mono text-muted-foreground mt-1.5 truncate bg-white dark:bg-[#1e1e1e] px-2 py-0.5 rounded-md border border-border/50 inline-block shadow-sm">{v.sku || "Sans SKU"}</p>
                           </div>
                           <div className={cn("h-3 w-3 rounded-full shrink-0 shadow-sm mt-1 border border-white/20", v.is_active ? "bg-emerald-500" : "bg-gray-300")} />
                         </div>
@@ -587,13 +591,13 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
 //                         transition={{ delay: idx * 0.05 }}
 //                         whileHover={{ y: -4, boxShadow: "0 12px 30px -8px rgba(0,0,0,0.15)" }}
 //                         whileTap={{ scale: 0.98 }}
-//                         className="group relative flex flex-col text-left overflow-hidden rounded-[20px] border border-border/50 bg-surface shadow-sm hover:border-primary/40 transition-all duration-300"
+//                         className="group relative flex flex-col text-left overflow-hidden rounded-[20px] border border-border/50 bg-white shadow-sm hover:border-primary/40 transition-all duration-300"
 //                       >
 //                         {/* En-tête variante */}
-//                         <div className="bg-gradient-to-br from-surface-alt to-surface-alt/40 p-5 border-b border-border/40 flex items-start justify-between gap-4">
+//                          <div className="bg-slate-50 dark:bg-slate-800/60 p-5 border-b border-border/40 flex items-start justify-between gap-4">
 //                           <div className="min-w-0">
 //                             <h5 className="font-bold text-base text-foreground group-hover:text-primary transition-colors line-clamp-1">{v.name}</h5>
-//                             <p className="text-[11px] font-mono text-muted-foreground mt-1.5 truncate bg-surface px-2 py-0.5 rounded-md border border-border/50 inline-block shadow-sm">{v.sku || "Sans SKU"}</p>
+//                             <p className="text-[11px] font-mono text-muted-foreground mt-1.5 truncate bg-white px-2 py-0.5 rounded-md border border-border/50 inline-block shadow-sm">{v.sku || "Sans SKU"}</p>
 //                           </div>
 //                           <div className={cn("h-3 w-3 rounded-full shrink-0 shadow-sm mt-1 border border-white/20", v.is_active ? "bg-emerald-500" : "bg-gray-300")} />
 //                         </div>
@@ -662,7 +666,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
 //                         <Globe className="h-4 w-4" />
 //                         Métadonnées SEO
 //                       </h4>
-//                       <div className="rounded-2xl border border-border/50 bg-surface-alt/50 p-5 space-y-3 shadow-sm">
+//                       <div className="rounded-2xl border border-border/50 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-sm">
 //                         {product.seo_title && (
 //                           <div>
 //                             <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Titre SEO</span>

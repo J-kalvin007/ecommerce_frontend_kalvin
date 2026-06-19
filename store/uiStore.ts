@@ -50,7 +50,7 @@ export const useUIStore = create<UIState>()((set) => ({
   isUserProfileOpen: false,
   isMobileMenuOpen: false,
   isOnline: true,
-  theme: "system",
+  theme: "light",
 
   toggleSidebar: (open) =>
     set((state) => ({

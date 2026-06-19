@@ -292,6 +292,7 @@ import { useRef, useEffect, useState, useId } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, Zap, Calendar, TrendingUp, Percent } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
+import { mediaUrl } from "@/lib/mediaUrl";
 import { getTierConfig } from "@/modeles/fidelites";
 import type { LoyaltyProfile, Tier } from "@/modeles/fidelites";
 import { LoyaltyTierBadge } from "./LoyaltyTierBadge";
@@ -391,7 +392,7 @@ function MemberAvatar({
       >
         {profile.user.profile_image ? (
           <img
-            src={profile.user.profile_image}
+            src={mediaUrl(profile.user.profile_image) || ''}
             alt={profile.user.name || "Avatar"}
             className="h-full w-full object-cover"
           />

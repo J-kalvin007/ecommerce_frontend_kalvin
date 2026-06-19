@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Mail, Phone, Shield, ShieldCheck, ShieldBan, CheckCircle2, XCircle, User as UserIcon, Calendar, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { User } from "@/modeles/user";
+import { mediaUrl } from "@/lib/mediaUrl";
 
 interface ClientDetailModalProps {
   open: boolean;
@@ -24,11 +25,7 @@ export function ClientDetailModal({ open, onClose, user }: ClientDetailModalProp
   const role = ROLE_LABELS[user.role] || ROLE_LABELS.customer;
   const RoleIcon = role.icon;
 
-  const resolvedImage = user.profile_image
-    ? (user.profile_image.startsWith("http")
-      ? user.profile_image
-      : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${user.profile_image.startsWith("/") ? "" : "/"}${user.profile_image}`)
-    : null;
+  const resolvedImage = mediaUrl(user.profile_image);
 
   return (
     <AnimatePresence>
@@ -46,7 +43,7 @@ export function ClientDetailModal({ open, onClose, user }: ClientDetailModalProp
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: 10 }}
             transition={{ type: "spring", stiffness: 380, damping: 32 }}
-            className="relative z-10 w-full max-w-lg mx-4 rounded-3xl border border-border/50 bg-surface shadow-2xl overflow-hidden"
+            className="relative z-10 w-full max-w-lg mx-4 rounded-3xl border border-border/50 bg-white shadow-2xl overflow-hidden"
           >
             {/* Top gradient accent */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary/80 to-amber-500" />
@@ -54,7 +51,7 @@ export function ClientDetailModal({ open, onClose, user }: ClientDetailModalProp
             {/* Close */}
             <button
               onClick={onClose}
-              className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-surface-alt/80 text-muted-foreground transition-colors hover:bg-surface-alt hover:text-foreground backdrop-blur-sm"
+              className="absolute right-4 cursor-pointer top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white-alt/80 text-muted-foreground transition-colors hover:bg-white-alt hover:text-foreground backdrop-blur-sm"
             >
               <X className="h-4 w-4" />
             </button>
@@ -99,7 +96,7 @@ export function ClientDetailModal({ open, onClose, user }: ClientDetailModalProp
             <div className="px-8 pb-8 space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 {/* Phone */}
-                <div className="rounded-2xl border border-border/50 bg-surface-alt/30 p-4">
+                <div className="rounded-2xl border border-border/50 bg-white-alt/30 p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Phone className="h-4 w-4 text-muted-foreground" />
                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Téléphone</span>
@@ -108,7 +105,7 @@ export function ClientDetailModal({ open, onClose, user }: ClientDetailModalProp
                 </div>
 
                 {/* ID */}
-                <div className="rounded-2xl border border-border/50 bg-surface-alt/30 p-4">
+                <div className="rounded-2xl border border-border/50 bg-white-alt/30 p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Shield className="h-4 w-4 text-muted-foreground" />
                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">ID Utilisateur</span>
@@ -117,7 +114,7 @@ export function ClientDetailModal({ open, onClose, user }: ClientDetailModalProp
                 </div>
 
                 {/* Statut Actif */}
-                <div className="rounded-2xl border border-border/50 bg-surface-alt/30 p-4">
+                <div className="rounded-2xl border border-border/50 bg-white-alt/30 p-4">
                   <div className="flex items-center gap-2 mb-2">
                     {user.is_active
                       ? <ShieldCheck className="h-4 w-4 text-emerald-500" />
@@ -131,7 +128,7 @@ export function ClientDetailModal({ open, onClose, user }: ClientDetailModalProp
                 </div>
 
                 {/* Vérification email */}
-                <div className="rounded-2xl border border-border/50 bg-surface-alt/30 p-4">
+                <div className="rounded-2xl border border-border/50 bg-white-alt/30 p-4">
                   <div className="flex items-center gap-2 mb-2">
                     {user.is_verified
                       ? <CheckCircle2 className="h-4 w-4 text-emerald-500" />
@@ -149,7 +146,7 @@ export function ClientDetailModal({ open, onClose, user }: ClientDetailModalProp
               <div className="flex justify-end pt-2">
                 <button
                   onClick={onClose}
-                  className="rounded-xl bg-surface-alt border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-surface-alt/80"
+                  className="rounded-xl cursor-pointer bg-white-alt border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-white-alt/80"
                 >
                   Fermer
                 </button>

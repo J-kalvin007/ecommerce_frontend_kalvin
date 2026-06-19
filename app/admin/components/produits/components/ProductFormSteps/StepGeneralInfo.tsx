@@ -25,7 +25,7 @@ const PRODUCT_TYPES = [
 function Field({ label, error, children, required }: { label: string; error?: string; children: React.ReactNode; required?: boolean }) {
   return (
     <div className="space-y-1.5">
-      <label className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+      <label className="flex items-center gap-1 text-xs font-semibold uppercase text-muted-foreground">
         {label} {required && <span className="text-primary">*</span>}
       </label>
       {children}
@@ -44,7 +44,7 @@ function Input({ error, ...props }: React.InputHTMLAttributes<HTMLInputElement> 
     <input
       {...props}
       className={cn(
-        "h-11 w-full rounded-xl border bg-surface px-4 text-sm text-foreground outline-none transition-all duration-200",
+        "h-11 w-full rounded-xl border px-4 text-sm text-foreground outline-none transition-all duration-200",
         "focus:border-primary focus:ring-2 focus:ring-primary/15 placeholder:text-muted-foreground/50",
         error ? "border-red-400 focus:border-red-400 focus:ring-red-400/15" : "border-border hover:border-border/80"
       )}
@@ -66,12 +66,12 @@ export function StepGeneralInfo({
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value;
     onChange("name", newName);
-    
+
     // Auto-generate slug if empty or previously matching
     if (!form.slug || form.slug === slugify(form.name)) {
       onChange("slug", slugify(newName));
     }
-    
+
     // Auto-generate SKU if empty or previously auto-generated
     if (!form.sku || (form.name && form.sku.startsWith(form.name.substring(0, 3).toUpperCase().replace(/[^A-Z0-9]/g, "X")))) {
       onChange("sku", generateSKU(newName));
@@ -100,7 +100,7 @@ export function StepGeneralInfo({
             value={selectedCategoryId}
             onChange={(e) => onCategoryChange(e.target.value)}
             className={cn(
-              "h-11 w-full rounded-xl border bg-surface px-4 text-sm text-foreground outline-none transition-all duration-200",
+              "h-11 w-full rounded-xl border  px-4 text-sm text-foreground outline-none transition-all duration-200",
               "focus:border-primary focus:ring-2 focus:ring-primary/15",
               errors.category ? "border-red-400" : "border-border"
             )}
@@ -148,7 +148,7 @@ export function StepGeneralInfo({
             onChange={(e) => onChange("description", e.target.value)}
             placeholder="Description détaillée du produit..."
             className={cn(
-              "w-full rounded-xl border bg-surface py-3 pr-4 text-sm text-foreground outline-none transition-all duration-200 resize-none",
+              "w-full rounded-xl border  py-3 pr-4 text-sm text-foreground outline-none transition-all duration-200 resize-none",
               "focus:border-primary focus:ring-2 focus:ring-primary/15 placeholder:text-muted-foreground/50",
               errors.description ? "border-red-400" : "border-border",
             )}
@@ -212,10 +212,10 @@ export function StepGeneralInfo({
               type="button"
               onClick={() => onChange("product_type", type.value)}
               className={cn(
-                "flex flex-col items-start gap-1 rounded-xl border p-3 text-left transition-all duration-200",
+                "flex flex-col cursor-pointer items-start gap-1 rounded-xl border p-3 text-left transition-all duration-200",
                 form.product_type === type.value
                   ? "border-primary bg-primary/8 ring-2 ring-primary/20"
-                  : "border-border bg-surface hover:border-primary/40 hover:bg-surface-alt"
+                  : "border-border  hover:border-primary/40 hover:-alt"
               )}
             >
               <span className={cn("text-sm font-semibold", form.product_type === type.value ? "text-primary" : "text-foreground")}>
@@ -228,11 +228,11 @@ export function StepGeneralInfo({
       </Field>
 
       {/* Champs avancés */}
-      <div className="overflow-hidden rounded-xl border border-border/60 bg-surface-alt/50">
+      <div className="overflow-hidden rounded-xl border border-border/60 -alt/50">
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-surface-alt/80"
+          className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:-alt/80"
         >
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-primary" />
@@ -257,7 +257,7 @@ export function StepGeneralInfo({
               <div className="flex items-end">
                 <label className={cn(
                   "flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-all duration-200",
-                  form.is_top ? "border-primary bg-primary/8" : "border-border bg-surface hover:border-primary/30"
+                  form.is_top ? "border-primary bg-primary/8" : "border-border  hover:border-primary/30"
                 )}>
                   <div className={cn(
                     "relative h-5 w-5 rounded flex items-center justify-center border-2 transition-all",
@@ -284,7 +284,7 @@ export function StepGeneralInfo({
                 value={form.seo_description}
                 onChange={(e) => onChange("seo_description", e.target.value)}
                 placeholder="Description courte pour les moteurs de recherche..."
-                className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm outline-none transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 resize-none placeholder:text-muted-foreground/50"
+                className="w-full rounded-xl border border-border  px-4 py-3 text-sm outline-none transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/15 resize-none placeholder:text-muted-foreground/50"
               />
             </Field>
           </div>

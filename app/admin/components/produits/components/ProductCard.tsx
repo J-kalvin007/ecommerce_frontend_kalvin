@@ -27,7 +27,7 @@
 //   const variantsCount = product.variants?.length || 0;
 //   const isTop = product.is_top;
 //   const stock = typeof product.stock === 'number' ? product.stock : parseInt(product.stock as any) || 0;
-  
+
 //   let stockLabel = "";
 //   let stockDot = "";
 //   let stockText = "";
@@ -69,7 +69,7 @@
 //       {/* Image Container - Superbe container avec padding */}
 //       <div className="relative p-2.5 shrink-0">
 //         <div className="relative w-full h-[170px] rounded-xl overflow-hidden bg-gradient-to-br from-surface-alt/80 to-surface-alt/30 border border-border/40 shadow-[inset_0_2px_15px_rgba(0,0,0,0.03)] group-hover:shadow-[inset_0_2px_20px_rgba(0,0,0,0.05)] transition-all duration-500 flex items-center justify-center">
-          
+
 //           {resolvedPrimaryImage && !imgError ? (
 //             <div className="absolute inset-0">
 //               <Image
@@ -208,6 +208,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Edit3, Trash2, Layers, Crown, Eye, TrendingUp } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
+import { mediaUrl } from "@/lib/mediaUrl";
 import type { ProductDetail } from "@/modeles/produits";
 
 const PRODUCT_TYPE_FR: Record<string, string> = {
@@ -233,11 +234,7 @@ export function ProductCard({ product, onClick, onEdit, onDelete, onAddVariant }
   const [imgError, setImgError] = useState(false);
   const [hovered, setHovered] = useState(false);
 
-  const resolvedPrimaryImage = primaryImage
-    ? primaryImage.startsWith("http")
-      ? primaryImage
-      : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${primaryImage.startsWith("/") ? "" : "/"}${primaryImage}`
-    : null;
+  const resolvedPrimaryImage = mediaUrl(primaryImage);
 
   // Stock config
   type StockConfig = { label: string; color: string; bg: string; glow: string; barWidth: string; pulse: boolean };
@@ -245,10 +242,10 @@ export function ProductCard({ product, onClick, onEdit, onDelete, onAddVariant }
     stock === 0
       ? { label: "Épuisé", color: "text-red-500", bg: "bg-red-500/10 border-red-500/20", glow: "bg-red-500", barWidth: "w-0", pulse: false }
       : stock <= 5
-      ? { label: "Critique", color: "text-rose-500", bg: "bg-rose-500/10 border-rose-500/20", glow: "bg-rose-500", barWidth: "w-[8%]", pulse: true }
-      : stock <= 10
-      ? { label: "Stock bas", color: "text-amber-500", bg: "bg-amber-500/10 border-amber-500/20", glow: "bg-amber-500", barWidth: "w-[25%]", pulse: false }
-      : { label: "En stock", color: "text-emerald-500", bg: "bg-emerald-500/10 border-emerald-500/20", glow: "bg-emerald-500", barWidth: "w-[85%]", pulse: false };
+        ? { label: "Critique", color: "text-rose-500", bg: "bg-rose-500/10 border-rose-500/20", glow: "bg-rose-500", barWidth: "w-[8%]", pulse: true }
+        : stock <= 10
+          ? { label: "Stock bas", color: "text-amber-500", bg: "bg-amber-500/10 border-amber-500/20", glow: "bg-amber-500", barWidth: "w-[25%]", pulse: false }
+          : { label: "En stock", color: "text-emerald-500", bg: "bg-emerald-500/10 border-emerald-500/20", glow: "bg-emerald-500", barWidth: "w-[85%]", pulse: false };
 
   return (
     <motion.div
@@ -273,7 +270,7 @@ export function ProductCard({ product, onClick, onEdit, onDelete, onAddVariant }
       <motion.div
         animate={{ y: hovered ? -6 : 0 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="relative flex flex-row rounded-[20px] border border-border/40 bg-surface overflow-hidden min-h-[190px] shadow-[0_4px_24px_-8px_rgba(0,0,0,0.08)]"
+        className="relative flex flex-row rounded-[20px] border border-border/40 bg-white dark:bg-[#1e1e1e] overflow-hidden min-h-[190px] shadow-[0_4px_24px_-8px_rgba(0,0,0,0.08)]"
         style={{
           boxShadow: hovered
             ? "0 24px 48px -12px rgba(0,0,0,0.18), 0 8px 16px -8px rgba(0,0,0,0.1)"
@@ -284,7 +281,7 @@ export function ProductCard({ product, onClick, onEdit, onDelete, onAddVariant }
         {/* ── LEFT: Image panel ── */}
         <div className="relative w-[38%] shrink-0 overflow-hidden">
           {/* Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-surface-alt to-surface-alt/60" />
+          <div className="absolute inset-0 bg-slate-50 dark:bg-slate-800" />
 
           {/* Image */}
           {resolvedPrimaryImage && !imgError ? (
@@ -325,7 +322,7 @@ export function ProductCard({ product, onClick, onEdit, onDelete, onAddVariant }
 
           {/* Category badge — bottom left */}
           <div className="absolute bottom-3 left-3 right-3">
-            <span className="inline-flex items-center rounded-lg bg-black/50 backdrop-blur-md px-2.5 py-1 text-[9px] font-black text-white/90 uppercase tracking-widest border border-white/10 shadow-sm">
+            <span className="inline-flex items-center rounded-lg bg-black/50 backdrop-blur-md px-2.5 py-1 text-[9px] font-bold text-white uppercase border border-white/10 shadow-sm">
               {product.category?.name || "Sans catégorie"}
             </span>
           </div>
@@ -428,7 +425,7 @@ export function ProductCard({ product, onClick, onEdit, onDelete, onAddVariant }
                 whileTap={{ scale: 0.92, y: 1 }}
                 onClick={(e) => { e.stopPropagation(); onAddVariant(); }}
                 title="Gérer les variantes"
-                className="relative flex h-8 w-8 items-center justify-center rounded-xl overflow-hidden group/btn"
+                className="relative cursor-pointer flex h-8 w-8 items-center justify-center rounded-xl overflow-hidden group/btn"
               >
                 <div className="absolute inset-0 bg-primary/10 border border-primary/25 rounded-xl" />
                 <motion.div
@@ -444,7 +441,7 @@ export function ProductCard({ product, onClick, onEdit, onDelete, onAddVariant }
                 whileTap={{ scale: 0.92, y: 1 }}
                 onClick={(e) => { e.stopPropagation(); onEdit(); }}
                 title="Modifier"
-                className="relative flex h-8 w-8 items-center justify-center rounded-xl overflow-hidden"
+                className="relative flex cursor-pointer h-8 w-8 items-center justify-center rounded-xl overflow-hidden"
               >
                 <div className="absolute inset-0 bg-amber-500/10 border border-amber-500/25 rounded-xl" />
                 <motion.div
@@ -460,12 +457,12 @@ export function ProductCard({ product, onClick, onEdit, onDelete, onAddVariant }
                 whileTap={{ scale: 0.92, y: 1 }}
                 onClick={(e) => { e.stopPropagation(); onDelete(); }}
                 title="Supprimer"
-                className="relative flex h-8 w-8 items-center justify-center rounded-xl overflow-hidden"
+                className="relative cursor-pointer flex h-8 w-8 items-center justify-center rounded-xl overflow-hidden"
               >
                 <div className="absolute inset-0 bg-rose-500/10 border border-rose-500/25 rounded-xl" />
                 <motion.div
                   animate={{ opacity: hovered ? 1 : 0 }}
-                  className="absolute inset-0 bg-rose-500/20 rounded-xl"
+                  className="absolute cursor-pointer inset-0 bg-rose-500/20 rounded-xl"
                 />
                 <Trash2 className="relative h-3.5 w-3.5 text-rose-500 z-10" />
               </motion.button>

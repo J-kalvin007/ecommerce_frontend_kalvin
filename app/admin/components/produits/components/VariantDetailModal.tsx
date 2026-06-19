@@ -21,7 +21,7 @@ function DetailRow({ icon: Icon, label, value, accent }: {
 }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-alt border border-border/50">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-border/50">
         <Icon className="h-3.5 w-3.5 text-muted-foreground" />
       </div>
       <span className="text-xs text-muted-foreground min-w-[90px]">{label}</span>
@@ -47,7 +47,7 @@ export function VariantDetailModal({ open, onClose, variant, productName }: Vari
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       {/* Hide the default radix close button so we can use our custom styled one */}
-      <DialogContent className="w-[95vw] sm:max-w-sm max-h-[85vh] flex flex-col p-0 overflow-hidden border border-border/40 shadow-2xl rounded-2xl bg-surface [&>button]:hidden">
+      <DialogContent className="w-[95vw] sm:max-w-sm max-h-[85vh] flex flex-col p-0 overflow-hidden border border-border/40 shadow-2xl rounded-2xl bg-white dark:bg-[#161616] [&>button]:hidden">
         <DialogTitle className="sr-only">Détails de la variante {variant.name}</DialogTitle>
 
         {/* Gradient header */}
@@ -56,7 +56,7 @@ export function VariantDetailModal({ open, onClose, variant, productName }: Vari
           <div className="absolute right-4 top-4 h-20 w-20 rounded-full bg-primary/8 blur-xl" />
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full bg-surface/80 text-muted-foreground backdrop-blur-sm transition-colors hover:bg-surface hover:text-foreground z-10"
+            className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full bg-white/80 dark:bg-[#1e1e1e]/80 text-muted-foreground backdrop-blur-sm transition-colors hover:bg-slate-50 dark:hover:bg-[#2a2a2a] hover:text-foreground z-10"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -112,7 +112,7 @@ export function VariantDetailModal({ open, onClose, variant, productName }: Vari
             value={<span className="text-xs font-medium">{formatDate(variant.updated_at)}</span>}
           />
           {/* ID */}
-          <div className="mt-4 rounded-lg border border-border/40 bg-surface-alt/40 px-3 py-2">
+          <div className="mt-4 rounded-lg border border-border/40 bg-slate-50 dark:bg-slate-800/40 px-3 py-2">
             <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground mb-0.5">Identifiant unique</p>
             <p className="text-[10px] font-mono text-muted-foreground break-all">{variant.id}</p>
           </div>
@@ -122,7 +122,7 @@ export function VariantDetailModal({ open, onClose, variant, productName }: Vari
         <div className="shrink-0 border-t border-border/30 px-6 py-4">
           <button
             onClick={onClose}
-            className="w-full rounded-xl bg-surface-alt py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-border/40 active:scale-95"
+            className="w-full rounded-xl bg-slate-50 dark:bg-slate-800/60 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-border/40 active:scale-95"
           >
             Fermer
           </button>

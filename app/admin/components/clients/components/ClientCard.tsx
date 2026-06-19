@@ -37,7 +37,7 @@
 //       animate={{ opacity: 1, y: 0 }}
 //       whileHover={{ y: -6, transition: { duration: 0.3, ease: "easeOut" } }}
 //       onClick={onViewDetail}
-//       className="group relative flex flex-col rounded-[24px] border border-border/40 bg-surface shadow-sm hover:shadow-[0_16px_32px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 overflow-hidden cursor-pointer p-5"
+//       className="group relative flex flex-col rounded-[24px] border border-border/40 bg-white shadow-sm hover:shadow-[0_16px_32px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 overflow-hidden cursor-pointer p-5"
 //     >
 //       {/* Top row: Avatar + Actions */}
 //       <div className="flex items-start justify-between mb-4">
@@ -183,6 +183,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { User } from "@/modeles/user";
+import { mediaUrl } from "@/lib/mediaUrl";
 
 // ─── Role config ─────────────────────────────────────────────────────────────
 const ROLE_CONFIG: Record<string, { label: string; icon: React.ElementType }> = {
@@ -277,13 +278,7 @@ export function ClientCard({ user, onViewDetail, onToggleActive }: ClientCardPro
     .join("")
     .toUpperCase();
 
-  const resolvedImage = user.profile_image
-    ? user.profile_image.startsWith("http")
-      ? user.profile_image
-      : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${
-          user.profile_image.startsWith("/") ? "" : "/"
-        }${user.profile_image}`
-    : null;
+  const resolvedImage = mediaUrl(user.profile_image);
 
   return (
     <motion.div
@@ -294,7 +289,7 @@ export function ClientCard({ user, onViewDetail, onToggleActive }: ClientCardPro
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
       onClick={onViewDetail}
-      className="group relative flex flex-col rounded-[22px] border border-border/40 bg-surface overflow-hidden cursor-pointer select-none"
+      className="group relative flex flex-col rounded-[22px] border border-border/40 bg-white overflow-hidden cursor-pointer select-none"
       style={{
         boxShadow: hovered
           ? "0 20px 48px -12px rgba(0,0,0,0.13), 0 0 0 1px rgba(0,0,0,0.04)"
@@ -409,8 +404,8 @@ export function ClientCard({ user, onViewDetail, onToggleActive }: ClientCardPro
         </div>
 
         {/* Phone row */}
-        <div className="flex items-center gap-2 rounded-lg bg-surface-alt/60 border border-border/30 px-3 py-2">
-          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-surface border border-border/40">
+        <div className="flex items-center gap-2 rounded-lg bg-white-alt/60 border border-border/30 px-3 py-2">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-white border border-border/40">
             <Phone className="h-3 w-3 text-muted-foreground" />
           </div>
           <span className="text-[11px] text-foreground/70 font-medium truncate">
@@ -459,7 +454,7 @@ export function ClientCard({ user, onViewDetail, onToggleActive }: ClientCardPro
                 whileTap={{ scale: 0.9 }}
                 onClick={(e) => { e.stopPropagation(); onViewDetail(); }}
                 title="Voir le détail"
-                className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/15 hover:bg-primary hover:text-white transition-all duration-200"
+                className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/15 hover:bg-primary hover:text-white transition-all duration-200"
               >
                 <Eye className="h-3.5 w-3.5" />
               </motion.button>
@@ -471,7 +466,7 @@ export function ClientCard({ user, onViewDetail, onToggleActive }: ClientCardPro
                 onClick={(e) => { e.stopPropagation(); onToggleActive(); }}
                 title={user.is_active ? "Désactiver" : "Activer"}
                 className={cn(
-                  "flex h-7 w-7 items-center justify-center rounded-lg border transition-all duration-200",
+                  "flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border transition-all duration-200",
                   user.is_active
                     ? "bg-rose-500/10 text-rose-500 border-rose-500/15 hover:bg-rose-500 hover:text-white"
                     : "bg-emerald-500/10 text-emerald-500 border-emerald-500/15 hover:bg-emerald-500 hover:text-white"

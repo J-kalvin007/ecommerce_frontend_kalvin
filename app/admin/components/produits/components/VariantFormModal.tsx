@@ -41,7 +41,7 @@ function InputField({
         <input
           {...props}
           className={cn(
-            "h-10 w-full rounded-lg border bg-surface text-sm text-foreground outline-none transition-all duration-200",
+            "h-10 w-full rounded-lg border bg-white dark:bg-[#1e1e1e] text-sm text-foreground outline-none transition-all duration-200",
             "focus:border-primary focus:ring-2 focus:ring-primary/15 placeholder:text-muted-foreground/40",
             Icon ? "pl-9 pr-3" : "px-3",
             error ? "border-red-400" : "border-border"
@@ -158,7 +158,7 @@ export function VariantFormModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: 10 }}
             transition={{ type: "spring", stiffness: 380, damping: 32 }}
-            className="relative z-10 w-full max-w-5xl mx-4 max-h-[90vh] flex flex-col rounded-2xl border border-border/50 bg-surface shadow-2xl overflow-hidden"
+            className="relative z-10 w-full max-w-5xl mx-4 max-h-[90vh] flex flex-col rounded-2xl border border-border/50 bg-white dark:bg-[#161616] shadow-2xl overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center gap-3 border-b border-border/50 bg-gradient-to-r from-primary/5 to-transparent px-6 py-4 shrink-0">
@@ -185,7 +185,7 @@ export function VariantFormModal({
                 )}
               </AnimatePresence>
 
-              <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-alt hover:text-foreground">
+              <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-foreground">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -194,8 +194,8 @@ export function VariantFormModal({
             <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
               
               {/* Left Column: Formulaire */}
-              <div className="w-full lg:w-5/12 p-6 overflow-y-auto custom-scrollbar border-b lg:border-b-0 lg:border-r border-border/50 bg-surface-alt/10">
-                <div className="rounded-2xl border border-border/60 bg-surface p-5 shadow-sm">
+              <div className="w-full lg:w-5/12 p-6 overflow-y-auto custom-scrollbar border-b lg:border-b-0 lg:border-r border-border/50 bg-slate-50/50 dark:bg-slate-900/20">
+                <div className="rounded-2xl border border-border/60 bg-white dark:bg-[#1e1e1e] p-5 shadow-sm">
                   <div className="mb-5 flex items-center gap-3 border-b border-border/50 pb-4">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
                       {editingId ? <Edit3 className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
@@ -261,8 +261,8 @@ export function VariantFormModal({
 
                     <div className="pt-2">
                       <label className={cn(
-                        "flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-all hover:bg-surface-alt",
-                        form.is_active ? "border-primary/30 bg-primary/5" : "border-border bg-surface"
+                        "flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50",
+                        form.is_active ? "border-primary/30 bg-primary/5" : "border-border bg-white dark:bg-[#1e1e1e]"
                       )}>
                         <div className={cn(
                           "relative h-5 w-5 rounded flex items-center justify-center border-2 transition-all shrink-0",
@@ -280,7 +280,7 @@ export function VariantFormModal({
 
                     <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-border/50">
                       {editingId && (
-                        <button type="button" onClick={reset} className="rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-alt hover:text-foreground">
+                        <button type="button" onClick={reset} className="rounded-xl border border-border bg-white dark:bg-[#1e1e1e] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-foreground">
                           Annuler
                         </button>
                       )}
@@ -304,7 +304,7 @@ export function VariantFormModal({
               </div>
 
               {/* Right Column: Liste des variantes */}
-              <div className="w-full lg:w-7/12 p-6 overflow-y-auto custom-scrollbar bg-surface/30">
+              <div className="w-full lg:w-7/12 p-6 overflow-y-auto custom-scrollbar bg-slate-50/50 dark:bg-slate-900/50">
                 {variants.length > 0 ? (
                   <div className="space-y-3">
                     <div className="flex items-center justify-between mb-4">
@@ -323,7 +323,7 @@ export function VariantFormModal({
                             "group relative flex flex-col justify-between overflow-hidden rounded-2xl border p-4 transition-all duration-300",
                             editingId === v.id
                               ? "border-primary shadow-md shadow-primary/5 bg-primary/5 ring-1 ring-primary/20"
-                              : "border-border/60 bg-surface shadow-sm hover:border-border hover:shadow-md hover:-translate-y-0.5"
+                              : "border-border/60 bg-white dark:bg-slate-800/50 shadow-sm hover:border-border hover:shadow-md hover:-translate-y-0.5"
                           )}
                         >
                           <div className="flex items-start justify-between mb-3">
@@ -337,27 +337,27 @@ export function VariantFormModal({
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                               <button
                                 onClick={() => handleEdit(v)}
-                                className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface-alt text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                                className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
                                 title="Modifier"
                               >
                                 <Edit3 className="h-3.5 w-3.5" />
                               </button>
                               {deleteConfirmId === v.id ? (
-                                <div className="absolute right-2 top-2 z-10 flex items-center gap-1 rounded-xl bg-surface p-1 shadow-lg border border-border">
+                                <div className="absolute right-2 top-2 z-10 flex items-center gap-1 rounded-xl bg-white dark:bg-slate-800 p-1 shadow-lg border border-border">
                                   <button
                                     onClick={() => { onDeleteVariant(v.id); setDeleteConfirmId(null); }}
                                     className="flex items-center gap-1 rounded-lg bg-red-500 px-2 py-1 text-[10px] font-bold text-white hover:bg-red-600 transition-colors"
                                   >
                                     <AlertCircle className="h-3 w-3" /> Confirmer
                                   </button>
-                                  <button onClick={() => setDeleteConfirmId(null)} className="px-2 py-1 rounded-lg text-[10px] font-bold text-muted-foreground hover:bg-surface-alt transition-colors">
+                                  <button onClick={() => setDeleteConfirmId(null)} className="px-2 py-1 rounded-lg text-[10px] font-bold text-muted-foreground hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                                     Annuler
                                   </button>
                                 </div>
                               ) : (
                                 <button
                                   onClick={() => setDeleteConfirmId(v.id)}
-                                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface-alt text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500"
+                                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500"
                                   title="Supprimer"
                                 >
                                   <Trash2 className="h-3.5 w-3.5" />
@@ -389,8 +389,8 @@ export function VariantFormModal({
                     </div>
                   </div>
                 ) : (
-                  <div className="flex h-full flex-col items-center justify-center gap-4 rounded-3xl border-2 border-dashed border-border/50 bg-surface-alt/20 p-10 text-center">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-surface shadow-sm border border-border/50">
+                  <div className="flex h-full flex-col items-center justify-center gap-4 rounded-3xl border-2 border-dashed border-border/50 bg-slate-50/50 dark:bg-slate-800/30 p-10 text-center">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white dark:bg-slate-800 shadow-sm border border-border/50">
                       <Layers className="h-8 w-8 text-muted-foreground/40" />
                     </div>
                     <div>
@@ -405,12 +405,12 @@ export function VariantFormModal({
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between border-t border-border/50 px-6 py-4 bg-surface shrink-0 z-20">
+            <div className="flex items-center justify-between border-t border-border/50 px-6 py-4 bg-white dark:bg-[#161616] shrink-0 z-20">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                 {variants.length} variante{variants.length !== 1 ? "s" : ""} au total
               </div>
-              <button onClick={onClose} className="rounded-lg bg-surface px-4 py-2 text-sm font-medium text-foreground border border-border transition-colors hover:bg-surface-alt">
+              <button onClick={onClose} className="rounded-lg bg-white dark:bg-slate-800 px-4 py-2 text-sm font-medium text-foreground border border-border transition-colors hover:bg-slate-50 dark:hover:bg-slate-700">
                 Fermer
               </button>
             </div>

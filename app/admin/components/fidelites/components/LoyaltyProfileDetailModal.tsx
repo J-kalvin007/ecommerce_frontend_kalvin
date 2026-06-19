@@ -319,6 +319,7 @@ import {
   Percent, Award, Trash2, Loader2, Phone,
 } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
+import { mediaUrl } from "@/lib/mediaUrl";
 import { getLoyaltyHistory } from "@/fonctions_api/fidelites.api";
 import { getTierConfig } from "@/modeles/fidelites";
 import type { LoyaltyProfile, LoyaltyEvent, Tier } from "@/modeles/fidelites";
@@ -412,7 +413,7 @@ export function LoyaltyProfileDetailModal({
                     <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border-2 border-surface shadow-lg">
                       {profile.user.profile_image ? (
                         <img
-                          src={profile.user.profile_image}
+                          src={mediaUrl(profile.user.profile_image) || ''}
                           alt={profile.user.name || profile.user.email}
                           className="h-full w-full object-cover"
                         />

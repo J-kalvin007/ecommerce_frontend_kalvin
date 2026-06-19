@@ -44,6 +44,7 @@ import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 import ProfileModal from "@/components/layout/ProfileModal";
+import { mediaUrl } from "@/lib/mediaUrl";
 
 // Chemin statique de l'image (doit être placée dans public/assets/images/LOGO.png)
 const LOGO_PATH = "/assets/images/LOGO.png";
@@ -387,7 +388,7 @@ export default function Header() {
                   <div className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-primary to-highlight">
                     {user?.profile_image ? (
                       <img
-                        src={user.profile_image}
+                        src={mediaUrl(user.profile_image) || ''}
                         alt={user.name || "Avatar"}
                         className="h-full w-full object-cover"
                       />
@@ -428,7 +429,7 @@ export default function Header() {
                           <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary to-highlight">
                             {user?.profile_image ? (
                               <img
-                                src={user.profile_image}
+                                src={mediaUrl(user.profile_image) || ''}
                                 alt={user.name}
                                 className="h-full w-full object-cover"
                               />

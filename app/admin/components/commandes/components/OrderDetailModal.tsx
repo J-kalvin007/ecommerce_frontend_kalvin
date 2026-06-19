@@ -100,14 +100,14 @@
 //                         onClick={onClose}
 //                         className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
 //                     />
-                    
+
 //                     {/* Panel */}
 //                     <motion.div
 //                         initial={{ opacity: 0, x: "100%" }}
 //                         animate={{ opacity: 1, x: 0 }}
 //                         exit={{ opacity: 0, x: "100%" }}
 //                         transition={{ type: "spring", stiffness: 260, damping: 28 }}
-//                         className="fixed right-0 top-0 z-50 flex h-full w-full max-w-xl flex-col bg-surface-elevated border-l border-border/50 shadow-2xl"
+//                         className="fixed right-0 top-0 z-50 flex h-full w-full max-w-xl flex-col bg-white-elevated border-l border-border/50 shadow-2xl"
 //                     >
 //                         {/* Header */}
 //                         <div className="relative overflow-hidden border-b border-border/40 p-6">
@@ -134,7 +134,7 @@
 //                                         </div>
 //                                     )}
 //                                 </div>
-//                                 <button onClick={onClose} className="rounded-xl border border-border p-2 text-muted-foreground transition-colors hover:bg-surface-alt hover:text-foreground">
+//                                 <button onClick={onClose} className="rounded-xl border border-border p-2 text-muted-foreground transition-colors hover:bg-white-alt hover:text-foreground">
 //                                     <X className="h-5 w-5" />
 //                                 </button>
 //                             </div>
@@ -195,7 +195,7 @@
 //                                     </div>
 
 //                                     {/* Livraison */}
-//                                     <div className="rounded-2xl border border-border/50 bg-surface p-5 space-y-3">
+//                                     <div className="rounded-2xl border border-border/50 bg-white p-5 space-y-3">
 //                                         <h3 className="flex items-center gap-2 text-sm font-bold text-foreground">
 //                                             <MapPin className="h-4 w-4 text-primary" /> Adresse de livraison
 //                                         </h3>
@@ -210,14 +210,14 @@
 
 //                                     {/* Dates */}
 //                                     <div className="flex gap-4">
-//                                         <div className="flex-1 rounded-xl border border-border/50 bg-surface p-4">
+//                                         <div className="flex-1 rounded-xl border border-border/50 bg-white p-4">
 //                                             <div className="flex items-center gap-2 text-xs font-semibold uppercase text-muted-foreground mb-1">
 //                                                 <Calendar className="h-3.5 w-3.5" /> Créée le
 //                                             </div>
 //                                             <p className="text-sm font-bold">{new Date(order.created_at).toLocaleString("fr-FR")}</p>
 //                                         </div>
 //                                         {order.paid_at && (
-//                                             <div className="flex-1 rounded-xl border border-border/50 bg-surface p-4">
+//                                             <div className="flex-1 rounded-xl border border-border/50 bg-white p-4">
 //                                                 <div className="flex items-center gap-2 text-xs font-semibold uppercase text-muted-foreground mb-1">
 //                                                     <CreditCard className="h-3.5 w-3.5" /> Payée le
 //                                                 </div>
@@ -233,7 +233,7 @@
 //                                         </h3>
 //                                         <div className="space-y-2">
 //                                             {order.items.map(item => (
-//                                                 <div key={item.id} className="flex items-center justify-between gap-4 rounded-xl border border-border/50 bg-surface p-4 transition-colors hover:bg-surface-elevated">
+//                                                 <div key={item.id} className="flex items-center justify-between gap-4 rounded-xl border border-border/50 bg-white p-4 transition-colors hover:bg-white-elevated">
 //                                                     <div className="flex min-w-0 flex-1 flex-col">
 //                                                         <p className="truncate text-sm font-bold text-foreground">{item.product_name}</p>
 //                                                         <p className="text-xs text-muted-foreground">SKU: {item.product_sku} · Qté: {item.quantity}</p>
@@ -249,7 +249,7 @@
 
 //                                     {/* Notes */}
 //                                     {order.notes && (
-//                                         <div className="rounded-xl border border-border/50 bg-surface p-4">
+//                                         <div className="rounded-xl border border-border/50 bg-white p-4">
 //                                             <p className="text-xs font-semibold uppercase text-muted-foreground mb-1">Notes client</p>
 //                                             <p className="text-sm text-foreground italic">"{order.notes}"</p>
 //                                         </div>
@@ -271,7 +271,7 @@
 //                                                             "rounded-lg border px-3 py-1.5 text-xs font-bold transition-all",
 //                                                             selectedStatus === s
 //                                                                 ? `${ORDER_STATUS_MAP[s].bg} ${ORDER_STATUS_MAP[s].color} ${ORDER_STATUS_MAP[s].border} scale-105 shadow-sm`
-//                                                                 : "border-border bg-surface text-muted-foreground hover:border-primary/50 hover:text-foreground"
+//                                                                 : "border-border bg-white text-muted-foreground hover:border-primary/50 hover:text-foreground"
 //                                                         )}
 //                                                     >
 //                                                         {ORDER_STATUS_MAP[s].label}
@@ -285,7 +285,7 @@
 //                                                         value={comment}
 //                                                         onChange={e => setComment(e.target.value)}
 //                                                         placeholder="Commentaire interne (optionnel)..."
-//                                                         className="w-full resize-none rounded-xl border border-border/80 bg-surface px-4 py-3 text-sm outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all"
+//                                                         className="w-full resize-none rounded-xl border border-border/80 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all"
 //                                                     />
 //                                                     <button
 //                                                         onClick={handleStatusUpdate}
@@ -328,7 +328,7 @@
 //                                                             "absolute -left-6 top-1 h-4 w-4 rounded-full border-2 border-surface-elevated",
 //                                                             i === 0 ? "bg-primary" : "bg-border"
 //                                                         )} />
-//                                                         <div className="rounded-xl border border-border/50 bg-surface p-4 space-y-2">
+//                                                         <div className="rounded-xl border border-border/50 bg-white p-4 space-y-2">
 //                                                             <div className="flex flex-wrap items-center gap-2">
 //                                                                 {entry.old_status && (
 //                                                                     <>
@@ -439,24 +439,24 @@ interface OrderDetailModalProps {
 /* ── Statuts suivants autorisés ───────────────────────────────── */
 const NEXT_STATUS_OPTIONS: Partial<Record<OrderStatus, OrderStatus[]>> = {
     pending_payment: ["paid", "cancelled"],
-    paid:            ["confirmed", "cancelled", "refunded"],
-    confirmed:       ["processing", "cancelled"],
-    processing:      ["shipped"],
-    shipped:         ["delivered"],
-    delivered:       ["refunded"],
+    paid: ["confirmed", "cancelled", "refunded"],
+    confirmed: ["processing", "cancelled"],
+    processing: ["shipped"],
+    shipped: ["delivered"],
+    delivered: ["refunded"],
 };
 
 /* ── Icône de statut ──────────────────────────────────────────── */
 const STATUS_ICONS: Record<string, React.ReactNode> = {
-    draft:           <FileText className="h-4 w-4" />,
+    draft: <FileText className="h-4 w-4" />,
     pending_payment: <Clock className="h-4 w-4" />,
-    paid:            <CreditCard className="h-4 w-4" />,
-    confirmed:       <CheckCircle2 className="h-4 w-4" />,
-    processing:      <ShoppingBag className="h-4 w-4" />,
-    shipped:         <Truck className="h-4 w-4" />,
-    delivered:       <CheckCircle2 className="h-4 w-4" />,
-    cancelled:       <XCircle className="h-4 w-4" />,
-    refunded:        <RotateCcw className="h-4 w-4" />,
+    paid: <CreditCard className="h-4 w-4" />,
+    confirmed: <CheckCircle2 className="h-4 w-4" />,
+    processing: <ShoppingBag className="h-4 w-4" />,
+    shipped: <Truck className="h-4 w-4" />,
+    delivered: <CheckCircle2 className="h-4 w-4" />,
+    cancelled: <XCircle className="h-4 w-4" />,
+    refunded: <RotateCcw className="h-4 w-4" />,
 };
 
 /* ── Pill de statut ───────────────────────────────────────────── */
@@ -479,7 +479,7 @@ function StatusPill({ status, size = "md" }: { status: OrderStatus; size?: "sm" 
 function Section({ children, className }: { children: React.ReactNode; className?: string }) {
     return (
         <div className={cn(
-            "rounded-2xl border border-border/50 bg-surface overflow-hidden",
+            "rounded-2xl border border-border/50 bg-white overflow-hidden",
             className
         )}>
             {children}
@@ -490,7 +490,7 @@ function Section({ children, className }: { children: React.ReactNode; className
 /* ── Section header ───────────────────────────────────────────── */
 function SectionHeader({ icon, label }: { icon: React.ReactNode; label: string }) {
     return (
-        <div className="flex items-center gap-2.5 border-b border-border/40 bg-surface-alt/50 px-5 py-3.5">
+        <div className="flex items-center gap-2.5 border-b border-border/40 bg-white-alt/50 px-5 py-3.5">
             <span className="text-primary">{icon}</span>
             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{label}</p>
         </div>
@@ -504,10 +504,10 @@ function ArticleItem({ item, index }: { item: OrderDetail["items"][0]; index: nu
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05 }}
-            className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-surface-alt/60 border-b border-border/30 last:border-0"
+            className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-white-alt/60 border-b border-border/30 last:border-0"
         >
             {/* Index badge */}
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-surface-elevated">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-white-elevated">
                 <span className="font-mono text-[11px] font-black text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
             </div>
 
@@ -515,7 +515,7 @@ function ArticleItem({ item, index }: { item: OrderDetail["items"][0]; index: nu
             <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-bold text-foreground">{item.product_name}</p>
                 <div className="mt-0.5 flex items-center gap-2 text-[10px] text-muted-foreground">
-                    <span className="rounded border border-border/50 bg-surface-elevated px-1.5 py-0.5 font-mono font-semibold">{item.product_sku}</span>
+                    <span className="rounded border border-border/50 bg-white-elevated px-1.5 py-0.5 font-mono font-semibold">{item.product_sku}</span>
                     <span>·</span>
                     <span>Qté {item.quantity}</span>
                     <span>·</span>
@@ -551,7 +551,7 @@ function HistoryEntry({ entry, index, total }: { entry: OrderHistory; index: num
                 "relative z-10 mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2",
                 isFirst
                     ? "border-primary bg-primary shadow-md shadow-primary/30"
-                    : "border-border/60 bg-surface-elevated"
+                    : "border-border/60 bg-white-elevated"
             )}>
                 {isFirst
                     ? <Sparkles className="h-3.5 w-3.5 text-white" />
@@ -561,9 +561,9 @@ function HistoryEntry({ entry, index, total }: { entry: OrderHistory; index: num
 
             {/* Card */}
             <div className="flex-1 pb-6">
-                <div className="rounded-2xl border border-border/50 bg-surface overflow-hidden">
+                <div className="rounded-2xl border border-border/50 bg-white overflow-hidden">
                     {/* Status transition */}
-                    <div className="flex flex-wrap items-center gap-2 border-b border-border/30 bg-surface-alt/40 px-4 py-3">
+                    <div className="flex flex-wrap items-center gap-2 border-b border-border/30 bg-white-alt/40 px-4 py-3">
                         {entry.old_status && (
                             <>
                                 <StatusPill status={entry.old_status as OrderStatus} size="sm" />
@@ -659,7 +659,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: "100%" }}
                         transition={{ type: "spring", stiffness: 300, damping: 32, mass: 0.8 }}
-                        className="fixed right-0 top-0 z-50 flex h-full w-full max-w-[520px] flex-col bg-surface-elevated border-l border-border/40 shadow-[−32px_0_80px_rgba(0,0,0,0.4)]"
+                        className="fixed right-0 top-0 z-50 flex h-full w-full max-w-[520px] flex-col bg-white-elevated border-l border-border/40 shadow-[−32px_0_80px_rgba(0,0,0,0.4)]"
                     >
                         {/* ── Header ── */}
                         <header className="relative flex-none overflow-hidden">
@@ -712,7 +712,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                         </header>
 
                         {/* ── Tabs ── */}
-                        <nav className="relative flex-none border-b border-border/40 bg-surface-elevated px-6">
+                        <nav className="relative flex-none border-b border-border/40 bg-white-elevated px-6">
                             <div className="flex gap-1">
                                 {(["details", "history"] as const).map(t => (
                                     <button
@@ -755,7 +755,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                             {/* Error state */}
                             {!loading && !order && (
                                 <div className="flex h-64 flex-col items-center justify-center gap-3">
-                                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border/50 bg-surface">
+                                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border/50 bg-white">
                                         <AlertTriangle className="h-6 w-6 text-amber-400" />
                                     </div>
                                     <div className="text-center">
@@ -819,7 +819,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                             <p className="text-sm font-bold text-foreground leading-snug">{order.address_livraison}</p>
                                             <p className="text-sm text-muted-foreground">{order.city}, {order.country}</p>
                                             {order.phone_livraison && (
-                                                <div className="inline-flex items-center gap-2 rounded-xl border border-border/50 bg-surface-elevated px-3 py-2">
+                                                <div className="inline-flex items-center gap-2 rounded-xl border border-border/50 bg-white-elevated px-3 py-2">
                                                     <Phone className="h-3.5 w-3.5 text-muted-foreground" />
                                                     <span className="font-mono text-sm font-semibold text-foreground">{order.phone_livraison}</span>
                                                 </div>
@@ -916,10 +916,10 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                                                 whileTap={{ scale: 0.97 }}
                                                                 onClick={() => setSelectedStatus(isSelected ? "" : s)}
                                                                 className={cn(
-                                                                    "flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-[11px] font-black transition-all",
+                                                                    "flex items-center cursor-pointer gap-1.5 rounded-xl border px-3.5 py-2 text-[11px] font-black transition-all",
                                                                     isSelected
                                                                         ? `${cfg.bg} ${cfg.color} ${cfg.border} shadow-md`
-                                                                        : "border-border/60 bg-surface text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                                                                        : "border-border/60 bg-white text-muted-foreground hover:border-primary/30 hover:text-foreground"
                                                                 )}
                                                             >
                                                                 {isSelected && (
@@ -948,7 +948,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                                                     value={comment}
                                                                     onChange={e => setComment(e.target.value)}
                                                                     placeholder="Commentaire interne (optionnel)…"
-                                                                    className="w-full resize-none rounded-xl border border-border/60 bg-surface pl-10 pr-4 pt-3 pb-3 text-sm outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 placeholder:text-muted-foreground/50"
+                                                                    className="w-full resize-none rounded-xl border border-border/60 bg-white pl-10 pr-4 pt-3 pb-3 text-sm outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 placeholder:text-muted-foreground/50"
                                                                 />
                                                             </div>
 
@@ -958,7 +958,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                                                 whileTap={{ scale: 0.98 }}
                                                                 onClick={handleStatusUpdate}
                                                                 disabled={isUpdating}
-                                                                className="group relative w-full overflow-hidden rounded-xl bg-primary py-3 text-sm font-black text-white shadow-lg shadow-primary/25 transition-all disabled:opacity-50"
+                                                                className="group relative cursor-pointer w-full overflow-hidden rounded-xl bg-primary py-3 text-sm font-black text-white shadow-lg shadow-primary/25 transition-all disabled:opacity-50"
                                                             >
                                                                 {/* Shimmer */}
                                                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
@@ -1007,7 +1007,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                         </div>
                                     ) : history.length === 0 ? (
                                         <div className="flex h-48 flex-col items-center justify-center gap-3">
-                                            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border/50 bg-surface">
+                                            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border/50 bg-white">
                                                 <History className="h-6 w-6 text-muted-foreground/40" />
                                             </div>
                                             <div className="text-center">

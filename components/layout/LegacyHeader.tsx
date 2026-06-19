@@ -517,7 +517,9 @@ import {
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
+import { mediaUrl } from "@/lib/mediaUrl";
 import ProfileModal from "@/components/layout/ProfileModal";
+import { useTheme } from "@/hooks/useTheme";
 
 /* -------------------------------------------------------------------------- */
 /*  Constantes                                                               */
@@ -563,27 +565,20 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  /* --- Thème partagé via Zustand (useTheme) ------------------------------ */
+  const { theme, setTheme } = useTheme();
+  const isDark = theme === "dark";
+
+  const toggleTheme = () => setTheme(isDark ? "light" : "dark");
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  /* --- Hydratation & thème ---------------------------------------------- */
+  /* --- Hydratation ------------------------------------------------------- */
   useEffect(() => {
     setMounted(true);
-    const storedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = storedTheme || (systemPrefersDark ? "dark" : "light");
-    setTheme(initialTheme);
-    document.documentElement.classList.toggle("dark", initialTheme === "dark");
   }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
-  };
 
   /* --- Détection du scroll (seuil identique à l’original) --------------- */
   useEffect(() => {
@@ -752,10 +747,10 @@ export default function Header() {
               )}
               aria-label="Changer de thème"
             >
-              {theme === "light" ? (
-                <Moon className="h-4 w-4" />
-              ) : (
+              {isDark ? (
                 <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
               )}
             </button>
 
@@ -864,7 +859,7 @@ export default function Header() {
                   <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[#1f4d3f] text-sm font-bold text-white dark:bg-[#2d5a4b]">
                     {user?.profile_image ? (
                       <img
-                        src={user.profile_image}
+                        src={mediaUrl(user.profile_image) || ''}
                         alt={user.name || "Avatar"}
                         className="h-full w-full object-cover"
                       />

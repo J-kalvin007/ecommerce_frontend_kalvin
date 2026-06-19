@@ -22,7 +22,7 @@ const PRODUCT_TYPE_LABELS: Record<string, string> = {
 
 function ReviewItem({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-surface px-4 py-3">
+    <div className="flex items-center gap-3 rounded-xl border border-border/50  px-4 py-3">
       <Icon className="h-4 w-4 shrink-0 text-primary" />
       <span className="text-xs text-muted-foreground min-w-[80px]">{label}</span>
       <span className="ml-auto text-sm font-semibold text-foreground text-right">{value || "—"}</span>
@@ -76,7 +76,7 @@ export function StepReview({ form, selectedCategoryName, uploadedImages, existin
       {form.description && (
         <div>
           <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</h4>
-          <div className="rounded-xl border border-border/50 bg-surface-alt/50 px-4 py-3">
+          <div className="rounded-xl border border-border/50 -alt/50 px-4 py-3">
             <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">{form.description}</p>
           </div>
         </div>
@@ -103,7 +103,7 @@ export function StepReview({ form, selectedCategoryName, uploadedImages, existin
           <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">Aperçu des variantes</h4>
           <div className="grid gap-2 sm:grid-cols-2">
             {variants.map((v, i) => (
-              <div key={v.id || i} className="flex flex-col gap-1 rounded-xl border border-border/50 bg-surface-alt/30 p-3">
+              <div key={v.id || i} className="flex flex-col gap-1 rounded-xl border border-border/50 -alt/30 p-3">
                 <div className="flex justify-between items-start">
                   <span className="text-sm font-semibold text-foreground">{v.name}</span>
                   <span className="text-xs font-bold text-primary">{formatCurrency(parseFloat(v.price) || 0, "FCFA")}</span>

@@ -2,8 +2,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #f6f1e8;
-  --foreground: #1f241c;
+  --background: #ffffff;
+  --foreground: #0f172a;
 
   --color-primary: #ef8219;
   --color-primary-hover: #f09a44;
@@ -15,10 +15,10 @@
   --color-success: #22c55e;
   --color-info: #3b82f6;
 
-  --color-background: #f9f6ee;
-  --color-surface: #fff6ec;
-  --color-surface-alt: #f8f3ea;
-  --color-surface-elevated: #f9f6ee;
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f8fafc;
+  --color-surface-elevated: #ffffff;
 
   --color-text: #18181b;
   --color-text-secondary: #78716c;

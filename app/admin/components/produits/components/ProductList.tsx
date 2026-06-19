@@ -6,6 +6,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Edit3, Trash2, Layers, Crown } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
+import { mediaUrl } from "@/lib/mediaUrl";
 import type { ProductDetail } from "@/modeles/produits";
 
 const PRODUCT_TYPE_FR: Record<string, string> = {
@@ -24,15 +25,11 @@ interface ProductListProps {
 
 export function SafeProductImage({ src, alt }: { src: string; alt: string }) {
   const [error, setError] = useState(false);
-  const resolvedSrc = src
-    ? (src.startsWith("http")
-        ? src
-        : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${src.startsWith("/") ? "" : "/"}${src}`)
-    : null;
+  const resolvedSrc = mediaUrl(src);
 
   if (!resolvedSrc || error) {
     return (
-      <div className="flex h-full w-full items-center justify-center text-lg text-muted-foreground/30 bg-surface-alt">
+      <div className="flex h-full w-full items-center justify-center text-lg text-muted-foreground/30 bg-slate-50 dark:bg-slate-800">
         📦
       </div>
     );
@@ -51,9 +48,9 @@ export function SafeProductImage({ src, alt }: { src: string; alt: string }) {
 
 export function ProductList({ products, onProductClick, onEdit, onDelete, onAddVariant }: ProductListProps) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-border/50 bg-surface shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1e1e1e] shadow-sm">
       {/* Header table */}
-      <div className="border-b border-border/50 bg-surface-alt/60 px-5 py-3">
+      <div className="border-b border-border/50 bg-slate-50 dark:bg-slate-800/60 px-5 py-3">
         <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr_auto] items-center gap-4 min-w-[680px]">
           <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Produit</span>
           <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">SKU</span>
@@ -100,11 +97,11 @@ export function ProductList({ products, onProductClick, onEdit, onDelete, onAddV
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.03 }}
                 onClick={() => onProductClick(product)}
-                className="group grid grid-cols-[2fr_1fr_1fr_1fr_1fr_auto] items-center gap-4 border-b border-border/30 px-5 py-4 last:border-0 cursor-pointer transition-all duration-300 hover:bg-surface-alt/40 hover:shadow-[inset_0_0_20px_rgba(0,0,0,0.02)]"
+                className="group grid grid-cols-[2fr_1fr_1fr_1fr_1fr_auto] items-center gap-4 border-b border-border/30 px-5 py-4 last:border-0 cursor-pointer transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:shadow-[inset_0_0_20px_rgba(0,0,0,0.02)]"
               >
                 {/* Produit */}
                 <div className="flex items-center gap-4 min-w-0">
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-[14px] bg-gradient-to-br from-surface-alt to-surface-alt/50 border border-border/50 p-1.5 shadow-sm group-hover:shadow-md transition-all duration-300">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-[14px] bg-slate-50 dark:bg-slate-800 border border-border/50 p-1.5 shadow-sm group-hover:shadow-md transition-all duration-300">
                     <div className="relative h-full w-full rounded-[8px] overflow-hidden bg-white dark:bg-zinc-900">
                       <SafeProductImage src={primaryImage} alt={product.name} />
                     </div>
@@ -119,7 +116,7 @@ export function ProductList({ products, onProductClick, onEdit, onDelete, onAddV
                       {product.name}
                     </p>
                     <p className="text-xs text-muted-foreground truncate mt-1 flex items-center gap-1.5">
-                      <span className="bg-surface-alt px-2 py-0.5 rounded-md border border-border/50">{product.category?.name || "Sans catégorie"}</span>
+                      <span className="bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-border/50">{product.category?.name || "Sans catégorie"}</span>
                       {variantsCount > 0 && (
                         <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 font-bold text-primary">
                           <Layers className="h-3 w-3" /> {variantsCount} var.
@@ -130,7 +127,7 @@ export function ProductList({ products, onProductClick, onEdit, onDelete, onAddV
                 </div>
 
                 {/* SKU */}
-                <div className="font-mono text-[13px] font-medium text-muted-foreground truncate bg-surface-alt/50 px-2 py-1 rounded-md border border-border/30 inline-block w-fit">
+                <div className="font-mono text-[13px] font-medium text-muted-foreground truncate bg-slate-50 dark:bg-slate-800/50 px-2 py-1 rounded-md border border-border/30 inline-block w-fit">
                   {product.sku}
                 </div>
 
@@ -150,18 +147,18 @@ export function ProductList({ products, onProductClick, onEdit, onDelete, onAddV
 
                 {/* Type */}
                 <div>
-                  <span className="rounded-full border border-border/60 bg-surface-alt px-2.5 py-1 text-[11px] font-bold text-muted-foreground shadow-sm">
+                  <span className="rounded-full border border-border/60 bg-slate-50 dark:bg-slate-800 px-2.5 py-1 text-[11px] font-bold text-muted-foreground shadow-sm">
                     {PRODUCT_TYPE_FR[product.product_type] || product.product_type}
                   </span>
                 </div>
 
                 {/* Actions (Bubble Menu) */}
                 <div className="flex items-center justify-end" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center gap-0.5 rounded-full bg-surface-alt/80 border border-border/60 p-1 shadow-sm backdrop-blur-xl transition-all duration-300 group-hover:bg-white dark:group-hover:bg-zinc-800 group-hover:shadow-md group-hover:border-border/80">
+                  <div className="flex items-center gap-0.5 rounded-full bg-slate-50 dark:bg-slate-800/80 border border-border/60 p-1 shadow-sm backdrop-blur-xl transition-all duration-300 group-hover:bg-white dark:group-hover:bg-zinc-800 group-hover:shadow-md group-hover:border-border/80">
                     <button
                       onClick={() => onAddVariant(product)}
                       title="Gérer les variantes"
-                      className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-all duration-200 hover:bg-primary/10 hover:text-primary hover:scale-105"
+                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-all duration-200 hover:bg-primary/10 hover:text-primary hover:scale-105"
                     >
                       <Layers className="h-4 w-4" />
                     </button>
@@ -169,7 +166,7 @@ export function ProductList({ products, onProductClick, onEdit, onDelete, onAddV
                     <button
                       onClick={() => onEdit(product)}
                       title="Modifier"
-                      className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-all duration-200 hover:bg-amber-500/10 hover:text-amber-600 hover:scale-105"
+                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-all duration-200 hover:bg-amber-500/10 hover:text-amber-600 hover:scale-105"
                     >
                       <Edit3 className="h-4 w-4" />
                     </button>
@@ -177,7 +174,7 @@ export function ProductList({ products, onProductClick, onEdit, onDelete, onAddV
                     <button
                       onClick={() => onDelete(product.id)}
                       title="Supprimer"
-                      className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-all duration-200 hover:bg-red-500/10 hover:text-red-500 hover:scale-105"
+                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-all duration-200 hover:bg-red-500/10 hover:text-red-500 hover:scale-105"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>

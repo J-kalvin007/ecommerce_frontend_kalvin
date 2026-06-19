@@ -54,7 +54,7 @@ function StatCard({
   return (
     <motion.div
       whileHover={{ y: -2 }}
-      className="relative overflow-hidden rounded-2xl border border-border/50 bg-surface/80 backdrop-blur-sm p-4 shadow-sm transition-all hover:shadow-md group"
+      className="relative overflow-hidden rounded-2xl border border-border/50 bg-white/80 backdrop-blur-sm p-4 shadow-sm transition-all hover:shadow-md group"
     >
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -187,10 +187,10 @@ export default function ClientsSection() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher par nom, email ou téléphone..."
-            className="h-11 w-full rounded-xl border border-border bg-surface pl-11 pr-4 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/15 placeholder:text-muted-foreground/50"
+            className="h-11 w-full rounded-xl border border-border bg-white pl-11 pr-4 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/15 placeholder:text-muted-foreground/50"
           />
           {search && (
-            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-surface-alt text-muted-foreground">
+            <button onClick={() => setSearch("")} className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-white-alt text-muted-foreground">
               <X className="h-3.5 w-3.5" />
             </button>
           )}
@@ -199,10 +199,10 @@ export default function ClientsSection() {
         <button
           onClick={() => setShowFilters(!showFilters)}
           className={cn(
-            "flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-all",
+            "flex items-center gap-2 cursor-pointer rounded-xl border px-4 py-2.5 text-sm font-medium transition-all",
             showFilters || activeFiltersCount > 0
               ? "border-primary/30 bg-primary/5 text-primary"
-              : "border-border bg-surface text-muted-foreground hover:bg-surface-alt"
+              : "border-border bg-white text-muted-foreground hover:bg-white-alt"
           )}
         >
           <SlidersHorizontal className="h-4 w-4" />
@@ -212,7 +212,7 @@ export default function ClientsSection() {
           )}
         </button>
 
-        <div className="flex h-11 items-center gap-2 rounded-xl border border-border bg-surface px-4 text-sm text-muted-foreground">
+        <div className="flex h-11 items-center gap-2 rounded-xl border border-border bg-white px-4 text-sm text-muted-foreground">
           <Filter className="h-4 w-4" />
           <span className="font-semibold text-primary">{filtered.length}</span> résultat{filtered.length !== 1 ? "s" : ""}
         </div>
@@ -228,13 +228,13 @@ export default function ClientsSection() {
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="flex flex-wrap gap-3 rounded-2xl border border-border/50 bg-surface-alt/30 p-4">
+            <div className="flex flex-wrap gap-3 rounded-2xl border border-border/50 bg-white-alt/30 p-4">
               <div className="flex-1 min-w-[180px]">
                 <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Rôle</label>
                 <select
                   value={roleFilter}
                   onChange={(e) => setRoleFilter(e.target.value)}
-                  className="h-10 w-full rounded-xl border border-border bg-surface px-3 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/15"
+                  className="h-10 w-full rounded-xl border border-border bg-white px-3 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/15"
                 >
                   {ROLE_FILTERS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
                 </select>
@@ -244,15 +244,15 @@ export default function ClientsSection() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="h-10 w-full rounded-xl border border-border bg-surface px-3 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/15"
+                  className="h-10 w-full cursor-pointer rounded-xl border border-border bg-white px-3 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/15"
                 >
                   {STATUS_FILTERS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
                 </select>
               </div>
               {activeFiltersCount > 0 && (
                 <div className="flex items-end">
-                  <button onClick={() => { setRoleFilter(""); setStatusFilter(""); }} className="h-10 flex items-center gap-2 rounded-xl border border-border bg-surface px-4 text-xs font-semibold text-muted-foreground hover:bg-surface-alt transition-colors">
-                    <X className="h-3.5 w-3.5" /> Réinitialiser
+                  <button onClick={() => { setRoleFilter(""); setStatusFilter(""); }} className="h-10 flex items-center gap-2 rounded-xl border border-border bg-white px-4 text-xs font-semibold text-muted-foreground hover:bg-white-alt transition-colors">
+                    <X className="h-3.5 w-3.5 cursor-pointer" /> Réinitialiser
                   </button>
                 </div>
               )}
@@ -263,16 +263,16 @@ export default function ClientsSection() {
 
       {/* View Mode Toggle */}
       <div className="flex items-center justify-end">
-        <div className="flex items-center gap-1 rounded-xl border border-border bg-surface p-1 shadow-sm">
+        <div className="flex items-center gap-1 rounded-xl border border-border bg-white p-1 shadow-sm">
           <button
             onClick={() => setViewMode("grid")}
-            className={cn("flex h-8 w-8 items-center justify-center rounded-lg transition-all", viewMode === "grid" ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-surface-alt")}
+            className={cn("flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all", viewMode === "grid" ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-white-alt")}
           >
             <LayoutGrid className="h-4 w-4" />
           </button>
           <button
             onClick={() => setViewMode("list")}
-            className={cn("flex h-8 w-8 items-center justify-center rounded-lg transition-all", viewMode === "list" ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-surface-alt")}
+            className={cn("flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all", viewMode === "list" ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-white-alt")}
           >
             <List className="h-4 w-4" />
           </button>
@@ -309,11 +309,11 @@ export default function ClientsSection() {
         </motion.div>
       ) : (
         /* List View */
-        <div className="overflow-hidden rounded-2xl border border-border/50 bg-surface shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-border/50 bg-white shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-border/50 bg-surface-alt/30">
+                <tr className="border-b border-border/50 bg-white-alt/30">
                   {["Utilisateur", "Contact", "Rôle", "Vérification", "Statut", "Actions"].map((h) => (
                     <th key={h} className="px-5 py-3.5 text-left text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{h}</th>
                   ))}
@@ -336,7 +336,7 @@ export default function ClientsSection() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.03 }}
                       onClick={() => handleViewDetail(user)}
-                      className="border-b border-border/30 transition-colors hover:bg-surface-alt/40 cursor-pointer group"
+                      className="border-b border-border/30 transition-colors hover:bg-white-alt/40 cursor-pointer group"
                     >
                       {/* Utilisateur */}
                       <td className="px-5 py-4">

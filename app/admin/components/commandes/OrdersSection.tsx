@@ -48,7 +48,7 @@
 //       onClick={onClick}
 //       className={cn(
 //         "relative overflow-hidden rounded-2xl border p-5 text-left transition-all shadow-sm w-full",
-//         active ? "border-primary/40 bg-primary/5 shadow-primary/10" : "border-border bg-surface-elevated hover:border-border/80"
+//         active ? "border-primary/40 bg-primary/5 shadow-primary/10" : "border-border bg-white-elevated hover:border-border/80"
 //       )}
 //     >
 //       <div className={cn("absolute -right-4 -top-4 h-20 w-20 rounded-full blur-2xl opacity-60", accent)} />
@@ -86,7 +86,7 @@
 //         initial={{ opacity: 0, scale: 0.96 }}
 //         animate={{ opacity: 1, scale: 1 }}
 //         exit={{ opacity: 0, scale: 0.94 }}
-//         className="group relative overflow-hidden rounded-2xl border border-border bg-surface-elevated p-5 shadow-sm transition-all hover:shadow-md hover:border-border/60"
+//         className="group relative overflow-hidden rounded-2xl border border-border bg-white-elevated p-5 shadow-sm transition-all hover:shadow-md hover:border-border/60"
 //       >
 //         <div className={cn("absolute top-0 left-0 right-0 h-0.5", cfg.bg.replace('/10', ''))} />
 
@@ -125,7 +125,7 @@
 //       initial={{ opacity: 0, y: 8 }}
 //       animate={{ opacity: 1, y: 0 }}
 //       exit={{ opacity: 0, y: -8 }}
-//       className="group relative overflow-hidden rounded-2xl border border-border bg-surface-elevated px-5 py-4 shadow-sm transition-all hover:shadow-md hover:border-border/60"
+//       className="group relative overflow-hidden rounded-2xl border border-border bg-white-elevated px-5 py-4 shadow-sm transition-all hover:shadow-md hover:border-border/60"
 //     >
 //       <div className={cn("absolute left-0 top-0 bottom-0 w-0.5 rounded-r-full", cfg.bg.replace('/10', '').replace('bg-', 'bg-'))} />
 
@@ -171,7 +171,7 @@
 //               onClick={() => setShowSelect(!showSelect)}
 //               className={cn(
 //                 "flex h-9 items-center gap-1.5 rounded-xl border px-3 text-xs font-bold transition-all",
-//                 showSelect ? "border-primary bg-primary/10 text-primary" : "border-border bg-surface text-muted-foreground hover:border-primary/50 hover:text-foreground"
+//                 showSelect ? "border-primary bg-primary/10 text-primary" : "border-border bg-white text-muted-foreground hover:border-primary/50 hover:text-foreground"
 //               )}
 //             >
 //               <SlidersHorizontal className="h-3.5 w-3.5" />
@@ -184,7 +184,7 @@
 //                   initial={{ opacity: 0, y: -8, scale: 0.95 }}
 //                   animate={{ opacity: 1, y: 0, scale: 1 }}
 //                   exit={{ opacity: 0, y: -8, scale: 0.95 }}
-//                   className="absolute right-0 top-full z-30 mt-2 w-52 rounded-xl border border-border bg-surface-elevated shadow-2xl overflow-hidden"
+//                   className="absolute right-0 top-full z-30 mt-2 w-52 rounded-xl border border-border bg-white-elevated shadow-2xl overflow-hidden"
 //                 >
 //                   {(Object.keys(ORDER_STATUS_MAP) as OrderStatus[]).map(s => (
 //                     <button
@@ -193,7 +193,7 @@
 //                       onClick={() => { onStatusChange(s); setShowSelect(false); }}
 //                       className={cn(
 //                         "flex w-full items-center gap-2 px-4 py-2.5 text-xs font-semibold transition-colors",
-//                         s === order.status ? "opacity-40 cursor-not-allowed" : "hover:bg-surface-alt",
+//                         s === order.status ? "opacity-40 cursor-not-allowed" : "hover:bg-white-alt",
 //                         ORDER_STATUS_MAP[s].color
 //                       )}
 //                     >
@@ -390,7 +390,7 @@
 //             value={search}
 //             onChange={e => setSearch(e.target.value)}
 //             placeholder="Rechercher par référence..."
-//             className="h-11 w-full rounded-xl border border-border bg-surface pl-11 pr-10 text-sm font-medium outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all"
+//             className="h-11 w-full rounded-xl border border-border bg-white pl-11 pr-10 text-sm font-medium outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all"
 //           />
 //           {search && (
 //             <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
@@ -404,18 +404,18 @@
 //             onClick={() => setShowFilters(!showFilters)}
 //             className={cn(
 //               "flex h-11 items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition-all",
-//               showFilters ? "border-primary bg-primary/10 text-primary" : "border-border bg-surface text-muted-foreground hover:text-foreground"
+//               showFilters ? "border-primary bg-primary/10 text-primary" : "border-border bg-white text-muted-foreground hover:text-foreground"
 //             )}
 //           >
 //             <Filter className="h-4 w-4" />
 //             Filtres
 //           </button>
 
-//           <div className="flex rounded-xl border border-border bg-surface p-1">
-//             <button onClick={() => setViewMode("list")} className={cn("rounded-lg p-2 transition-colors", viewMode === "list" ? "bg-surface-alt text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>
+//           <div className="flex rounded-xl border border-border bg-white p-1">
+//             <button onClick={() => setViewMode("list")} className={cn("rounded-lg p-2 transition-colors", viewMode === "list" ? "bg-white-alt text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>
 //               <List className="h-4 w-4" />
 //             </button>
-//             <button onClick={() => setViewMode("grid")} className={cn("rounded-lg p-2 transition-colors", viewMode === "grid" ? "bg-surface-alt text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>
+//             <button onClick={() => setViewMode("grid")} className={cn("rounded-lg p-2 transition-colors", viewMode === "grid" ? "bg-white-alt text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>
 //               <LayoutGrid className="h-4 w-4" />
 //             </button>
 //           </div>
@@ -431,14 +431,14 @@
 //             exit={{ opacity: 0, height: 0 }}
 //             className="overflow-hidden"
 //           >
-//             <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-border bg-surface-elevated p-5">
+//             <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-border bg-white-elevated p-5">
 //               <div className="flex flex-col gap-1.5">
 //                 <label className="text-xs font-bold uppercase text-muted-foreground">Du</label>
-//                 <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} className="h-9 rounded-xl border border-border bg-surface px-3 text-sm outline-none focus:border-primary" />
+//                 <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} className="h-9 rounded-xl border border-border bg-white px-3 text-sm outline-none focus:border-primary" />
 //               </div>
 //               <div className="flex flex-col gap-1.5">
 //                 <label className="text-xs font-bold uppercase text-muted-foreground">Au</label>
-//                 <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} className="h-9 rounded-xl border border-border bg-surface px-3 text-sm outline-none focus:border-primary" />
+//                 <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} className="h-9 rounded-xl border border-border bg-white px-3 text-sm outline-none focus:border-primary" />
 //               </div>
 //               {(dateFrom || dateTo) && (
 //                 <button onClick={() => { setDateFrom(""); setDateTo(""); }} className="mt-5 text-xs font-semibold text-muted-foreground hover:text-foreground flex items-center gap-1">
@@ -456,7 +456,7 @@
 //           onClick={() => setStatusFilter("ALL")}
 //           className={cn(
 //             "flex shrink-0 items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-bold transition-all whitespace-nowrap",
-//             statusFilter === "ALL" ? "bg-primary text-white border-primary shadow-md" : "border-border bg-surface text-muted-foreground hover:border-primary/40"
+//             statusFilter === "ALL" ? "bg-primary text-white border-primary shadow-md" : "border-border bg-white text-muted-foreground hover:border-primary/40"
 //           )}
 //         >
 //           Toutes <span className="rounded-md bg-white/20 px-1.5 py-0.5">{orders.length}</span>
@@ -473,11 +473,11 @@
 //                 "flex shrink-0 items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-bold transition-all whitespace-nowrap",
 //                 statusFilter === s
 //                   ? `${cfg.bg} ${cfg.color} ${cfg.border} shadow-sm`
-//                   : "border-border bg-surface text-muted-foreground hover:border-primary/40"
+//                   : "border-border bg-white text-muted-foreground hover:border-primary/40"
 //               )}
 //             >
 //               {cfg.label}
-//               <span className={cn("rounded-md px-1.5 py-0.5", statusFilter === s ? "bg-white/20" : "bg-surface-alt")}>
+//               <span className={cn("rounded-md px-1.5 py-0.5", statusFilter === s ? "bg-white/20" : "bg-white-alt")}>
 //                 {count}
 //               </span>
 //             </button>
@@ -632,7 +632,7 @@ function KPICard({ label, value, icon, accentClass, iconColorClass, active, onCl
         "group relative w-full overflow-hidden rounded-2xl border p-5 text-left transition-all duration-300",
         active
           ? "border-primary/30 bg-primary/5 shadow-lg shadow-primary/10"
-          : "border-border/60 bg-surface-elevated hover:border-border shadow-sm hover:shadow-md"
+          : "border-border/60 bg-white-elevated hover:border-border shadow-sm hover:shadow-md"
       )}
     >
       {/* Glow blob */}
@@ -861,7 +861,7 @@ export default function OrdersSection() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Rechercher par référence…"
-            className="h-11 w-full rounded-xl border border-border/60 bg-surface pl-11 pr-10 text-sm font-medium outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/10"
+            className="h-11 w-full rounded-xl border border-border/60 bg-white pl-11 pr-10 text-sm font-medium outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/10"
           />
           {search && (
             <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
@@ -878,7 +878,7 @@ export default function OrdersSection() {
               "flex h-11 items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition-all",
               showFilters
                 ? "border-primary bg-primary/10 text-primary"
-                : "border-border/60 bg-surface text-muted-foreground hover:text-foreground"
+                : "border-border/60 bg-white text-muted-foreground hover:text-foreground"
             )}
           >
             <Filter className="h-4 w-4" />
@@ -886,14 +886,14 @@ export default function OrdersSection() {
           </button>
 
           {/* View toggle */}
-          <div className="flex rounded-xl border border-border/60 bg-surface p-1">
+          <div className="flex rounded-xl border border-border/60 bg-white p-1">
             {(["list", "grid"] as const).map(mode => (
               <button
                 key={mode}
                 onClick={() => setViewMode(mode)}
                 className={cn(
                   "rounded-lg p-2 transition-colors",
-                  viewMode === mode ? "bg-surface-alt text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                  viewMode === mode ? "bg-white-alt text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {mode === "list" ? <List className="h-4 w-4" /> : <LayoutGrid className="h-4 w-4" />}
@@ -912,14 +912,14 @@ export default function OrdersSection() {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="flex flex-wrap items-end gap-4 rounded-2xl border border-border/60 bg-surface-elevated p-5">
+            <div className="flex flex-wrap items-end gap-4 rounded-2xl border border-border/60 bg-white-elevated p-5">
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Du</label>
                 <input
                   type="date"
                   value={dateFrom}
                   onChange={e => setDateFrom(e.target.value)}
-                  className="h-9 rounded-xl border border-border/60 bg-surface px-3 text-sm outline-none focus:border-primary"
+                  className="h-9 rounded-xl border border-border/60 bg-white px-3 text-sm outline-none focus:border-primary"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -928,7 +928,7 @@ export default function OrdersSection() {
                   type="date"
                   value={dateTo}
                   onChange={e => setDateTo(e.target.value)}
-                  className="h-9 rounded-xl border border-border/60 bg-surface px-3 text-sm outline-none focus:border-primary"
+                  className="h-9 rounded-xl border border-border/60 bg-white px-3 text-sm outline-none focus:border-primary"
                 />
               </div>
               {(dateFrom || dateTo) && (
@@ -952,11 +952,11 @@ export default function OrdersSection() {
             "flex shrink-0 items-center gap-2 rounded-xl border px-4 py-2 text-xs font-black transition-all whitespace-nowrap",
             statusFilter === "ALL"
               ? "bg-primary text-white border-primary shadow-md shadow-primary/20"
-              : "border-border/60 bg-surface text-muted-foreground hover:border-primary/40"
+              : "border-border/60 bg-white text-muted-foreground hover:border-primary/40"
           )}
         >
           Toutes
-          <span className={cn("rounded-lg px-1.5 py-0.5 text-[10px]", statusFilter === "ALL" ? "bg-white/20" : "bg-surface-alt")}>
+          <span className={cn("rounded-lg px-1.5 py-0.5 text-[10px]", statusFilter === "ALL" ? "bg-white/20" : "bg-white-alt")}>
             {orders.length}
           </span>
         </button>
@@ -973,11 +973,11 @@ export default function OrdersSection() {
                 "flex shrink-0 items-center gap-2 rounded-xl border px-4 py-2 text-xs font-black transition-all whitespace-nowrap",
                 statusFilter === s
                   ? `${cfg.bg} ${cfg.color} ${cfg.border} shadow-sm`
-                  : "border-border/60 bg-surface text-muted-foreground hover:border-primary/40"
+                  : "border-border/60 bg-white text-muted-foreground hover:border-primary/40"
               )}
             >
               {cfg.label}
-              <span className={cn("rounded-lg px-1.5 py-0.5 text-[10px]", statusFilter === s ? "bg-white/20" : "bg-surface-alt")}>
+              <span className={cn("rounded-lg px-1.5 py-0.5 text-[10px]", statusFilter === s ? "bg-white/20" : "bg-white-alt")}>
                 {count}
               </span>
             </button>

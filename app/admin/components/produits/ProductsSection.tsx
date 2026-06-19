@@ -57,8 +57,8 @@ function StatCard({
       whileHover={{ y: -2, scale: 1.01 }}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
       className={cn(
-        "relative overflow-hidden rounded-[1.25rem] border border-white/20 p-3.5 shadow-sm backdrop-blur-xl",
-        "bg-gradient-to-br from-surface/80 to-surface/30 dark:from-surface/20 dark:to-surface/5"
+        "relative overflow-hidden rounded-[1.25rem] border border-slate-200 dark:border-slate-800 p-3.5 shadow-sm",
+        "bg-white dark:bg-[#1e1e1e]"
       )}
     >
       {/* Pattern de fond subtil (dots) */}
@@ -72,7 +72,7 @@ function StatCard({
           <Icon className={cn("h-4 w-4", color.replace("bg-", "text-"))} />
         </div>
         {sub && (
-          <span className="text-[9px] font-bold text-muted-foreground rounded-full bg-surface/50 backdrop-blur-sm px-2 py-0.5 border border-border/30 shadow-sm">
+          <span className="text-[9px] font-bold text-muted-foreground rounded-full bg-slate-50/50 dark:bg-slate-800/50 backdrop-blur-sm px-2 py-0.5 border border-border/30 shadow-sm">
             {sub}
           </span>
         )}
@@ -246,8 +246,8 @@ export default function ProductsSection() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
             className={cn(
-              "flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold transition-all shadow-sm",
-              showStats ? "border-primary bg-primary/10 text-primary" : "border-border/50 bg-surface text-muted-foreground hover:bg-surface-alt hover:text-foreground"
+              "flex items-center gap-2 cursor-pointer rounded-xl border px-4 py-2.5 text-sm font-semibold transition-all shadow-sm",
+              showStats ? "border-primary bg-primary/10 text-primary" : "border-border/50 bg-white dark:bg-[#1e1e1e] text-muted-foreground hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-foreground"
             )}
           >
             <TrendingUp className="h-4 w-4" />
@@ -258,7 +258,7 @@ export default function ProductsSection() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => { setEditingProduct(null); setFormOpen(true); }}
-            className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary/90"
+            className="flex items-center gap-2 cursor-pointer rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">Ajouter un produit</span>
@@ -295,10 +295,10 @@ export default function ProductsSection() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Rechercher par nom ou SKU..."
-              className="h-10 w-full rounded-xl border border-border/60 bg-surface pl-10 pr-4 text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/15 placeholder:text-muted-foreground/50"
+              className="h-10 w-full rounded-xl border border-border/60 bg-white dark:bg-[#1e1e1e] pl-10 pr-4 text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/15 placeholder:text-muted-foreground/50"
             />
             {search && (
-              <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+              <button onClick={() => setSearch("")} className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                 <X className="h-3.5 w-3.5" />
               </button>
             )}
@@ -308,10 +308,10 @@ export default function ProductsSection() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
             className={cn(
-              "flex items-center gap-2 rounded-xl border px-4 text-sm font-medium transition-all duration-200",
+              "flex items-center gap-2 cursor-pointer rounded-xl border px-4 text-sm font-medium transition-all duration-200",
               showFilters || activeFiltersCount > 0
                 ? "border-primary bg-primary/10 text-primary"
-                : "border-border/60 bg-surface text-muted-foreground hover:bg-surface-alt hover:text-foreground"
+                : "border-border/60 bg-white dark:bg-[#1e1e1e] text-muted-foreground hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-foreground"
             )}
           >
             <SlidersHorizontal className="h-4 w-4" />
@@ -323,7 +323,7 @@ export default function ProductsSection() {
             )}
           </motion.button>
           {/* Compteur résultats */}
-          <div className="flex h-10 items-center gap-1.5 rounded-xl border border-border/40 bg-surface px-3 text-xs text-muted-foreground whitespace-nowrap">
+          <div className="flex h-10 items-center gap-1.5 rounded-xl border border-border/40  px-3 text-xs text-muted-foreground whitespace-nowrap">
             <Filter className="h-3.5 w-3.5" />
             <span className="font-semibold text-foreground">{filteredProducts.length}</span>
             <span className="hidden sm:inline">résultat{filteredProducts.length !== 1 ? "s" : ""}</span>
@@ -340,14 +340,14 @@ export default function ProductsSection() {
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className="overflow-hidden"
             >
-              <div className="rounded-2xl border border-border/50 bg-surface-alt/50 p-4">
+              <div className="rounded-2xl border border-border/50 -alt/50 p-4">
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                     <SlidersHorizontal className="h-3.5 w-3.5" />
                     Filtres avancés
                   </p>
                   {activeFiltersCount > 0 && (
-                    <button onClick={clearFilters} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors">
+                    <button onClick={clearFilters} className="flex items-center cursor-pointer gap-1 text-xs text-muted-foreground hover:text-primary transition-colors">
                       <X className="h-3 w-3" />Effacer tout
                     </button>
                   )}
@@ -359,18 +359,18 @@ export default function ProductsSection() {
                     <select
                       value={filterStock}
                       onChange={e => setFilterStock(e.target.value)}
-                      className="h-9 w-full rounded-xl border border-border bg-surface px-3 text-xs outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+                      className="h-9 w-full rounded-xl border border-border  px-3 text-xs outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
                     >
                       {STOCK_FILTERS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
                     </select>
                   </div>
                   {/* Filtre type */}
                   <div>
-                    <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Type</label>
+                    <label className="mb-1.5 block text-[10px] cursor-pointer font-semibold uppercase tracking-wider text-muted-foreground">Type</label>
                     <select
                       value={filterType}
                       onChange={e => setFilterType(e.target.value)}
-                      className="h-9 w-full rounded-xl border border-border bg-surface px-3 text-xs outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+                      className="h-9 w-full rounded-xl border border-border  px-3 text-xs outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
                     >
                       {TYPE_FILTERS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
                     </select>
@@ -381,7 +381,7 @@ export default function ProductsSection() {
                     <select
                       value={filterCategory}
                       onChange={e => setFilterCategory(e.target.value)}
-                      className="h-9 w-full rounded-xl border border-border bg-surface px-3 text-xs outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+                      className="h-9 w-full cursor-pointer rounded-xl border border-border  px-3 text-xs outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
                     >
                       <option value="">Toutes les catégories</option>
                       {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -393,8 +393,8 @@ export default function ProductsSection() {
                     <button
                       onClick={() => setFilterTop(!filterTop)}
                       className={cn(
-                        "h-9 w-full rounded-xl border flex items-center gap-2 px-3 text-xs font-medium transition-all",
-                        filterTop ? "border-amber-400 bg-amber-50 text-amber-700" : "border-border bg-surface text-muted-foreground hover:border-border/80"
+                        "h-9 w-full rounded-xl cursor-pointer border flex items-center gap-2 px-3 text-xs font-medium transition-all",
+                        filterTop ? "border-amber-400 bg-amber-50 text-amber-700" : "border-border  text-muted-foreground hover:border-border/80"
                       )}
                     >
                       <Crown className={cn("h-3.5 w-3.5", filterTop ? "text-amber-500" : "")} />
@@ -410,19 +410,19 @@ export default function ProductsSection() {
 
       {/* Bouton bascule de vue juste au-dessus de la liste */}
       <div className="flex justify-end">
-        <div className="flex items-center rounded-[14px] border border-border/50 bg-surface/60 backdrop-blur-sm p-1 shadow-sm">
+        <div className="flex items-center rounded-[14px] border border-border/50 /60 backdrop-blur-sm p-1 shadow-sm">
           <button
             onClick={() => setViewMode("grid")}
-            className={cn("rounded-[10px] p-2 transition-all duration-200 flex items-center gap-2",
-              viewMode === "grid" ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-surface-alt"
+            className={cn("rounded-[10px] p-2 cursor-pointer transition-all duration-200 flex items-center gap-2",
+              viewMode === "grid" ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-slate-50 dark:hover:bg-slate-800"
             )}
           >
             <LayoutGrid className="h-4 w-4" />
           </button>
           <button
             onClick={() => setViewMode("list")}
-            className={cn("rounded-[10px] p-2 transition-all duration-200 flex items-center gap-2",
-              viewMode === "list" ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-surface-alt"
+            className={cn("rounded-[10px] p-2 cursor-pointer transition-all duration-200 flex items-center gap-2",
+              viewMode === "list" ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-slate-50 dark:hover:bg-slate-800"
             )}
           >
             <List className="h-4 w-4" />
