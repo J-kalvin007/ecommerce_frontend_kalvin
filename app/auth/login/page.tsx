@@ -6,6 +6,8 @@
 
 import type { Metadata } from "next";
 import { LoginPageView } from "./components/LoginPageView";
+import Header from "@/components/layout/LegacyHeader";
+import { LegacyFooter } from "@/components/layout/LegacyFooter";
 // import LoginClient from "./components/LoginClient";
 
 export const metadata: Metadata = {
@@ -15,5 +17,13 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   // return <LoginClient />;
-  return <LoginPageView />;
+  // return <LoginPageView />;
+
+  return (
+    <main>
+      <Header />;
+      <LoginPageView />;
+      <LegacyFooter />;
+    </main>
+  )
 }

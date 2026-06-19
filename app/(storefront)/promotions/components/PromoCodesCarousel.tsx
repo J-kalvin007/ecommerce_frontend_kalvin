@@ -5,16 +5,16 @@ import Image from "next/image";
 import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import { Check, ChevronLeft, ChevronRight, Loader2, Tag, Zap } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
-import { useApplyPromoCode } from "@/hooks/useApplyPromoCode";
 import { useCartStore } from "@/store/cartStore";
-import type { PublicPromoCode, PublicPromoProduct } from "@/lib/ecommerce-api";
+import { useApplyPromoCode } from "@/hooks/useApplyPromoCode";
+import type { PromoCodeList } from "@/modeles/promotions";
 
 type PromoCodesCarouselProps = {
-  promos: PublicPromoCode[];
+  promos: PromoCodeList[];
   className?: string;
 };
 
-function promoLabel(promo: PublicPromoCode) {
+function promoLabel(promo: PromoCodeList) {
   if (promo.type === "percentage") {
     return `-${parseFloat(promo.value)}%`;
   }
@@ -24,12 +24,11 @@ function promoLabel(promo: PublicPromoCode) {
   return formatCurrency(parseFloat(promo.value), "FCFA");
 }
 
-function getFeaturedProduct(promo: PublicPromoCode): PublicPromoProduct | null {
-  return promo.applicable_product_labels?.[0] ?? null;
-}
+// Image par défaut pour le placeholder
+const DEFAULT_PROMO_IMAGE = "/assets/images/promo-placeholder.png"; // à adapter
 
 type PromoCarouselCardProps = {
-  promo: PublicPromoCode;
+  promo: PromoCodeList;
   isActive: boolean;
   offset: number;
   onSelect: () => void;
@@ -41,7 +40,8 @@ function PromoCarouselCard({ promo, isActive, offset, onSelect }: PromoCarouselC
   const [feedback, setFeedback] = useState<string | null>(null);
   const [burst, setBurst] = useState(false);
 
-  const product = getFeaturedProduct(promo);
+  // Aucun produit spécifique associé dans PromoCodeList, on utilise une image par défaut
+  const promoImage = DEFAULT_PROMO_IMAGE;
   const isApplying = applyingCode === promo.code.toUpperCase();
   const isApplied = activePromoCode === promo.code.toUpperCase();
   const isSide = Math.abs(offset) === 1;
@@ -50,13 +50,11 @@ function PromoCarouselCard({ promo, isActive, offset, onSelect }: PromoCarouselC
   async function handleUse(event: React.MouseEvent) {
     event.stopPropagation();
 
-    if (!isActive || isApplying) {
-      return;
-    }
+    if (!isActive || isApplying) return;
 
     if (isApplied) {
       toggleDrawer(true);
-      setFeedback("Code deja applique");
+      setFeedback("Code déjà appliqué");
       return;
     }
 
@@ -101,20 +99,14 @@ function PromoCarouselCard({ promo, isActive, offset, onSelect }: PromoCarouselC
           transition={{ type: "spring", stiffness: 260, damping: 22 }}
           className="pointer-events-none absolute left-1/2 top-0 z-20 h-44 w-36 -translate-x-1/2"
         >
-          {product?.image ? (
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              sizes="160px"
-              className="object-contain drop-shadow-[0_22px_28px_rgba(0,0,0,0.28)]"
-              priority={isActive}
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center rounded-full bg-white/80 shadow-[0_18px_30px_rgba(0,0,0,0.12)]">
-              <Tag className={cn("h-14 w-14", isActive ? "text-[#1f4d3f]" : "text-gray-400")} />
-            </div>
-          )}
+          <Image
+            src={promoImage}
+            alt="Code promo"
+            fill
+            sizes="160px"
+            className="object-contain drop-shadow-[0_22px_28px_rgba(0,0,0,0.28)]"
+            priority={isActive}
+          />
         </motion.div>
 
         <motion.div
@@ -156,7 +148,7 @@ function PromoCarouselCard({ promo, isActive, offset, onSelect }: PromoCarouselC
               isActive ? "text-white" : "text-[#6b7568]"
             )}
           >
-            {product?.name || promo.description || "Offre speciale"}
+            {promo.description || "Offre spéciale"}
           </motion.p>
 
           <div
@@ -191,7 +183,7 @@ function PromoCarouselCard({ promo, isActive, offset, onSelect }: PromoCarouselC
               {promo.code}
             </p>
 
-            {promo.description && product?.name ? (
+            {promo.description ? (
               <p className={cn("line-clamp-2 text-center text-xs leading-5", isActive ? "text-white/65" : "text-[#9aa297]")}>
                 {promo.description}
               </p>
@@ -246,9 +238,7 @@ export function PromoCodesCarousel({ promos, className }: PromoCodesCarouselProp
 
   const goTo = useCallback(
     (index: number) => {
-      if (count === 0) {
-        return;
-      }
+      if (count === 0) return;
       const normalized = ((index % count) + count) % count;
       setActiveIndex(normalized);
     },
@@ -262,33 +252,21 @@ export function PromoCodesCarousel({ promos, className }: PromoCodesCarouselProp
   }, [activeIndex, count]);
 
   const slideOffsets = useMemo(() => {
-    if (count <= 1) {
-      return [0];
-    }
-
+    if (count <= 1) return [0];
     return promos.map((_, index) => {
       let offset = index - activeIndex;
-      if (offset > count / 2) {
-        offset -= count;
-      }
-      if (offset < -count / 2) {
-        offset += count;
-      }
+      if (offset > count / 2) offset -= count;
+      if (offset < -count / 2) offset += count;
       return offset;
     });
   }, [activeIndex, count, promos]);
 
   function handleDragEnd(_: unknown, info: PanInfo) {
-    if (info.offset.x < -60) {
-      goTo(activeIndex + 1);
-    } else if (info.offset.x > 60) {
-      goTo(activeIndex - 1);
-    }
+    if (info.offset.x < -60) goTo(activeIndex + 1);
+    else if (info.offset.x > 60) goTo(activeIndex - 1);
   }
 
-  if (count === 0) {
-    return null;
-  }
+  if (count === 0) return null;
 
   return (
     <div className={cn("relative", className)}>
@@ -298,7 +276,7 @@ export function PromoCodesCarousel({ promos, className }: PromoCodesCarouselProp
             type="button"
             onClick={() => goTo(activeIndex - 1)}
             className="absolute left-0 top-1/2 z-30 hidden -translate-y-1/2 rounded-full border border-[#d8ddd3] bg-white/90 p-2.5 text-[#1f4d3f] shadow-md backdrop-blur-sm transition hover:bg-white sm:flex"
-            aria-label="Code promo precedent"
+            aria-label="Code promo précédent"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -322,9 +300,7 @@ export function PromoCodesCarousel({ promos, className }: PromoCodesCarouselProp
       >
         {slideOffsets.map((offset, index) => {
           const promo = promos[index];
-          if (Math.abs(offset) > 1) {
-            return null;
-          }
+          if (Math.abs(offset) > 1) return null;
 
           return (
             <PromoCarouselCard
@@ -333,9 +309,7 @@ export function PromoCodesCarousel({ promos, className }: PromoCodesCarouselProp
               isActive={offset === 0}
               offset={offset}
               onSelect={() => {
-                if (offset !== 0) {
-                  goTo(index);
-                }
+                if (offset !== 0) goTo(index);
               }}
             />
           );

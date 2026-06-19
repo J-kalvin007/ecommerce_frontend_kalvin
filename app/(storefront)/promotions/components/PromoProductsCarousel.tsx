@@ -1,16 +1,32 @@
+// "use client";
+
+// import { useCallback, useEffect, useMemo, useState } from "react";
+// import { motion, type PanInfo } from "framer-motion";
+// import { ChevronLeft, ChevronRight } from "lucide-react";
+// import { PromoOfferCard } from "@/app/(storefront)/promotions/components/PromoOfferCard";
+
+// type PromoProductsCarouselProps = {
+//   items: PromoProductCard[];
+//   className?: string;
+// };
+
+
+
+
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion, type PanInfo } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { PromoOfferCard } from "./PromoOfferCard";
+import { PromoProductCard } from "./PromotionsPage";
 import { cn } from "@/lib/utils";
-import type { PromoProductCard } from "@/lib/promotions";
-import { PromoOfferCard } from "@/app/(storefront)/promotions/components/PromoOfferCard";
 
 type PromoProductsCarouselProps = {
   items: PromoProductCard[];
   className?: string;
 };
+
 
 type ProductCarouselSlideProps = {
   item: PromoProductCard;

@@ -94,11 +94,11 @@ import type { Metadata } from "next";
 import AgriShowcaseSection from "@/app/(storefront)/components/AgriShowcaseSection";
 import FermeSolimeSection from "@/app/(storefront)/components/FermeSolimeSection";
 import FeaturesSection from "@/app/(storefront)/components/FeaturesSection";
-import HeroSection from "@/components/home/HeroSection";
-import HomePromotionsSection from "@/app/(storefront)/promotions/components/HomePromotionsSection";
-import HomeTrendingProducts from "@/components/home/HomeTrendingProducts";
 import TestimonialsSection from "@/app/(storefront)/components/TestimonialsSection";
 import TrustBand from "@/app/(storefront)/components/TrustBand";
+import HomeTrendingProducts from "./components/HomeTrendingProducts";
+import HomePromotionsSection from "./components/HomePromotionsSection";
+import HeroSection from "./components/HeroSection";
 
 export const metadata: Metadata = {
   title: "Atelier du Terroir — Produits agricoles frais et authentiques",

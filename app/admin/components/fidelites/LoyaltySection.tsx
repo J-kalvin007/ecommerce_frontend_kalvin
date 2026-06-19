@@ -16,10 +16,10 @@ import { computeLoyaltyStats } from "@/modeles/fidelites";
 
 // ─── Composants spéciaux partagés ────────────────────────────────────────────
 import Toast from "@/components/notifications/Toast";
-import LoadingKalvin from "@/components/widgets_originaux/special/loadingKalvin";
-import EmptyState from "@/components/widgets_originaux/special/EmptyState";
-import ErrorState from "@/components/widgets_originaux/special/ErrorState";
-import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
+import LoadingKalvin from "@/components/special/loadingKalvin";
+import EmptyState from "@/components/special/EmptyState";
+import ErrorState from "@/components/special/ErrorState";
+import ConfirmDialog from "@/components/special/ConfirmDialog";
 
 // ─── Sous-composants fidélité ────────────────────────────────────────────────
 import { LoyaltyStatsBar } from "./components/LoyaltyStatsBar";

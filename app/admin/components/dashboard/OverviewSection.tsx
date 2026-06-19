@@ -289,8 +289,8 @@ import { getAdminCategories } from "@/fonctions_api/categories.api";
 import { getAdminProducts } from "@/fonctions_api/produits.api";
 import type { ProductDetail } from "@/modeles/produits";
 
-import LoadingStyle from "@/components/widgets_originaux/special/loadingStyle";
-import ErrorState from "@/components/widgets_originaux/special/ErrorState";
+import LoadingStyle from "@/components/special/loadingStyle";
+import ErrorState from "@/components/special/ErrorState";
 
 interface OverviewOrder {
   id: string;

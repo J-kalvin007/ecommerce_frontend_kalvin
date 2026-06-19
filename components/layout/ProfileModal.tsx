@@ -689,7 +689,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
   LogOut,
   X,
@@ -715,6 +715,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { patchUser, changePassword } from "@/fonctions_api/auth.api";
+import { useTheme } from "@/hooks/useTheme";
 import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
 import Toast from "@/components/notifications/Toast";
 import {
@@ -738,14 +739,14 @@ interface ProfileModalProps {
 /*  Variantes d'animation (purement visuelles, aucune logique métier touchée)  */
 /* -------------------------------------------------------------------------- */
 
-const containerStagger = {
+const containerStagger: Variants = {
   hidden: {},
   visible: {
     transition: { staggerChildren: 0.07, delayChildren: 0.05 },
   },
 };
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 14 },
   visible: {
     opacity: 1,
@@ -762,6 +763,7 @@ export default function ProfileModal({
   onProfileUpdate,
 }: ProfileModalProps) {
   const router = useRouter();
+  const { theme } = useTheme();
 
   // États locaux
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -826,8 +828,8 @@ export default function ProfileModal({
   const roleLabel = profile?.role === "platform_admin" ? "Administrateur" : "Client";
   const roleColor =
     profile?.role === "platform_admin"
-      ? "from-amber-500 to-yellow-600"
-      : "from-primary to-primary/80";
+      ? "from-orange-500 to-orange-600"
+      : "from-green-500 to-green-600";
 
   // Gestionnaire de modification de la photo
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -945,7 +947,7 @@ export default function ProfileModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="max-w-5xl overflow-hidden rounded-[28px] border border-border bg-surface-elevated p-0 shadow-2xl ring-1 ring-black/5">
+        <DialogContent className="max-w-5xl overflow-hidden rounded-[28px] border p-0 shadow-2xl ring-1 ring-black/5 bg-white border-black/5 dark:bg-[#121212] dark:border-white/10">
           <div className="relative flex max-h-[90vh] flex-col">
             {/* Liseré signature : dégradé animé, seul geste "fort" du design */}
             <motion.div
@@ -961,7 +963,7 @@ export default function ProfileModal({
             />
 
             {/* Header */}
-            <div className="relative flex items-center justify-between gap-4 border-b border-border bg-gradient-to-b from-surface-alt/60 to-transparent px-6 py-5">
+            <div className="relative flex items-center justify-between gap-4 border-b px-6 py-5 border-black/5 bg-gradient-to-b from-black/[0.02] to-transparent dark:border-white/10 dark:from-white/[0.02]">
               <div className="flex items-center gap-3.5">
                 <div className="relative">
                   <div className="absolute inset-0 rounded-2xl bg-primary/20 blur-md" />
@@ -970,10 +972,10 @@ export default function ProfileModal({
                   </div>
                 </div>
                 <div>
-                  <DialogTitle className="text-xl font-bold tracking-tight">
+                  <DialogTitle className="text-xl font-bold tracking-tight text-black dark:text-white">
                     Mon profil
                   </DialogTitle>
-                  <DialogDescription className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
+                  <DialogDescription className="text-[11px] font-medium uppercase tracking-[0.12em] text-neutral-500 dark:text-neutral-400">
                     Gérez vos informations personnelles
                   </DialogDescription>
                 </div>
@@ -983,7 +985,7 @@ export default function ProfileModal({
                 whileHover={{ rotate: 90, scale: 1.05 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ duration: 0.25 }}
-                className="rounded-full p-2 text-muted transition-colors hover:bg-surface hover:text-foreground"
+                className="rounded-full p-2 transition-colors text-neutral-500 hover:bg-black/5 hover:text-black dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white"
               >
                 <X className="h-5 w-5" />
               </motion.button>
@@ -1019,14 +1021,13 @@ export default function ProfileModal({
                     >
                       <div className="relative h-full w-full overflow-hidden rounded-full bg-white ring-4 ring-white/80">
                         {imagePreview ? (
-                          // eslint-disable-next-line @next/next/no-img-element
                           <img
-                            src={imagePreview}
+                            src={imagePreview.replace(/^http:\/\//i, 'https://')}
                             alt="Avatar"
                             className="h-full w-full object-cover"
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-surface text-3xl font-bold text-foreground">
+                          <div className="flex h-full w-full items-center justify-center text-3xl font-bold bg-neutral-100 text-black dark:bg-[#1e1e1e] dark:text-white">
                             {getInitials(profile.name)}
                           </div>
                         )}
@@ -1040,7 +1041,7 @@ export default function ProfileModal({
                           animate={{ opacity: 1, scale: 1, y: 0 }}
                           exit={{ opacity: 0, scale: 0.7, y: 8 }}
                           transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                          className="absolute -bottom-1 -right-1 flex gap-1.5 rounded-full border border-border bg-surface-elevated/90 p-1.5 shadow-lg backdrop-blur-md"
+                          className="absolute -bottom-1 -right-1 flex gap-1.5 rounded-full border p-1.5 shadow-lg backdrop-blur-md border-black/5 bg-white/90 dark:border-white/10 dark:bg-[#1e1e1e]/90"
                         >
                           <motion.button
                             onClick={() => fileInputRef.current?.click()}
@@ -1075,7 +1076,7 @@ export default function ProfileModal({
                   </div>
 
                   <div className="text-center">
-                    <h3 className="text-xl font-bold tracking-tight">{profile.name}</h3>
+                    <h3 className="text-xl font-bold tracking-tight text-black dark:text-white">{profile.name}</h3>
                     <div
                       className={cn(
                         "mt-2 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm",
@@ -1104,7 +1105,7 @@ export default function ProfileModal({
                     <div className="h-px flex-1 bg-border" />
                   </div>
 
-                  <div className="relative w-full overflow-hidden rounded-2xl border border-border bg-surface p-4 text-center">
+                  <div className="relative w-full overflow-hidden rounded-2xl border p-4 text-center border-black/5 bg-neutral-50 dark:border-white/10 dark:bg-[#1e1e1e]">
                     <div
                       aria-hidden
                       className="pointer-events-none absolute inset-0 opacity-[0.04]"
@@ -1122,7 +1123,7 @@ export default function ProfileModal({
                         Membre depuis le
                       </p>
                     </div>
-                    <p className="relative mt-1.5 text-sm font-semibold tabular-nums">
+                    <p className="relative mt-1.5 text-sm font-semibold tabular-nums text-black dark:text-white">
                       {new Date().toLocaleDateString("fr-FR")}
                     </p>
                   </div>
@@ -1133,10 +1134,10 @@ export default function ProfileModal({
                   {/* Bloc Informations personnelles */}
                   <motion.div
                     variants={fadeUp}
-                    className="rounded-2xl border border-border bg-surface p-5 transition-shadow hover:shadow-sm sm:p-6"
+                    className="rounded-2xl border p-5 transition-shadow hover:shadow-sm sm:p-6 border-black/5 bg-neutral-50 dark:border-white/10 dark:bg-[#1e1e1e]"
                   >
                     <div className="mb-5 flex items-center justify-between">
-                      <h4 className="flex items-center gap-2.5 text-lg font-semibold tracking-tight">
+                      <h4 className="flex items-center gap-2.5 text-lg font-semibold tracking-tight text-black dark:text-white">
                         <span className="rounded-xl bg-primary/10 p-1.5">
                           <UserRound className="h-4.5 w-4.5 text-primary" />
                         </span>
@@ -1147,7 +1148,7 @@ export default function ProfileModal({
                           onClick={() => setIsEditingProfile(true)}
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
-                          className="flex items-center gap-1.5 rounded-xl bg-surface-alt px-3.5 py-1.5 text-xs font-semibold text-primary shadow-sm transition hover:bg-primary/10"
+                          className="flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold shadow-sm transition bg-white text-green-600 hover:bg-neutral-100 dark:bg-[#2a2a2a] dark:text-green-400 dark:hover:bg-[#333]"
                         >
                           <Edit2 className="h-3.5 w-3.5" />
                           Modifier
@@ -1166,7 +1167,7 @@ export default function ProfileModal({
                           }}
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
-                          className="rounded-xl bg-surface-alt px-3.5 py-1.5 text-xs font-semibold text-muted-foreground transition hover:bg-surface"
+                          className="rounded-xl px-3.5 py-1.5 text-xs font-semibold transition bg-white text-neutral-500 hover:bg-neutral-100 dark:bg-[#2a2a2a] dark:text-neutral-400 dark:hover:bg-[#333]"
                         >
                           Annuler
                         </motion.button>
@@ -1199,7 +1200,7 @@ export default function ProfileModal({
                           ].map(({ icon: Icon, label, value }) => (
                             <div
                               key={label}
-                              className="group flex items-center gap-3 rounded-xl p-2.5 transition-colors hover:bg-surface-alt/70"
+                              className="group flex items-center gap-3 rounded-xl p-2.5 transition-colors hover:bg-white dark:hover:bg-[#2a2a2a]"
                             >
                               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
                                 <Icon className="h-4 w-4" />
@@ -1208,7 +1209,7 @@ export default function ProfileModal({
                                 <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                                   {label}
                                 </p>
-                                <p className="truncate text-sm font-medium">{value}</p>
+                                <p className="truncate text-sm font-medium text-neutral-800 dark:text-neutral-200">{value}</p>
                               </div>
                             </div>
                           ))}
@@ -1236,7 +1237,7 @@ export default function ProfileModal({
                                   onChange={(e) =>
                                     setFormData({ ...formData, name: e.target.value })
                                   }
-                                  className="w-full rounded-xl border border-border bg-background py-2.5 pl-10 pr-4 text-sm shadow-sm outline-none transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                                  className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm shadow-sm outline-none transition-all duration-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 border-black/5 bg-white text-black dark:border-white/10 dark:bg-[#121212] dark:text-white"
                                   required
                                 />
                               </div>
@@ -1253,7 +1254,7 @@ export default function ProfileModal({
                                   onChange={(e) =>
                                     setFormData({ ...formData, email: e.target.value })
                                   }
-                                  className="w-full rounded-xl border border-border bg-background py-2.5 pl-10 pr-4 text-sm shadow-sm outline-none transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                                  className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm shadow-sm outline-none transition-all duration-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 border-black/5 bg-white text-black dark:border-white/10 dark:bg-[#121212] dark:text-white"
                                   required
                                 />
                               </div>
@@ -1270,7 +1271,7 @@ export default function ProfileModal({
                                   onChange={(e) =>
                                     setFormData({ ...formData, phone_number: e.target.value })
                                   }
-                                  className="w-full rounded-xl border border-border bg-background py-2.5 pl-10 pr-4 text-sm shadow-sm outline-none transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                                  className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm shadow-sm outline-none transition-all duration-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 border-black/5 bg-white text-black dark:border-white/10 dark:bg-[#121212] dark:text-white"
                                 />
                               </div>
                             </div>
@@ -1281,7 +1282,7 @@ export default function ProfileModal({
                               disabled={isSavingProfile}
                               whileHover={{ scale: isSavingProfile ? 1 : 1.02 }}
                               whileTap={{ scale: isSavingProfile ? 1 : 0.98 }}
-                              className="flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-primary/90 disabled:opacity-50"
+                              className="flex items-center gap-2 rounded-xl bg-green-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-green-600 disabled:opacity-50"
                             >
                               {isSavingProfile ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -1299,10 +1300,10 @@ export default function ProfileModal({
                   {/* Bloc Sécurité (mot de passe) */}
                   <motion.div
                     variants={fadeUp}
-                    className="rounded-2xl border border-border bg-surface p-5 transition-shadow hover:shadow-sm sm:p-6"
+                    className="rounded-2xl border p-5 transition-shadow hover:shadow-sm sm:p-6 border-black/5 bg-neutral-50 dark:border-white/10 dark:bg-[#1e1e1e]"
                   >
                     <div className="flex items-center justify-between">
-                      <h4 className="flex items-center gap-2.5 text-lg font-semibold tracking-tight">
+                      <h4 className="flex items-center gap-2.5 text-lg font-semibold tracking-tight text-black dark:text-white">
                         <span className="rounded-xl bg-primary/10 p-1.5">
                           <Lock className="h-4.5 w-4.5 text-primary" />
                         </span>
@@ -1313,7 +1314,7 @@ export default function ProfileModal({
                           onClick={() => setIsChangingPassword(true)}
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
-                          className="flex items-center gap-1.5 rounded-xl bg-surface-alt px-3.5 py-1.5 text-xs font-semibold text-primary shadow-sm transition hover:bg-primary/10"
+                          className="flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold shadow-sm transition bg-white text-orange-600 hover:bg-neutral-100 dark:bg-[#2a2a2a] dark:text-orange-400 dark:hover:bg-[#333]"
                         >
                           <Key className="h-3.5 w-3.5" />
                           Changer mon mot de passe
@@ -1350,7 +1351,7 @@ export default function ProfileModal({
                                   onChange={(e) =>
                                     setPassData({ ...passData, new_password1: e.target.value })
                                   }
-                                  className="w-full rounded-xl border border-border bg-background py-2.5 pl-10 pr-4 text-sm shadow-sm outline-none transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                                  className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm shadow-sm outline-none transition-all duration-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 border-black/5 bg-white text-black dark:border-white/10 dark:bg-[#121212] dark:text-white"
                                   required
                                   minLength={8}
                                 />
@@ -1368,7 +1369,7 @@ export default function ProfileModal({
                                   onChange={(e) =>
                                     setPassData({ ...passData, new_password2: e.target.value })
                                   }
-                                  className="w-full rounded-xl border border-border bg-background py-2.5 pl-10 pr-4 text-sm shadow-sm outline-none transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                                  className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm shadow-sm outline-none transition-all duration-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 border-black/5 bg-white text-black dark:border-white/10 dark:bg-[#121212] dark:text-white"
                                   required
                                 />
                               </div>
@@ -1383,7 +1384,7 @@ export default function ProfileModal({
                               }}
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
-                              className="rounded-xl border border-border px-4 py-2 text-sm font-medium transition hover:bg-surface-alt"
+                              className="rounded-xl border px-4 py-2 text-sm font-medium transition border-neutral-200 text-neutral-700 hover:bg-neutral-100 dark:border-white/10 dark:text-neutral-300 dark:hover:bg-white/10"
                             >
                               Annuler
                             </motion.button>
@@ -1392,7 +1393,7 @@ export default function ProfileModal({
                               disabled={isSavingPassword}
                               whileHover={{ scale: isSavingPassword ? 1 : 1.02 }}
                               whileTap={{ scale: isSavingPassword ? 1 : 0.98 }}
-                              className="flex items-center gap-2 rounded-xl bg-primary px-6 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-primary/90 disabled:opacity-50"
+                              className="flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-orange-600 disabled:opacity-50"
                             >
                               {isSavingPassword ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -1423,7 +1424,7 @@ export default function ProfileModal({
             </div>
 
             {/* Footer avec informations de session */}
-            <div className="border-t border-border bg-surface-alt/80 px-6 py-4 backdrop-blur-sm">
+            <div className="border-t px-6 py-4 backdrop-blur-sm border-black/5 bg-neutral-50/80 text-neutral-500 dark:border-white/10 dark:bg-[#161616]/80 dark:text-neutral-400">
               <div className="flex flex-col items-center justify-between gap-2 text-xs text-muted-foreground sm:flex-row">
                 <div className="flex items-center gap-2">
                   <span className="relative flex h-2 w-2">
@@ -1440,7 +1441,7 @@ export default function ProfileModal({
                   <span className="tabular-nums">{new Date().toLocaleTimeString("fr-FR")}</span>
                 </div>
                 <div className="flex items-center gap-2 font-medium uppercase tracking-[0.08em] text-[11px]">
-                  <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                  <ShieldCheck className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
                   <span>L'Atelier du Terroir – Zone client</span>
                 </div>
               </div>

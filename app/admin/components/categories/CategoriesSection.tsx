@@ -472,10 +472,10 @@ import {
 } from "@/fonctions_api/categories.api";
 import type { Category } from "@/modeles/categories";
 import Toast from "@/components/notifications/Toast";
-import LoadingStyle from "@/components/widgets_originaux/special/loadingStyle";
-import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
-import ErrorState from "@/components/widgets_originaux/special/ErrorState";
-import EmptyState from "@/components/widgets_originaux/special/EmptyState";
+import LoadingStyle from "@/components/special/loadingStyle";
+import ConfirmDialog from "@/components/special/ConfirmDialog";
+import ErrorState from "@/components/special/ErrorState";
+import EmptyState from "@/components/special/EmptyState";
 import CategoryCard from "./components/CategoryCard";
 import CategoryModal from "./components/CategoryModal";
 import CategoryDetailModal from "./components/CategoryDetailModal";

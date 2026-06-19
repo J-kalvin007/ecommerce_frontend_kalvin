@@ -22,10 +22,10 @@ import { VariantFormModal } from "./components/VariantFormModal";
 import { INITIAL_FORM, buildProductPayload } from "./productsUtils";
 import type { ProductFormState, UploadedProductImage } from "./productsUtils";
 import Toast from "@/components/notifications/Toast";
-import LoadingStyle from "@/components/widgets_originaux/special/loadingStyle";
-import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
-import ErrorState from "@/components/widgets_originaux/special/ErrorState";
-import EmptyState from "@/components/widgets_originaux/special/EmptyState";
+import LoadingStyle from "@/components/special/loadingStyle";
+import ConfirmDialog from "@/components/special/ConfirmDialog";
+import ErrorState from "@/components/special/ErrorState";
+import EmptyState from "@/components/special/EmptyState";
 import { ProductList } from "./components/ProductList";
 import { motion, AnimatePresence } from "framer-motion";
 

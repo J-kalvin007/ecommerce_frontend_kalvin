@@ -6,6 +6,8 @@
 
 import type { Metadata } from "next";
 import { RegisterPageView } from "./components/RegisterPageView";
+import Header from "@/components/layout/LegacyHeader";
+import { LegacyFooter } from "@/components/layout/LegacyFooter";
 // import RegisterClient from "./components/RegisterClient";
 
 export const metadata: Metadata = {
@@ -15,5 +17,11 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   // return <RegisterClient />;
-  return <RegisterPageView />;
+  return (
+    <main>
+      <Header />;
+      <RegisterPageView />;
+      <LegacyFooter />;
+    </main>
+  )
 }

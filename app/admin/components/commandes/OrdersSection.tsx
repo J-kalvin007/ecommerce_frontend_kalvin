@@ -603,10 +603,10 @@ import { getAdminOrders, updateOrderStatus } from "@/fonctions_api/commandes.api
 import type { OrderList, OrderStatus, AdminOrderFilters } from "@/modeles/commandes";
 import { ORDER_STATUS_MAP } from "@/modeles/commandes";
 import Toast from "@/components/notifications/Toast";
-import LoadingKalvin from "@/components/widgets_originaux/special/loadingKalvin";
-import EmptyState from "@/components/widgets_originaux/special/EmptyState";
-import ErrorState from "@/components/widgets_originaux/special/ErrorState";
-import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
+import LoadingKalvin from "@/components/special/loadingKalvin";
+import EmptyState from "@/components/special/EmptyState";
+import ErrorState from "@/components/special/ErrorState";
+import ConfirmDialog from "@/components/special/ConfirmDialog";
 import { OrderDetailModal } from "./components/OrderDetailModal";
 import { OrderCard } from "./components/Ordercard";
 

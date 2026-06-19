@@ -16,10 +16,10 @@ import { BannerCard } from "./components/BannerCard";
 import { BannerFormModal } from "./components/BannerFormModal";
 import { BannerDetailModal } from "./components/BannerDetailModal";
 
-import EmptyState from "@/components/widgets_originaux/special/EmptyState";
-import LoadingStyle from "@/components/widgets_originaux/special/loadingStyle";
-import Toast from "@/components/widgets_originaux/special/Toast";
-import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
+import EmptyState from "@/components/special/EmptyState";
+import LoadingStyle from "@/components/special/loadingStyle";
+import Toast from "@/components/special/Toast";
+import ConfirmDialog from "@/components/special/ConfirmDialog";
 import { cn } from "@/lib/utils";
 
 export default function BannersSection() {

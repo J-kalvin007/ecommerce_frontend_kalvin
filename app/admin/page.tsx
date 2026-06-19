@@ -32,8 +32,8 @@
 // app/admin/page.tsx
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import AdminDashboard from "./components/dashboard/AdminDashboard";
 import LoadingStyle from "@/components/widgets_originaux/special/loadingStyle";
+import AdminDashboard from "./components/dashboard/components/AdminDashboard";
 
 export const metadata: Metadata = {
   title: "Dashboard Administrateur - Atelier du Terroir",

@@ -26,7 +26,8 @@ import {
 import { login as loginApi } from "@/fonctions_api/auth.api";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
-import Toast from "@/components/notifications/Toast";
+import Toast from "@/components/special/Toast";
+
 
 export default function LoginClient() {
   const router = useRouter();

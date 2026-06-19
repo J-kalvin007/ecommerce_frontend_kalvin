@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { ProductsCatalogClient } from "@/components/product/ProductsCatalogClient";
-import { LegacyFooter } from "@/components/layout/LegacyFooter";
-import { LegacyHeader } from "@/components/layout/LegacyHeader";
+import { ProductsCatalogClient } from "./components/ProductsCatalogClient";
 
 export const metadata: Metadata = {
   title: "Boutique — Atelier du Terroir",
@@ -12,11 +10,11 @@ export const metadata: Metadata = {
 export default function ProductsPage() {
   return (
     <>
-      <LegacyHeader />
+
       <main>
         <ProductsCatalogClient />
       </main>
-      <LegacyFooter />
+
     </>
   );
 }

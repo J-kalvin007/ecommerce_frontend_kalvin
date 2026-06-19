@@ -629,10 +629,10 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
               </div>
               <div className="hidden sm:block">
                 <span className="block text-[13.5px] font-bold leading-none tracking-tight text-slate-900">
-                  Atelier du Terroir
+                  ATELIER DU TERROIR
                 </span>
                 <span className="mt-1.5 block text-[9px] font-semibold uppercase tracking-[0.16em] text-primary/70">
-                  Espace Admin
+                  E-COMMERCE
                 </span>
               </div>
             </Link>
