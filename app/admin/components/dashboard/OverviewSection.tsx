@@ -289,8 +289,8 @@ import { getAdminCategories } from "@/fonctions_api/categories.api";
 import { getAdminProducts } from "@/fonctions_api/produits.api";
 import type { ProductDetail } from "@/modeles/produits";
 
-import LoadingStyle from "@/components/special/loadingStyle";
-import ErrorState from "@/components/special/ErrorState";
+import LoadingStyle from "@/components/widgets_originaux/special/loadingStyle";
+import ErrorState from "@/components/widgets_originaux/special/ErrorState";
 
 interface OverviewOrder {
   id: string;
@@ -632,7 +632,7 @@ export default function OverviewSection() {
                         className={cn(
                           "shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-medium",
                           STATUS_STYLES[order.status || ""] ||
-                            "border-slate-200 bg-slate-100 text-slate-600"
+                          "border-slate-200 bg-slate-100 text-slate-600"
                         )}
                       >
                         {STATUS_LABELS[order.status || ""] || order.status || "Statut inconnu"}

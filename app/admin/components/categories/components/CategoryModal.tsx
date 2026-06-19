@@ -229,7 +229,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/special/ui/Dialog";
+} from "@/components/widgets_originaux/special/ui/Dialog";
 import type { Category } from "@/modeles/categories";
 
 interface CategoryModalProps {
@@ -327,8 +327,8 @@ export default function CategoryModal({
               {isEditing
                 ? "Modifier la catégorie"
                 : initialData.parentId
-                ? "Ajouter une sous-catégorie"
-                : "Nouvelle catégorie"}
+                  ? "Ajouter une sous-catégorie"
+                  : "Nouvelle catégorie"}
             </DialogTitle>
             <DialogDescription>
               {parentCategoryName && `Sous-catégorie de : ${parentCategoryName}`}

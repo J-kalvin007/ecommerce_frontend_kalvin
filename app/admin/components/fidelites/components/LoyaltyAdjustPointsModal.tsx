@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Plus, Minus, Zap, AlertTriangle, Check, Loader2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/special/Dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/widgets_originaux/special/Dialog";
 import { cn } from "@/lib/utils";
 import { adjustAdminLoyaltyPoints } from "@/fonctions_api/fidelites.api";
 import type { LoyaltyProfile } from "@/modeles/fidelites";
@@ -25,13 +25,13 @@ const PRESET_REASONS = [
 ];
 
 export function LoyaltyAdjustPointsModal({ open, onClose, profile, onSuccess }: LoyaltyAdjustPointsModalProps) {
-    const [mode, setMode]     = useState<"add" | "remove">("add");
+    const [mode, setMode] = useState<"add" | "remove">("add");
     const [points, setPoints] = useState("");
     const [reason, setReason] = useState(PRESET_REASONS[0]);
     const [customReason, setCustomReason] = useState("");
     const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState<{ email: string; newBalance: number } | null>(null);
-    const [error, setError]   = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (open) {
@@ -42,11 +42,11 @@ export function LoyaltyAdjustPointsModal({ open, onClose, profile, onSuccess }: 
 
     if (!profile) return null;
 
-    const pointsNum    = parseInt(points) || 0;
-    const delta        = mode === "add" ? pointsNum : -pointsNum;
-    const projected    = profile.points_balance + delta;
-    const isNegative   = projected < 0;
-    const finalReason  = reason === "Autre" ? customReason : reason;
+    const pointsNum = parseInt(points) || 0;
+    const delta = mode === "add" ? pointsNum : -pointsNum;
+    const projected = profile.points_balance + delta;
+    const isNegative = projected < 0;
+    const finalReason = reason === "Autre" ? customReason : reason;
 
     const handleSubmit = async () => {
         if (!pointsNum || !finalReason.trim() || isNegative) return;
@@ -54,8 +54,8 @@ export function LoyaltyAdjustPointsModal({ open, onClose, profile, onSuccess }: 
         setError(null);
         const res = await adjustAdminLoyaltyPoints({
             user_id: profile.id,
-            points:  delta,
-            reason:  finalReason,
+            points: delta,
+            reason: finalReason,
         });
         if (res.ok) {
             setSuccess({ email: res.data.user_email, newBalance: res.data.new_balance });
@@ -112,7 +112,7 @@ export function LoyaltyAdjustPointsModal({ open, onClose, profile, onSuccess }: 
                                 {/* Mode +/- */}
                                 <div className="flex gap-2">
                                     {([["add", Plus, "Ajouter des points", "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"],
-                                       ["remove", Minus, "Retirer des points",  "bg-red-500/10 border-red-500/30 text-red-400"]] as const).map(([m, Icon, label, cls]) => (
+                                    ["remove", Minus, "Retirer des points", "bg-red-500/10 border-red-500/30 text-red-400"]] as const).map(([m, Icon, label, cls]) => (
                                         <button
                                             key={m}
                                             onClick={() => setMode(m)}

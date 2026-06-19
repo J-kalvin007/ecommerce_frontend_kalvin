@@ -1,9 +1,3 @@
-/**
- * TestimonialsSection — Témoignages clients
- *
- * @module components/home/TestimonialsSection
- */
-
 "use client";
 
 import { useState } from "react";
@@ -19,27 +13,27 @@ const TESTIMONIALS = [
     avatar: "MD",
     rating: 5,
     comment:
-      "La qualité des épices est incomparable. Le safran de la Mancha a transformé mes paellas. Le programme de fidélité est un vrai plus — j'ai déjà atteint le palier Or !",
+      "La qualite des produits du terroir est incomparable. Les legumes frais et la viande blanche ont transforme ma cuisine. Le programme de fidelite est un vrai plus — j'ai deja atteint le palier Or !",
     tier: "GOLD",
   },
   {
     id: 2,
     name: "Amadou Diallo",
-    location: "Dakar, Sénégal",
+    location: "Dakar, Senegal",
     avatar: "AD",
     rating: 5,
     comment:
-      "Enfin une plateforme qui accepte le Mobile Money ! La recharge du wallet est instantanée et la livraison au Sénégal est rapide. Je recommande à 100%.",
+      "Enfin une plateforme qui accepte le Mobile Money ! La recharge du wallet est instantanee et la livraison au Senegal est rapide. Je recommande a 100%.",
     tier: "SILVER",
   },
   {
     id: 3,
     name: "Sophie Chen",
-    location: "Montréal, Canada",
+    location: "Montreal, Canada",
     avatar: "SC",
     rating: 5,
     comment:
-      "Le matcha cérémoniel d'Uji est le meilleur que j'ai trouvé en ligne. L'emballage est soigné et la livraison au Canada s'est faite en 5 jours.",
+      "Les produits transformes et seches sont d'une qualite remarquable. L'emballage est soigne et la livraison internationale s'est faite en 5 jours.",
     tier: "PLATINUM",
   },
   {
@@ -49,14 +43,11 @@ const TESTIMONIALS = [
     avatar: "LR",
     rating: 4,
     comment:
-      "En tant qu'italien, je suis très exigeant sur l'huile d'olive. Celle de Toscane IGP est authentique et de qualité premium. Le vinaigre balsamique aussi est excellent.",
+      "Des produits authentiques et de qualite premium. Les epices et cereales locales sont excellentes. Un vrai pont entre l'Afrique et le reste du monde.",
     tier: "BRONZE",
   },
 ] as const;
 
-/**
- * TestimonialsSection — Carrousel de témoignages premium.
- */
 export default function TestimonialsSection() {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -68,7 +59,6 @@ export default function TestimonialsSection() {
   return (
     <section className="bg-surface/30 py-16 lg:py-24">
       <div className="mx-auto max-w-[var(--content-max-width)] px-[var(--spacing-page-x)]">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -77,14 +67,13 @@ export default function TestimonialsSection() {
           className="mb-12 text-center"
         >
           <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">
-            Témoignages
+            Temoignages
           </p>
           <h2 className="font-display text-3xl font-bold lg:text-4xl">
             Ce Que Disent Nos Clients
           </h2>
         </motion.div>
 
-        {/* Testimonial Carousel */}
         <div className="relative mx-auto max-w-3xl">
           <AnimatePresence mode="wait">
             <motion.div
@@ -95,10 +84,8 @@ export default function TestimonialsSection() {
               transition={{ duration: 0.3 }}
               className="relative overflow-hidden rounded-3xl border border-border bg-surface-elevated p-8 shadow-lg sm:p-12"
             >
-              {/* Quote icon */}
               <Quote className="absolute right-8 top-8 h-12 w-12 text-primary/10" />
 
-              {/* Stars */}
               <div className="mb-6 flex items-center gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
@@ -113,12 +100,10 @@ export default function TestimonialsSection() {
                 ))}
               </div>
 
-              {/* Comment */}
               <blockquote className="text-lg leading-relaxed text-foreground sm:text-xl">
                 &ldquo;{TESTIMONIALS[activeIndex].comment}&rdquo;
               </blockquote>
 
-              {/* Author */}
               <div className="mt-8 flex items-center gap-4">
                 <div
                   className={cn(
@@ -126,10 +111,10 @@ export default function TestimonialsSection() {
                     TESTIMONIALS[activeIndex].tier === "PLATINUM"
                       ? "bg-gradient-to-br from-gray-300 to-gray-500"
                       : TESTIMONIALS[activeIndex].tier === "GOLD"
-                      ? "bg-gradient-to-br from-yellow-400 to-amber-600"
-                      : TESTIMONIALS[activeIndex].tier === "SILVER"
-                      ? "bg-gradient-to-br from-gray-300 to-gray-400"
-                      : "bg-gradient-to-br from-amber-600 to-amber-800"
+                        ? "bg-gradient-to-br from-yellow-400 to-amber-600"
+                        : TESTIMONIALS[activeIndex].tier === "SILVER"
+                          ? "bg-gradient-to-br from-gray-300 to-gray-400"
+                          : "bg-gradient-to-br from-amber-600 to-amber-800"
                   )}
                 >
                   {TESTIMONIALS[activeIndex].avatar}
@@ -138,9 +123,7 @@ export default function TestimonialsSection() {
                   <p className="font-semibold text-foreground">
                     {TESTIMONIALS[activeIndex].name}
                   </p>
-                  <p className="text-sm text-muted">
-                    {TESTIMONIALS[activeIndex].location}
-                  </p>
+                  <p className="text-sm text-muted">{TESTIMONIALS[activeIndex].location}</p>
                 </div>
                 <span
                   className={cn(
@@ -158,37 +141,36 @@ export default function TestimonialsSection() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Navigation */}
           <div className="mt-6 flex items-center justify-center gap-4">
             <button
+              type="button"
               onClick={prevTestimonial}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface-elevated transition-all hover:border-primary/30 hover:bg-surface-alt"
-              aria-label="Témoignage précédent"
+              aria-label="Temoignage precedent"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
 
-            {/* Dots */}
             <div className="flex items-center gap-2">
               {TESTIMONIALS.map((_, i) => (
                 <button
                   key={i}
+                  type="button"
                   onClick={() => setActiveIndex(i)}
                   className={cn(
                     "h-2 rounded-full transition-all",
-                    i === activeIndex
-                      ? "w-6 bg-primary"
-                      : "w-2 bg-border hover:bg-primary/30"
+                    i === activeIndex ? "w-6 bg-primary" : "w-2 bg-border hover:bg-primary/30"
                   )}
-                  aria-label={`Témoignage ${i + 1}`}
+                  aria-label={`Temoignage ${i + 1}`}
                 />
               ))}
             </div>
 
             <button
+              type="button"
               onClick={nextTestimonial}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface-elevated transition-all hover:border-primary/30 hover:bg-surface-alt"
-              aria-label="Témoignage suivant"
+              aria-label="Temoignage suivant"
             >
               <ChevronRight className="h-5 w-5" />
             </button>

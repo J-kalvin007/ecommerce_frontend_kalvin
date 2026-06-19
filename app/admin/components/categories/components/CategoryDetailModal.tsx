@@ -154,13 +154,13 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-} from "@/components/special/ui/Dialog";
+} from "@/components/widgets_originaux/special/ui/Dialog";
 import type { Category } from "@/modeles/categories";
 
 function SafeImage({ src, alt, ...props }: any) {
   const [error, setError] = useState(false);
   const resolvedSrc = src ? (src.startsWith("http") ? src : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${src.startsWith("/") ? "" : "/"}${src}`) : null;
-  
+
   if (!resolvedSrc || error) {
     return <FolderTree className="h-1/2 w-1/2 text-primary opacity-50 m-auto" />;
   }
@@ -305,7 +305,7 @@ export default function CategoryDetailModal({
                   <span className="text-sm font-semibold text-foreground">{category.slug}</span>
                 </div>
               </div>
-              
+
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-widest text-primary mb-3 flex items-center gap-2">
                   <FolderTree className="h-4 w-4" />
@@ -333,7 +333,7 @@ export default function CategoryDetailModal({
                   {category.children?.length || 0}
                 </div>
               </div>
-              
+
               <div className="rounded-2xl bg-surface-elevated p-6 border border-border/50 shadow-sm">
                 {category.children && category.children.length > 0 ? (
                   <div className="space-y-1.5">

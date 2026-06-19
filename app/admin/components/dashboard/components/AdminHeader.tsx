@@ -317,7 +317,7 @@
 //     setShowLogoutConfirm(false);
 //   };
 
-  
+
 
 //   const affichetoken = () => {
 //     const token = getToken();
@@ -523,7 +523,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, Bell, Sun, Moon, User, ChevronDown, LogOut } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
-import ConfirmDialog from "@/components/special/ConfirmDialog";
+import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
 import { getToken } from "@/lib/axios";
 import ProfileModal from "@/components/layout/ProfileModal";
 

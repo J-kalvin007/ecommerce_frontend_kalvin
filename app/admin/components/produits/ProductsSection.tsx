@@ -22,10 +22,10 @@ import { VariantFormModal } from "./components/VariantFormModal";
 import { INITIAL_FORM, buildProductPayload } from "./productsUtils";
 import type { ProductFormState, UploadedProductImage } from "./productsUtils";
 import Toast from "@/components/notifications/Toast";
-import LoadingStyle from "@/components/special/loadingStyle";
-import ConfirmDialog from "@/components/special/ConfirmDialog";
-import ErrorState from "@/components/special/ErrorState";
-import EmptyState from "@/components/special/EmptyState";
+import LoadingStyle from "@/components/widgets_originaux/special/loadingStyle";
+import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
+import ErrorState from "@/components/widgets_originaux/special/ErrorState";
+import EmptyState from "@/components/widgets_originaux/special/EmptyState";
 import { ProductList } from "./components/ProductList";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -63,10 +63,10 @@ function StatCard({
     >
       {/* Pattern de fond subtil (dots) */}
       <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.08]" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)", backgroundSize: "12px 12px" }} />
-      
+
       {/* Éclairage / Glow */}
       <div className={cn("absolute -right-4 -top-4 h-20 w-20 rounded-full opacity-20 blur-2xl", color)} />
-      
+
       <div className="relative z-10 flex items-start justify-between gap-2">
         <div className={cn("flex h-8 w-8 items-center justify-center rounded-xl bg-white/50 dark:bg-black/20 shadow-sm border border-white/10 backdrop-blur-sm")}>
           <Icon className={cn("h-4 w-4", color.replace("bg-", "text-"))} />
@@ -167,7 +167,7 @@ export default function ProductsSection() {
         await createAdminProductImage({ product: saved.id, image: uploadedImages[i].file, alt_text: uploadedImages[i].alt_text, is_primary: isPrimary });
       }
     }
-    
+
     // Save locally created variants if it's a new product
     if (!editingProduct && variants && variants.length > 0) {
       for (const v of variants) {
@@ -253,7 +253,7 @@ export default function ProductsSection() {
             <TrendingUp className="h-4 w-4" />
             <span className="hidden sm:inline">{showStats ? "Masquer les stats" : "Afficher les stats"}</span>
           </motion.button>
-          
+
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}

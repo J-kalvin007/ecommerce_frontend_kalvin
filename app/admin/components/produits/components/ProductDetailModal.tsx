@@ -2,7 +2,7 @@
 // components/admin/produits/ProductDetailModal.tsx
 "use client";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/special/ui/Dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/widgets_originaux/special/ui/Dialog";
 import { ProductImageCarousel } from "./ProductImageCarousel";
 import { VariantDetailModal } from "./VariantDetailModal";
 import { formatCurrency } from "@/lib/utils";

@@ -1,496 +1,139 @@
-// "use client";
-
-// import { motion } from "framer-motion";
-// import Link from "next/link";
-// import Image from "next/image";
-// import { ArrowRight, ShoppingBag, Sparkles, Star } from "lucide-react";
-// import productImageOne from "@/assets/images/orange.jpg";
-// import productImageTwo from "@/assets/images/ananas.jpg";
-// import productImageThree from "@/assets/images/mais1.jpg";
-// import productImageFour from "@/assets/images/manioc.jpg";
-// import type { ProductListItem } from "@/models";
-
-// type FeaturedProduct = Omit<ProductListItem, "primary_image"> & {
-//   primary_image: typeof productImageOne;
-//   description: string;
-// };
-
-// const MOCK_PRODUCTS: FeaturedProduct[] = [
-//   {
-//     id: "1",
-//     name: "Orange",
-//     slug: "huile-olive-toscane-igp",
-//     price: "16500",
-//     compare_at_price: "21000",
-//     currency: "FCFA",
-//     stock_status: "IN_STOCK",
-//     avg_rating: 4.8,
-//     review_count: 234,
-//     primary_image: productImageOne,
-//     category_name: "Huiles",
-//     labels: ["bio"],
-//     is_featured: true,
-//     is_boosted: true,
-// description: "Des oranges de première qualité, récoltées à maturité pour offrir une saveur sucrée, une chair généreuse et une fraîcheur exceptionnelle.",  },
-//   {
-//     id: "2",
-//     name: "Ananas",
-//     slug: "safran-mancha-1g",
-//     price: "8500",
-//     compare_at_price: null,
-//     currency: "FCFA",
-//     stock_status: "IN_STOCK",
-//     avg_rating: 4.9,
-//     review_count: 189,
-//     primary_image: productImageTwo,
-//     category_name: "fruits",
-//     labels: [],
-//     is_featured: true,
-//     is_boosted: false,
-//     description: "Des ananas frais et savoureux, récoltés à maturité pour garantir une chair juteuse, sucrée et riche en nutriments.",  },
-//   {
-//     id: "3",
-//     name: "Maïs",
-//     slug: "chocolat-noir-madagascar-72",
-//     price: "5900",
-//     compare_at_price: "7500",
-//     currency: "FCFA",
-//     stock_status: "IN_STOCK",
-//     avg_rating: 4.7,
-//     review_count: 156,
-//     primary_image: productImageThree,
-//     category_name: "Chocolats",
-//     labels: ["bio"],
-//     is_featured: false,
-//     is_boosted: true,
-//   description: "Du maïs de qualité supérieure, cultivé avec soin pour offrir des grains tendres, nutritifs et adaptés à de nombreux usages alimentaires.",  },
-//   {
-//     id: "4",
-//     name: "Manioc",
-//     slug: "the-matcha-ceremoniel-uji",
-//     price: "19500",
-//     compare_at_price: null,
-//     currency: "FCFA",
-//     stock_status: "LOW_STOCK",
-//     avg_rating: 4.6,
-//     review_count: 98,
-//     primary_image: productImageFour,
-//     category_name: "Thes",
-//     labels: ["bio"],
-//     is_featured: true,
-//     is_boosted: false,
-// description: "Du manioc sélectionné avec rigueur, apprécié pour sa fraîcheur, sa valeur nutritive et sa polyvalence dans de nombreuses recettes africaines.",  },
-// ];
-
-// function formatPrice(value: string, currency: string) {
-//   return `${new Intl.NumberFormat().format(Number(value))} ${currency}`;
-// }
-
-// export default function TrendingProducts() {
-//   return (
-//     <section className="relative overflow-hidden bg-transparent py-14 sm:py-16 lg:py-20">
-//       <div className="pointer-events-none absolute inset-0">
-//         <div className="absolute left-[10%] top-10 h-40 w-40 rounded-full bg-highlight/10 blur-3xl" />
-//         <div className="absolute right-[8%] top-24 h-52 w-52 rounded-full bg-primary/8 blur-3xl" />
-//       </div>
-
-//       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-//         <motion.div
-//           initial={{ opacity: 0, y: 18 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           viewport={{ once: true, margin: "-80px" }}
-//           transition={{ duration: 0.45, ease: "easeOut" }}
-//           className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between"
-//         >
-//           <div className="max-w-2xl">
-//             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-highlight/15 bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-highlight backdrop-blur-sm">
-//               <Sparkles className="h-3.5 w-3.5" />
-//               Selection
-//             </div>
-//             <h2 className="text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
-//               Les plus demandes
-//             </h2>
-//             <p className="mt-2 text-sm leading-7 text-gray-600 sm:text-base">
-//               Une selection rigoureuse de produits qui ont conquis notre communaute.
-//             </p>
-//           </div>
-
-//           <Link
-//             href="/products"
-//             className="inline-flex items-center gap-2 self-start rounded-full border border-gray-200 bg-white/80 px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm backdrop-blur-sm transition-all hover:border-highlight/20 hover:text-highlight"
-//           >
-//             <span>Voir tout</span>
-//             <ArrowRight className="h-4 w-4" />
-//           </Link>
-//         </motion.div>
-
-//         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:gap-6">
-//           {MOCK_PRODUCTS.map((product, idx) => (
-//             <motion.article
-//               key={product.id}
-//               initial={{ opacity: 0, y: 18 }}
-//               whileInView={{ opacity: 1, y: 0 }}
-//               viewport={{ once: true, margin: "-60px" }}
-//               transition={{ duration: 0.45, delay: idx * 0.06, ease: "easeOut" }}
-//               className="group overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-[0_14px_36px_rgba(15,23,42,0.07)] backdrop-blur-sm transition-all hover:-translate-y-1 hover:shadow-[0_18px_44px_rgba(15,23,42,0.10)]"
-//             >
-//               <Link href={`/products/${product.slug}`} className="block">
-//                 <div className="relative aspect-[4/3] overflow-hidden bg-[#faf7f2]">
-//                   <Image
-//                     src={product.primary_image}
-//                     alt={product.name}
-//                     fill
-//                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 560px"
-//                     className="object-cover transition-transform duration-700 group-hover:scale-105"
-//                   />
-
-//                   <div className="absolute inset-x-0 top-0 flex items-center justify-between p-3">
-//                     <span className="rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-700 shadow-sm">
-//                       {product.category_name}
-//                     </span>
-//                     {product.stock_status === "LOW_STOCK" && (
-//                       <span className="rounded-full bg-highlight/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-highlight shadow-sm">
-//                         Dernieres pieces
-//                       </span>
-//                     )}
-//                   </div>
-//                 </div>
-//               </Link>
-
-//               <div className="p-4 sm:p-5">
-//                 <div className="mb-2 flex items-center gap-1 text-primary">
-//                   {Array.from({ length: 5 }).map((_, index) => (
-//                     <Star
-//                       key={index}
-//                       className={`h-3.5 w-3.5 ${index < Math.floor(product.avg_rating) ? "fill-current" : ""}`}
-//                     />
-//                   ))}
-//                   <span className="ml-1 text-xs font-medium text-gray-700">{product.avg_rating}</span>
-//                   <span className="text-xs text-gray-400">({product.review_count} avis)</span>
-//                 </div>
-
-//                 <Link href={`/products/${product.slug}`}>
-//                   <h3 className="line-clamp-1 text-lg font-semibold text-gray-900 transition-colors group-hover:text-primary">
-//                     {product.name}
-//                   </h3>
-//                 </Link>
-
-//                 <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-600">
-//                   {product.description}
-//                 </p>
-
-//                 <div className="mt-4 flex items-end justify-between gap-3 border-t border-gray-100 pt-4">
-//                   <div>
-//                     <p className="text-lg font-bold text-gray-900">
-//                       {formatPrice(product.price, product.currency)}
-//                     </p>
-//                     {product.compare_at_price && (
-//                       <p className="text-xs text-gray-400 line-through">
-//                         {formatPrice(product.compare_at_price, product.currency)}
-//                       </p>
-//                     )}
-//                   </div>
-
-//                   <Link
-//                     href={`/products/${product.slug}`}
-//                     className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-3.5 py-2 text-xs font-medium text-white transition-colors hover:bg-primary"
-//                   >
-//                     <ShoppingBag className="h-3.5 w-3.5" />
-//                     <span>Ajouter</span>
-//                   </Link>
-//                 </div>
-//               </div>
-//             </motion.article>
-//           ))}
-//         </div>
-
-//         <div className="mt-8 text-center">
-//           <Link
-//             href="/products"
-//             className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition-colors hover:text-primary"
-//           >
-//             <span>Explorer la collection</span>
-//             <ArrowRight className="h-4 w-4" />
-//           </Link>
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"use client";
-
-import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight, ShoppingBag, Sparkles, Star } from "lucide-react";
+import { ProductCard } from "@/components/product/ProductCard";
+import type {
+  ProductListItem,
+  PublicBanner,
+  PublicFlashSale,
+  PublicPromoCode,
+} from "@/lib/ecommerce-api";
 
-// ─────────────────────────────────────────────
-// Chemins statiques des images (à placer dans public/assets/images/)
-// ─────────────────────────────────────────────
-const productImageOne = "/assets/images/orange.jpg";
-const productImageTwo = "/assets/images/ananas.jpg";
-const productImageThree = "/assets/images/mais1.jpg";
-const productImageFour = "/assets/images/manioc.jpg";
-
-// ─────────────────────────────────────────────
-// Types locaux (sans dépendre de @/models)
-// ─────────────────────────────────────────────
-type FeaturedProduct = {
-  id: string;
-  name: string;
-  slug: string;
-  price: string;
-  compare_at_price: string | null;
-  currency: string;
-  stock_status: "IN_STOCK" | "LOW_STOCK" | "OUT_OF_STOCK";
-  avg_rating: number;
-  review_count: number;
-  primary_image: string;
-  category_name: string;
-  labels: string[];
-  is_featured: boolean;
-  is_boosted: boolean;
-  description: string;
+type TrendingProductsProps = {
+  products: ProductListItem[];
+  promoCodes: PublicPromoCode[];
+  banners: PublicBanner[];
+  flashSales: PublicFlashSale[];
+  loading: boolean;
 };
 
-const MOCK_PRODUCTS: FeaturedProduct[] = [
-  {
-    id: "1",
-    name: "Orange",
-    slug: "orange-ferme-solime",
-    price: "16500",
-    compare_at_price: "21000",
-    currency: "FCFA",
-    stock_status: "IN_STOCK",
-    avg_rating: 4.8,
-    review_count: 234,
-    primary_image: productImageOne,
-    category_name: "Fruits",
-    labels: ["bio"],
-    is_featured: true,
-    is_boosted: true,
-    description:
-      "Des oranges de première qualité, récoltées à maturité pour offrir une saveur sucrée, une chair généreuse et une fraîcheur exceptionnelle.",
-  },
-  {
-    id: "2",
-    name: "Ananas",
-    slug: "ananas-sucree",
-    price: "8500",
-    compare_at_price: null,
-    currency: "FCFA",
-    stock_status: "IN_STOCK",
-    avg_rating: 4.9,
-    review_count: 189,
-    primary_image: productImageTwo,
-    category_name: "Fruits",
-    labels: [],
-    is_featured: true,
-    is_boosted: false,
-    description:
-      "Des ananas frais et savoureux, récoltés à maturité pour garantir une chair juteuse, sucrée et riche en nutriments.",
-  },
-  {
-    id: "3",
-    name: "Maïs",
-    slug: "mais-dore",
-    price: "5900",
-    compare_at_price: "7500",
-    currency: "FCFA",
-    stock_status: "IN_STOCK",
-    avg_rating: 4.7,
-    review_count: 156,
-    primary_image: productImageThree,
-    category_name: "Céréales",
-    labels: ["bio"],
-    is_featured: false,
-    is_boosted: true,
-    description:
-      "Du maïs de qualité supérieure, cultivé avec soin pour offrir des grains tendres, nutritifs et adaptés à de nombreux usages alimentaires.",
-  },
-  {
-    id: "4",
-    name: "Manioc",
-    slug: "manioc-frais",
-    price: "19500",
-    compare_at_price: null,
-    currency: "FCFA",
-    stock_status: "LOW_STOCK",
-    avg_rating: 4.6,
-    review_count: 98,
-    primary_image: productImageFour,
-    category_name: "Tubercules",
-    labels: ["bio"],
-    is_featured: true,
-    is_boosted: false,
-    description:
-      "Du manioc sélectionné avec rigueur, apprécié pour sa fraîcheur, sa valeur nutritive et sa polyvalence dans de nombreuses recettes africaines.",
-  },
-];
+export function TrendingProducts({
+  products,
+  promoCodes,
+  banners,
+  flashSales,
+  loading,
+}: TrendingProductsProps) {
+  const spotlightProducts = products.slice(0, 4);
+  const featuredPromo = promoCodes[0];
+  const featuredBanner = banners[0];
+  const featuredFlashSale = flashSales[0];
 
-function formatPrice(value: string, currency: string) {
-  return `${new Intl.NumberFormat().format(Number(value))} ${currency}`;
-}
-
-export default function TrendingProducts() {
   return (
-    <section className="relative overflow-hidden bg-transparent py-14 sm:py-16 lg:py-20">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[10%] top-10 h-40 w-40 rounded-full bg-highlight/10 blur-3xl" />
-        <div className="absolute right-[8%] top-24 h-52 w-52 rounded-full bg-primary/8 blur-3xl" />
-      </div>
+    <section className="relative overflow-hidden px-6 py-16">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,_rgba(139,94,52,0.08),_transparent_22%),radial-gradient(circle_at_82%_18%,_rgba(31,77,63,0.08),_transparent_20%)]" />
 
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.45, ease: "easeOut" }}
-          className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between"
-        >
+      <div className="relative mx-auto max-w-7xl">
+        <div className="mb-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-highlight/15 bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-highlight backdrop-blur-sm">
-              <Sparkles className="h-3.5 w-3.5" />
-              Sélection
-            </div>
-            <h2 className="text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
-              Les plus demandés
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#8b5e34]">
+              Produits tendances
+            </p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#1d241d] md:text-4xl">
+              La vitrine produits de l&apos;ancien projet, branchee a nos vraies donnees
             </h2>
-            <p className="mt-2 text-sm leading-7 text-gray-600 sm:text-base">
-              Une sélection rigoureuse de produits qui ont conquis notre communauté.
+            <p className="mt-4 text-base leading-7 text-[#5d6a59]">
+              Les produits ajoutes cote admin peuvent ensuite remonter ici et dans le catalogue
+              client selon les endpoints exposes par l&apos;API.
             </p>
           </div>
 
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 self-start rounded-full border border-gray-200 bg-white/80 px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm backdrop-blur-sm transition-all hover:border-highlight/20 hover:text-highlight"
+            className="inline-flex w-fit items-center rounded-full border border-[#d8c4ab] bg-white/80 px-5 py-3 text-sm font-semibold text-[#1f4d3f] hover:border-[#8b5e34] hover:text-[#8b5e34]"
           >
-            <span>Voir tout</span>
-            <ArrowRight className="h-4 w-4" />
+            Voir tout le catalogue
           </Link>
-        </motion.div>
-
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:gap-6">
-          {MOCK_PRODUCTS.map((product, idx) => (
-            <motion.article
-              key={product.id}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.45, delay: idx * 0.06, ease: "easeOut" }}
-              className="group overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-[0_14px_36px_rgba(15,23,42,0.07)] backdrop-blur-sm transition-all hover:-translate-y-1 hover:shadow-[0_18px_44px_rgba(15,23,42,0.10)]"
-            >
-              <Link href={`/products/${product.slug}`} className="block">
-                <div className="relative aspect-[4/3] overflow-hidden bg-[#faf7f2]">
-                  <Image
-                    src={product.primary_image}
-                    alt={product.name}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 560px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    priority={idx === 0}
-                  />
-                  <div className="absolute inset-x-0 top-0 flex items-center justify-between p-3">
-                    <span className="rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-700 shadow-sm">
-                      {product.category_name}
-                    </span>
-                    {product.stock_status === "LOW_STOCK" && (
-                      <span className="rounded-full bg-highlight/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-highlight shadow-sm">
-                        Dernières pièces
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-
-              <div className="p-4 sm:p-5">
-                <div className="mb-2 flex items-center gap-1 text-primary">
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <Star
-                      key={index}
-                      className={`h-3.5 w-3.5 ${
-                        index < Math.floor(product.avg_rating) ? "fill-current" : ""
-                      }`}
-                    />
-                  ))}
-                  <span className="ml-1 text-xs font-medium text-gray-700">
-                    {product.avg_rating}
-                  </span>
-                  <span className="text-xs text-gray-400">
-                    ({product.review_count} avis)
-                  </span>
-                </div>
-
-                <Link href={`/products/${product.slug}`}>
-                  <h3 className="line-clamp-1 text-lg font-semibold text-gray-900 transition-colors group-hover:text-primary">
-                    {product.name}
-                  </h3>
-                </Link>
-
-                <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-600">
-                  {product.description}
-                </p>
-
-                <div className="mt-4 flex items-end justify-between gap-3 border-t border-gray-100 pt-4">
-                  <div>
-                    <p className="text-lg font-bold text-gray-900">
-                      {formatPrice(product.price, product.currency)}
-                    </p>
-                    {product.compare_at_price && (
-                      <p className="text-xs text-gray-400 line-through">
-                        {formatPrice(product.compare_at_price, product.currency)}
-                      </p>
-                    )}
-                  </div>
-
-                  <Link
-                    href={`/products/${product.slug}`}
-                    className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-3.5 py-2 text-xs font-medium text-white transition-colors hover:bg-primary"
-                  >
-                    <ShoppingBag className="h-3.5 w-3.5" />
-                    <span>Ajouter</span>
-                  </Link>
-                </div>
-              </div>
-            </motion.article>
-          ))}
         </div>
 
-        <div className="mt-8 text-center">
-          <Link
-            href="/products"
-            className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition-colors hover:text-primary"
-          >
-            <span>Explorer la collection</span>
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+        <div className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
+          <div className="grid gap-5 md:grid-cols-2">
+            {(loading ? new Array(4).fill(null) : spotlightProducts).map((product, index) =>
+              product ? (
+                <ProductCard key={product.id} product={product} />
+              ) : (
+                <div
+                  key={`trending-skeleton-${index}`}
+                  className="overflow-hidden rounded-[1.6rem] border border-[#e8dece] bg-white shadow-[0_18px_60px_rgba(66,49,23,0.08)]"
+                >
+                  <div className="aspect-square animate-pulse bg-[#efe6da]" />
+                  <div className="space-y-3 p-4">
+                    <div className="h-3 w-20 animate-pulse rounded bg-[#efe6da]" />
+                    <div className="h-5 w-3/4 animate-pulse rounded bg-[#efe6da]" />
+                    <div className="h-4 w-1/2 animate-pulse rounded bg-[#efe6da]" />
+                  </div>
+                </div>
+              )
+            )}
+          </div>
+
+          <div className="grid gap-5">
+            <article className="rounded-[2rem] bg-[#1f2e26] p-6 text-white shadow-[0_24px_64px_rgba(14,22,18,0.22)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d7c39e]">
+                Promotion active
+              </p>
+              <h3 className="mt-3 text-2xl font-semibold">
+                {loading
+                  ? "Chargement des promotions..."
+                  : featuredPromo?.code || "Aucun code promo actif pour le moment"}
+              </h3>
+              <p className="mt-3 text-sm leading-7 text-white/78">
+                {loading
+                  ? "Les donnees de promotions arrivent depuis l'API."
+                  : featuredPromo?.description ||
+                    "Des que les promotions sont disponibles cote backend, elles s'affichent ici."}
+              </p>
+            </article>
+
+            <article className="rounded-[2rem] border border-[#e4d6c4] bg-white/88 p-6 shadow-[0_20px_52px_rgba(64,47,24,0.08)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b5e34]">
+                Vitrine et urgence commerciale
+              </p>
+              <div className="mt-5 space-y-4">
+                <InfoRow
+                  label="Banniere"
+                  value={
+                    loading
+                      ? "Chargement..."
+                      : featuredBanner?.title || "Aucune banniere active pour le moment"
+                  }
+                />
+                <InfoRow
+                  label="Flash sale"
+                  value={
+                    loading
+                      ? "Chargement..."
+                      : featuredFlashSale
+                        ? `${featuredFlashSale.product_name} a ${featuredFlashSale.sale_price} FCFA`
+                        : "Aucune vente flash active"
+                  }
+                />
+                <InfoRow
+                  label="Objectif"
+                  value="Donner a la home une vraie communication avec nos APIs ecommerce."
+                />
+              </div>
+            </article>
+          </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-[1.2rem] border border-[#eee4d6] bg-[#fbf7f1] px-4 py-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8b5e34]">{label}</p>
+      <p className="mt-2 text-sm leading-6 text-[#546250]">{value}</p>
+    </div>
   );
 }

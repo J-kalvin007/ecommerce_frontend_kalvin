@@ -4,7 +4,7 @@
 import { X, Layers, Hash, Package, Weight, Calendar, CheckCircle2, XCircle, Clock } from "lucide-react";
 import { formatCurrency, cn } from "@/lib/utils";
 import type { ProductVariant } from "@/modeles/produits";
-import { Dialog, DialogContent, DialogTitle } from "@/components/special/ui/Dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/widgets_originaux/special/ui/Dialog";
 
 interface VariantDetailModalProps {
   open: boolean;
@@ -38,8 +38,8 @@ export function VariantDetailModal({ open, onClose, variant, productName }: Vari
   const stockStatus = variant.stock === 0
     ? { label: "Rupture de stock", color: "bg-red-500/10 text-red-600 border-red-200" }
     : variant.stock < 10
-    ? { label: "Stock faible", color: "bg-amber-500/10 text-amber-600 border-amber-200" }
-    : { label: "En stock", color: "bg-emerald-500/10 text-emerald-600 border-emerald-200" };
+      ? { label: "Stock faible", color: "bg-amber-500/10 text-amber-600 border-amber-200" }
+      : { label: "En stock", color: "bg-emerald-500/10 text-emerald-600 border-emerald-200" };
 
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
@@ -49,7 +49,7 @@ export function VariantDetailModal({ open, onClose, variant, productName }: Vari
       {/* Hide the default radix close button so we can use our custom styled one */}
       <DialogContent className="w-[95vw] sm:max-w-sm max-h-[85vh] flex flex-col p-0 overflow-hidden border border-border/40 shadow-2xl rounded-2xl bg-surface [&>button]:hidden">
         <DialogTitle className="sr-only">Détails de la variante {variant.name}</DialogTitle>
-        
+
         {/* Gradient header */}
         <div className="shrink-0 relative bg-gradient-to-br from-primary/15 via-primary/5 to-transparent px-6 py-5">
           {/* Decorative circle */}
@@ -60,7 +60,7 @@ export function VariantDetailModal({ open, onClose, variant, productName }: Vari
           >
             <X className="h-3.5 w-3.5" />
           </button>
-          
+
           <div className="flex items-center gap-3 mb-3 relative z-10">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 border border-primary/20">
               <Layers className="h-5 w-5 text-primary" />

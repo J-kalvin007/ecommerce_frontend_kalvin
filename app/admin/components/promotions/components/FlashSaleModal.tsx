@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/special/ui/Dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/widgets_originaux/special/ui/Dialog";
 import { Save, Loader2, Search, Zap, Clock, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence, Variants } from "framer-motion";
@@ -96,7 +96,7 @@ export function FlashSaleModal({
                 <div className="relative flex flex-col max-h-[90vh]">
                     {/* Glowing effect in background */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-32 bg-primary/10 blur-[80px] pointer-events-none rounded-t-full" />
-                    
+
                     <DialogHeader className="p-8 pb-4 relative z-10 border-b border-border/40">
                         <DialogTitle className="text-2xl font-extrabold flex items-center gap-3">
                             <div className="p-2.5 bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl border border-primary/20 text-primary shadow-inner">
@@ -111,17 +111,17 @@ export function FlashSaleModal({
 
                     <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-8 relative z-10">
                         <motion.div variants={formVariants} initial="hidden" animate="show" className="space-y-6">
-                            
+
                             {/* Produit Selection (Custom Dropdown) */}
                             <motion.div variants={itemVariants} className="relative z-50">
                                 <label className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                                     <Tag className="h-3.5 w-3.5 text-primary" />
                                     Produit éligible *
                                 </label>
-                                
+
                                 {products.length > 0 ? (
                                     <div className="relative">
-                                        <div 
+                                        <div
                                             onClick={() => setIsProductDropdownOpen(!isProductDropdownOpen)}
                                             className={cn(
                                                 "flex items-center justify-between w-full h-12 rounded-xl border border-border/80 bg-surface/80 px-4 text-sm cursor-pointer transition-all hover:bg-surface-elevated hover:border-primary/50",
@@ -133,10 +133,10 @@ export function FlashSaleModal({
                                             </span>
                                             <Search className="h-4 w-4 text-muted-foreground" />
                                         </div>
-                                        
+
                                         <AnimatePresence>
                                             {isProductDropdownOpen && (
-                                                <motion.div 
+                                                <motion.div
                                                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -144,9 +144,9 @@ export function FlashSaleModal({
                                                     className="absolute top-full left-0 mt-2 w-full bg-surface-elevated border border-border/80 rounded-xl shadow-2xl shadow-black/10 overflow-hidden z-50"
                                                 >
                                                     <div className="p-2 border-b border-border/50">
-                                                        <input 
-                                                            type="text" 
-                                                            placeholder="Rechercher un produit..." 
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Rechercher un produit..."
                                                             value={searchProduct}
                                                             onChange={(e) => setSearchProduct(e.target.value)}
                                                             className="w-full bg-surface rounded-lg px-3 py-2 text-sm outline-none border border-transparent focus:border-primary/50 transition-colors"
@@ -158,7 +158,7 @@ export function FlashSaleModal({
                                                             <div className="p-4 text-center text-xs text-muted-foreground">Aucun produit trouvé</div>
                                                         ) : (
                                                             filteredProducts.map(p => (
-                                                                <div 
+                                                                <div
                                                                     key={p.id}
                                                                     onClick={() => { handleChange("product", p.id); setIsProductDropdownOpen(false); }}
                                                                     className={cn(

@@ -2,9 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import Button from './ui/Button';
 import { LucideIcon, Inbox } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
 
 interface EmptyStateProps {
   title: string;
@@ -21,80 +19,57 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   onAction,
   icon: Icon = Inbox
 }) => {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className={`
-        relative flex flex-col items-center justify-center text-center
-        px-10 py-16 rounded-3xl overflow-hidden isolate
-        ${isDark
-          ? 'bg-[#0a1628]/80 border border-white/[0.06]'
-          : 'bg-white border border-gray-100/80 shadow-[0_4px_40px_-8px_rgba(0,0,0,0.06)]'
-        }
-      `}
+      initial={{ opacity: 0, y: 24, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="relative flex flex-col items-center justify-center text-center px-8 py-16 rounded-3xl overflow-hidden glass-card w-full"
     >
-
       {/* ── Ambient background glow ─────────────────────────────── */}
-      <div
-        aria-hidden
-        className={`
-          pointer-events-none absolute inset-0 -z-10
-          ${isDark
-            ? 'bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(35,190,49,0.07),transparent)]'
-            : 'bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(35,190,49,0.06),transparent)]'
-          }
-        `}
-      />
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-[10%] w-[50%] h-[50%] rounded-full blur-[80px] animate-pulse" style={{ background: 'var(--color-accent)', opacity: 0.1 }} />
+        <div className="absolute bottom-[-10%] right-[10%] w-[40%] h-[40%] rounded-full blur-[80px] animate-pulse" style={{ background: 'var(--color-sage)', opacity: 0.1, animationDelay: '1.5s' }} />
+      </div>
 
       {/* Subtle grid texture */}
       <div
         aria-hidden
-        className={`
-          pointer-events-none absolute inset-0 -z-10 opacity-[0.03]
-          [background-image:linear-gradient(rgba(255,255,255,0.5)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.5)_1px,transparent_1px)]
-          [background-size:28px_28px]
-        `}
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.03]"
+        style={{
+          backgroundImage: 'linear-gradient(var(--color-text-primary) 1px, transparent 1px), linear-gradient(90deg, var(--color-text-primary) 1px, transparent 1px)',
+          backgroundSize: '24px 24px'
+        }}
       />
 
       {/* ── Icon block ──────────────────────────────────────────── */}
       <motion.div
         initial={{ scale: 0.75, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ delay: 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="relative mb-8"
       >
         {/* Outer ring — pulsing */}
         <motion.div
-          animate={{ scale: [1, 1.18, 1], opacity: [0.15, 0.04, 0.15] }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.05, 0.15] }}
           transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-          className="absolute inset-0 -m-5 rounded-full bg-[#23BE31]"
+          className="absolute inset-0 -m-5 rounded-full"
+          style={{ background: 'var(--color-accent)' }}
         />
 
         {/* Mid ring */}
-        <div
-          className={`
-            absolute inset-0 -m-2 rounded-2xl
-            ${isDark ? 'bg-[#23BE31]/8' : 'bg-[#23BE31]/5'}
-          `}
-        />
+        <div className="absolute inset-0 -m-2 rounded-2xl" style={{ background: 'var(--color-accent-light)' }} />
 
         {/* Icon container */}
         <div
-          className={`
-            relative w-24 h-24 rounded-[22px] flex items-center justify-center
-            shadow-[0_8px_32px_-4px_rgba(35,190,49,0.25)]
-            ${isDark
-              ? 'bg-gradient-to-br from-[#0f2a18] to-[#0f1d24] border border-[#23BE31]/20'
-              : 'bg-gradient-to-br from-white to-green-50/60 border border-[#23BE31]/15'
-            }
-          `}
+          className="relative w-20 h-20 md:w-24 md:h-24 rounded-[22px] flex items-center justify-center"
+          style={{
+            background: 'var(--color-bg-primary)',
+            border: '1px solid var(--color-border)',
+            boxShadow: 'var(--shadow-lg)'
+          }}
         >
-          <Icon className="w-11 h-11 text-[#23BE31]" strokeWidth={1.5} />
+          <Icon className="w-10 h-10" style={{ color: 'var(--color-accent)' }} strokeWidth={1.5} />
         </div>
       </motion.div>
 
@@ -103,48 +78,34 @@ const EmptyState: React.FC<EmptyStateProps> = ({
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5, ease: 'easeOut' }}
-        className="space-y-3 mb-8"
+        className="space-y-3 mb-8 relative z-10"
       >
-        <h3 className={`
-          text-[1.35rem] font-black tracking-tight leading-snug
-          ${isDark ? 'text-white' : 'text-gray-900'}
-        `}>
+        <h3 className="text-2xl md:text-3xl font-black tracking-tight leading-snug text-primary">
           {title}
         </h3>
-        <p className={`
-          max-w-sm mx-auto text-sm leading-relaxed font-medium
-          ${isDark ? 'text-gray-400' : 'text-gray-500'}
-        `}>
+        <p className="max-w-sm mx-auto text-sm md:text-base leading-relaxed font-medium text-secondary">
           {description}
         </p>
       </motion.div>
 
       {/* ── CTA ─────────────────────────────────────────────────── */}
       {actionText && onAction && (
-
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.32, duration: 0.45, ease: 'easeOut' }}
-          className='rounded-full'
+          transition={{ delay: 0.3, duration: 0.5, ease: 'easeOut' }}
+          className="relative z-10"
         >
-          <Button
+          <button
             onClick={onAction}
-            variant="default"
-            size="md"
-            className="shadow-xl shadow-[#23BE31]/20 rounded-full px-8"
+            className="btn btn-primary rounded-full px-8 py-3 shadow-lg hover:-translate-y-1 transition-transform"
           >
             {actionText}
-          </Button>
-
+          </button>
         </motion.div>
-
       )}
-
     </motion.div>
-
   );
-
 };
 
 export default EmptyState;

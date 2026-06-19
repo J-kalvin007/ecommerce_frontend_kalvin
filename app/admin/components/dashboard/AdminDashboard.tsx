@@ -153,6 +153,7 @@ import { useAuthStore } from "@/store/authStore";
 import AdminShell from "./components/AdminShell";
 import OverviewSection from "./OverviewSection";
 import AccessDenied from "./components/AccessDenied";
+import { getSessionRoleLabel } from "@/lib/auth";
 
 const ProductsSection = dynamic(() => import("../produits/ProductsSection"), { ssr: false });
 const CategoriesSection = dynamic(() => import("../categories/CategoriesSection"), { ssr: false });
@@ -174,7 +175,7 @@ export default function AdminDashboard() {
 
   const hasAdminAccess = user?.role === "platform_admin";
 
-  const renderSection = () => {
+  const renderSection = (section: string) => {
     if (!hasAdminAccess) {
       return <AccessDenied />;
     }
@@ -205,9 +206,33 @@ export default function AdminDashboard() {
     }
   };
 
+  // return (
+  //   <AdminShell activeSection={section} onSectionChange={setSection}>
+  //     {renderSection()}
+  //   </AdminShell>
+  // );
+
   return (
-    <AdminShell activeSection={section} onSectionChange={setSection}>
-      {renderSection()}
+    <AdminShell
+      activeSection={undefined}
+      onSectionChange={setSection}
+      adminReturnPath={undefined}
+      onLogout={() => void console.log('logout')}
+    >
+      {true ? (
+        <div className="mb-4 rounded-xl border border-[#eadfce] bg-white px-4 py-3 text-sm text-slate-500">
+          Verification du role administrateur...
+        </div>
+      ) : null}
+      <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-950">
+        <p className="font-semibold">Session administrateur active</p>
+        <p className="mt-2 leading-6 text-emerald-900/90">
+          Role : <strong>{getSessionRoleLabel(undefined)}</strong>. Tu peux gerer toutes les sections
+          du dashboard et naviguer vers la boutique client via le menu lateral.
+        </p>
+      </div>
+      {renderSection(section)}
     </AdminShell>
   );
+
 }

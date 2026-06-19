@@ -33,7 +33,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import AdminDashboard from "./components/dashboard/AdminDashboard";
-import LoadingStyle from "@/components/special/loadingStyle";
+import LoadingStyle from "@/components/widgets_originaux/special/loadingStyle";
 
 export const metadata: Metadata = {
   title: "Dashboard Administrateur - Atelier du Terroir",

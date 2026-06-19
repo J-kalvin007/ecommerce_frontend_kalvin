@@ -1,6 +1,6 @@
 "use client";
 import { X, Calendar, Link as LinkIcon, Target, Power, PowerOff, LayoutGrid } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/special/ui/Dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/widgets_originaux/special/ui/Dialog";
 import { cn } from "@/lib/utils";
 import type { AdminBanner } from "@/modeles/bannieres";
 import { BANNER_TYPE_LABELS, BANNER_TYPE_COLORS } from "@/modeles/bannieres";
@@ -25,20 +25,20 @@ export function BannerDetailModal({ open, onClose, banner, onEdit, onDelete }: B
                 {/* Hero Image Section */}
                 <div className="relative h-64 w-full bg-surface-alt flex items-center justify-center overflow-hidden">
                     {banner.image ? (
-                        <img 
-                            src={banner.image} 
-                            alt={banner.title} 
+                        <img
+                            src={banner.image}
+                            alt={banner.title}
                             className="h-full w-full object-cover"
                         />
                     ) : (
                         <Target className="h-16 w-16 text-muted-foreground/30" />
                     )}
-                    
+
                     {/* Gradient Overlay for Text */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                    
+
                     {/* Top Right Close Button */}
-                    <button 
+                    <button
                         onClick={onClose}
                         className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-md transition-colors hover:bg-black/70"
                     >
@@ -121,7 +121,7 @@ export function BannerDetailModal({ open, onClose, banner, onEdit, onDelete }: B
                                 <p className="text-sm font-black text-foreground">Ordre #{banner.position}</p>
                             </div>
                         </div>
-                        
+
                         {/* Actions */}
                         <div className="flex gap-2">
                             <button

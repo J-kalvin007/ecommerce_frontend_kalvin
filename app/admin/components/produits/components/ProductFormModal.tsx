@@ -2,7 +2,7 @@
 // components/admin/produits/ProductFormModal.tsx
 "use client";
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/special/ui/Dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/widgets_originaux/special/ui/Dialog";
 import { StepIndicator, type Step } from "./StepIndicator";
 import { StepGeneralInfo } from "./ProductFormSteps/StepGeneralInfo";
 import { StepImages } from "./ProductFormSteps/StepImages";
@@ -62,7 +62,7 @@ export function ProductFormModal({
       setCompletedSteps([]);
       setFormErrors({});
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   // Sync variants when existingVariants changes (après ajout/modif)
@@ -260,9 +260,8 @@ export function ProductFormModal({
               <button
                 key={idx}
                 onClick={() => goToStep(idx)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  idx === currentStep ? "w-6 bg-primary" : completedSteps.includes(idx) ? "w-3 bg-primary/40" : "w-3 bg-border"
-                }`}
+                className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentStep ? "w-6 bg-primary" : completedSteps.includes(idx) ? "w-3 bg-primary/40" : "w-3 bg-border"
+                  }`}
               />
             ))}
           </div>

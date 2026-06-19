@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/special/ui/Dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/widgets_originaux/special/ui/Dialog";
 import { Save, Loader2, Tag, Percent, Banknote, Truck, Clock, Sparkles, Check, Search, Layers, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AdminPromoCode, DiscountType } from "@/modeles/promotions";
@@ -250,10 +250,10 @@ export function PromoCodeModal({
                                         </label>
                                         <div className="relative mb-3">
                                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                            <input 
+                                            <input
                                                 value={searchCategory}
                                                 onChange={e => setSearchCategory(e.target.value)}
-                                                placeholder="Rechercher une catégorie..." 
+                                                placeholder="Rechercher une catégorie..."
                                                 className="w-full h-10 pl-9 pr-4 rounded-xl border border-border/80 bg-surface/50 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground/50"
                                             />
                                         </div>
@@ -277,9 +277,9 @@ export function PromoCodeModal({
                                                                         : "bg-surface border-border hover:border-primary/40 hover:bg-surface-elevated"
                                                                 )}
                                                             >
-                                                                <input 
-                                                                    type="checkbox" 
-                                                                    className="sr-only" 
+                                                                <input
+                                                                    type="checkbox"
+                                                                    className="sr-only"
                                                                     checked={isSelected}
                                                                     onChange={() => handleMultiSelect("applicable_categories", c.id)}
                                                                 />
@@ -316,10 +316,10 @@ export function PromoCodeModal({
                                         </label>
                                         <div className="relative mb-3">
                                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                            <input 
+                                            <input
                                                 value={searchProduct}
                                                 onChange={e => setSearchProduct(e.target.value)}
-                                                placeholder="Rechercher un produit..." 
+                                                placeholder="Rechercher un produit..."
                                                 className="w-full h-10 pl-9 pr-4 rounded-xl border border-border/80 bg-surface/50 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground/50"
                                             />
                                         </div>
@@ -347,9 +347,9 @@ export function PromoCodeModal({
                                                                         : "bg-surface border-border hover:border-primary/40 hover:bg-surface-elevated"
                                                                 )}
                                                             >
-                                                                <input 
-                                                                    type="checkbox" 
-                                                                    className="sr-only" 
+                                                                <input
+                                                                    type="checkbox"
+                                                                    className="sr-only"
                                                                     checked={isSelected}
                                                                     onChange={() => handleMultiSelect("applicable_products", p.id)}
                                                                 />

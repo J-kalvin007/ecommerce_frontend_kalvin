@@ -17,10 +17,10 @@ import type { AdminPromoCode, AdminSoldes } from "@/modeles/promotions";
 
 // ─── Composants spéciaux partagés ────────────────────────────────────────────
 import Toast from "@/components/notifications/Toast";
-import LoadingKalvin from "@/components/special/loadingKalvin";
-import EmptyState from "@/components/special/EmptyState";
-import ErrorState from "@/components/special/ErrorState";
-import ConfirmDialog from "@/components/special/ConfirmDialog";
+import LoadingKalvin from "@/components/widgets_originaux/special/loadingKalvin";
+import EmptyState from "@/components/widgets_originaux/special/EmptyState";
+import ErrorState from "@/components/widgets_originaux/special/ErrorState";
+import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
 
 // ─── Sous-composants promotions ───────────────────────────────────────────────
 import { PromoCodeCard } from "./components/PromoCodeCard";
@@ -87,9 +87,9 @@ export default function PromotionsSection() {
             // Chargement silencieux catégories + produits pour les formulaires
             try {
                 const { getAdminCategories } = await import("@/fonctions_api/categories.api");
-                const { getAdminProducts }   = await import("@/fonctions_api/produits.api");
+                const { getAdminProducts } = await import("@/fonctions_api/produits.api");
                 const [catRes, prodRes] = await Promise.all([getAdminCategories(), getAdminProducts()]);
-                if (catRes.ok)  setCategories(((catRes as any).results ?? catRes.data) || []);
+                if (catRes.ok) setCategories(((catRes as any).results ?? catRes.data) || []);
                 if (prodRes.ok) setProductsList(((prodRes as any).results ?? prodRes.data) || []);
             } catch { /* silencieux */ }
 
@@ -104,9 +104,9 @@ export default function PromotionsSection() {
 
     // ── Statistiques ─────────────────────────────────────────────────────────
     const stats = useMemo(() => ({
-        activeCodes:  promoCodes.filter(c => c.is_active && (!c.expires_at || new Date(c.expires_at) > new Date())).length,
-        totalUses:    promoCodes.reduce((acc, c) => acc + (c.number_times_used || 0), 0),
-        activeSales:  sales.filter(s => s.is_active && new Date(s.ends_at) > new Date()).length,
+        activeCodes: promoCodes.filter(c => c.is_active && (!c.expires_at || new Date(c.expires_at) > new Date())).length,
+        totalUses: promoCodes.reduce((acc, c) => acc + (c.number_times_used || 0), 0),
+        activeSales: sales.filter(s => s.is_active && new Date(s.ends_at) > new Date()).length,
     }), [promoCodes, sales]);
 
     // ── Handlers codes promo ──────────────────────────────────────────────────
@@ -248,9 +248,9 @@ export default function PromotionsSection() {
             {/* ── KPI ──────────────────────────────────────────────────────── */}
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
                 {[
-                    { icon: <Tag className="h-6 w-6 text-primary" />, value: stats.activeCodes,  label: "Codes promo actifs",      glow: "bg-primary/10" },
-                    { icon: <Tag className="h-6 w-6 text-blue-500" />, value: stats.totalUses,   label: "Utilisations totales",     glow: "bg-blue-500/10" },
-                    { icon: <Zap className="h-6 w-6 text-amber-500" />, value: stats.activeSales, label: "Ventes flash en cours",   glow: "bg-amber-500/10" },
+                    { icon: <Tag className="h-6 w-6 text-primary" />, value: stats.activeCodes, label: "Codes promo actifs", glow: "bg-primary/10" },
+                    { icon: <Tag className="h-6 w-6 text-blue-500" />, value: stats.totalUses, label: "Utilisations totales", glow: "bg-blue-500/10" },
+                    { icon: <Zap className="h-6 w-6 text-amber-500" />, value: stats.activeSales, label: "Ventes flash en cours", glow: "bg-amber-500/10" },
                 ].map((kpi, i) => (
                     <motion.div key={i} whileHover={{ y: -4 }} className="relative overflow-hidden rounded-2xl border border-border bg-surface-elevated p-6 shadow-sm">
                         <div className={cn("absolute -right-4 -top-4 h-24 w-24 rounded-full blur-2xl", kpi.glow)} />

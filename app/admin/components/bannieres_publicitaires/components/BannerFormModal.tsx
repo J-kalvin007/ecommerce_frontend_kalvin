@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/special/ui/Dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/widgets_originaux/special/ui/Dialog";
 import { Save, Loader2, Image as ImageIcon, Link2, Type, Calendar, Target, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AdminBanner, BannerTypeEnum, CreateAdminBannerPayload } from "@/modeles/bannieres";
@@ -69,14 +69,14 @@ export function BannerFormModal({ open, onClose, onSave, initialData, isSaving }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         // Prepare data
         const payload: CreateAdminBannerPayload = {
             ...form,
             starts_at: form.starts_at ? new Date(form.starts_at).toISOString() : null,
             ends_at: form.ends_at ? new Date(form.ends_at).toISOString() : null,
         };
-        
+
         await onSave(payload);
     };
 
@@ -85,7 +85,7 @@ export function BannerFormModal({ open, onClose, onSave, initialData, isSaving }
             <DialogContent className="sm:max-w-4xl p-0 overflow-hidden border-border/50 bg-surface/95 backdrop-blur-xl shadow-2xl shadow-primary/10">
                 <div className="relative flex flex-col max-h-[90vh]">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-32 bg-primary/10 blur-[80px] pointer-events-none rounded-t-full" />
-                    
+
                     <DialogHeader className="p-8 pb-4 relative z-10 border-b border-border/40">
                         <DialogTitle className="text-2xl font-extrabold flex items-center gap-3">
                             <div className="p-2.5 bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl border border-primary/20 text-primary shadow-inner">
@@ -100,7 +100,7 @@ export function BannerFormModal({ open, onClose, onSave, initialData, isSaving }
 
                     <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-8 relative z-10">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            
+
                             {/* Colonne Gauche : Visuel & Type */}
                             <div className="space-y-6">
                                 {/* Image Upload */}
@@ -108,7 +108,7 @@ export function BannerFormModal({ open, onClose, onSave, initialData, isSaving }
                                     <label className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                                         <ImageIcon className="h-3.5 w-3.5 text-primary" /> Visuel de la bannière *
                                     </label>
-                                    <div 
+                                    <div
                                         onClick={() => fileInputRef.current?.click()}
                                         className={cn(
                                             "relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed bg-surface-alt transition-all hover:bg-surface-elevated hover:border-primary/50",
@@ -129,13 +129,13 @@ export function BannerFormModal({ open, onClose, onSave, initialData, isSaving }
                                                 <p className="text-xs text-muted-foreground mt-1">PNG, JPG, WEBP optimisé</p>
                                             </div>
                                         )}
-                                        <input 
-                                            type="file" 
-                                            ref={fileInputRef} 
-                                            className="hidden" 
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            className="hidden"
                                             accept="image/*"
                                             onChange={handleFileChange}
-                                            required={!initialData} 
+                                            required={!initialData}
                                         />
                                     </div>
                                 </div>
@@ -150,16 +150,16 @@ export function BannerFormModal({ open, onClose, onSave, initialData, isSaving }
                                             const cfg = BANNER_TYPE_COLORS[type];
                                             const isSelected = form.banner_type === type;
                                             return (
-                                                <label 
+                                                <label
                                                     key={type}
                                                     className={cn(
                                                         "flex cursor-pointer items-center justify-center rounded-xl border p-3 text-sm font-bold transition-all text-center",
                                                         isSelected ? cn(cfg.bg, cfg.text, cfg.border, "ring-2 ring-primary/20 shadow-sm") : "bg-surface border-border text-muted-foreground hover:border-primary/40 hover:bg-surface-elevated"
                                                     )}
                                                 >
-                                                    <input 
-                                                        type="radio" 
-                                                        className="sr-only" 
+                                                    <input
+                                                        type="radio"
+                                                        className="sr-only"
                                                         name="banner_type"
                                                         checked={isSelected}
                                                         onChange={() => handleChange("banner_type", type)}
@@ -174,7 +174,7 @@ export function BannerFormModal({ open, onClose, onSave, initialData, isSaving }
 
                             {/* Colonne Droite : Textes, Liens & Paramètres */}
                             <div className="space-y-6">
-                                
+
                                 {/* Titre & Sous-titre */}
                                 <div className="space-y-4">
                                     <div>

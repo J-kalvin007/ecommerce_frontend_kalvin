@@ -38,8 +38,8 @@ export function formatCurrency(
   locale: string = "fr-FR"
 ): string {
   // Nettoyage de la chaîne si c'est un string (ex: "19 000" -> 19000)
-  const numAmount = typeof amount === "string" 
-    ? parseFloat(amount.replace(/\s/g, "").replace(/[^\d.-]/g, "")) 
+  const numAmount = typeof amount === "string"
+    ? parseFloat(amount.replace(/\s/g, "").replace(/[^\d.-]/g, ""))
     : amount;
 
   if (isNaN(numAmount)) return String(amount);
@@ -239,3 +239,69 @@ export function slugify(text: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 }
+
+
+
+
+
+
+// export function formatCurrency(
+//   amount: string | number,
+//   currency: string = "FCFA",
+//   locale: string = "fr-FR"
+// ): string {
+//   const numAmount =
+//     typeof amount === "string"
+//       ? parseFloat(amount.replace(/\s/g, "").replace(/[^\d.-]/g, ""))
+//       : amount;
+
+//   if (Number.isNaN(numAmount)) {
+//     return String(amount);
+//   }
+
+//   if (currency === "FCFA" || currency === "XOF" || currency === "XAF") {
+//     return (
+//       new Intl.NumberFormat(locale, {
+//         minimumFractionDigits: 0,
+//         maximumFractionDigits: 0,
+//       }).format(numAmount) + " FCFA"
+//     );
+//   }
+
+//   try {
+//     return new Intl.NumberFormat(locale, {
+//       style: "currency",
+//       currency,
+//       minimumFractionDigits: 2,
+//       maximumFractionDigits: 2,
+//     }).format(numAmount);
+//   } catch {
+//     return (
+//       new Intl.NumberFormat(locale, {
+//         minimumFractionDigits: 2,
+//         maximumFractionDigits: 2,
+//       }).format(numAmount) +
+//       " " +
+//       currency
+//     );
+//   }
+// }
+
+
+
+// export function formatDate(
+//   dateStr: string | null | undefined,
+//   locale: string = "fr-FR",
+//   options: Intl.DateTimeFormatOptions = {
+//     day: "numeric",
+//     month: "short",
+//     year: "numeric",
+//   }
+// ): string {
+//   if (!dateStr) return "—";
+//   try {
+//     return new Intl.DateTimeFormat(locale, options).format(new Date(dateStr));
+//   } catch {
+//     return "—";
+//   }
+// }

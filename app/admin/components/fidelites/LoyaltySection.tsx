@@ -16,10 +16,10 @@ import { computeLoyaltyStats } from "@/modeles/fidelites";
 
 // ─── Composants spéciaux partagés ────────────────────────────────────────────
 import Toast from "@/components/notifications/Toast";
-import LoadingKalvin from "@/components/special/loadingKalvin";
-import EmptyState from "@/components/special/EmptyState";
-import ErrorState from "@/components/special/ErrorState";
-import ConfirmDialog from "@/components/special/ConfirmDialog";
+import LoadingKalvin from "@/components/widgets_originaux/special/loadingKalvin";
+import EmptyState from "@/components/widgets_originaux/special/EmptyState";
+import ErrorState from "@/components/widgets_originaux/special/ErrorState";
+import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
 
 // ─── Sous-composants fidélité ────────────────────────────────────────────────
 import { LoyaltyStatsBar } from "./components/LoyaltyStatsBar";
@@ -300,8 +300,8 @@ export default function LoyaltySection() {
                 )
             ) : (
                 <div className="max-w-4xl">
-                    <LoyaltyTiersPanel 
-                        tiers={tiers} 
+                    <LoyaltyTiersPanel
+                        tiers={tiers}
                         isAdmin={true}
                         onAdd={() => { setEditingTier(null); setTierFormOpen(true); }}
                         onEdit={(tier) => { setEditingTier(tier); setTierFormOpen(true); }}

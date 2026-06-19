@@ -5,21 +5,21 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import type { AdminBanner, BannerTypeEnum, CreateAdminBannerPayload } from "@/modeles/bannieres";
 import { BANNER_TYPE_LABELS } from "@/modeles/bannieres";
-import { 
-    getAdminBanners, 
-    createAdminBanner, 
-    updateAdminBanner, 
-    deleteAdminBanner 
+import {
+    getAdminBanners,
+    createAdminBanner,
+    updateAdminBanner,
+    deleteAdminBanner
 } from "@/fonctions_api/bannieres.api";
 
 import { BannerCard } from "./components/BannerCard";
 import { BannerFormModal } from "./components/BannerFormModal";
 import { BannerDetailModal } from "./components/BannerDetailModal";
 
-import EmptyState from "@/components/special/EmptyState";
-import LoadingStyle from "@/components/special/loadingStyle";
-import Toast from "@/components/special/Toast";
-import ConfirmDialog from "@/components/special/ConfirmDialog";
+import EmptyState from "@/components/widgets_originaux/special/EmptyState";
+import LoadingStyle from "@/components/widgets_originaux/special/loadingStyle";
+import Toast from "@/components/widgets_originaux/special/Toast";
+import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
 import { cn } from "@/lib/utils";
 
 export default function BannersSection() {
@@ -153,7 +153,7 @@ export default function BannersSection() {
             <div className="relative overflow-hidden rounded-3xl border border-border bg-surface-elevated p-8 shadow-sm">
                 <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
                 <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
-                
+
                 <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6 z-10">
                     <div className="space-y-2">
                         <h1 className="text-3xl font-black tracking-tight text-foreground flex items-center gap-3">
@@ -164,7 +164,7 @@ export default function BannersSection() {
                             Gérez les bannières publicitaires affichées sur le site. Attirez l'attention de vos clients sur vos nouvelles offres, vos promotions ou vos annonces importantes.
                         </p>
                     </div>
-                    
+
                     <button
                         onClick={openCreate}
                         className="group flex shrink-0 items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-primary/30 active:scale-95"
@@ -238,7 +238,7 @@ export default function BannersSection() {
                     onAction={openCreate}
                 />
             ) : (
-                <motion.div 
+                <motion.div
                     layout
                     className={cn(
                         "grid gap-6",

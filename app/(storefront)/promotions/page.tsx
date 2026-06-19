@@ -4,7 +4,7 @@
  */
 
 import type { Metadata } from "next";
-import PromotionsClient from "./PromotionsClient";
+// import PromotionsClient from "./PromotionsClient";
 
 export const metadata: Metadata = {
   title: "Promotions",
@@ -12,5 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default function PromotionsPage() {
-  return <PromotionsClient />;
+  // return <PromotionsClient />;
+  return <PromotionsPage />;
 }

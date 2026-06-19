@@ -53,7 +53,7 @@ export default function TrustBand() {
               className="flex items-center gap-4 px-8 py-3 text-sm font-semibold uppercase tracking-[0.16em] sm:px-10 sm:text-base"
             >
               <span>{item}</span>
-              <span className="text-highlight">•</span>
+              <span className="text-[#c2e662]">•</span>
             </div>
           ))}
         </motion.div>

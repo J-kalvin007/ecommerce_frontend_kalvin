@@ -603,10 +603,10 @@ import { getAdminOrders, updateOrderStatus } from "@/fonctions_api/commandes.api
 import type { OrderList, OrderStatus, AdminOrderFilters } from "@/modeles/commandes";
 import { ORDER_STATUS_MAP } from "@/modeles/commandes";
 import Toast from "@/components/notifications/Toast";
-import LoadingKalvin from "@/components/special/loadingKalvin";
-import EmptyState from "@/components/special/EmptyState";
-import ErrorState from "@/components/special/ErrorState";
-import ConfirmDialog from "@/components/special/ConfirmDialog";
+import LoadingKalvin from "@/components/widgets_originaux/special/loadingKalvin";
+import EmptyState from "@/components/widgets_originaux/special/EmptyState";
+import ErrorState from "@/components/widgets_originaux/special/ErrorState";
+import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
 import { OrderDetailModal } from "./components/OrderDetailModal";
 import { OrderCard } from "./components/Ordercard";
 
@@ -721,12 +721,12 @@ export default function OrdersSection() {
   }, [orders, search]);
 
   const stats = useMemo(() => ({
-    total:     orders.length,
-    pending:   orders.filter(o => o.status === "pending_payment" || o.status === "paid").length,
-    processing:orders.filter(o => o.status === "processing").length,
-    shipped:   orders.filter(o => o.status === "shipped").length,
+    total: orders.length,
+    pending: orders.filter(o => o.status === "pending_payment" || o.status === "paid").length,
+    processing: orders.filter(o => o.status === "processing").length,
+    shipped: orders.filter(o => o.status === "shipped").length,
     delivered: orders.filter(o => o.status === "delivered").length,
-    revenue:   orders.reduce((s, o) => s + parseFloat(o.total_final || "0"), 0),
+    revenue: orders.reduce((s, o) => s + parseFloat(o.total_final || "0"), 0),
   }), [orders]);
 
   if (error && orders.length === 0) {

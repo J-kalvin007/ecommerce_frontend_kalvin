@@ -1,6 +1,6 @@
 'use client';
 
-import { useTheme } from '@/hooks/useTheme';
+
 import { AlertTriangle, Info, CheckCircle, X, HelpCircle, Trash2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -31,8 +31,8 @@ const ConfirmDialog = ({
   isLoading = false,
   children
 }: ConfirmDialogProps) => {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
+
+  const isDark = false;
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -164,7 +164,7 @@ const ConfirmDialog = ({
                 onClick={onCancel}
                 disabled={isLoading}
                 className={`
-                  w-full sm:w-auto min-w-[140px] py-3 px-6 rounded-xl font-medium text-sm
+                  w-full cursor-pointer sm:w-auto min-w-[140px] py-3 px-6 rounded-xl font-medium text-sm
                   transition-all duration-200
                   ${isDark
                     ? 'hover:bg-white/5 text-gray-400 hover:text-white border border-transparent hover:border-white/10'
@@ -180,7 +180,7 @@ const ConfirmDialog = ({
                 onClick={onConfirm}
                 disabled={isLoading}
                 className={`
-                  w-full sm:w-auto min-w-[140px] py-3 px-6 rounded-xl font-bold text-sm text-white shadow-lg
+                  w-full cursor-pointer sm:w-auto min-w-[140px] py-3 px-6 rounded-xl font-bold text-sm text-white shadow-lg
                   ${config.button}
                   transition-all duration-200
                   hover:scale-[1.02] hover:shadow-xl

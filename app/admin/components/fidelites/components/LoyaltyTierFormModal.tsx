@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Loader2, Crown, AlertTriangle } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/special/Dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/widgets_originaux/special/Dialog";
 import { cn } from "@/lib/utils";
 import type { Tier } from "@/modeles/fidelites";
 import { createAdminLoyaltyTier, updateAdminLoyaltyTier } from "@/fonctions_api/fidelites.api";

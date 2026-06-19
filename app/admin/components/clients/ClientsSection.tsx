@@ -15,11 +15,11 @@ import { getAllUsers, toggleUserActive } from "@/fonctions_api/auth.api";
 import type { User } from "@/modeles/user";
 import { ClientCard } from "./components/ClientCard";
 import { ClientDetailModal } from "./components/ClientDetailModal";
-import Toast from "@/components/special/Toast";
-import LoadingStyle from "@/components/special/loadingStyle";
-import ConfirmDialog from "@/components/special/ConfirmDialog";
-import ErrorState from "@/components/special/ErrorState";
-import EmptyState from "@/components/special/EmptyState";
+import Toast from "@/components/widgets_originaux/special/Toast";
+import LoadingStyle from "@/components/widgets_originaux/special/loadingStyle";
+import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
+import ErrorState from "@/components/widgets_originaux/special/ErrorState";
+import EmptyState from "@/components/widgets_originaux/special/EmptyState";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

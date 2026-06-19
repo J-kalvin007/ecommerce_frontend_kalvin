@@ -715,7 +715,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { patchUser, changePassword } from "@/fonctions_api/auth.api";
-import ConfirmDialog from "@/components/special/ConfirmDialog";
+import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
 import Toast from "@/components/notifications/Toast";
 import {
   Dialog,
@@ -723,7 +723,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/special/ui/Dialog";
+} from "@/components/widgets_originaux/special/ui/Dialog";
 import type { User } from "@/modeles/user";
 
 interface ProfileModalProps {
