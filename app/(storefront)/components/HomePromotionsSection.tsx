@@ -5,13 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Zap } from "lucide-react";
-import { PromoProductsCarousel } from "@/components/promotions/PromoProductsCarousel";
-import {
-  getActiveBanners,
-  getPromoProducts,
-  type PublicBanner,
-} from "@/lib/ecommerce-api";
-import { mapFlashSalesToPromoCards, type PromoProductCard } from "@/lib/promotions";
+import { PromoProductsCarousel } from "@/app/(storefront)/promotions/components/PromoProductsCarousel";
 
 function PromoBanner({ banner }: { banner: PublicBanner }) {
   const content = (

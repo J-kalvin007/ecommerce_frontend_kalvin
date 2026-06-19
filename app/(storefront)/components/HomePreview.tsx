@@ -13,9 +13,9 @@ import {
   type PublicFlashSale,
   type PublicPromoCode,
 } from "@/lib/ecommerce-api";
-import { CategoriesGrid } from "@/components/home/CategoriesGrid";
-import FeaturesSection from "@/components/home/FeaturesSection";
-import { TrendingProducts } from "@/components/home/TrendingProducts";
+import { CategoriesGrid } from "@/app/(storefront)/components/CategoriesGrid";
+import FeaturesSection from "@/app/(storefront)/components/FeaturesSection";
+import { TrendingProducts } from "@/app/(storefront)/components/TrendingProducts";
 
 type PreviewState = {
   categories: PublicCategory[];

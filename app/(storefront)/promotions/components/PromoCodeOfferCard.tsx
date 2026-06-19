@@ -1,6 +1,6 @@
 "use client";
 
-import { PromoCodeUseButton } from "@/components/promotions/PromoCodeUseButton";
+import { PromoCodeUseButton } from "@/app/(storefront)/promotions/components/PromoCodeUseButton";
 import type { PublicPromoCode } from "@/lib/ecommerce-api";
 
 type PromoCodeOfferCardProps = {

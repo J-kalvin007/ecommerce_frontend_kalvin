@@ -10,7 +10,7 @@ import { usePathname } from "next/navigation";
 // import Footer from "@/components/layout/Footer";
 import CartDrawer from "@/components/cart/CartDrawer";
 import { LegacyFooter } from "@/components/layout/LegacyFooter";
-import { LegacyHeader } from "@/components/layout/LegacyHeader";
+import Header from "@/components/layout/LegacyHeader";
 
 
 
@@ -23,7 +23,7 @@ export default function StorefrontLayout({ children }: { children: React.ReactNo
     <>
       {/* <Header /> */}
 
-      <LegacyHeader />
+      <Header />
 
       <main className="storefront-content min-h-[calc(100vh-var(--navbar-height))] bg-gradient-to-br from-primary/10 via-white to-primary/5">
         {children}

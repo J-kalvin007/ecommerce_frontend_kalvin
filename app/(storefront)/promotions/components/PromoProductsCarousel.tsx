@@ -5,7 +5,7 @@ import { motion, type PanInfo } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PromoProductCard } from "@/lib/promotions";
-import { PromoOfferCard } from "@/components/promotions/PromoOfferCard";
+import { PromoOfferCard } from "@/app/(storefront)/promotions/components/PromoOfferCard";
 
 type PromoProductsCarouselProps = {
   items: PromoProductCard[];

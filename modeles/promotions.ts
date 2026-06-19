@@ -119,3 +119,45 @@ export interface ValidatePromoResponse {
     discount_amount: string;
     description: string;
 }
+
+export interface ValidatePromoErrorResponse {
+    valid: boolean;
+    error_code: string;
+    detail: string;
+}
+
+export interface PromoCodeList {
+    id: string;
+    code: string;
+    description: string;
+    type: DiscountType;
+    type_display: string;
+    value: string;
+    starts_at: string;
+    expires_at: string | null;
+}
+
+export interface Banner {
+    id: string;
+    title: string;
+    subtitle: string;
+    image_url: string;
+    cta_label: string;
+    cta_url: string;
+    banner_type: BannerType;
+    position: number;
+}
+
+export interface Soldes {
+    id: string;
+    product_name: string;
+    product_slug: string;
+    product_image: string;
+    variant: string | null;
+    sale_price: string;
+    original_price: string;
+    discount_percent: number;
+    remaining_stock: number | null;
+    starts_at: string;
+    ends_at: string;
+}

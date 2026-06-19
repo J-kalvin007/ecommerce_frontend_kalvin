@@ -15,6 +15,10 @@ import type {
     UpdateBannerPayload,
     ValidateCodePayload,
     ValidatePromoResponse,
+    PromoCodeList,
+    Banner,
+    Soldes,
+    BannerType,
 } from "@/modeles/promotions";
 import type { Result, ApiError } from "@/modeles/user";
 import { AxiosError } from "axios";
@@ -180,3 +184,27 @@ export const validatePromoCode = async (payload: ValidateCodePayload): Promise<R
         return { ok: true, data: res.data };
     } catch (e) { return handleApiError(e); }
 };
+
+export const getActivePromoCodes = async (): Promise<Result<PromoCodeList[]>> => {
+    try {
+        const res = await apiPublic.get<PromoCodeList[]>("/api/v1/promotions/codes-promo-actifs/");
+        return { ok: true, data: res.data };
+    } catch (e) { return handleApiError(e); }
+};
+
+export const getActiveRecommendations = async (type?: BannerType): Promise<Result<Banner[]>> => {
+    try {
+        const url = type 
+            ? `/api/v1/promotions/recommendations-actives/?type=${type}`
+            : "/api/v1/promotions/recommendations-actives/";
+        const res = await apiPublic.get<Banner[]>(url);
+        return { ok: true, data: res.data };
+    } catch (e) { return handleApiError(e); }
+};
+
+export const getActiveSales = async (): Promise<Result<Soldes[]>> => {
+    try {
+        const res = await apiPublic.get<Soldes[]>("/api/v1/promotions/soldes-actifs/");
+        return { ok: true, data: res.data };
+    } catch (e) { return handleApiError(e); }
+};
