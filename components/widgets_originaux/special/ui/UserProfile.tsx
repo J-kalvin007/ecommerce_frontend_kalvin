@@ -4,7 +4,7 @@ import { User, Mail, Phone, MapPin, Calendar, Edit, Shield, CreditCard, Bell, Gl
 import { useUI } from '@/hooks/useUI';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 import Button from './Button';
 import Card from './Card';
 import Badge from './Badge';
@@ -12,7 +12,7 @@ import Badge from './Badge';
 export default function UserProfile() {
   const { closeAllModals } = useUI();
   const [activeTab, setActiveTab] = useState('profile');
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
 
   const user = {

@@ -1,3 +1,8 @@
+
+
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { logoImage } from "@/assets/images";
@@ -18,6 +23,31 @@ const solutionLinks = [
 const phoneNumbers = ["+228 72318393", "+228 92226399", "+228 97014471"];
 
 export function LegacyFooter() {
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || subscribed || sending) return;
+
+    setSending(true);
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        setSubscribed(true);
+      }
+    } catch (err) {
+      // Gestion silencieuse de l'erreur
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <footer className="relative overflow-hidden bg-[#183a1f] text-white">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(239,130,25,0.16),transparent_28%),radial-gradient(circle_at_88%_8%,rgba(255,255,255,0.10),transparent_24%),linear-gradient(135deg,rgba(255,255,255,0.04),transparent_48%)]" />
@@ -48,25 +78,36 @@ export function LegacyFooter() {
                 <h3 className="text-lg font-black leading-tight text-white">Restez informe</h3>
               </div>
             </div>
-            <div className="flex gap-2 rounded-full bg-white p-1 shadow-inner">
+
+            <form
+              onSubmit={handleSubscribe}
+              className="flex gap-2 rounded-full bg-white p-1 shadow-inner"
+            >
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Votre email"
+                required
                 className="min-w-0 flex-1 rounded-full px-4 text-sm font-medium text-[#183a1f] outline-none placeholder:text-[#183a1f]/45"
+                disabled={subscribed}
               />
               <button
-                type="button"
-                className="inline-flex h-9 shrink-0 items-center gap-2 rounded-full bg-[#ef8219] px-4 text-xs font-black text-white hover:bg-[#d96f13]"
+                type="submit"
+                disabled={subscribed || sending}
+                className="inline-flex h-9 shrink-0 items-center gap-2 rounded-full bg-[#ef8219] px-4 text-xs font-black text-white hover:bg-[#d96f13] disabled:opacity-70"
               >
-                S&apos;inscrire
+                {subscribed ? "Inscrit !" : sending ? "Envoi..." : "S'inscrire"}
               </button>
-            </div>
+            </form>
           </div>
         </div>
 
-        <div className="grid gap-8 py-10 lg:grid-cols-[1.25fr_0.65fr_0.8fr_1fr]">
-          <div className="space-y-5">
-            <div className="flex items-center gap-4">
+        {/* Grille principale – centrage mobile */}
+        <div className="grid gap-8 py-10 text-center lg:grid-cols-[1.25fr_0.65fr_0.8fr_1fr] lg:text-left">
+          {/* Colonne Marque */}
+          <div className="flex flex-col items-center space-y-5 lg:items-start">
+            <div className="flex flex-col items-center gap-4 lg:flex-row">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-lg">
                 <Image
                   src={logoImage}
@@ -76,7 +117,7 @@ export function LegacyFooter() {
                   className="object-contain"
                 />
               </div>
-              <div>
+              <div className="text-center lg:text-left">
                 <h2 className="text-xl font-black leading-tight">L&apos;Atelier du Terroir</h2>
                 <p className="mt-1 text-xs font-black uppercase tracking-[0.18em] text-[#ef8219]">
                   Deal & Consulting
@@ -84,7 +125,7 @@ export function LegacyFooter() {
               </div>
             </div>
 
-            <p className="max-w-sm text-sm leading-6 text-white/68">
+            <p className="max-w-sm text-center text-sm leading-6 text-white/68 lg:text-left">
               Des produits du terroir d&apos;exception, selectionnes avec soin pour reveler le meilleur de la gastronomie agricole locale et export.
             </p>
           </div>
@@ -92,9 +133,9 @@ export function LegacyFooter() {
           <FooterColumn title="Navigation" links={pageLinks} />
           <FooterColumn title="Solutions" links={solutionLinks} />
 
-          <div>
+          <div className="flex flex-col items-center lg:items-start">
             <FooterTitle>Contact</FooterTitle>
-            <div className="mt-4 space-y-4 text-sm text-white/70">
+            <div className="mt-4 space-y-4 text-center text-sm text-white/70 lg:text-left">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-white/35">Email</p>
                 <p className="mt-1">agrobusiness@dealandconsulting.com</p>
@@ -151,7 +192,7 @@ function FooterColumn({
   links: ReadonlyArray<{ label: string; href: string }>;
 }) {
   return (
-    <div>
+    <div className="flex flex-col items-center lg:items-start">
       <FooterTitle>{title}</FooterTitle>
       <ul className="mt-4 space-y-2.5">
         {links.map((link) => (

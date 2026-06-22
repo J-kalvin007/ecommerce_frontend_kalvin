@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
@@ -17,7 +17,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({
   className = '',
   ...props
 }, ref) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
   const [isFocused, setIsFocused] = useState(false);
 

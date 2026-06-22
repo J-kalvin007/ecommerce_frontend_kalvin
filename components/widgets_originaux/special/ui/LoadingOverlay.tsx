@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Loader from './Loader';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 
 interface LoadingOverlayProps {
   isLoading: boolean;
@@ -14,7 +14,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
   isLoading,
   message = 'Chargement...'
 }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
 
   return (

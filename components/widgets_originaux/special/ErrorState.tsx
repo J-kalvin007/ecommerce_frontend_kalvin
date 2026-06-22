@@ -3,7 +3,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useTheme } from "@/hooks/useTheme"
+import { useThemeStore } from '@/store/theme.store';
 import Lottie from "lottie-react"
 import errorAnimation from "@/public/assets/lottis/error11.json"
 
@@ -20,7 +20,7 @@ export default function ErrorState({
     buttonText = "Réessayer",
     onRetry,
 }: ErrorStateProps) {
-    const { theme } = useTheme();
+    const { resolvedTheme: theme } = useThemeStore();
     const isDark = theme === 'dark';
 
     return (

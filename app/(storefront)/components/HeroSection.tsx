@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Play, Sparkles, Leaf, Award, Heart, X } from "lucide-react";
+import { ArrowRight, Layers, Play, Sparkles, Leaf, Award, Heart, X } from "lucide-react";
 import {
   pimentHeroImage,
   poivronsImage,
@@ -124,7 +124,7 @@ export default function HeroSection() {
             className="space-y-6 lg:space-y-7"
           >
             <div className="inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 px-4 py-2 backdrop-blur-md shadow-lg">
-              <Sparkles className="h-4 w-4 text-[#c2e662] drop-shadow-sm" />
+              <Layers className="h-4 w-4 text-[#c2e662] drop-shadow-sm" />
               <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-white/90 sm:text-xs">
                 {HERO_BADGE}
               </span>
@@ -144,7 +144,7 @@ export default function HeroSection() {
             <div className="flex flex-col items-center gap-4 pt-4 sm:flex-row lg:justify-start">
               <Link
                 href="/products"
-                className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-primary-hover px-7 py-3.5 text-base font-bold text-white shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl sm:text-lg"
+                className="group relative cursor-pointer overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-primary-hover px-7 py-3.5 text-base font-bold text-white shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl sm:text-lg"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   {HERO_PRIMARY_CTA}
@@ -156,7 +156,7 @@ export default function HeroSection() {
               <button
                 type="button"
                 onClick={() => setShowStoryVideo(true)}
-                className="group flex items-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-6 py-3.5 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:border-white/50 hover:bg-white/20 hover:shadow-lg sm:text-lg"
+                className="group cursor-pointer flex items-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-6 py-3.5 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:border-white/50 hover:bg-white/20 hover:shadow-lg sm:text-lg"
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 transition-all duration-300 group-hover:bg-white/25">
                   <Play className="h-4 w-4 text-[#c2e662] drop-shadow-sm" />
@@ -274,7 +274,7 @@ export default function HeroSection() {
               <button
                 type="button"
                 onClick={() => setShowStoryVideo(false)}
-                className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80"
+                className="absolute cursor-pointer right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80"
                 aria-label="Fermer la video"
               >
                 <X className="h-5 w-5" />

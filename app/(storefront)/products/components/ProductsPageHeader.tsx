@@ -35,10 +35,11 @@ function StatBadge({
 
 export function ProductsPageHeader({ productCount, categoryCount }: ProductsPageHeaderProps) {
   return (
-    <section className="relative overflow-hidden bg-highlight pt-24 text-white">
+    <section className="relative overflow-hidden bg-highlight pt-0 text-white">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(239,130,25,0.14),transparent_38%),radial-gradient(circle_at_88%_0%,rgba(255,255,255,0.07),transparent_32%)]" />
 
       <div className="relative mx-auto max-w-[var(--content-max-width)] px-[var(--spacing-page-x)] py-9 md:py-10">
+
         <motion.nav
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -46,7 +47,7 @@ export function ProductsPageHeader({ productCount, categoryCount }: ProductsPage
           aria-label="Fil d'Ariane"
           className="mb-5 flex items-center gap-1.5 text-xs text-white/50"
         >
-          <Link href="/" className="transition-colors hover:text-white/80">
+          <Link href="/" className="cursor-pointer transition-colors hover:text-white/80">
             Accueil
           </Link>
           <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-60" aria-hidden="true" />

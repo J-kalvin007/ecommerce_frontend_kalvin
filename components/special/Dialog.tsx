@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
-import { useTheme } from "@/hooks/useTheme"
+import { useThemeStore } from '@/store/theme.store';
 
 // Inline class merger — no external dependency needed
 function cx(...classes: (string | undefined | null | false)[]): string {
@@ -22,7 +22,7 @@ const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
 >(({ className, style, ...props }, ref) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
   return (
     <DialogPrimitive.Overlay
@@ -53,7 +53,7 @@ const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, style, ...props }, ref) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
   return (
     <DialogPortal>
@@ -134,7 +134,7 @@ const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, style, ...props }, ref) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
   return (
     <DialogPrimitive.Title
@@ -152,7 +152,7 @@ const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, style, ...props }, ref) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
   return (
     <DialogPrimitive.Description

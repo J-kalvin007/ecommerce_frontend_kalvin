@@ -28,6 +28,8 @@ interface UIState {
   isOnline: boolean;
   /** Thème actuel */
   theme: string;
+  /** ID du produit actuellement sélectionné pour optimiser le chargement de la page détail */
+  activeProductId: string | null;
 
   /* --- Actions --- */
   toggleSidebar: (open?: boolean) => void;
@@ -38,6 +40,7 @@ interface UIState {
   closeAllModals: () => void;
   setOnline: (online: boolean) => void;
   setTheme: (theme: string) => void;
+  setActiveProductId: (id: string | null) => void;
 }
 
 /**
@@ -51,6 +54,7 @@ export const useUIStore = create<UIState>()((set) => ({
   isMobileMenuOpen: false,
   isOnline: true,
   theme: "light",
+  activeProductId: null,
 
   toggleSidebar: (open) =>
     set((state) => ({
@@ -88,4 +92,6 @@ export const useUIStore = create<UIState>()((set) => ({
   setOnline: (online) => set({ isOnline: online }),
 
   setTheme: (theme) => set({ theme }),
+
+  setActiveProductId: (id) => set({ activeProductId: id }),
 }));

@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -12,7 +12,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, icon, className = '', onFocus, onBlur, ...props }, ref) => {
-    const { theme } = useTheme();
+    const { resolvedTheme: theme } = useThemeStore();
     const isDark = theme === 'dark';
     const [isFocused, setIsFocused] = useState(false);
 

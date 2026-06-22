@@ -2,14 +2,14 @@
 
 'use client';
 
-import { useTheme } from "@/hooks/useTheme";
+import { useThemeStore } from '@/store/theme.store';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
 const Card: React.FC<CardProps> = ({ children, className = '', ...props }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
 
   return (
     <div

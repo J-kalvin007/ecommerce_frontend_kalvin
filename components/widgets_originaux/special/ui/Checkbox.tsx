@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 
 interface CheckboxProps {
   label?: string;
@@ -13,7 +13,7 @@ interface CheckboxProps {
 }
 
 const Checkbox: React.FC<CheckboxProps> = ({ label, checked, onChange, disabled }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
 
   return (

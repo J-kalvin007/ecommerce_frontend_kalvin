@@ -1,4 +1,4 @@
-// import { useTheme } from "@/hooks/useTheme";
+// import { useThemeStore } from '@/store/theme.store';
 // import { motion } from "framer-motion";
 // import Lottie from "lottie-react";
 // import loadingAnimation from "@/public/assets/lottis/load5.json";
@@ -9,7 +9,7 @@
 // }
 
 // const LoadingStyle = ({ label, size = 15 }: LoadingStyleProps) => {
-//     const { theme } = useTheme();
+//     const { resolvedTheme: theme } = useThemeStore();
 //     const isDark = theme === 'dark';
 
 //     // Convert size to a valid number if it's a string
@@ -120,7 +120,7 @@
 // components/special/loadingStyle.tsx
 "use client";
 
-import { useTheme } from "@/hooks/useTheme";
+import { useThemeStore } from '@/store/theme.store';
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import loadingAnimation from "@/public/assets/lottis/load5.json";
@@ -131,7 +131,7 @@ interface LoadingStyleProps {
 }
 
 const LoadingStyle = ({ label, size = 15 }: LoadingStyleProps) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === "dark";
 
   const numericSize = typeof size === "string" ? parseFloat(size) : size;

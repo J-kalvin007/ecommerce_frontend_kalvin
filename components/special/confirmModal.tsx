@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { AlertTriangle, Info, CheckCircle, HelpCircle, Trash2 } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 import {
     Dialog,
     DialogContent,
@@ -95,7 +95,7 @@ export default function ConfirmModal({
     isLoading = false,
     children,
 }: ConfirmModalProps) {
-    const { theme } = useTheme();
+    const { resolvedTheme: theme } = useThemeStore();
     const isDark = theme === 'dark';
 
     const cfg = typeConfigs[type] ?? typeConfigs.warning;

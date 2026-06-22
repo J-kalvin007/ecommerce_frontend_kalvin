@@ -291,7 +291,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, Loader2, Sparkles, Tag, Zap } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
-import { useCartStore } from "@/store/cartStore";
+import { useCartStore } from "@/store/pannierStore";
 import { useApplyPromoCode } from "@/hooks/useApplyPromoCode";
 import type { PromoCodeList } from "@/modeles/promotions";
 

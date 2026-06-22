@@ -11,7 +11,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
-import { useCartStore } from "@/store/cartStore";
+import { useCartStore } from "@/store/pannierStore";
 
 export default function CartDrawer() {
   const { items, isDrawerOpen, toggleDrawer, updateQuantity, removeItem, getTotal, getItemCount } = useCartStore();
@@ -59,7 +59,7 @@ export default function CartDrawer() {
               </div>
               <button
                 onClick={() => toggleDrawer(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-surface-alt"
+                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-surface-alt"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -79,7 +79,7 @@ export default function CartDrawer() {
                   <Link
                     href="/products"
                     onClick={() => toggleDrawer(false)}
-                    className="flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-primary-hover"
+                    className="flex items-center cursor-pointer gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-primary-hover"
                   >
                     Explorer la boutique
                     <ArrowRight className="h-4 w-4" />
@@ -122,7 +122,7 @@ export default function CartDrawer() {
                           <div className="flex items-center rounded-lg border border-border">
                             <button
                               onClick={() => updateQuantity(item.productId, null, item.quantity - 1)}
-                              className="flex h-7 w-7 items-center justify-center rounded-l-lg hover:bg-surface-alt"
+                              className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-l-lg hover:bg-surface-alt"
                             >
                               <Minus className="h-3 w-3" />
                             </button>
@@ -131,7 +131,7 @@ export default function CartDrawer() {
                             </span>
                             <button
                               onClick={() => updateQuantity(item.productId, null, item.quantity + 1)}
-                              className="flex h-7 w-7 items-center justify-center rounded-r-lg hover:bg-surface-alt"
+                              className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-r-lg hover:bg-surface-alt"
                             >
                               <Plus className="h-3 w-3" />
                             </button>
@@ -145,7 +145,7 @@ export default function CartDrawer() {
                       {/* Remove */}
                       <button
                         onClick={() => removeItem(item.productId, null)}
-                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-muted transition-colors hover:bg-error-light hover:text-error"
+                        className="flex h-7 w-7 cursor-pointer shrink-0 items-center justify-center rounded-lg text-muted transition-colors hover:bg-error-light hover:text-error"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -175,16 +175,16 @@ export default function CartDrawer() {
                 {/* CTAs */}
                 <div className="mt-4 space-y-2">
                   <Link
-                    href="/checkout"
+                    href="/commandes"
                     onClick={() => toggleDrawer(false)}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-hover py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-glow-strong"
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-hover py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-glow-strong"
                   >
                     Passer la commande
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <button
                     onClick={() => toggleDrawer(false)}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm font-semibold transition-all hover:bg-surface-alt"
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm font-semibold transition-all hover:bg-surface-alt"
                   >
                     Continuer les achats
                   </button>

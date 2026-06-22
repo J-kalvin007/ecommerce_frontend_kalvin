@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Button from './ui/Button';
 import { LucideIcon, Inbox } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 
 interface EmptyStateProps {
   title: string;
@@ -21,7 +21,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   onAction,
   icon: Icon = Inbox
 }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
 
   return (

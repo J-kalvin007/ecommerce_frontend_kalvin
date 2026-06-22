@@ -271,6 +271,59 @@ export interface ProductList {
   readonly count_favorites: number;
 }
 
+
+
+
+export interface ProductListPublicTop {
+  /** UUID unique — readOnly */
+  readonly id: string;
+
+  /** Nom du produit — required, maxLength: 255 */
+  name: string;
+
+  /**
+   * Slug URL-safe — nullable, maxLength: 50
+   * @pattern ^[-a-zA-Z0-9_]+$
+   */
+  slug: string | null;
+
+  /** SKU — required, maxLength: 100 */
+  sku: string;
+
+  /**
+   * Prix — required
+   * @pattern ^-?\d{0,10}(?:\.\d{0,2})?$
+   */
+  price: string;
+
+  /** Stock disponible — min: 0, max: 2147483647 */
+  stock: number;
+
+  /** Produit mis en avant — nullable */
+  is_top: boolean | null;
+
+  /** Type de produit */
+  product_type: ProductType;
+
+  /** Nom de la catégorie — readOnly */
+  readonly category_name: string;
+
+  /** URL ou objet de l'image principale — readOnly */
+  readonly primary_image: string;  
+
+  /**
+   * Note moyenne du produit — readOnly
+   * @pattern ^-?\d{0,1}(?:\.\d{0,2})?$
+   */
+  readonly note_produit: string;
+
+  /** Nombre de notes — readOnly */
+  readonly count_ratings: number;
+
+  /** Nombre de favoris — readOnly */
+  readonly count_favorites: number;
+}
+
 /** Alias pour la compatibilité avec certains composants frontend */
 export type ProductListItem = ProductList;
 
@@ -340,6 +393,95 @@ export interface ProductDetail {
 
   /** Images du produit — readOnly en réponse */
   readonly images: ProductImage[];
+
+  /** Variantes du produit — readOnly en réponse */
+  readonly variants: ProductVariant[];
+
+  /** Produits associés — readOnly en réponse */
+  readonly related_products: ProductList[];
+
+  /**
+   * Note moyenne du produit — readOnly
+   * @pattern ^-?\d{0,1}(?:\.\d{0,2})?$
+   */
+  readonly note_produit: string;
+
+  /** Nombre de notes — readOnly */
+  readonly count_ratings: number;
+
+  /** Nombre de favoris — readOnly */
+  readonly count_favorites: number;
+
+  /** Date de création — readOnly */
+  readonly created_at: string;
+
+  /** Date de dernière modification — readOnly */
+  readonly updated_at: string;
+
+  // ─── Champs optionnels présents dans certaines réponses legacy ────────
+  /** Image principale URL — parfois incluse dans les réponses */
+  primary_image?: string | null;
+  /** URL d'image legacy */
+  image?: string | null;
+  /** URL d'image legacy */
+  image_url?: string | null;
+  /** URL thumbnail legacy */
+  thumbnail?: string | null;
+}
+
+
+
+export interface ProductDetailPublicTop {
+  /** UUID unique — readOnly */
+  readonly id: string;
+
+  /** Nom du produit — required, maxLength: 255 */
+  name: string;
+
+  /**
+   * Slug URL-safe — nullable, maxLength: 50
+   * @pattern ^[-a-zA-Z0-9_]+$
+   */
+  slug: string | null;
+
+  /** SKU — required, maxLength: 100 */
+  sku: string;
+
+  /** Description — nullable */
+  description: string | null;
+
+  /** Type de produit — required */
+  product_type: ProductType;
+
+  /**
+   * Prix — required
+   * @pattern ^-?\d{0,10}(?:\.\d{0,2})?$
+   */
+  price: string;
+
+  /** Stock disponible — min: 0, max: 2147483647 */
+  stock: number;
+
+  /** Poids en grammes — nullable */
+  weight_grams: number | null;
+
+  /** Titre SEO — nullable, maxLength: 255 */
+  seo_title: string | null;
+
+  /** Description SEO — nullable */
+  seo_description: string | null;
+
+  /** Produit mis en avant — nullable */
+  is_top: boolean | null;
+
+  /** Indique si le produit est en stock — readOnly, calculé backend */
+  readonly is_in_stock: string;
+
+  /** Catégorie complète — readOnly en réponse */
+  readonly category: Category;
+
+  /** Images du produit — readOnly en réponse */
+  readonly images?: string | null; 
 
   /** Variantes du produit — readOnly en réponse */
   readonly variants: ProductVariant[];

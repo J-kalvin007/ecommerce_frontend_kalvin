@@ -8,9 +8,9 @@
 import { usePathname } from "next/navigation";
 // import Header from "@/components/layout/Header";
 // import Footer from "@/components/layout/Footer";
-import CartDrawer from "@/components/cart/CartDrawer";
 import { LegacyFooter } from "@/components/layout/LegacyFooter";
-import Header from "@/components/layout/LegacyHeader";
+import { Header } from "@/components/layout/LegacyHeader";
+import CartDrawer from "./commandes/components/PannierProduits";
 
 
 

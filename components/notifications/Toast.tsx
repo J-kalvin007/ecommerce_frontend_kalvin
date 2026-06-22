@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, XCircle, Info, X } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 import { useEffect } from 'react';
 
 interface ToastProps {
@@ -15,7 +15,7 @@ interface ToastProps {
 }
 
 const Toast: React.FC<ToastProps> = ({ show = true, type, message, onClose, duration = 3000, fixed = true }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
 
   useEffect(() => {

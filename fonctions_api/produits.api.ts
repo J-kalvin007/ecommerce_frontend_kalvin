@@ -106,6 +106,7 @@ export interface GetPublicProductsParams {
   search?: string;
   page?: number;
   page_size?: number;
+  is_top?: boolean; 
 }
 
 /**

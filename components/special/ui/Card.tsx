@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'glass' | 'outline' | 'gradient';
@@ -16,7 +16,7 @@ export const Card: React.FC<CardProps> = ({
   hover = false,
   ...props
 }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
 
   const variants = {
@@ -83,7 +83,7 @@ export const CardTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({
   className = '',
   ...props
 }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   return (
     <h2 className={`
       text-2xl font-bold
@@ -100,7 +100,7 @@ export const CardDescription: React.FC<React.HTMLAttributes<HTMLParagraphElement
   className = '',
   ...props
 }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   return (
     <p className={`
       mt-2 text-sm

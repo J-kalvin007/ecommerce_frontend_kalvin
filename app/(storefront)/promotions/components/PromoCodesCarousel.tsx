@@ -5,7 +5,7 @@ import Image from "next/image";
 import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import { Check, ChevronLeft, ChevronRight, Loader2, Tag, Zap } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
-import { useCartStore } from "@/store/cartStore";
+import { useCartStore } from "@/store/pannierStore";
 import { useApplyPromoCode } from "@/hooks/useApplyPromoCode";
 import type { PromoCodeList } from "@/modeles/promotions";
 

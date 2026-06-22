@@ -3,7 +3,7 @@
 import { Search, X, Loader2, Command } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useUI } from '@/hooks/useUI';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface SearchBarProps {
@@ -15,7 +15,7 @@ export default function SearchBar({ mobile = false }: SearchBarProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [loading, setLoading] = useState(false);
   const { isSearchExpanded, toggleSearch } = useUI();
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
   const containerRef = useRef<HTMLDivElement>(null);
 

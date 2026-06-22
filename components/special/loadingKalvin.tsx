@@ -1,38 +1,10 @@
 
 
 
-// const LoadingKalvin = () => {
-//     return (
-//         <div className="flex flex-col items-center justify-center py-32 space-y-4">
-//             <div className="relative">
-//                 <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-800 rounded-full" />
-//                 <div className="w-16 h-16 border-4 border-[#23BE31] border-t-transparent rounded-full animate-spin absolute top-0 left-0" />
-//             </div>
-//             <p className="text-gray-500 font-bold animate-pulse text-sm">Chargement des données...</p>
-//         </div>
-//     );
-// };
-// export default LoadingKalvin;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 'use client';
 
 import { motion } from 'framer-motion';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 
 interface LoadingKalvinProps {
     message?: string;
@@ -51,7 +23,7 @@ const LoadingKalvin = ({
     size = 'md',
     block = true,
 }: LoadingKalvinProps) => {
-    const { theme } = useTheme();
+    const { resolvedTheme: theme } = useThemeStore();
     const isDark = theme === 'dark';
     const dim = size === 'sm' ? 36 : size === 'lg' ? 64 : 48;
     const track = size === 'sm' ? 3 : size === 'lg' ? 5 : 4;

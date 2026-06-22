@@ -8,10 +8,10 @@
 // import Lottie from "lottie-react";
 // import { ShieldAlert, ArrowRight, Lock, AlertTriangle } from "lucide-react";
 // import errorAnimation from "@/public/assets/lottis/error6.json";
-// import { useTheme } from "@/hooks/useTheme";
+// import { useThemeStore } from '@/store/theme.store';
 
 // export default function AccessDenied() {
-//   const { theme } = useTheme();
+//   const { resolvedTheme: theme } = useThemeStore();
 //   const isDark = theme === "dark";
 
 //   return (
@@ -166,7 +166,7 @@ import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import { ShieldAlert, ArrowRight, Lock, AlertTriangle, Mail } from "lucide-react";
 import errorAnimation from "@/public/assets/lottis/error6.json";
-import { useTheme } from "@/hooks/useTheme";
+import { useThemeStore } from '@/store/theme.store';
 
 /* -------------------------------------------------------------------------- */
 /*  Variantes d'animation (purement visuelles, aucune logique métier touchée)  */
@@ -189,7 +189,7 @@ const fadeUp = {
 };
 
 export default function AccessDenied() {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === "dark";
 
   return (

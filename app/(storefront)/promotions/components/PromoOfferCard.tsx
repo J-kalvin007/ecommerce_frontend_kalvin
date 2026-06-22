@@ -145,7 +145,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ShoppingCart, Star, Zap } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
-import { useCartStore } from "@/store/cartStore";
+import { useCartStore } from "@/store/pannierStore";
 import { PromoProductCard } from "./PromotionsPage";
 
 const FALLBACK_IMAGE = "/assets/images/LOGO.png";

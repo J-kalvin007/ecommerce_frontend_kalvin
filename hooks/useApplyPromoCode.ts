@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { validatePromoCode } from "@/fonctions_api/promotions.api";
-import { useCartStore } from "@/store/cartStore";
+import { useCartStore } from "@/store/pannierStore";
 import { useAuthStore } from "@/store/authStore";
 import type { PromoCodeList } from "@/modeles/promotions";
 

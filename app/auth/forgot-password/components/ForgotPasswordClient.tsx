@@ -264,7 +264,7 @@ export default function ForgotPasswordClient() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="relative w-full max-w-6xl"
         >
           <div className="overflow-hidden rounded-3xl border border-border bg-surface-elevated shadow-2xl">

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 import { motion } from 'framer-motion';
 
 interface BadgeProps {
@@ -13,7 +13,7 @@ interface BadgeProps {
 }
 
 const Badge: React.FC<BadgeProps> = ({ status, text, icon, pulse = false, className = '' }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
 
   const statusConfig = {

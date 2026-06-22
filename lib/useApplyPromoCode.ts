@@ -11,7 +11,7 @@ import {
   isPromoValidationSuccessful,
 } from "@/lib/promotions";
 import { readApiError } from "@/lib/utils";
-import { useCartStore } from "@/store/cartStore";
+import { useCartStore } from "@/store/pannierStore";
 
 export type ApplyPromoResult =
   | { ok: true; pending?: boolean; message: string }
@@ -127,8 +127,8 @@ export function useApplyPromoCode() {
             String(result.type ?? "") === "free_shipping"
               ? "Livraison offerte appliquee."
               : discount > 0
-              ? `Reduction de ${discount.toLocaleString("fr-FR")} FCFA appliquee.`
-              : "Code promo applique.",
+                ? `Reduction de ${discount.toLocaleString("fr-FR")} FCFA appliquee.`
+                : "Code promo applique.",
         };
       } catch (error) {
         return { ok: false, message: readApiError(error, "Impossible d'appliquer ce code promo.") };

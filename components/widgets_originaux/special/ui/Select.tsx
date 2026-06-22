@@ -3,7 +3,7 @@
 import React, { forwardRef } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, LucideIcon } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 
 interface Option {
   value: string | number;
@@ -25,7 +25,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(({
   icon: Icon,
   ...props
 }, ref) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
 
   return (

@@ -117,9 +117,9 @@ export const getOrderHistory = async (reference: string): Promise<Result<OrderHi
 };
 
 /** Valider / passer une commande (checkout) */
-export const validateOrder = async (payload: CheckoutPayload): Promise<Result<CheckoutPayload>> => {
+export const validateOrder = async (payload: CheckoutPayload): Promise<Result<OrderDetail>> => {
     try {
-        const res = await apiPrivate.post<CheckoutPayload>(
+        const res = await apiPrivate.post<OrderDetail>(
             "/api/v1/commandes/validate-commandes/",
             payload
         );

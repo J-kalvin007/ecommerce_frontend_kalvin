@@ -2,6 +2,9 @@
 
 export type BannerTypeEnum = "carousel" | "popup" | "hero" | "side_banner";
 
+export type BannerType = "carousel" | "popup" | "hero" | "side_banner";
+
+
 export interface AdminBanner {
     readonly id: string;
     readonly created_at: string;
@@ -44,3 +47,16 @@ export const BANNER_TYPE_COLORS: Record<BannerTypeEnum, { bg: string, text: stri
     hero: { bg: "bg-amber-500/10", text: "text-amber-500", border: "border-amber-500/20" },
     side_banner: { bg: "bg-emerald-500/10", text: "text-emerald-500", border: "border-emerald-500/20" },
 };
+
+
+
+export interface Banner {
+    id: string;
+    title: string;
+    subtitle: string;
+    image_url: string;
+    cta_label: string;
+    cta_url: string;
+    banner_type: BannerType;
+    position: number;
+}

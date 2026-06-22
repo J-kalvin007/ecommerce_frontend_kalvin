@@ -1,6 +1,6 @@
 // fonctions_api/bannieres.api.ts
-import { apiPrivate } from "@/lib/axios";
-import type { AdminBanner, CreateAdminBannerPayload } from "@/modeles/bannieres";
+import { apiPrivate, apiPublic } from "@/lib/axios";
+import type { AdminBanner, Banner, BannerType, CreateAdminBannerPayload } from "@/modeles/bannieres";
 import type { Result } from "@/modeles/user";
 import { AxiosError } from "axios";
 
@@ -76,5 +76,17 @@ export const deleteAdminBanner = async (id: string): Promise<Result<void>> => {
     try {
         await apiPrivate.delete(`/api/v1/promotions/admin/recommendations/${id}/`);
         return { ok: true, data: undefined };
+    } catch (e) { return handleApiError(e); }
+};
+
+
+
+export const getActiveRecommendations = async (type?: BannerType): Promise<Result<Banner[]>> => {
+    try {
+        const url = type 
+            ? `/api/v1/promotions/recommendations-actives/?type=${type}`
+            : "/api/v1/promotions/recommendations-actives/";
+        const res = await apiPublic.get<Banner[]>(url);
+        return { ok: true, data: res.data };
     } catch (e) { return handleApiError(e); }
 };

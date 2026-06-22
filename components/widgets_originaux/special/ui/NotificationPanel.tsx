@@ -4,7 +4,7 @@ import { Bell, Check, Trash2, Clock, AlertCircle, CheckCircle, XCircle, MessageS
 import { useUI } from '@/hooks/useUI';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 
 interface Notification {
   id: number;
@@ -18,7 +18,7 @@ interface Notification {
 
 export default function NotificationPanel() {
   const { isNotificationPanelOpen, toggleNotificationPanel } = useUI();
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
 
   const [notifications, setNotifications] = useState<Notification[]>([

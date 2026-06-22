@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 
 interface ModalProps {
   isOpen: boolean;
@@ -20,7 +20,7 @@ const Modal: React.FC<ModalProps> = ({
   children,
   size = 'md'
 }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
   const [mounted, setMounted] = useState(false);
 

@@ -42,7 +42,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
-import { useCartStore } from "@/store/cartStore";
+import { useCartStore } from "@/store/pannierStore";
 import ProfileModal from "@/components/layout/ProfileModal";
 import { mediaUrl } from "@/lib/mediaUrl";
 

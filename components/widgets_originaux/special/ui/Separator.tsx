@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
+import { useThemeStore } from '@/store/theme.store';
 
 interface SeparatorProps {
   className?: string;
@@ -19,7 +19,7 @@ const Separator: React.FC<SeparatorProps> = ({
   variant = 'default',
   orientation = 'horizontal'
 }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useThemeStore();
   const isDark = theme === 'dark';
 
   const baseStyles = orientation === 'horizontal'
