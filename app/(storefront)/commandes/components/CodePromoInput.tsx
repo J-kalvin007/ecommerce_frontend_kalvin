@@ -121,7 +121,7 @@ export default function CodePromoInput({ cartTotal, codeApplique, onCodeChange }
               <button
                 type="button"
                 onClick={handleRemove}
-                className="rounded-full p-2 hover:bg-[#1f4d3f]/10 transition-colors"
+                className="cursor-pointer rounded-full p-2 hover:bg-[#1f4d3f]/10 transition-colors"
                 title="Retirer le code"
               >
                 <X className="h-4 w-4 text-[#1f4d3f]" />
@@ -158,7 +158,7 @@ export default function CodePromoInput({ cartTotal, codeApplique, onCodeChange }
                 type="button"
                 onClick={handleApply}
                 disabled={!code.trim() || loading}
-                className="flex items-center justify-center rounded-xl px-6 font-bold text-white transition-all hover:opacity-90 disabled:opacity-50"
+                className="cursor-pointer flex items-center justify-center rounded-xl px-6 font-bold text-white transition-all hover:opacity-90 disabled:opacity-50"
                 style={{ background: "#1f4d3f" }}
               >
                 {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Appliquer"}

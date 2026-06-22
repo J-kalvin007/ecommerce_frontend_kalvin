@@ -180,7 +180,7 @@ export const deleteAdminBanner = async (id: string): Promise<Result<void>> => {
 // ─── Endpoints publics ──────────────────────────────────────
 export const validatePromoCode = async (payload: ValidateCodePayload): Promise<Result<ValidatePromoResponse>> => {
     try {
-        const res = await apiPublic.post<ValidatePromoResponse>("/api/v1/promotions/codes-promo/validate/", payload);
+        const res = await apiPrivate.post<ValidatePromoResponse>("/api/v1/promotions/codes-promo/validate/", payload);
         return { ok: true, data: res.data };
     } catch (e) { return handleApiError(e); }
 };
@@ -194,7 +194,7 @@ export const getActivePromoCodes = async (): Promise<Result<PromoCodeList[]>> =>
 
 export const getActiveRecommendations = async (type?: BannerType): Promise<Result<Banner[]>> => {
     try {
-        const url = type 
+        const url = type
             ? `/api/v1/promotions/recommendations-actives/?type=${type}`
             : "/api/v1/promotions/recommendations-actives/";
         const res = await apiPublic.get<Banner[]>(url);
@@ -207,4 +207,4 @@ export const getActiveSales = async (): Promise<Result<Soldes[]>> => {
         const res = await apiPublic.get<Soldes[]>("/api/v1/promotions/soldes-actifs/");
         return { ok: true, data: res.data };
     } catch (e) { return handleApiError(e); }
-};
+};

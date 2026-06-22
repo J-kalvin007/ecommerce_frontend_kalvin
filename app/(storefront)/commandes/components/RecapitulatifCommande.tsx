@@ -67,14 +67,14 @@ export default function RecapitulatifCommande({
 
   return (
     <div
-      className="rounded-3xl p-6"
+      className="rounded-2xl p-5 shadow-sm"
       style={{ background: bg, border: `1px solid ${border}` }}
     >
-      <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f4d3f]/10">
-          <Receipt className="h-5 w-5 text-[#1f4d3f]" />
+      <div className="mb-5 flex items-center gap-2.5">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#1f4d3f]/10">
+          <Receipt className="h-4 w-4 text-[#1f4d3f]" />
         </div>
-        <h3 className="text-xl font-bold" style={{ color: text, fontFamily: "'Playfair Display', serif" }}>
+        <h3 className="text-lg font-bold" style={{ color: text, fontFamily: "'Playfair Display', serif" }}>
           Récapitulatif
         </h3>
       </div>

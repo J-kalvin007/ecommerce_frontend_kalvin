@@ -153,7 +153,7 @@ export default function LocalisationCarte({ value, onChange }: LocalisationCarte
           type="button"
           onClick={handleGeolocate}
           disabled={isGeolocating}
-          className="flex items-center justify-center gap-2.5 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 hover:scale-[1.01] disabled:opacity-60 sm:flex-initial"
+          className="cursor-pointer flex items-center justify-center gap-2.5 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 hover:scale-[1.01] disabled:opacity-60 sm:flex-initial"
           style={{
             background: isDark ? "rgba(139,94,52,0.12)" : "rgba(139,94,52,0.07)",
             border: `1.5px solid ${border}`,
@@ -215,7 +215,7 @@ export default function LocalisationCarte({ value, onChange }: LocalisationCarte
             <button
               type="button"
               onClick={handleEffacer}
-              className="shrink-0 rounded-full p-1 transition-all hover:scale-110"
+              className="cursor-pointer shrink-0 rounded-full p-1 transition-all hover:scale-110"
               style={{ color: muted }}
               aria-label="Effacer la position"
             >

@@ -77,6 +77,8 @@ export interface CheckoutPayload {
     city: string;
     country: string;
     notes?: string;
+    frais_livraison?: number;
+    discount_amount?: number;
     items: CheckoutItem[];
 }
 

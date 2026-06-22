@@ -58,48 +58,46 @@ const DialogContent = React.forwardRef<
   return (
     <DialogPortal>
       <DialogOverlay />
-      <DialogPrimitive.Content
-        ref={ref}
-        className={cx(
-          // Positioning
-          "fixed left-[50%] top-[50%] z-50 w-full max-w-lg",
-          "translate-x-[-50%] translate-y-[-50%]",
-          // Rounded & layout
-          "rounded-[2rem] grid gap-5 p-7 md:w-full",
-          // Radix animation — spring-like zoom + fade + slide
-          "duration-200 ease-out",
-          "data-[state=open]:animate-in data-[state=closed]:animate-out",
-          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-          "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-          "data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
-          "data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
-          className
-        )}
-        style={{
-          background: isDark
-            ? 'linear-gradient(160deg, rgba(14,26,17,0.97) 0%, rgba(8,15,11,0.99) 100%)'
-            : '#ffffff',
-          border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.07)'}`,
-          boxShadow: isDark
-            ? '0 40px 80px -20px rgba(0,0,0,0.75), 0 0 0 0.5px rgba(255,255,255,0.05) inset, 0 1px 0 rgba(255,255,255,0.08) inset'
-            : '0 16px 48px -8px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05)',
-          position: 'relative',
-          ...style,
-        }}
-        {...props}
-      >
-        {/* Ambient top-edge green shimmer */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-[2rem]"
+      <div className="fixed inset-0 z-50 flex items-center justify-center sm:p-4">
+        <DialogPrimitive.Content
+          ref={ref}
+          className={cx(
+            // Positioning (handled by flex parent now)
+            "relative w-full max-w-lg max-h-[90vh] overflow-y-auto",
+            // Rounded & layout
+            "rounded-[2rem] grid gap-5 p-7 md:w-full",
+            // Radix animation — spring-like zoom + fade + slide
+            "duration-200 ease-out",
+            "data-[state=open]:animate-in data-[state=closed]:animate-out",
+            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+            "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+            className
+          )}
           style={{
             background: isDark
-              ? 'linear-gradient(90deg, transparent 5%, rgba(35,190,49,0.5) 35%, rgba(35,190,49,0.7) 50%, rgba(35,190,49,0.5) 65%, transparent 95%)'
-              : 'linear-gradient(90deg, transparent 5%, rgba(35,190,49,0.35) 35%, rgba(35,190,49,0.55) 50%, rgba(35,190,49,0.35) 65%, transparent 95%)',
+              ? 'linear-gradient(160deg, rgba(14,26,17,0.97) 0%, rgba(8,15,11,0.99) 100%)'
+              : '#ffffff',
+            border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.07)'}`,
+            boxShadow: isDark
+              ? '0 40px 80px -20px rgba(0,0,0,0.75), 0 0 0 0.5px rgba(255,255,255,0.05) inset, 0 1px 0 rgba(255,255,255,0.08) inset'
+              : '0 16px 48px -8px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05)',
+            ...style,
           }}
-        />
-        {children}
-      </DialogPrimitive.Content>
+          {...props}
+        >
+          {/* Ambient top-edge green shimmer */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-[2rem]"
+            style={{
+              background: isDark
+                ? 'linear-gradient(90deg, transparent 5%, rgba(35,190,49,0.5) 35%, rgba(35,190,49,0.7) 50%, rgba(35,190,49,0.5) 65%, transparent 95%)'
+                : 'linear-gradient(90deg, transparent 5%, rgba(35,190,49,0.35) 35%, rgba(35,190,49,0.55) 50%, rgba(35,190,49,0.35) 65%, transparent 95%)',
+            }}
+          />
+          {children}
+        </DialogPrimitive.Content>
+      </div>
     </DialogPortal>
   );
 })

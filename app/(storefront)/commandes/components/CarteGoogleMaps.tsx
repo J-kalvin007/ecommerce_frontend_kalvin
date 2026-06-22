@@ -106,7 +106,7 @@ export default function CarteGoogleMaps({ open, initialCoords, onConfirm, onClos
       {open && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            onClick={onClose} className="absolute inset-0 backdrop-blur-md"
+            onClick={onClose} className="cursor-pointer absolute inset-0 backdrop-blur-md"
             style={{ background: isDark ? 'rgba(0,0,0,0.82)' : 'rgba(0,0,0,0.5)' }} />
 
           <motion.div
@@ -190,7 +190,7 @@ export default function CarteGoogleMaps({ open, initialCoords, onConfirm, onClos
                     gestureHandling: 'greedy',
                     clickableIcons: false,
                   }}
-                >
+                 className="cursor-pointer">
                   {marker && (
                     <Marker
                       position={marker}

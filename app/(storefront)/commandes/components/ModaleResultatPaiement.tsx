@@ -92,7 +92,7 @@ export default function ModaleResultatPaiement({
 
         <button
           onClick={handleAction}
-          className="w-full rounded-xl py-3.5 font-bold text-white transition-all hover:opacity-90 active:scale-95 shadow-lg"
+          className="cursor-pointer w-full rounded-xl py-3.5 font-bold text-white transition-all hover:opacity-90 active:scale-95 shadow-lg"
           style={{ background: isSuccess ? "#1f4d3f" : "#ef4444" }}
         >
           {isSuccess ? "Voir ma commande" : "Réessayer"}

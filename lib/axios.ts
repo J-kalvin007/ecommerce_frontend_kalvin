@@ -8,7 +8,7 @@
  * - apiPublic  : pour les endpoints publics (connexion, inscription, etc.)
  * - apiPrivate : pour les endpoints authentifiés (injection automatique du token)
  *
- * Gestion du token : chiffrement AES avant stockage dans localStorage.
+ * Gestion du token : Stocké en mémoire (Zustand/Axios), plus de localStorage.
  *
  * @module lib/axios
  */
@@ -20,16 +20,8 @@ import axios, {
 import CryptoJS from "crypto-js";
 
 /** URL de base de l'API Django (variable d'environnement) */
-
-// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://shed-croak-unending.ngrok-free.dev";
-
-// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.1.66:8000";
-
-// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev";
-
 
 /** Clé d'encryption pour sécuriser les tokens côté client */
 const ENCRYPTION_KEY =
@@ -40,7 +32,7 @@ const ENCRYPTION_KEY =
 const AUTH_TOKEN_KEY = "AUTH_TOKEN_KEY";
 
 /* ============================================================
-   Helpers de chiffrement / déchiffrement
+   Helpers de chiffrement / déchiffrement (Sécurité Maximale)
    ============================================================ */
 const encryptData = (data: string): string => {
   return CryptoJS.AES.encrypt(data, ENCRYPTION_KEY).toString();
@@ -57,14 +49,8 @@ const decryptData = (ciphertext: string): string | null => {
 };
 
 /* ============================================================
-   Gestion du token (lecture / écriture / suppression)
+   Gestion du token (lecture / écriture / suppression dans localStorage)
    ============================================================ */
-// export function getToken(): string | null {
-//   if (typeof window === "undefined") return null;
-//   const encrypted = localStorage.getItem(AUTH_TOKEN_KEY);
-//   if (!encrypted) return null;
-//   return decryptData(encrypted);
-// }
 
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -75,8 +61,6 @@ export function getToken(): string | null {
   console.log("🔓🔓🔓 Decrypted token:", decrypted);
   return decrypted;
 }
-
-
 
 export function setToken(token: string): void {
   if (typeof window === "undefined") return;

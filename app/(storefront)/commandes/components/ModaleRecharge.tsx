@@ -21,6 +21,7 @@ import {
 } from "@/components/special/Dialog";
 import { depositWallet } from "@/fonctions_api/wallets-paiements.api";
 import { useThemeStore } from "@/store/theme.store";
+import PhoneInputWithCountry from "@/components/special/PhoneInputWithCountry";
 
 interface ModaleRechargeProps {
   open: boolean;
@@ -92,8 +93,11 @@ export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 500
             <label className="mb-2 flex items-center text-sm font-semibold" style={{ color: text }}>
               Montant à recharger (FCFA)
             </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold" style={{ color: muted }}>
+            <div 
+              className="flex items-center w-full rounded-xl px-4 transition-all focus-within:ring-2 focus-within:ring-[#1f4d3f]/50"
+              style={{ background: inputBg, border: `1px solid ${border}` }}
+            >
+              <span className="text-base font-bold shrink-0 mr-3" style={{ color: muted }}>
                 FCFA
               </span>
               <input
@@ -102,8 +106,8 @@ export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 500
                 step="100"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full rounded-xl py-3 pl-16 pr-4 text-lg font-bold outline-none transition-all"
-                style={{ background: inputBg, border: `1px solid ${border}`, color: text }}
+                className="w-full py-3.5 text-lg font-bold outline-none bg-transparent"
+                style={{ color: text }}
                 required
               />
             </div>
@@ -113,18 +117,11 @@ export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 500
             <label className="mb-2 flex items-center text-sm font-semibold" style={{ color: text }}>
               Numéro de téléphone
             </label>
-            <div className="relative">
-              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5" style={{ color: muted }} />
-              <input
-                type="tel"
-                placeholder="Ex: 771234567"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full rounded-xl py-3 pl-12 pr-4 outline-none transition-all"
-                style={{ background: inputBg, border: `1px solid ${border}`, color: text }}
-                required
-              />
-            </div>
+            <PhoneInputWithCountry
+              value={phone}
+              onChange={setPhone}
+              required
+            />
           </div>
 
           {error && (
@@ -138,7 +135,7 @@ export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 500
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-bold text-white transition-all hover:opacity-90 disabled:opacity-50"
+              className="cursor-pointer flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-bold text-white transition-all hover:opacity-90 disabled:opacity-50"
               style={{ background: "#1f4d3f" }}
             >
               {loading ? (

@@ -24,6 +24,7 @@ import {
 import { adminWithdraw } from "@/fonctions_api/wallets-paiements.api";
 import type { Payment } from "@/modeles/wallets-paiements";
 import { PAYMENT_STATUS_LABELS } from "@/modeles/wallets-paiements";
+import PhoneInputWithCountry from "@/components/special/PhoneInputWithCountry";
 
 /* ============================================================
    Props
@@ -219,18 +220,11 @@ export function AdminWithdrawModal({
                   <label className="mb-1.5 block text-xs font-semibold text-slate-600 dark:text-slate-400">
                     Numéro Mobile Money *
                   </label>
-                  <div className="relative">
-                    <Smartphone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    <input
-                      type="tel"
-                      maxLength={30}
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="Ex: +221 77 123 45 67"
-                      required
-                      className="h-11 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 pl-10 pr-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                    />
-                  </div>
+                  <PhoneInputWithCountry
+                    value={phone}
+                    onChange={setPhone}
+                    required
+                  />
                 </div>
 
                 {/* Description optionnelle */}

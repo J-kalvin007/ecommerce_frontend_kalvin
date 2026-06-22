@@ -14,6 +14,7 @@ import React, { useState } from "react";
 import { Loader2, Phone, AlertCircle, ExternalLink } from "lucide-react";
 import { initiateDirectPayment } from "@/fonctions_api/wallets-paiements.api";
 import { useThemeStore } from "@/store/theme.store";
+import PhoneInputWithCountry from "@/components/special/PhoneInputWithCountry";
 
 interface PayDunyaCheckoutProps {
   orderId: string;
@@ -45,8 +46,8 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
       });
 
       if (res.ok) {
-        // Redirection vers l'interface PayDunya
-        window.open(res.data.redirect_url, "_blank");
+        // Redirection vers l'interface PayDunya dans le même onglet
+        window.location.href = res.data.redirect_url;
       } else {
         setError(res.error.message || "Erreur lors de l'initiation du paiement avec PayDunya.");
       }
@@ -74,20 +75,10 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
 
       <div className="space-y-4">
         <div>
-          <label className="mb-2 block text-sm font-semibold" style={{ color: text }}>
-            Numéro de téléphone
+          <label className="mb-1.5 block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300">
+            Numéro Mobile Money <span className="text-[#1f4d3f]">*</span>
           </label>
-          <div className="relative">
-            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5" style={{ color: muted }} />
-            <input
-              type="tel"
-              placeholder="Ex: 771234567"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full rounded-xl py-3 pl-12 pr-4 outline-none transition-all"
-              style={{ background: inputBg, border: `1px solid ${error ? "#ef4444" : border}`, color: text }}
-            />
-          </div>
+          <PhoneInputWithCountry value={phone} onChange={setPhone} required />
         </div>
 
         {error && (
@@ -100,7 +91,7 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
         <button
           onClick={handlePayer}
           disabled={loading || !orderId}
-          className="flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-bold text-white transition-all hover:opacity-90 disabled:opacity-50"
+          className="cursor-pointer flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-bold text-white transition-all hover:opacity-90 disabled:opacity-50"
           style={{ background: "#0f76b5" }} // Couleur PayDunya
         >
           {loading ? (

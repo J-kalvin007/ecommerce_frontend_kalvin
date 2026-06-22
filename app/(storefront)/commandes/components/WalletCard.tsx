@@ -63,7 +63,7 @@ export default function WalletCard({ wallet, totalAPayer, onOpenRecharge }: Wall
         {!soldeSuffisant && (
           <button
             onClick={onOpenRecharge}
-            className="flex items-center gap-2 rounded-xl bg-[#1f4d3f]/10 px-4 py-2 text-sm font-bold text-[#1f4d3f] transition-all hover:bg-[#1f4d3f]/20"
+            className="cursor-pointer flex items-center gap-2 rounded-xl bg-[#1f4d3f]/10 px-4 py-2 text-sm font-bold text-[#1f4d3f] transition-all hover:bg-[#1f4d3f]/20"
           >
             <PlusCircle className="h-4 w-4" /> Recharger
           </button>

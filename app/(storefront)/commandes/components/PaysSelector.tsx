@@ -15,6 +15,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Search, X } from "lucide-react";
+import ReactCountryFlag from "react-country-flag";
 import { useThemeStore } from "@/store/theme.store";
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -298,7 +299,7 @@ export default function PaysSelector({ value, onChange, error }: PaysSelectorPro
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={`Pays sélectionné : ${paysCourant.nom}`}
-        className="flex w-full items-center justify-between gap-3 rounded-xl px-4 py-3 text-left transition-all duration-200 focus:outline-none"
+        className="flex w-full items-center justify-between gap-3 rounded-lg px-3.5 py-2.5 text-left transition-all duration-200 focus:outline-none"
         style={{
           background: bg,
           border: `1.5px solid ${error ? "#ef4444" : isOpen ? "#1f4d3f" : border}`,
@@ -307,7 +308,7 @@ export default function PaysSelector({ value, onChange, error }: PaysSelectorPro
         }}
       >
         <span className="flex items-center gap-3">
-          <span className="text-2xl leading-none">{paysCourant.drapeau}</span>
+          <ReactCountryFlag countryCode={paysCourant.code} svg style={{ width: "1.5em", height: "1.5em", borderRadius: "2px" }} />
           <span className="text-sm font-semibold">{paysCourant.nom}</span>
           <span
             className="hidden rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider sm:block"
@@ -395,7 +396,7 @@ export default function PaysSelector({ value, onChange, error }: PaysSelectorPro
                       role="option"
                       aria-selected={isSelected}
                       onClick={() => handleSelect(pays.code)}
-                      className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors duration-100"
+                      className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors duration-100 cursor-pointer"
                       style={{
                         background: isSelected ? selectedBg : "transparent",
                         color: isSelected ? "#1f4d3f" : text,
@@ -407,7 +408,7 @@ export default function PaysSelector({ value, onChange, error }: PaysSelectorPro
                         if (!isSelected) (e.currentTarget as HTMLButtonElement).style.background = "transparent";
                       }}
                     >
-                      <span className="text-xl leading-none">{pays.drapeau}</span>
+                      <ReactCountryFlag countryCode={pays.code} svg style={{ width: "1.5em", height: "1.5em", borderRadius: "2px" }} />
                       <span className="flex-1 text-sm font-medium">{pays.nom}</span>
                       <span
                         className="text-[10px] font-bold uppercase"

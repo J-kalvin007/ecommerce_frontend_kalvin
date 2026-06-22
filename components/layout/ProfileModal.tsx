@@ -35,6 +35,7 @@ import {
   UserStar,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import PhoneInputWithCountry from "@/components/special/PhoneInputWithCountry";
 import { patchUser, changePassword } from "@/fonctions_api/auth.api";
 import { useThemeStore } from '@/store/theme.store';
 import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
@@ -712,17 +713,10 @@ export default function ProfileModal({
                               <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                                 Téléphone
                               </label>
-                              <div className="group relative">
-                                <Phone className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted transition-colors group-focus-within:text-green-500 dark:group-focus-within:text-green-400" />
-                                <input
-                                  type="tel"
-                                  value={formData.phone_number}
-                                  onChange={(e) =>
-                                    setFormData({ ...formData, phone_number: e.target.value })
-                                  }
-                                  className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm shadow-sm outline-none transition-all duration-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 border-black/5 bg-white text-black dark:border-white/10 dark:bg-[#121212] dark:text-white"
-                                />
-                              </div>
+                              <PhoneInputWithCountry
+                                value={formData.phone_number}
+                                onChange={(v) => setFormData({ ...formData, phone_number: v })}
+                              />
                             </div>
                           </div>
                           <div className="flex justify-end pt-1">
