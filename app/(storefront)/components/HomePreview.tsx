@@ -46,7 +46,7 @@ export function HomePreview() {
       try {
         const [categories, products, promoCodes, banners, flashSales] = await Promise.all([
           getPublicCategories(),
-          getPublicProducts(6),
+          getPublicProducts({ page_size: 6 }),
           getActivePromoCodes(),
           getActiveBanners(),
           getActiveFlashSales(),

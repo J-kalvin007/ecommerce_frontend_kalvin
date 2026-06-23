@@ -190,7 +190,7 @@ export default function CarteGoogleMaps({ open, initialCoords, onConfirm, onClos
                     gestureHandling: 'greedy',
                     clickableIcons: false,
                   }}
-                 className="cursor-pointer">
+                >
                   {marker && (
                     <Marker
                       position={marker}

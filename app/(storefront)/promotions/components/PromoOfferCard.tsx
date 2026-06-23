@@ -202,7 +202,7 @@ export function PromoOfferCard({
         <Zap className="h-3 w-3 fill-current" />
         {discountLabel}
       </span>
-      <Link href={href} className="flex items-start gap-3">
+      <Link href={href} tabIndex={dimmed ? -1 : undefined} className="flex items-start gap-3">
         <div className="min-w-0 flex-1">
           <p className="line-clamp-2 text-sm font-bold leading-snug text-white">{item.name}</p>
           <p className="mt-1 text-[11px] text-white/65">Offre du moment</p>
@@ -234,6 +234,7 @@ export function PromoOfferCard({
 
       <button
         type="button"
+        tabIndex={dimmed ? -1 : undefined}
         onClick={handleAddToCart}
         aria-label={`Ajouter ${item.name} au panier`}
         className="absolute bottom-4 right-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-[0_8px_18px_rgba(239,130,25,0.35)] transition hover:bg-primary-hover"

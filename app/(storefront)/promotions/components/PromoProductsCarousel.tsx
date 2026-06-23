@@ -47,8 +47,7 @@ function ProductCarouselSlide({
   const isHidden = Math.abs(offset) > 1;
 
   return (
-    <motion.button
-      type="button"
+    <motion.div
       onClick={onSelect}
       layout
       animate={{
@@ -67,12 +66,20 @@ function ProductCarouselSlide({
         width: isActive ? 300 : 252,
         zIndex: isActive ? 20 : 10 - Math.abs(offset),
       }}
+      role="button"
+      tabIndex={isActive || isHidden ? -1 : 0}
+      onKeyDown={(e) => {
+        if (!isActive && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
       aria-current={isActive ? "true" : undefined}
     >
       <div className="w-full">
         <PromoOfferCard item={item} index={index} disableEntrance dimmed={!isActive} />
       </div>
-    </motion.button>
+    </motion.div>
   );
 }
 

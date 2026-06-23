@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ProductCard } from "@/components/product/ProductCard";
+import { ProductCard } from "../products/components/ProductCard";
 import type {
   ProductListItem,
   PublicBanner,
