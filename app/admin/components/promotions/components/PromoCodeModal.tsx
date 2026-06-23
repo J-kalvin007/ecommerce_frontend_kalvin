@@ -72,8 +72,8 @@ export function PromoCodeModal({
                 starts_at: initialData.starts_at ? new Date(initialData.starts_at).toISOString().slice(0, 16) : "",
                 expires_at: initialData.expires_at ? new Date(initialData.expires_at).toISOString().slice(0, 16) : "",
                 is_active: initialData.is_active ?? true,
-                applicable_products: initialData.applicable_products || [],
-                applicable_categories: initialData.applicable_categories || [],
+                applicable_products: initialData.applicable_products?.map(p => typeof p === 'string' ? p : p.id) || [],
+                applicable_categories: initialData.applicable_categories?.map(c => typeof c === 'string' ? c : c.id) || [],
             });
         }
     }, [open, initialData]);

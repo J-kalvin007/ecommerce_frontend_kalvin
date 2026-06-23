@@ -9,7 +9,7 @@ import {
     DialogTitle,
     DialogDescription,
 } from '@/components/special/ui/Dialog';
-import LoadingSpinner from '@/components/special/ui/LoadingSpinner';
+import LoadingSpinner from '@/components/special/LoadingSpinner';
 import LoadingKalvin from '@/components/special/loadingKalvin';
 
 // ─── Types ──────────────────────────────────────────────────────────────────

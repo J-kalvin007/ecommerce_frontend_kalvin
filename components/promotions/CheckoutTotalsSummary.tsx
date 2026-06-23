@@ -1,7 +1,7 @@
 "use client";
 
 import { formatCurrency } from "@/lib/utils";
-import { isFreeShippingPromoType } from "@/lib/shipping";
+
 
 type CheckoutTotalsSummaryProps = {
   subtotal: number;
@@ -24,7 +24,7 @@ export function CheckoutTotalsSummary({
   promoType,
   className,
 }: CheckoutTotalsSummaryProps) {
-  const freeShipping = isFreeShippingPromoType(promoType);
+  const freeShipping = promoType === "free_shipping";
   const hasProductDiscount = discount > 0 && !freeShipping;
   const shippingWaived = freeShipping && shippingFee > 0;
 

@@ -50,8 +50,8 @@ export function LoyaltyTierFormModal({ open, onClose, tier, onSuccess }: Loyalty
         const payload = {
             name,
             min_points: parseInt(minPoints) || 0,
-            min_solde: parseFloat(minSolde) || 0,
-            discount_percent: parseFloat(discountPercent) || 0,
+            min_solde: minSolde,
+            discount_percent: discountPercent,
         };
 
         const res = tier

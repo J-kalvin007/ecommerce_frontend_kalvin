@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { LegacyFooter } from "@/components/layout/LegacyFooter";
-import { LegacyHeader } from "@/components/layout/LegacyHeader";
+import { Header as LegacyHeader } from "@/components/layout/LegacyHeader";
 
 export function StorefrontPage({
   children,

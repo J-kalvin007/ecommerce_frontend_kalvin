@@ -162,7 +162,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import Lottie from "lottie-react";
 import { ShieldAlert, ArrowRight, Lock, AlertTriangle, Mail } from "lucide-react";
 import errorAnimation from "@/public/assets/lottis/error6.json";
@@ -172,14 +172,14 @@ import { useThemeStore } from '@/store/theme.store';
 /*  Variantes d'animation (purement visuelles, aucune logique métier touchée)  */
 /* -------------------------------------------------------------------------- */
 
-const containerStagger = {
+const containerStagger: Variants = {
   hidden: {},
   visible: {
     transition: { staggerChildren: 0.09, delayChildren: 0.15 },
   },
 };
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 14 },
   visible: {
     opacity: 1,

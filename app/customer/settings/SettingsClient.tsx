@@ -16,21 +16,15 @@ import { useAuthStore } from "@/store/authStore";
 
 type FormState = {
   name: string;
-  first_name: string;
-  last_name: string;
   email: string;
 };
 
 function buildInitialState(user?: {
-  username?: string;
-  first_name?: string;
-  last_name?: string;
+  name?: string;
   email?: string;
 } | null) {
   return {
-    name: user?.username ?? "",
-    first_name: user?.first_name ?? "",
-    last_name: user?.last_name ?? "",
+    name: user?.name ?? "",
     email: user?.email ?? "",
   };
 }
@@ -55,9 +49,7 @@ export default function SettingsClient() {
 
         updateAuthStore(profile);
         setForm({
-          name: profile.username ?? "",
-          first_name: profile.first_name ?? "",
-          last_name: profile.last_name ?? "",
+          name: profile.name ?? "",
           email: profile.email ?? "",
         });
         setErrorMessage("");
@@ -95,9 +87,7 @@ export default function SettingsClient() {
 
     try {
       const profileResult = await updateUser((user as any)?.id || 0, {
-        username: form.name,
-        first_name: form.first_name,
-        last_name: form.last_name,
+        name: form.name,
         email: form.email,
       });
       if (!profileResult.ok) throw new Error(profileResult.error.message);
@@ -105,9 +95,7 @@ export default function SettingsClient() {
 
       updateAuthStore(profile);
       setForm({
-        name: profile.username,
-        first_name: profile.first_name,
-        last_name: profile.last_name,
+        name: profile.name,
         email: profile.email,
       });
       setSuccessMessage("Profil mis a jour.");
@@ -145,9 +133,9 @@ export default function SettingsClient() {
               <p className="mt-2 max-w-2xl text-sm text-muted">
                 Cette page edite directement les champs Django exposes par
                 <code className="mx-1 rounded bg-surface-alt px-1.5 py-0.5 text-xs">
-                  /api/auth/user/
+                  /api/users/id/
                 </code>
-                : username, first_name, last_name et email.
+                : name et email.
               </p>
             </div>
             <div className="hidden rounded-2xl border border-primary/15 bg-white/80 p-4 shadow-sm lg:block">
@@ -168,7 +156,7 @@ export default function SettingsClient() {
               <CardHeader className="mb-4">
                 <CardTitle>Informations personnelles</CardTitle>
                 <CardDescription>
-                  Modifiez votre nom d&apos;utilisateur, votre prenom, votre nom et votre email.
+                  Modifiez votre nom complet et votre email.
                 </CardDescription>
               </CardHeader>
 
@@ -183,29 +171,12 @@ export default function SettingsClient() {
                 ) : (
                   <form className="space-y-5" onSubmit={handleSubmit}>
                     <Input
-                      label="Username"
+                      label="Nom complet"
                       value={form.name}
                       onChange={(event) => handleChange("name", event.target.value)}
-                      placeholder="votre_username"
+                      placeholder="Jean Dupont"
                       icon={<UserIcon className="h-4 w-4" />}
                     />
-
-                    <div className="grid gap-5 md:grid-cols-2">
-                      <Input
-                        label="Prenom"
-                        value={form.first_name}
-                        onChange={(event) => handleChange("first_name", event.target.value)}
-                        placeholder="Jean"
-                        icon={<UserIcon className="h-4 w-4" />}
-                      />
-                      <Input
-                        label="Nom"
-                        value={form.last_name}
-                        onChange={(event) => handleChange("last_name", event.target.value)}
-                        placeholder="Dupont"
-                        icon={<UserIcon className="h-4 w-4" />}
-                      />
-                    </div>
 
                     <Input
                       label="Email"
@@ -253,13 +224,11 @@ export default function SettingsClient() {
                     Payload PATCH
                   </p>
                   <p className="mb-2 text-xs text-muted">
-                    `name` dans l&apos;interface est envoye au backend Django sous `username`.
+                    Seuls le nom complet et l&apos;email sont transmis au backend.
                   </p>
                   <pre className="overflow-x-auto text-xs leading-6 text-foreground/80">
                     {`{
-  "username": "${form.name || "..."}",
-  "first_name": "${form.first_name || "..."}",
-  "last_name": "${form.last_name || "..."}",
+  "name": "${form.name || "..."}",
   "email": "${form.email || "..."}"
 }`}
                   </pre>

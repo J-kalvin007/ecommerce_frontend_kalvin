@@ -161,7 +161,7 @@ export default function PromotionsClient() {
                     >
                       {product.primary_image ? (
                         <Image
-                          src={product.primary_image}
+                          src={typeof product.primary_image === "string" ? product.primary_image : product.primary_image.image}
                           alt={product.name}
                           fill
                           className="object-cover transition-transform duration-300 group-hover:scale-105"
