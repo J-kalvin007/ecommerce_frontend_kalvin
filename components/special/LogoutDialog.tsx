@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Lottie from 'lottie-react';
 import { LogOut, X } from 'lucide-react';
-import exitAnimation from '@/public/assets/lottis/exit_01.json';
+import exitAnimation from '@/public/assets/lottis/logout.json';
 import { useThemeStore } from '@/store/theme.store';
 
 interface LogoutDialogProps {

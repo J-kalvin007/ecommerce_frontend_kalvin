@@ -28,6 +28,7 @@ import { useThemeStore } from "@/store/theme.store";
 import { validateOrder } from "@/fonctions_api/commandes.api";
 import { getMyWallet, payWithWallet } from "@/fonctions_api/wallets-paiements.api";
 import { getMyLoyaltyProfile, redeemLoyaltyPoints } from "@/fonctions_api/fidelites.api";
+import { getFraisLivraison } from "@/fonctions_api/livraisons.api";
 
 // Types
 import { OrderDetail } from "@/modeles/commandes";
@@ -73,6 +74,22 @@ interface AddressForm {
   city: string;
   postalCode: string;
   country: string;
+}
+
+function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const R = 6371; // Rayon de la terre en km
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // Distance en km
+}
+
+function deg2rad(deg: number) {
+  return deg * (Math.PI / 180);
 }
 
 export default function CommandesClient() {
@@ -137,8 +154,53 @@ export default function CommandesClient() {
   const [paymentStatus, setPaymentStatus] = useState<"success" | "error" | null>(null);
   const [paymentMessage, setPaymentMessage] = useState("");
 
+  // État des frais de livraison dynamiques
+  const [fraisLivraisonAdmin, setFraisLivraisonAdmin] = useState<{prix_livraison: number, coordonnee_admin: {lat: number, lng: number}} | null>(null);
+  const [dynamicShippingCost, setDynamicShippingCost] = useState<number | null>(null);
+
+  // Fetch frais livraison au montage
+  useEffect(() => {
+    getFraisLivraison().then(res => {
+      if (res.ok && res.data.coordonnee_admin) {
+        const coords = res.data.coordonnee_admin.split(",");
+        if (coords.length >= 2) {
+          setFraisLivraisonAdmin({
+            prix_livraison: parseFloat(res.data.prix_livraison),
+            coordonnee_admin: { lat: parseFloat(coords[0]), lng: parseFloat(coords[1]) }
+          });
+        }
+      }
+    });
+  }, []);
+
+  // Calcul dynamique des frais de livraison
+  useEffect(() => {
+    if (fraisLivraisonAdmin && address.address) {
+      const parts = address.address.split("|");
+      if (parts.length > 1) {
+        const coordsStr = parts[1].split("&");
+        if (coordsStr.length > 1) {
+          const lat = parseFloat(coordsStr[0]);
+          const lng = parseFloat(coordsStr[1]);
+          if (!isNaN(lat) && !isNaN(lng)) {
+            const distance = getDistanceFromLatLonInKm(
+              lat, 
+              lng, 
+              fraisLivraisonAdmin.coordonnee_admin.lat, 
+              fraisLivraisonAdmin.coordonnee_admin.lng
+            );
+            const basePrice = fraisLivraisonAdmin.prix_livraison;
+            const calculatedCost = Math.ceil(distance * basePrice);
+            // On s'assure d'avoir au moins le prix de base si la distance est trop faible
+            setDynamicShippingCost(calculatedCost > basePrice ? calculatedCost : basePrice);
+          }
+        }
+      }
+    }
+  }, [address.address, fraisLivraisonAdmin]);
+
   // Coûts
-  const shippingCost = shipping === "standard" ? 2500 : 0; // Seul standard est actif pour l'instant
+  const shippingCost = shipping === "standard" ? (dynamicShippingCost !== null ? dynamicShippingCost : 2500) : 0; // Seul standard est actif pour l'instant
   const remisePromo = codeApplique ? parseFloat(codeApplique.discount_amount) : 0;
   const total = Math.max(0, subtotal + shippingCost - remisePromo - remiseFideliteFCFA);
 
@@ -416,7 +478,11 @@ export default function CommandesClient() {
                   exit={{ opacity: 0, x: 20 }}
                 >
                   <h2 className="mb-6 font-display text-xl font-bold">Mode de livraison</h2>
-                  <ModeLivraisonSelector value={shipping} onChange={setShipping} />
+                  <ModeLivraisonSelector 
+                    value={shipping} 
+                    onChange={setShipping} 
+                    dynamicStandardPrice={dynamicShippingCost}
+                  />
                 </motion.div>
               )}
 

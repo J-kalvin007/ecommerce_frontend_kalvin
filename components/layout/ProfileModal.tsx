@@ -37,6 +37,7 @@ import {
 import { cn } from "@/lib/utils";
 import PhoneInputWithCountry from "@/components/special/PhoneInputWithCountry";
 import { patchUser, changePassword } from "@/fonctions_api/auth.api";
+import { getToken } from "@/lib/axios";
 import { useThemeStore } from '@/store/theme.store';
 import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
 import Toast from "@/components/notifications/Toast";
@@ -204,7 +205,7 @@ export default function ProfileModal({
       // Appel API spécial pour l'upload (patchUser ne gère pas le multipart)
       // On va utiliser fetch directement sur l'endpoint PATCH /api/users/{id}/
       try {
-        const token = localStorage.getItem("authToken"); // à adapter selon votre stockage
+        const token = getToken(); // Utilisation du helper sécurisé qui décrypte le token
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${profile?.id}/`, {
           method: "PATCH",
           headers: {
@@ -307,7 +308,7 @@ export default function ProfileModal({
             className="relative flex max-h-[90vh] flex-col"
           >
             {/* Liseré signature : dégradé animé, seul geste "fort" du design */}
-            <motion.div
+            {/* <motion.div
               aria-hidden
               className={cn(
                 "absolute inset-x-0 top-0 z-10 h-[3px] bg-gradient-to-r",
@@ -317,7 +318,7 @@ export default function ProfileModal({
               style={{ backgroundSize: "200% 100%" }}
               animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
               transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            />
+            /> */}
 
             {/* Header */}
             <div className="relative flex items-center justify-between gap-4 border-b px-6 py-5 border-black/5 bg-gradient-to-b from-black/[0.02] to-transparent dark:border-white/10 dark:from-white/[0.02]">

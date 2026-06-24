@@ -12,7 +12,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Check, ChevronRight } from "lucide-react";
+import { Sparkles, Check, ChevronRight, Star } from "lucide-react";
 import { useThemeStore } from "@/store/theme.store";
 import { LoyaltyProfile, getTierConfig } from "@/modeles/fidelites";
 import { formatCurrency } from "@/lib/utils";
@@ -42,7 +42,7 @@ export default function PointsFideliteCard({
 
   // Si pas de profil on n'affiche rien. Si le solde est 0, on affiche quand même pour information
   if (!profil) {
-    return null; 
+    return null;
   }
 
   const solde = profil.points_balance;
@@ -91,7 +91,7 @@ export default function PointsFideliteCard({
               background: `linear-gradient(135deg, ${tierConfig.color}, #000)`,
             }}
           >
-            <Sparkles className="h-5 w-5 text-white" />
+            <Star className="h-5 w-5 text-white" />
           </div>
           <div>
             <h4 className="font-bold text-[13px] tracking-tight uppercase" style={{ color: text }}>

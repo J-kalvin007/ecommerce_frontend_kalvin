@@ -60,13 +60,14 @@ export type OptionLivraisonId = (typeof OPTIONS_LIVRAISON)[number]["id"];
 interface ModeLivraisonSelectorProps {
   value: OptionLivraisonId;
   onChange: (id: OptionLivraisonId) => void;
+  dynamicStandardPrice?: number | null;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Composant
    ─────────────────────────────────────────────────────────────────────────── */
 
-export default memo(function ModeLivraisonSelector({ value, onChange }: ModeLivraisonSelectorProps) {
+export default memo(function ModeLivraisonSelector({ value, onChange, dynamicStandardPrice }: ModeLivraisonSelectorProps) {
   const { resolvedTheme } = useThemeStore();
   const isDark = resolvedTheme === "dark";
 
@@ -80,6 +81,7 @@ export default memo(function ModeLivraisonSelector({ value, onChange }: ModeLivr
       {OPTIONS_LIVRAISON.map((opt) => {
         const isSelected = value === opt.id;
         const { Icon } = opt;
+        const displayPrice = opt.id === "standard" && dynamicStandardPrice != null ? dynamicStandardPrice : opt.prix;
 
         return (
           <div key={opt.id} className="relative">
@@ -160,7 +162,7 @@ export default memo(function ModeLivraisonSelector({ value, onChange }: ModeLivr
                     className="text-lg font-black tracking-tight"
                     style={{ color: isSelected ? "#1f4d3f" : text }}
                   >
-                    {formatCurrency(String(opt.prix), "FCFA")}
+                    {formatCurrency(String(displayPrice), "FCFA")}
                   </span>
                 </div>
 

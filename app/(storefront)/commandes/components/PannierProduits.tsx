@@ -14,7 +14,7 @@ import { cn, formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/pannierStore";
 
 export default function CartDrawer() {
-  const { items, isDrawerOpen, toggleDrawer, updateQuantity, removeItem, getTotal, getItemCount } = useCartStore();
+  const { items, isDrawerOpen, toggleDrawer, updateQuantity, removeItem, getTotal, getItemCount, clearCart } = useCartStore();
   const itemCount = getItemCount();
   const total = getTotal();
 
@@ -57,12 +57,23 @@ export default function CartDrawer() {
                   {itemCount}
                 </span>
               </div>
-              <button
-                onClick={() => toggleDrawer(false)}
-                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-surface-alt"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                {items.length > 0 && (
+                  <button
+                    onClick={clearCart}
+                    className="flex cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-muted transition-colors hover:bg-error-light hover:text-error"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Vider
+                  </button>
+                )}
+                <button
+                  onClick={() => toggleDrawer(false)}
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-surface-alt"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
 
             {/* Items */}

@@ -420,7 +420,7 @@ export function Header() {
                     <div className="p-2">
                       <button
                         onClick={openProfileModal}
-                        className="flex w- cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#52604e] hover:bg-[#f5ecdf] dark:text-[#b8ad8f] dark:hover:bg-[#2d281d]"
+                        className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#52604e] hover:bg-[#f5ecdf] dark:text-[#b8ad8f] dark:hover:bg-[#2d281d]"
                       >
                         <User className="h-4 w-4 text-[#8b5e34] dark:text-[#b3975c]" />
                         Mon profil
