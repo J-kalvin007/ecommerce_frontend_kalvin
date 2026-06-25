@@ -1,211 +1,3 @@
-// "use client";
-
-// import { useEffect, useState } from "react";
-// import Link from "next/link";
-// import { useSearchParams } from "next/navigation";
-// import { motion } from "framer-motion";
-// import { CheckCircle2, Loader2, Mail, RefreshCw, ShieldCheck } from "lucide-react";
-// import { resendVerificationEmail, verifyEmail } from "@/fonctions_api/auth.api";
-// import { cn } from "@/lib/utils";
-// import Toast from "@/components/notifications/Toast";
-
-// export default function VerifyEmailClient() {
-//   const searchParams = useSearchParams();
-//   const email = searchParams.get("email") ?? "";
-//   const key = searchParams.get("key") ?? "";
-
-//   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
-//     key ? "loading" : "idle"
-//   );
-//   const [message, setMessage] = useState<string>(
-//     key
-//       ? "Verification de votre email en cours..."
-//       : "Nous avons envoye un email de verification. Consultez votre boite mail."
-//   );
-//   const [resendLoading, setResendLoading] = useState(false);
-//   const [toast, setToast] = useState<{ show: boolean; type: "success" | "error" | "info"; message: string }>({
-//     show: false,
-//     type: "info",
-//     message: "",
-//   });
-
-//   useEffect(() => {
-//     if (!key) return;
-
-//     const runVerification = async () => {
-//       const result = await verifyEmail({ key });
-      
-//       if (result.ok) {
-//         setStatus("success");
-//         setMessage(result.data.detail || "Votre adresse email a bien ete verifiee.");
-//       } else {
-//         const detail = result.error.raw?.detail;
-//         const firstMessage = Array.isArray(detail) ? detail[0] : detail;
-//         setStatus("error");
-//         setMessage(String(firstMessage || "Impossible de verifier cet email."));
-//       }
-//     };
-
-//     void runVerification();
-//   }, [key]);
-
-//   const handleResend = async () => {
-//     if (!email) {
-//       setStatus("error");
-//       setMessage("Aucune adresse email fournie pour renvoyer la verification.");
-//       return;
-//     }
-
-//     setToast({ ...toast, show: false });
-//     setResendLoading(true);
-
-//     const result = await resendVerificationEmail({ email });
-    
-//     setResendLoading(false);
-
-//     if (result.ok) {
-//       setStatus("success");
-//       setMessage(result.data.detail || "Un nouvel email de verification a ete envoye.");
-//       setToast({ show: true, type: "success", message: result.data.detail || "Un nouvel email de verification a ete envoye." });
-//     } else {
-//       const detail = result.error.raw?.detail;
-//       const firstMessage = Array.isArray(detail) ? detail[0] : detail;
-//       setStatus("error");
-//       setMessage(String(firstMessage || "Impossible de renvoyer l'email de verification."));
-//       setToast({ show: true, type: "error", message: String(firstMessage || "Impossible de renvoyer l'email de verification.") });
-//     }
-//   };
-
-//   return (
-//     <>
-//       <Toast 
-//         show={toast.show} 
-//         type={toast.type} 
-//         message={toast.message} 
-//         onClose={() => setToast({ ...toast, show: false })} 
-//       />
-//       <div className="relative flex min-h-[80vh] items-center justify-center px-4 py-16">
-//       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-//         <div className="absolute -right-32 top-1/4 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
-//         <div className="absolute -left-32 bottom-1/4 h-80 w-80 rounded-full bg-highlight/8 blur-3xl" />
-//       </div>
-
-//       <motion.div
-//         initial={{ opacity: 0, y: 20 }}
-//         animate={{ opacity: 1, y: 0 }}
-//         transition={{ duration: 0.45 }}
-//         className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-border bg-surface-elevated shadow-xl"
-//       >
-//         <div className="bg-gradient-to-r from-primary to-primary-hover px-8 py-8 text-center text-white">
-//           <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
-//             <ShieldCheck className="h-7 w-7" />
-//           </div>
-//           <h1 className="font-display text-2xl font-bold">Verification email</h1>
-//           <p className="mt-1 text-sm text-white/80">
-//             Activez votre compte pour continuer sur la plateforme
-//           </p>
-//         </div>
-
-//         <div className="space-y-6 p-8">
-//           <div
-//             className={cn(
-//               "rounded-2xl border p-5 text-sm leading-7",
-//               status === "success" && "border-success/20 bg-success-light text-success",
-//               status === "error" && "border-error/20 bg-error-light text-error",
-//               (status === "idle" || status === "loading") &&
-//                 "border-border bg-surface text-slate-700"
-//             )}
-//           >
-//             <div className="flex items-start gap-3">
-//               {status === "loading" ? (
-//                 <Loader2 className="mt-0.5 h-5 w-5 animate-spin" />
-//               ) : status === "success" ? (
-//                 <CheckCircle2 className="mt-0.5 h-5 w-5" />
-//               ) : (
-//                 <Mail className="mt-0.5 h-5 w-5" />
-//               )}
-//               <p>{message}</p>
-//             </div>
-//           </div>
-
-//           {email && (
-//             <div className="rounded-2xl border border-border bg-surface p-5">
-//               <p className="text-sm font-medium text-slate-900">Adresse concernee</p>
-//               <p className="mt-1 text-sm text-muted">{email}</p>
-//             </div>
-//           )}
-
-//           <div className="flex flex-col gap-3 sm:flex-row">
-//             <button
-//               type="button"
-//               onClick={handleResend}
-//               disabled={resendLoading}
-//               className={cn(
-//                 "inline-flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white shadow-lg transition-all",
-//                 resendLoading
-//                   ? "cursor-not-allowed bg-primary/70"
-//                   : "bg-gradient-to-r from-primary to-primary-hover hover:shadow-glow"
-//               )}
-//             >
-//               {resendLoading ? (
-//                 <Loader2 className="h-4 w-4 animate-spin" />
-//               ) : (
-//                 <>
-//                   <RefreshCw className="h-4 w-4" />
-//                   Renvoyer l'email
-//                 </>
-//               )}
-//             </button>
-
-//             <Link
-//               href="/auth/login"
-//               className="inline-flex flex-1 items-center justify-center rounded-xl border border-border bg-surface px-4 py-3 text-sm font-semibold text-slate-900 transition hover:border-primary hover:text-primary"
-//             >
-//               Aller a la connexion
-//             </Link>
-//           </div>
-//         </div>
-//       </motion.div>
-//     </div>
-//     </>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 "use client";
 
@@ -213,10 +5,89 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2, KeyRound, Leaf, Mail, Shield, Sparkles, XCircle } from "lucide-react";
+import { motion, AnimatePresence, Variants } from "framer-motion";
+import {
+  ArrowRight,
+  KeyRound,
+  ShieldCheck,
+  Sparkles,
+  CheckCircle2,
+  Loader2,
+  Mail,
+  ArrowLeft,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
-import Toast from "@/components/notifications/Toast";
+import { getVerifyEmailError } from "@/lib/auth-errors";
+import Toast from "@/components/special/Toast";
+import { logoImage } from "@/assets/images";
+
+/* ─────────────────────────────────────────────────────────────────
+   Animation variants
+───────────────────────────────────────────────────────────────── */
+const stagger: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.2 } },
+};
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.48, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+const leftIn: Variants = {
+  hidden: { opacity: 0, x: -32 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+const rightIn: Variants = {
+  hidden: { opacity: 0, x: 32 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+function FloatingParticle({
+  x, y, size, delay, duration,
+}: {
+  x: number; y: number; size: number; delay: number; duration: number;
+}) {
+  return (
+    <motion.div
+      className="pointer-events-none absolute rounded-full bg-white/10"
+      style={{ left: `${x}%`, top: `${y}%`, width: size, height: size }}
+      animate={{ y: [-10, 10, -10], opacity: [0.25, 0.65, 0.25] }}
+      transition={{ duration, delay, repeat: Infinity, ease: "easeInOut" }}
+    />
+  );
+}
+
+const steps = [
+  {
+    icon: Mail,
+    label: "Vérifiez votre boîte mail",
+    desc: "Un code à 6 chiffres vous a été envoyé.",
+  },
+  {
+    icon: KeyRound,
+    label: "Saisissez le code",
+    desc: "Entrez-le ci-contre pour valider.",
+  },
+  {
+    icon: ShieldCheck,
+    label: "Compte sécurisé",
+    desc: "Accédez immédiatement à votre espace.",
+  },
+];
 
 export default function VerifyEmailClient() {
   const router = useRouter();
@@ -249,40 +120,35 @@ export default function VerifyEmailClient() {
     setIsLoading(true);
     setToast({ ...toast, show: false });
 
-    // Ici, remplacez par votre véritable appel API de vérification
-    // Exemple : await verifyEmailApi({ email, code: verificationCode });
     try {
-      // Simulation d'un appel API
+      // Simulation d'un appel API pour la démo
       await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Simulons un succès
-      const success = true;
+      
+      const success = true; // Remplacez par le résultat de votre API
       if (!success) throw new Error("Code invalide");
 
       setToast({
         show: true,
         type: "success",
-        message: "Votre adresse e-mail a été vérifiée avec succès ! Redirection...",
+        message: "Votre adresse e-mail a été vérifiée avec succès !",
       });
       setTimeout(() => {
         router.push("/auth/login?verified=1");
-      }, 2000);
+      }, 1500);
     } catch (error) {
-      setToast({
-        show: true,
-        type: "error",
-        message: error instanceof Error ? error.message : "Code invalide ou expiré. Veuillez réessayer.",
-      });
-    } finally {
+      // Si l'erreur vient d'un appel API structuré, utiliser le traducteur
+      const apiRaw = (error as Record<string, unknown>)?.raw ?? null;
+      const apiStatus = (error as Record<string, unknown>)?.status as number | undefined;
+      const message = apiRaw
+        ? getVerifyEmailError(apiRaw as Record<string, unknown>, apiStatus)
+        : error instanceof Error && error.message
+          ? getVerifyEmailError(null)
+          : "Code invalide ou expiré. Vérifiez votre boîte mail et réessayez.";
+
+      setToast({ show: true, type: "error", message });
       setIsLoading(false);
     }
   };
-
-  const advantages = [
-    { icon: Shield, text: "Vérification en quelques secondes" },
-    { icon: Sparkles, text: "Accès immédiat à votre espace" },
-    { icon: CheckCircle2, text: "Sécurité renforcée de votre compte" },
-  ];
 
   return (
     <>
@@ -293,188 +159,201 @@ export default function VerifyEmailClient() {
         onClose={() => setToast({ ...toast, show: false })}
       />
 
-      <div className="relative flex min-h-screen items-center justify-center px-4 py-12 md:px-6 lg:py-16">
-        {/* Décorations de fond */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -right-32 top-1/4 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
-          <div className="absolute -left-32 bottom-1/4 h-80 w-80 rounded-full bg-highlight/8 blur-3xl" />
-          <Leaf className="absolute left-[3%] top-[12%] h-14 w-14 rotate-12 text-primary/20" />
-          <Leaf className="absolute bottom-[15%] right-[5%] h-20 w-20 -rotate-45 text-highlight/15" />
-        </div>
-
+      <div className="flex min-h-screen w-full items-center justify-center bg-[#F0EDE6] p-4 md:p-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-          className="relative w-full max-w-6xl"
+          initial={{ opacity: 0, scale: 0.97, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          className="relative w-full max-w-4xl overflow-hidden rounded-[2.5rem] shadow-[0_40px_100px_rgba(15,45,32,0.16)]"
+          style={{ minHeight: 540 }}
         >
-          <div className="overflow-hidden rounded-3xl border border-border bg-surface-elevated shadow-2xl">
-            <div className="grid md:grid-cols-2">
-              {/* ========== COLONNE GAUCHE – BRANDING & MESSAGES ========== */}
-              <div className="relative bg-gradient-to-br from-primary/5 via-highlight/5 to-transparent p-8 md:p-10">
-                <div className="absolute inset-0 opacity-20">
-                  <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
-                  <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-highlight/20 blur-3xl" />
-                </div>
+          <div className="flex flex-col lg:flex-row">
 
-                <div className="relative z-10 flex flex-col items-center text-center md:items-start md:text-left">
-                  <div className="mb-6 flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-md dark:bg-surface-alt">
-                      <Image
-                        src="/assets/images/LOGO.png"
-                        alt="L'Atelier du Terroir"
-                        width={40}
-                        height={40}
-                        className="object-contain"
-                      />
-                    </div>
-                    <div>
-                      <h2 className="font-display text-xl font-bold text-foreground">
-                        Atelier du Terroir
-                      </h2>
-                      <p className="text-[11px] font-medium uppercase tracking-wider text-primary">
-                        Deal & Consulting
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mb-6">
-                    <h1 className="font-display text-3xl font-bold leading-tight text-foreground lg:text-4xl">
-                      Vérifiez votre
-                      <span className="text-primary"> e‑mail</span>
-                    </h1>
-                    <div className="mt-3 flex items-center justify-center gap-2 md:justify-start">
-                      <div className="h-px w-8 bg-primary/50" />
-                      <p className="text-sm font-medium text-muted">
-                        Sécurisez votre accès
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Liste d'avantages */}
-                  <div className="mt-4 space-y-3">
-                    {advantages.map((item, idx) => (
-                      <motion.div
-                        key={item.text}
-                        initial={{ opacity: 0, x: -15 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: idx * 0.1 }}
-                        className="flex items-center gap-3"
-                      >
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                          <item.icon className="h-4 w-4" />
-                        </div>
-                        <span className="text-sm font-medium text-foreground/80">
-                          {item.text}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {/* Encart informatif */}
-                  <div className="mt-8 rounded-2xl border border-border/50 bg-white/30 p-4 backdrop-blur-sm dark:bg-black/20">
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-5 w-5 text-primary" />
-                      <p className="text-sm font-medium text-foreground">
-                        {email ? (
-                          <>Un code a été envoyé à <span className="text-primary">{email}</span></>
-                        ) : (
-                          "Un code à 6 chiffres vous a été envoyé par e-mail"
-                        )}
-                      </p>
-                    </div>
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      Si vous ne trouvez pas l’e-mail, pensez à vérifier vos courriers indésirables.
-                    </p>
-                  </div>
-                </div>
+            {/* ── LEFT PANEL ── */}
+            <motion.div
+              variants={leftIn}
+              initial="hidden"
+              animate="visible"
+              className="relative flex flex-col justify-between overflow-hidden bg-[#0F2D20] p-10 lg:w-[44%] lg:p-12"
+            >
+              <div className="pointer-events-none absolute inset-0">
+                <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-[#C9963A]/10 blur-3xl" />
+                <div className="absolute -bottom-16 right-0 h-72 w-72 rounded-full bg-[#1f6b4f]/18 blur-3xl" />
               </div>
 
-              {/* ========== COLONNE DROITE – FORMULAIRE DE VÉRIFICATION ========== */}
-              <div className="flex flex-col justify-center p-8 md:p-10">
-                <div className="mb-6 text-center md:text-left">
-                  <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
-                    <KeyRound className="h-3 w-3" />
-                    Code de vérification
-                  </div>
-                  <h2 className="text-2xl font-bold text-foreground">Entrez votre code</h2>
-                  <p className="mt-1 text-sm text-muted">
-                    Nous avons envoyé un code à 6 chiffres à votre adresse e-mail.
-                  </p>
-                </div>
+              {[
+                { x: 12, y: 18, size: 5, delay: 0, duration: 5.5 },
+                { x: 78, y: 8, size: 3, delay: 1.2, duration: 6 },
+                { x: 88, y: 60, size: 5, delay: 0.6, duration: 7 },
+                { x: 18, y: 80, size: 4, delay: 2, duration: 5 },
+                { x: 50, y: 92, size: 3, delay: 0.4, duration: 6.5 },
+              ].map((p, i) => (
+                <FloatingParticle key={i} {...p} />
+              ))}
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+              <svg
+                className="pointer-events-none absolute right-0 top-0 h-full w-auto opacity-[0.04]"
+                viewBox="0 0 180 560"
+                fill="none"
+              >
+                <path d="M140 0 C60 90, 170 200, 90 280 C10 360, 150 460, 90 560" stroke="white" strokeWidth="1.5" />
+                <circle cx="90" cy="140" r="16" stroke="white" strokeWidth="1" />
+                <circle cx="130" cy="300" r="10" stroke="white" strokeWidth="1" />
+                <circle cx="70" cy="450" r="13" stroke="white" strokeWidth="1" />
+              </svg>
+
+              <div className="relative">
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="flex items-center gap-3"
+                >
+                  <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-white/20 bg-white/10">
+                    <Image src={logoImage} alt="Atelier du Terroir" width={36} height={36} className="object-contain p-1" />
+                  </div>
                   <div>
-                    <label htmlFor="code" className="mb-1.5 block text-sm font-medium text-foreground">
-                      Code de vérification
-                    </label>
-                    <div className="relative">
-                      <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-                      <input
-                        id="code"
-                        type="text"
-                        inputMode="numeric"
-                        pattern="\d{6}"
-                        maxLength={6}
-                        value={verificationCode}
-                        onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ""))}
-                        placeholder="123456"
-                        required
-                        className="w-full rounded-xl border border-border bg-surface py-3 pl-10 pr-4 text-center text-lg font-mono tracking-widest outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
-                      />
-                    </div>
-                    <p className="mt-1 text-xs text-muted">
-                      Le code est valable pendant 15 minutes.
-                    </p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#C9963A]">Atelier du Terroir</p>
+                    <p className="text-[11px] text-white/45">Vérification de sécurité</p>
                   </div>
+                </motion.div>
 
-                  <button
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: 0.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  className="my-7 h-px origin-left bg-gradient-to-r from-white/20 to-transparent"
+                />
+
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.55, delay: 0.3 }}
+                >
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#C9963A]">Dernière étape</p>
+                  <h2 className="mt-2 text-[1.9rem] font-bold leading-tight tracking-tight text-white">
+                    Vérifiez votre <span className="text-[#C9963A]">e-mail</span>
+                  </h2>
+                  <p className="mt-2.5 text-sm leading-relaxed text-white/55">
+                    Assurez-vous que c'est bien vous pour activer complètement votre compte.
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: 0.6, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                  className="my-7 h-px origin-left bg-gradient-to-r from-white/20 to-transparent"
+                />
+
+                <motion.div variants={stagger} initial="hidden" animate="visible" className="space-y-5">
+                  {steps.map((step, i) => (
+                    <motion.div key={step.label} variants={fadeUp} className="group flex items-start gap-3.5">
+                      <div className="relative shrink-0">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/20">
+                          <step.icon className="h-4 w-4 text-white/75" />
+                        </div>
+                        {i < steps.length - 1 && <div className="absolute left-[17px] top-9 h-5 w-px bg-white/12" />}
+                      </div>
+                      <div className="pt-0.5">
+                        <p className="text-sm font-semibold text-white/95">{step.label}</p>
+                        <p className="mt-0.5 text-xs leading-relaxed text-white/50">{step.desc}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </div>
+
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.9 }} className="relative mt-10">
+                <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                  <Sparkles className="h-4 w-4 text-[#C9963A]" />
+                  <p className="text-xs text-white/55">Vérification instantanée · Accès sécurisé</p>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* ── RIGHT PANEL – FORM ── */}
+            <motion.div
+              variants={rightIn}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-1 flex-col justify-center bg-white px-8 py-10 lg:px-12 lg:py-12"
+            >
+              <motion.div variants={stagger} initial="hidden" animate="visible" className="mb-8">
+                <motion.div variants={fadeUp} className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-[#dde5d8] bg-[#f8faf6] px-3 py-1">
+                  <ShieldCheck className="h-3 w-3 text-[#C9963A]" />
+                  <span className="text-[11px] font-semibold uppercase tracking-widest text-[#8a9685]">Authentification</span>
+                </motion.div>
+
+                <motion.h1 variants={fadeUp} className="text-3xl font-bold tracking-tight text-[#0F2D20]">
+                  Saisissez le code
+                </motion.h1>
+                <motion.p variants={fadeUp} className="mt-1.5 text-sm leading-relaxed text-[#6b7a65]">
+                  {email ? (
+                    <>Nous avons envoyé un code à 6 chiffres à <span className="font-semibold text-[#0F2D20]">{email}</span></>
+                  ) : (
+                    "Nous avons envoyé un code à 6 chiffres à votre adresse e-mail."
+                  )}
+                </motion.p>
+              </motion.div>
+
+              <motion.form variants={stagger} initial="hidden" animate="visible" className="space-y-6" onSubmit={handleSubmit}>
+                <motion.div variants={fadeUp}>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-[#4a5568]">
+                    Code de vérification
+                  </label>
+                  <div className="relative">
+                    <KeyRound className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#9aab94]" />
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="\\d{6}"
+                      maxLength={6}
+                      value={verificationCode}
+                      onChange={(e) => setVerificationCode(e.target.value.replace(/\\D/g, ""))}
+                      disabled={isLoading}
+                      placeholder="• • • • • •"
+                      className="w-full rounded-xl border border-[#dde5d8] bg-[#f8faf6] py-3.5 pl-12 pr-4 text-center text-2xl font-mono tracking-[0.5em] text-[#0F2D20] outline-none transition-all placeholder:text-[#b0bfa9] focus:border-[#0F2D20] focus:shadow-[0_0_0_3px_rgba(15,45,32,0.08)] disabled:opacity-60"
+                      required
+                    />
+                  </div>
+                </motion.div>
+
+                <motion.div variants={fadeUp}>
+                  <motion.button
                     type="submit"
                     disabled={isLoading || verificationCode.length !== 6}
-                    className={cn(
-                      "flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold text-white shadow-lg transition-all",
-                      isLoading || verificationCode.length !== 6
-                        ? "cursor-not-allowed bg-primary/70"
-                        : "bg-gradient-to-r from-primary to-primary/90 hover:shadow-glow hover:scale-[1.02]"
-                    )}
+                    whileHover={{ scale: isLoading || verificationCode.length !== 6 ? 1 : 1.012, y: isLoading || verificationCode.length !== 6 ? 0 : -1 }}
+                    whileTap={{ scale: isLoading || verificationCode.length !== 6 ? 1 : 0.988 }}
+                    className="relative flex w-full items-center justify-center gap-2.5 overflow-hidden rounded-xl bg-[#0F2D20] py-3.5 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(15,45,32,0.25)] transition disabled:cursor-not-allowed disabled:opacity-60"
                   >
+                    <motion.div
+                      className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                      animate={{ x: ["-100%", "200%"] }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
+                    />
                     {isLoading ? (
-                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                      <><Loader2 className="h-4 w-4 animate-spin" /> Vérification…</>
                     ) : (
-                      <>
-                        Vérifier mon compte
-                        <ArrowRight className="h-4 w-4" />
-                      </>
+                      <><CheckCircle2 className="h-4 w-4" /> Confirmer mon compte</>
                     )}
-                  </button>
+                  </motion.button>
+                </motion.div>
 
-                  <div className="text-center">
-                    <Link
-                      href="/auth/resend-code"
-                      className="text-xs font-medium text-primary transition hover:underline"
-                    >
+                <motion.div variants={fadeUp} className="mt-8 flex flex-col items-center justify-center gap-3 border-t border-[#f0f2eb] pt-6">
+                  <p className="text-center text-sm text-[#8a9685]">
+                    Je n'ai pas reçu le code ?{" "}
+                    <button type="button" className="font-semibold text-[#0F2D20] underline-offset-2 hover:underline">
                       Renvoyer le code
-                    </Link>
-                  </div>
-
-                  <p className="text-center text-sm text-muted">
-                    Vous avez déjà vérifié ?{" "}
-                    <Link
-                      href="/auth/login"
-                      className="font-semibold text-primary transition hover:underline"
-                    >
-                      Se connecter
-                    </Link>
+                    </button>
                   </p>
-                </form>
-
-                <div className="mt-6 flex items-center justify-center gap-2 text-center text-xs text-muted">
-                  <div className="h-px w-8 bg-border" />
-                  <span>Vérification sécurisée</span>
-                  <div className="h-px w-8 bg-border" />
-                </div>
-              </div>
-            </div>
+                  <Link href="/auth/login" className="group mt-2 inline-flex items-center gap-1 text-sm font-semibold text-[#0F2D20] underline-offset-2 hover:underline">
+                    <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
+                    Retour à la connexion
+                  </Link>
+                </motion.div>
+              </motion.form>
+            </motion.div>
           </div>
         </motion.div>
       </div>

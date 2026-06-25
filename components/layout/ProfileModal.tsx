@@ -49,6 +49,7 @@ import {
   DialogDescription,
 } from "@/components/widgets_originaux/special/ui/Dialog";
 import type { User } from "@/modeles/user";
+import LogoutDialog from "../special/LogoutDialog";
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -300,7 +301,20 @@ export default function ProfileModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="max-w-5xl overflow-hidden rounded-[28px] border p-0 shadow-2xl ring-1 ring-black/5 bg-white border-black/5 dark:bg-[#121212] dark:border-white/10">
+        <DialogContent 
+          className="max-w-5xl overflow-hidden rounded-[28px] border p-0 shadow-2xl ring-1 ring-black/5 bg-white border-black/5 dark:bg-[#121212] dark:border-white/10"
+          onInteractOutside={(e) => {
+            if (showLogoutConfirm) {
+              e.preventDefault();
+            }
+          }}
+          onEscapeKeyDown={(e) => {
+            if (showLogoutConfirm) {
+              e.preventDefault();
+              setShowLogoutConfirm(false);
+            }
+          }}
+        >
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -559,7 +573,7 @@ export default function ProfileModal({
                           onClick={() => setIsEditingProfile(true)}
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
-                          className="flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold shadow-sm transition bg-white text-green-600 hover:bg-neutral-100 dark:bg-[#2a2a2a] dark:text-green-400 dark:hover:bg-[#333]"
+                          className="flex items-center cursor-pointer gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold shadow-sm transition bg-white text-green-600 hover:bg-neutral-100 dark:bg-[#2a2a2a] dark:text-green-400 dark:hover:bg-[#333]"
                         >
                           <Edit2 className="h-3.5 w-3.5" />
                           Modifier
@@ -578,7 +592,7 @@ export default function ProfileModal({
                           }}
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
-                          className="rounded-xl px-3.5 py-1.5 text-xs font-semibold transition bg-white text-neutral-500 hover:bg-neutral-100 dark:bg-[#2a2a2a] dark:text-neutral-400 dark:hover:bg-[#333]"
+                          className="flex items-center cursor-pointer rounded-xl px-3.5 py-1.5 text-xs font-semibold transition bg-white text-neutral-500 hover:bg-neutral-100 dark:bg-[#2a2a2a] dark:text-neutral-400 dark:hover:bg-[#333]"
                         >
                           Annuler
                         </motion.button>
@@ -635,7 +649,7 @@ export default function ProfileModal({
                                   type="button"
                                   onClick={() => handleCopy(value, label)}
                                   title={`Copier ${label.toLowerCase()}`}
-                                  className="shrink-0 rounded-md p-1.5 text-neutral-400 opacity-0 transition-all group-hover:opacity-100 hover:bg-black/5 hover:text-green-600 dark:hover:bg-white/10 dark:hover:text-green-400"
+                                  className="shrink-0 cursor-pointer rounded-md p-1.5 text-neutral-400 opacity-0 transition-all group-hover:opacity-100 hover:bg-black/5 hover:text-green-600 dark:hover:bg-white/10 dark:hover:text-green-400"
                                 >
                                   <AnimatePresence mode="wait" initial={false}>
                                     {copiedField === label ? (
@@ -726,7 +740,7 @@ export default function ProfileModal({
                               disabled={isSavingProfile}
                               whileHover={{ scale: isSavingProfile ? 1 : 1.02 }}
                               whileTap={{ scale: isSavingProfile ? 1 : 0.98 }}
-                              className="flex items-center gap-2 rounded-xl bg-green-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-green-600 disabled:opacity-50"
+                              className="flex items-center gap-2 cursor-pointer rounded-xl bg-green-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-green-600 disabled:opacity-50"
                             >
                               {isSavingProfile ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -886,7 +900,7 @@ export default function ProfileModal({
                 </div>
                 <div className="flex items-center gap-2 font-medium uppercase tracking-[0.08em] text-[11px]">
                   <ShieldCheck className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
-                  <span>L'Atelier du Terroir – Zone client</span>
+                  <span>L'Atelier du Terroir – Profile client</span>
                 </div>
               </div>
             </div>
@@ -895,12 +909,21 @@ export default function ProfileModal({
       </Dialog>
 
       {/* Confirmation de déconnexion */}
-      <ConfirmDialog
+      {/* <ConfirmDialog
         isOpen={showLogoutConfirm}
         title="Déconnexion"
         message="Voulez-vous vraiment vous déconnecter ?"
         type="warning"
         confirmText="Se déconnecter"
+        onConfirm={() => {
+          setShowLogoutConfirm(false);
+          onLogout();
+        }}
+        onCancel={() => setShowLogoutConfirm(false)}
+      /> */}
+
+      <LogoutDialog
+        isOpen={showLogoutConfirm}
         onConfirm={() => {
           setShowLogoutConfirm(false);
           onLogout();

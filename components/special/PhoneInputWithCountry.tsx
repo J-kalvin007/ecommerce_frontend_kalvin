@@ -28,10 +28,10 @@ export default function PhoneInputWithCountry({
   // Parse initial value to separate dialCode and actual phone
   const parseInitial = () => {
     if (!value) return { code: "TG", phone: "" };
-    
+
     // Sort by length of dialCode descending to match longest prefix first (e.g. +1809 before +1)
     const sortedCountries = [...COUNTRIES].sort((a, b) => b.dialCode.length - a.dialCode.length);
-    
+
     // Check if value starts with '+'
     if (value.startsWith("+")) {
       for (const country of sortedCountries) {
@@ -115,7 +115,7 @@ export default function PhoneInputWithCountry({
           <button
             type="button"
             disabled={disabled}
-            className="flex shrink-0 items-center gap-2 rounded-l-xl px-4 py-3.5 outline-none transition-colors hover:bg-black/5 dark:hover:bg-white/5 disabled:opacity-50"
+            className="flex shrink-0 cursor-pointer items-center gap-2 rounded-l-xl px-4 py-3.5 outline-none transition-colors hover:bg-black/5 dark:hover:bg-white/5 disabled:opacity-50"
             style={{ borderRight: `1px solid ${border}` }}
           >
             <ReactCountryFlag

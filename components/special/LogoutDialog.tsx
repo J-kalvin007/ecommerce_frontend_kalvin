@@ -120,7 +120,8 @@ export default function LogoutDialog({
     <AnimatePresence mode="wait">
       {isOpen && (
         <div
-          className="fixed inset-0 z-[200] isolate flex items-center justify-center p-4 sm:p-6"
+          className="fixed inset-0 z-[200] isolate flex items-center justify-center p-4 sm:p-6 pointer-events-auto"
+          style={{ pointerEvents: 'auto' }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="logout-title"

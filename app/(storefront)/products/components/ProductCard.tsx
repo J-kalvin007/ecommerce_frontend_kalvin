@@ -336,7 +336,7 @@ export function ProductCard({
 
             <div className="mt-auto pt-3">
               {/* Prix */}
-              <div className="flex flex-wrap items-baseline gap-2">
+              <div className="flex flex-col">
                 {(() => {
                   const activeVariants = product.variants?.filter((v) => v.is_active);
                   if (activeVariants && activeVariants.length > 0) {
@@ -344,25 +344,37 @@ export function ProductCard({
                     const minPrice = Math.min(...prices);
                     const maxPrice = Math.max(...prices);
                     if (minPrice === maxPrice) {
-                      return <span className="text-[20px] font-bold text-[#1f4d3f]">{formatCurrency(minPrice, "FCFA")}</span>;
+                      return (
+                        <span className="text-xl font-black tracking-tight text-[#1f4d3f]">
+                          {formatCurrency(minPrice, "FCFA")}
+                        </span>
+                      );
                     }
                     return (
-                      <span className="flex flex-wrap items-baseline gap-1 text-[#1f4d3f]">
-                        <span className="text-[14px] font-semibold uppercase tracking-wider text-[#8a9086]">Dès</span>
-                        <span className="text-[20px] font-bold">{formatCurrency(minPrice, "FCFA")}</span>
-                        <span className="text-[20px] text-[#8a9086]">— {formatCurrency(maxPrice, "FCFA")}</span>
-                      </span>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-[#8b5e34]/80 mb-0.5">
+                          À partir de
+                        </span>
+                        <span className="text-xl font-black tracking-tight text-[#1f4d3f]">
+                          {formatCurrency(minPrice, "FCFA")}
+                        </span>
+                      </div>
                     );
                   }
                   return (
-                    <>
-                      <span className="text-[20px] font-bold text-[#1f4d3f]">{formatCurrency(finalPrice, "FCFA")}</span>
+                    <div className="flex flex-col">
                       {hasDiscount && (
-                        <span className="text-[18px] font-semibold text-[#8a9086] line-through">
+                        <span className="text-xs font-bold text-[#8a9086] line-through decoration-[#ef8219]/60 decoration-2 mb-0.5">
                           {formatCurrency(product.original_price!, "FCFA")}
                         </span>
                       )}
-                    </>
+                      <span className={cn(
+                        "text-xl font-black tracking-tight",
+                        hasDiscount ? "text-[#ef8219]" : "text-[#1f4d3f]"
+                      )}>
+                        {formatCurrency(finalPrice, "FCFA")}
+                      </span>
+                    </div>
                   );
                 })()}
               </div>
@@ -485,24 +497,37 @@ export function ProductCard({
                   const minPrice = Math.min(...prices);
                   const maxPrice = Math.max(...prices);
                   if (minPrice === maxPrice) {
-                    return <span className="text-[28px] font-bold text-[#1f4d3f]">{formatCurrency(minPrice, "FCFA")}</span>;
+                    return (
+                      <span className="text-2xl font-black tracking-tight text-[#1f4d3f]">
+                        {formatCurrency(minPrice, "FCFA")}
+                      </span>
+                    );
                   }
                   return (
                     <div className="flex flex-col sm:items-end">
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-[#8a9086]">À partir de</span>
-                      <span className="text-[28px] font-bold text-[#1f4d3f]">{formatCurrency(minPrice, "FCFA")}</span>
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-[#8b5e34]/80 mb-0.5">
+                        À partir de
+                      </span>
+                      <span className="text-2xl font-black tracking-tight text-[#1f4d3f]">
+                        {formatCurrency(minPrice, "FCFA")}
+                      </span>
                     </div>
                   );
                 }
                 return (
-                  <>
-                    <span className="text-[28px]  font-bold text-[#1f4d3f]">{formatCurrency(finalPrice, "FCFA")}</span>
+                  <div className="flex flex-col sm:items-end">
                     {hasDiscount && (
-                      <span className="text-[28px] font-semibold text-[#8a9086] line-through">
+                      <span className="text-sm font-bold text-[#8a9086] line-through decoration-[#ef8219]/60 decoration-2 mb-0.5">
                         {formatCurrency(product.original_price!, "FCFA")}
                       </span>
                     )}
-                  </>
+                    <span className={cn(
+                      "text-2xl font-black tracking-tight",
+                      hasDiscount ? "text-[#ef8219]" : "text-[#1f4d3f]"
+                    )}>
+                      {formatCurrency(finalPrice, "FCFA")}
+                    </span>
+                  </div>
                 );
               })()}
 
