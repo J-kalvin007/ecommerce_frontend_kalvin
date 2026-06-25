@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import VerifyEmailClient from "./components/VerifyEmailClient";
+import { ContainerFormAuth } from "@/app/auth/components/ContainerFormAuth";
 
 export const metadata: Metadata = {
   title: "Verification email | L'Atelier du Terroir",
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function VerifyEmailPage() {
-  return <VerifyEmailClient />;
+  return (
+    <ContainerFormAuth>
+      <VerifyEmailClient />
+    </ContainerFormAuth>
+  );
 }

@@ -420,9 +420,13 @@ export default function ContactClient() {
   };
 
   return (
-    <div className="page-transition relative overflow-hidden">
+    <div className="page-transition relative min-h-screen overflow-hidden bg-[#F7F5F0]/30">
+      {/* ── Légère touche de vert en arrière-plan (blobs flous) ── */}
+      <div className="pointer-events-none absolute -left-40 top-20 h-[500px] w-[500px] rounded-full bg-[#1f4d3f]/5 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 bottom-40 h-[600px] w-[600px] rounded-full bg-[#1f4d3f]/[0.03] blur-3xl" />
+
       {/* Hero section */}
-      <div className="border-b border-primary/10 bg-transparent">
+      <div className="relative z-10 border-b border-primary/10 bg-transparent">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 text-center lg:py-6">
           <h1 className="font-display text-3xl font-bold text-slate-950 lg:text-4xl">
             Contactez-nous
@@ -434,12 +438,12 @@ export default function ContactClient() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
         {/* Formulaire + FAQ */}
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
           {/* Formulaire */}
           <div>
-            <h2 className="font-display text-xl font-bold text-slate-950">
+            <h2 className="font-display text-xl font-bold text-[#1f4d3f]">
               Envoyez-nous un message
             </h2>
             <p className="mt-2 text-sm text-slate-600">
@@ -568,7 +572,7 @@ export default function ContactClient() {
 
           {/* FAQ */}
           <div>
-            <h2 className="font-display text-xl font-bold text-slate-950">
+            <h2 className="font-display text-xl font-bold text-[#1f4d3f]">
               Questions fréquentes
             </h2>
             <p className="mt-2 text-sm text-slate-600">
@@ -609,7 +613,7 @@ export default function ContactClient() {
 
         {/* Méthodes de contact */}
         <div className="mt-16">
-          <h2 className="font-display text-xl font-bold text-slate-950 text-center mb-6">
+          <h2 className="font-display text-xl font-bold text-[#1f4d3f] text-center mb-6">
             Nos coordonnées
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -632,8 +636,8 @@ export default function ContactClient() {
 
         {/* Horaires du support */}
         <div className="mt-12 rounded-2xl border border-primary/10 bg-white/88 p-6 text-center shadow-[0_18px_40px_-32px_rgba(52,76,61,0.14)] backdrop-blur-sm">
-          <Clock className="mx-auto h-6 w-6 text-primary" />
-          <h3 className="mt-3 font-semibold text-slate-950">Horaires du support</h3>
+          <Clock className="mx-auto h-6 w-6 text-[#1f4d3f]" />
+          <h3 className="mt-3 font-semibold text-[#1f4d3f]">Horaires du support</h3>
           <p className="mt-1 text-sm text-slate-600">
             Lundi - Vendredi : 9h - 18h (CET) · Chat en ligne : 24/7
           </p>

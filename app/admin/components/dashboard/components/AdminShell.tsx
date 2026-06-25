@@ -22,7 +22,8 @@ import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
 import { mediaUrl } from "@/lib/mediaUrl";
 import AdminHeader from "./AdminHeader";
-import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
+import LogoutDialog from "@/components/special/LogoutDialog";
+import { Home } from "lucide-react";
 
 const LOGO_PATH = "/assets/images/LOGO.png";
 
@@ -364,14 +365,9 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
         </div>
       </div>
 
-      {/* Dialogue de confirmation de déconnexion */}
-      <ConfirmDialog
+      {/* Modale de déconnexion premium */}
+      <LogoutDialog
         isOpen={showLogoutConfirm}
-        title="Déconnexion"
-        message="Voulez-vous vraiment vous déconnecter de votre compte administrateur ?"
-        type="warning"
-        confirmText="Se déconnecter"
-        cancelText="Annuler"
         onConfirm={confirmLogout}
         onCancel={() => setShowLogoutConfirm(false)}
       />

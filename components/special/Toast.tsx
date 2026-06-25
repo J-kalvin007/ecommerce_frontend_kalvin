@@ -131,8 +131,8 @@ const Toast: React.FC<ToastProps> = ({
   const glow = c.glowLight;
 
   const positions = {
-    'top-right': 'top-6 right-6',
-    'top-center': 'top-6 left-1/2 -translate-x-1/2',
+    'top-right': 'top-26 right-6',
+    'top-center': 'top-26 left-1/2 -translate-x-1/2',
     'bottom-center': 'bottom-6 left-1/2 -translate-x-1/2',
     'bottom-right': 'bottom-6 right-6',
   };

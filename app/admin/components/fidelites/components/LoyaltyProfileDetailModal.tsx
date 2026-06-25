@@ -577,7 +577,7 @@ export function LoyaltyProfileDetailModal({
                     {profile.next_tier && (
                       <div className="flex items-center gap-2.5 rounded-xl border border-border/40 bg-surface px-4 py-3 text-xs text-muted-foreground">
                         <Award className="h-4 w-4 shrink-0 text-primary" />
-                        <p>{profile.next_tier}</p>
+                        <p>Prochain palier : {profile.next_tier.name} (Requis: {profile.next_tier.points_needed} pts)</p>
                       </div>
                     )}
                   </motion.div>

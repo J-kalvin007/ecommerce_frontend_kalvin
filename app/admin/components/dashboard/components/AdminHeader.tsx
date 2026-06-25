@@ -521,9 +521,9 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, Bell, Sun, Moon, User, ChevronDown, LogOut } from "lucide-react";
+import { Menu, Bell, Sun, Moon, User, ChevronDown, LogOut, Home } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
-import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
+import LogoutDialog from "@/components/special/LogoutDialog";
 import { getToken } from "@/lib/axios";
 import ProfileModal from "@/components/layout/ProfileModal";
 import { mediaUrl } from "@/lib/mediaUrl";
@@ -603,7 +603,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
     <>
       <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/85 shadow-[0_1px_0_0_rgba(15,23,42,0.04),0_10px_30px_-22px_rgba(15,23,42,0.18)] backdrop-blur-2xl">
         <div className="flex h-[72px] items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* Gauche : menu mobile + logo */}
+          {/* Gauche : menu mobile + logo + bouton retour accueil */}
           <div className="flex items-center gap-3">
             <motion.button
               onClick={onMenuClick}
@@ -637,6 +637,22 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
                 </span>
               </div>
             </Link>
+
+            {/* ── Bouton retour à l'accueil (visible desktop) ── */}
+            <motion.div
+              className="hidden lg:block"
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.15, duration: 0.35 }}
+            >
+              <Link
+                href="/"
+                className="group flex items-center gap-2 rounded-xl border border-slate-100 bg-slate-50/80 px-3.5 py-2 text-[12.5px] font-semibold text-slate-500 shadow-sm transition-all duration-200 hover:border-primary/25 hover:bg-primary/5 hover:text-primary"
+              >
+                <Home className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
+                <span>Retour au site</span>
+              </Link>
+            </motion.div>
           </div>
 
           {/* Droite : thème, notifications, profil */}
@@ -776,14 +792,9 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
         onProfileUpdate={updateProfile}
       />
 
-      {/* Dialogue de confirmation de déconnexion */}
-      <ConfirmDialog
+      {/* Modale de déconnexion premium */}
+      <LogoutDialog
         isOpen={showLogoutConfirm}
-        title="Déconnexion"
-        message="Voulez-vous vraiment vous déconnecter de votre compte administrateur ?"
-        type="warning"
-        confirmText="Se déconnecter"
-        cancelText="Annuler"
         onConfirm={confirmLogout}
         onCancel={() => setShowLogoutConfirm(false)}
       />

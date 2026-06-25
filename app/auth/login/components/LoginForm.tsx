@@ -309,7 +309,7 @@ export function LoginForm({
                   <UserCheck className="h-3 w-3" />
                   Accès membre
                 </span>
-                <h2 className="mt-3 font-display text-[1.9rem] font-semibold text-[#1c241b]">Bienvenue</h2>
+                <h2 className="mt-3 font-display text-[1.9rem] font-semibold text-[#1c241b]">Bienvenue...</h2>
                 <p className="mt-1 text-sm text-[#7c8978]">
                   Connectez-vous avec votre email ou nom d&rsquo;utilisateur
                 </p>

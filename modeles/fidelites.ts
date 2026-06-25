@@ -142,7 +142,7 @@ export interface LoyaltyProfile {
     readonly points_balance:     number;
     readonly total_points_earned:number;
     readonly total_solde:        string;
-    readonly next_tier:          string;
+    readonly next_tier:          { name: string; points_needed: number } | null;
     readonly created_at:         string;
 }
 

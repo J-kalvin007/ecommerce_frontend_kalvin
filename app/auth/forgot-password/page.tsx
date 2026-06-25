@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ForgotPasswordClient from "./components/ForgotPasswordClient";
+import { ContainerFormAuth } from "@/app/auth/components/ContainerFormAuth";
 
 export const metadata: Metadata = {
   title: "Mot de passe oublie | L'Atelier du Terroir",
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function ForgotPasswordPage() {
-  return <ForgotPasswordClient />;
+  return (
+    <ContainerFormAuth>
+      <ForgotPasswordClient />
+    </ContainerFormAuth>
+  );
 }

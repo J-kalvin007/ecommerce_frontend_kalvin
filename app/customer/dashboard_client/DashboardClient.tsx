@@ -1,366 +1,449 @@
 /**
- * DashboardClient - Espace client premium
+ * DashboardClient.tsx
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Panneau de contrôle principal de l'espace client.
+ * Vue d'ensemble agrégée de toutes les données de l'utilisateur :
+ * commandes récentes, portefeuille, points de fidélité et favoris.
  *
- * Sections : Résumé, Commandes récentes, Portefeuille, Fidélité
- *
- * @module app/dashboard/DashboardClient
+ * @module app/customer/dashboard_client/DashboardClient
  */
 
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import {
-  Package, Wallet, Star, TrendingUp, Clock, ChevronRight,
-  ArrowUpRight, ArrowDownLeft, Gift, Crown, Eye, BellRing,
+  Package,
+  Wallet,
+  Star,
+  Heart,
+  ChevronRight,
+  ArrowUpRight,
+  ArrowDownLeft,
+  Crown,
+  ShieldCheck,
 } from "lucide-react";
-import { cn, formatCurrency } from "@/lib/utils";
+import Image from "next/image";
+
 import { useAuthStore } from "@/store/authStore";
-import api from "@/lib/axios";
-import { getOrders } from "@/fonctions_api/orders.api";
+import { mediaUrl } from "@/lib/mediaUrl";
+import LoadingStyle from "@/components/special/loadingStyle";
 
-/* ------------------------------------------------------------------ */
-/*  Mock data                                                          */
-/* ------------------------------------------------------------------ */
+// APIs
+import { getMyOrders } from "@/fonctions_api/commandes.api";
+import { getMyWallet, getMyWalletHistory } from "@/fonctions_api/wallets-paiements.api";
+import { getMyLoyaltyProfile } from "@/fonctions_api/fidelites.api";
+import { getMyFavorites } from "@/fonctions_api/notes-favoris.api";
 
-const MOCK_ORDERS = [
-  { id: "SAF-2026-001", date: "25 Avr 2026", status: "delivered", total: "35900", items: 3, label: "Livrée" },
-  { id: "SAF-2026-002", date: "22 Avr 2026", status: "shipped", total: "19500", items: 1, label: "En transit" },
-  { id: "SAF-2026-003", date: "18 Avr 2026", status: "processing", total: "57200", items: 5, label: "En préparation" },
-  { id: "SAF-2026-004", date: "10 Avr 2026", status: "delivered", total: "27500", items: 2, label: "Livrée" },
-];
+// Modèles
+import type { OrderList } from "@/modeles/commandes";
+import { WALLET_TRANSACTION_TYPE_LABELS } from "@/modeles/wallets-paiements";
+import type { Wallet as WalletModel, WalletTransaction } from "@/modeles/wallets-paiements";
+import type { LoyaltyProfile } from "@/modeles/fidelites";
+import type { FavoriteProduct } from "@/modeles/notes-favoris";
 
-const MOCK_TRANSACTIONS = [
-  { id: "1", type: "credit" as const, amount: 35000, label: "Rechargement", date: "20 Avr 2026" },
-  { id: "2", type: "debit" as const, amount: 16500, label: "Commande SAF-001", date: "18 Avr 2026" },
-  { id: "3", type: "credit" as const, amount: 6500, label: "Cashback fidélité", date: "15 Avr 2026" },
-  { id: "4", type: "debit" as const, amount: 8500, label: "Commande SAF-002", date: "12 Avr 2026" },
-];
+/* ── Utilitaires ────────────────────────────────────────────────────────── */
 
-const STATUS_STYLES: Record<string, string> = {
-  delivered: "bg-success/10 text-success",
-  shipped: "bg-info/10 text-info",
-  processing: "bg-warning/10 text-warning",
-  cancelled: "bg-error/10 text-error",
+function formatAmount(amount: string | number): string {
+  const num = typeof amount === "string" ? parseFloat(amount) : amount;
+  if (isNaN(num)) return "0 FCFA";
+  return new Intl.NumberFormat("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num) + " FCFA";
+}
+
+function formatDate(dateStr: string): string {
+  try {
+    return new Intl.DateTimeFormat("fr-FR", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(dateStr));
+  } catch {
+    return dateStr;
+  }
+}
+
+const ORDER_STATUS_LABELS: Record<string, string> = {
+  draft: "Brouillon",
+  pending_payment: "En attente de paiement",
+  paid: "Payée",
+  confirmed: "Confirmée",
+  processing: "En préparation",
+  shipped: "Expédiée",
+  delivered: "Livrée",
+  cancelled: "Annulée",
+  refunded: "Remboursée",
 };
 
-const LOYALTY_TIERS = [
-  { name: "Bronze", min: 0, max: 500, color: "from-amber-700 to-amber-600" },
-  { name: "Silver", min: 500, max: 2000, color: "from-gray-400 to-gray-300" },
-  { name: "Gold", min: 2000, max: 5000, color: "from-yellow-500 to-amber-400" },
-  { name: "Platinum", min: 5000, max: 10000, color: "from-gray-300 to-white" },
-];
+const ORDER_STATUS_COLORS: Record<string, string> = {
+  draft: "bg-gray-100 text-gray-700 border-gray-200",
+  pending_payment: "bg-orange-50 text-orange-700 border-orange-200",
+  paid: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  confirmed: "bg-blue-50 text-blue-700 border-blue-200",
+  processing: "bg-indigo-50 text-indigo-700 border-indigo-200",
+  shipped: "bg-violet-50 text-violet-700 border-violet-200",
+  delivered: "bg-emerald-100 text-emerald-800 border-emerald-300",
+  cancelled: "bg-red-50 text-red-700 border-red-200",
+  refunded: "bg-pink-50 text-pink-700 border-pink-200",
+};
 
-/* ------------------------------------------------------------------ */
-/*  Composant                                                          */
-/* ------------------------------------------------------------------ */
+/* ── Dashboard Aggregator ────────────────────────────────────────────────── */
 
 export default function DashboardClient() {
   const { user } = useAuthStore();
-  const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<"overview" | "orders" | "wallet" | "loyalty">("overview");
 
-  const [orders, setOrders] = useState<any[]>(MOCK_ORDERS);
-  const [wsConnected, setWsConnected] = useState(false);
+  /* ── États ───────────────────────────────────────────────────────────── */
+  const [isLoading, setIsLoading] = useState(true);
+  const [orders, setOrders] = useState<OrderList[]>([]);
+  const [wallet, setWallet] = useState<WalletModel | null>(null);
+  const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
+  const [loyalty, setLoyalty] = useState<LoyaltyProfile | null>(null);
+  const [favorites, setFavorites] = useState<FavoriteProduct[]>([]);
 
-  // Lire l'onglet initial depuis l'URL (?tab=orders)
+  /* ── Chargement de toutes les données en parallèle ───────────────────── */
   useEffect(() => {
-    const tab = searchParams.get("tab");
-    if (tab && ["overview", "orders", "wallet", "loyalty"].includes(tab)) {
-      setActiveTab(tab as typeof activeTab);
-    }
-  }, [searchParams]);
+    async function fetchDashboardData() {
+      setIsLoading(true);
 
-  // Fetch orders et connexion WebSocket
-  useEffect(() => {
-    async function fetchOrders() {
-      try {
-        const data = await getOrders();
-        if (data && (data.results || Array.isArray(data))) {
-          const results = data.results || data;
-          if (results.length > 0) {
-            const mappedOrders = results.map((o: any) => ({
-              realId: o.id,
-              id: o.order_number,
-              date: new Date(o.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" }),
-              status: o.status,
-              total: o.total_amount,
-              items: o.items ? o.items.length : 1,
-              label: o.status_display || o.status,
-            }));
-            setOrders(mappedOrders);
+      const [ordersRes, walletRes, historyRes, loyaltyRes, favsRes] = await Promise.allSettled([
+        getMyOrders(),
+        getMyWallet(),
+        getMyWalletHistory(),
+        getMyLoyaltyProfile(),
+        getMyFavorites(),
+      ]);
 
-            // Connexion WebSocket sur la première commande pour la démonstration
-            const latestOrder = mappedOrders[0];
-            const wsUrl = `ws://localhost:8000/ws/orders/${latestOrder.realId}/`;
-            const ws = new WebSocket(wsUrl);
-
-            ws.onopen = () => setWsConnected(true);
-            ws.onclose = () => setWsConnected(false);
-
-            ws.onmessage = (event) => {
-              const msg = JSON.parse(event.data);
-              console.log("WebSocket Message Reçu:", msg);
-              if (msg.status) {
-                // Mise à jour temps réel
-                setOrders((prev) =>
-                  prev.map((o) => o.realId === latestOrder.realId
-                    ? { ...o, status: msg.status, label: msg.status }
-                    : o
-                  )
-                );
-              }
-            };
-            return () => ws.close();
-          }
-        }
-      } catch (err) {
-        console.warn("API Commandes injoignable, mock data...", err);
+      // Commandes
+      if (ordersRes.status === "fulfilled" && ordersRes.value.ok) {
+        setOrders(ordersRes.value.data.slice(0, 3)); // Seulement les 3 plus récentes
       }
+
+      // Wallet
+      if (walletRes.status === "fulfilled" && walletRes.value.ok) {
+        setWallet(walletRes.value.data);
+      }
+      if (historyRes.status === "fulfilled" && historyRes.value.ok) {
+        setTransactions(historyRes.value.data.slice(0, 4)); // Les 4 dernières
+      }
+
+      // Fidélité
+      if (loyaltyRes.status === "fulfilled" && loyaltyRes.value.ok) {
+        setLoyalty(loyaltyRes.value.data);
+      }
+
+      // Favoris
+      if (favsRes.status === "fulfilled" && favsRes.value.ok) {
+        setFavorites(favsRes.value.data.slice(0, 4)); // Les 4 derniers favoris
+      }
+
+      setIsLoading(false);
     }
 
-    if (activeTab === "orders" || activeTab === "overview") {
-      fetchOrders();
-    }
-  }, [activeTab]);
+    fetchDashboardData();
+  }, []);
 
-  const userName = user?.name?.trim() || user?.email?.split("@")[0] || "Client";
-  const walletBalance = (user as any)?.wallet_balance ?? 23000;
-  const loyaltyPoints = (user as any)?.loyalty_points ?? 1250;
-  const tier = (user as any)?.loyalty_tier || "Silver";
+  /* ── Rendu de l'état de chargement ───────────────────────────────────── */
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center">
+        <LoadingStyle label="Préparation de votre espace…" size={18} />
+      </div>
+    );
+  }
 
-  const currentTier = LOYALTY_TIERS.find((t) => t.name === tier) || LOYALTY_TIERS[1];
-  const nextTier = LOYALTY_TIERS[LOYALTY_TIERS.indexOf(currentTier) + 1];
-  const progressPct = nextTier ? Math.min(100, ((loyaltyPoints - currentTier.min) / (nextTier.min - currentTier.min)) * 100) : 100;
+  /* ── Données dérivées ────────────────────────────────────────────────── */
+  const greeting = (() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Bonjour";
+    if (hour < 18) return "Bon après-midi";
+    return "Bonsoir";
+  })();
 
-  const TABS = [
-    { id: "overview" as const, label: "Aperçu", icon: TrendingUp },
-    { id: "orders" as const, label: "Commandes", icon: Package },
-    { id: "wallet" as const, label: "Portefeuille", icon: Wallet },
-    { id: "loyalty" as const, label: "Fidélité", icon: Star },
-  ];
+  const displayName = user?.name?.trim() || user?.email?.split("@")[0] || "Client";
 
+  /* ═══════════════════════════════════════════════════════════════════════
+     Rendu Principal
+     ═══════════════════════════════════════════════════════════════════════ */
   return (
-    <div className="page-transition">
-      {/* En-tête */}
-      <div className="border-b border-border bg-gradient-to-r from-primary/5 to-highlight/5">
-        <div className="mx-auto max-w-[var(--content-max-width)] px-[var(--spacing-page-x)] py-8">
-          <p className="text-sm text-muted">Bienvenue sur votre espace client,</p>
-          <h1 className="font-display text-2xl font-bold lg:text-3xl">
-            {userName}
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+      
+      {/* ── En-tête de bienvenue ── */}
+      <motion.div
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="relative overflow-hidden rounded-3xl p-8 sm:p-10"
+        style={{
+          background: "linear-gradient(135deg, #0d1a0f 0%, #1a2e1c 40%, #0f2012 100%)",
+          boxShadow: "0 24px 60px -12px rgba(31,77,63,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
+        }}
+      >
+        <div className="absolute right-0 top-0 opacity-10 pointer-events-none">
+          <svg width="400" height="400" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#C9963A" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,80.7,-46.3C89.6,-33.5,94.4,-18,94.2,-2.7C94,-12.6,88.8,-25.2,79.9,-36.8C71,-48.4,58.4,-59,44.7,-67.2C31,-75.4,15.5,-81.2,-0.2,-80.9C-15.9,-80.6,-31.8,-74.2,-45.5,-65.4C-59.2,-56.6,-70.7,-45.4,-78.9,-31.6C-87.1,-17.8,-92,-1.4,-89.6,13.8C-87.2,29,-77.5,43,-64.7,52.9C-51.9,62.8,-36,68.6,-20.9,72.6C-5.8,76.6,8.5,78.8,22.6,76.1C36.7,73.4,50.6,65.8,61.9,55.3C73.2,44.8,81.9,31.4,85.2,16.5C88.5,1.6,86.4,-14.8,80.4,-29.4C74.4,-44,64.5,-56.8,52.2,-66.2C39.9,-75.6,25.2,-81.6,9.8,-83.4C-5.6,-85.2,-21.7,-82.8,-35.8,-76.4Z" transform="translate(100 100)" />
+          </svg>
+        </div>
+
+        <div className="relative z-10">
+          <p className="mb-2 text-[12.5px] font-bold uppercase tracking-[0.16em] text-white/50">
+            {greeting},
+          </p>
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+            {displayName}
           </h1>
-          {/* Tabs */}
-          <div className="mt-6 flex gap-1 overflow-x-auto no-scrollbar">
-            {TABS.map((tab) => (
-              <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                className={cn(
-                  "flex items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition-all",
-                  activeTab === tab.id ? "bg-primary text-white shadow-md" : "text-muted hover:bg-surface-alt"
-                )}>
-                <tab.icon className="h-4 w-4" />
-                {tab.label}
-              </button>
-            ))}
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <span className="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-semibold text-white shadow-sm border border-white/10 backdrop-blur-sm">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+              Compte sécurisé
+            </span>
+            {loyalty && (
+              <span className="flex items-center gap-1.5 rounded-full bg-[#C9963A]/20 px-3 py-1.5 text-[12px] font-semibold text-[#E8B450] shadow-sm border border-[#C9963A]/30 backdrop-blur-sm">
+                <Crown className="h-3.5 w-3.5" />
+                Client {loyalty.tier_name}
+              </span>
+            )}
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="mx-auto max-w-[var(--content-max-width)] px-[var(--spacing-page-x)] py-8">
-        {/* === OVERVIEW === */}
-        {activeTab === "overview" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            {/* Stats cards */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { icon: Package, label: "Commandes", value: "12", sub: "4 ce mois", color: "text-info" },
-                { icon: Wallet, label: "Portefeuille", value: formatCurrency(String(walletBalance), "FCFA"), sub: "Solde actuel", color: "text-success" },
-                { icon: Star, label: "Points", value: String(loyaltyPoints), sub: `Niveau ${tier}`, color: "text-highlight" },
-                { icon: Gift, label: "Économies", value: "85 000 FCFA", sub: "Total économisé", color: "text-primary" },
-              ].map((card) => (
-                <div key={card.label} className="rounded-2xl border border-border bg-surface-elevated p-5">
-                  <div className="flex items-center justify-between">
-                    <card.icon className={cn("h-5 w-5", card.color)} />
-                    <ChevronRight className="h-4 w-4 text-muted" />
-                  </div>
-                  <p className="mt-3 text-2xl font-bold">{card.value}</p>
-                  <p className="text-sm text-muted">{card.sub}</p>
+      {/* ── Grille principale : 3 colonnes ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Colonne Gauche (Portefeuille & Fidélité) */}
+        <div className="lg:col-span-1 space-y-6">
+          
+          {/* Carte Portefeuille */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="group relative overflow-hidden rounded-3xl border border-[#E8E3D8] bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 border border-emerald-100">
+                  <Wallet className="h-4.5 w-4.5 text-emerald-600" strokeWidth={1.75} />
                 </div>
-              ))}
+                <h2 className="text-[15px] font-black tracking-tight text-[#1f241c]">Portefeuille</h2>
+              </div>
+              <Link href="/customer/wallet" className="text-[12px] font-bold text-[#1f4d3f] hover:underline">
+                Ouvrir
+              </Link>
             </div>
+            
+            <p className="text-[12px] font-semibold uppercase tracking-wider text-[#8A9080]">Solde Actuel</p>
+            <p className="mt-1 text-3xl font-black tracking-tighter text-[#1f241c]">
+              {wallet ? formatAmount(wallet.balance) : "—"}
+            </p>
 
-            {/* Commandes récentes */}
-            <div className="mt-8">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="font-display text-lg font-bold">Commandes récentes</h2>
-                <button onClick={() => setActiveTab("orders")} className="text-sm font-medium text-primary hover:underline">
-                  Tout voir
-                </button>
-              </div>
-              <div className="space-y-3">
-                {orders.slice(0, 3).map((order) => (
-                  <div key={order.id} className="flex items-center gap-4 rounded-2xl border border-border bg-surface-elevated p-4 transition-all hover:border-primary/20">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface-alt">
-                      <Package className="h-5 w-5 text-muted" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold">{order.id}</p>
-                      <p className="text-xs text-muted">{order.date} Â· {order.items} article{order.items > 1 ? "s" : ""}</p>
-                    </div>
-                    <span className={cn("rounded-full px-2.5 py-1 text-xs font-semibold", STATUS_STYLES[order.status])}>
-                      {order.label}
-                    </span>
-                    <span className="text-sm font-bold">{formatCurrency(order.total, "FCFA")}</span>
-                  </div>
-                ))}
-              </div>
+            <div className="mt-6 flex gap-2">
+              <Link
+                href="/customer/wallet"
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#1f4d3f] py-2.5 text-[12px] font-bold text-white transition-colors hover:bg-[#16382c]"
+              >
+                Recharger
+              </Link>
             </div>
           </motion.div>
-        )}
 
-        {/* === COMMANDES === */}
-        {activeTab === "orders" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="font-display text-xl font-bold">Mes commandes</h2>
-              {wsConnected && (
-                <div className="flex items-center gap-2 rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75"></span>
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-success"></span>
-                  </span>
-                  Suivi en direct activé
+          {/* Carte Fidélité */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className="group relative overflow-hidden rounded-3xl border border-[#E8E3D8] bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 border border-amber-100">
+                  <Star className="h-4.5 w-4.5 text-amber-500" strokeWidth={1.75} />
                 </div>
-              )}
-            </div>
-            <div className="space-y-3">
-              {orders.map((order) => (
-                <div key={order.id} className="flex items-center gap-4 rounded-2xl border border-border bg-surface-elevated p-5 transition-all hover:border-primary/20">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-surface-alt">
-                    <Package className="h-6 w-6 text-muted" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-semibold">{order.id}</p>
-                    <p className="text-sm text-muted">{order.date} Â· {order.items} article{order.items > 1 ? "s" : ""}</p>
-                  </div>
-                  <span className={cn("rounded-full px-3 py-1 text-xs font-semibold", STATUS_STYLES[order.status])}>
-                    {order.label}
-                  </span>
-                  <span className="text-lg font-bold">{formatCurrency(order.total, "FCFA")}</span>
-                  <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-border hover:bg-surface-alt">
-                    <Eye className="h-4 w-4 text-muted" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* === PORTEFEUILLE === */}
-        {activeTab === "wallet" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <div className="mb-8 rounded-3xl bg-gradient-to-br from-primary to-highlight p-8 text-white shadow-xl">
-              <p className="text-sm text-white/70">Solde du portefeuille</p>
-              <p className="mt-1 text-4xl font-bold">{formatCurrency(String(walletBalance), "FCFA")}</p>
-              <div className="mt-4 flex gap-3">
-                <button className="flex items-center gap-2 rounded-xl bg-white/20 px-5 py-2.5 text-sm font-semibold backdrop-blur-sm transition-all hover:bg-white/30">
-                  Recharger
-                </button>
-                <button className="flex items-center gap-2 rounded-xl bg-white/10 px-5 py-2.5 text-sm font-semibold backdrop-blur-sm transition-all hover:bg-white/20">
-                  Transférer
-                </button>
+                <h2 className="text-[15px] font-black tracking-tight text-[#1f241c]">Fidélité</h2>
               </div>
+              <Link href="/customer/fidelites" className="text-[12px] font-bold text-amber-600 hover:underline">
+                Détails
+              </Link>
             </div>
-            <h3 className="mb-4 font-display text-lg font-bold">Transactions récentes</h3>
-            <div className="space-y-3">
-              {MOCK_TRANSACTIONS.map((tx) => (
-                <div key={tx.id} className="flex items-center gap-4 rounded-2xl border border-border bg-surface-elevated p-4">
-                  <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
-                    tx.type === "credit" ? "bg-success/10" : "bg-error/10")}>
-                    {tx.type === "credit" ? <ArrowDownLeft className="h-5 w-5 text-success" /> : <ArrowUpRight className="h-5 w-5 text-error" />}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold">{tx.label}</p>
-                    <p className="text-xs text-muted">{tx.date}</p>
-                  </div>
-                  <span className={cn("text-sm font-bold", tx.type === "credit" ? "text-success" : "text-error")}>
-                    {tx.type === "credit" ? "+" : "-"}{formatCurrency(String(tx.amount), "FCFA")}
-                  </span>
-                </div>
-              ))}
+            
+            <p className="text-[12px] font-semibold uppercase tracking-wider text-[#8A9080]">Points Disponibles</p>
+            <div className="flex items-end gap-2 mt-1">
+              <p className="text-3xl font-black tracking-tighter text-[#1f241c]">
+                {loyalty ? new Intl.NumberFormat("fr-FR").format(loyalty.points_balance) : "—"}
+              </p>
+              <span className="mb-1 text-[13px] font-bold text-[#8A9080]">pts</span>
             </div>
-          </motion.div>
-        )}
 
-        {/* === FIDÉLITÉ === */}
-        {activeTab === "loyalty" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            {/* Tier card */}
-            <div className="mb-8 rounded-3xl bg-gradient-to-br from-primary/10 to-highlight/10 border border-border p-8">
-              <div className="flex items-center gap-3">
-                <Crown className="h-8 w-8 text-highlight" />
-                <div>
-                  <p className="text-sm text-muted">Votre niveau</p>
-                  <p className="text-2xl font-bold">{tier}</p>
+            {loyalty && loyalty.next_tier && (
+              <div className="mt-5">
+                <div className="mb-1.5 flex items-center justify-between text-[11px] font-semibold text-[#8A9080]">
+                  <span>{loyalty.tier_name}</span>
+                  <span>{loyalty.next_tier.name}</span>
                 </div>
-              </div>
-              <div className="mt-6">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">{loyaltyPoints} points</span>
-                  {nextTier && <span className="text-muted">{nextTier.min} pour {nextTier.name}</span>}
-                </div>
-                <div className="mt-2 h-3 overflow-hidden rounded-full bg-surface-alt">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${progressPct}%` }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="h-full rounded-full bg-gradient-to-r from-primary to-highlight"
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#F7F5F0]">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500"
+                    style={{ width: "65%" }} // Simulé pour le dashboard (la vraie logique est dans la page fidélité)
                   />
                 </div>
               </div>
+            )}
+          </motion.div>
+        </div>
+
+        {/* Colonne Centrale & Droite (Commandes & Reste) */}
+        <div className="lg:col-span-2 space-y-6">
+          
+          {/* Section Commandes Récentes */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+            className="rounded-3xl border border-[#E8E3D8] bg-white p-6 shadow-sm"
+          >
+            <div className="mb-6 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 border border-blue-100">
+                  <Package className="h-4.5 w-4.5 text-blue-600" strokeWidth={1.75} />
+                </div>
+                <div>
+                  <h2 className="text-[16px] font-black tracking-tight text-[#1f241c]">Commandes Récentes</h2>
+                  <p className="text-[12px] text-[#8A9080]">Vos derniers achats</p>
+                </div>
+              </div>
+              <Link
+                href="/customer/dashboard_client?tab=orders"
+                className="flex items-center gap-1 rounded-xl bg-[#F7F5F0] px-3 py-1.5 text-[12px] font-bold text-[#1f241c] transition-colors hover:bg-[#E8E3D8]"
+              >
+                Tout voir
+                <ChevronRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
 
-            {/* Avantages */}
-            <h3 className="mb-4 font-display text-lg font-bold">Vos avantages {tier}</h3>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {[
-                { icon: "🎁", label: "Points x2 le week-end" },
-                { icon: "🚚", label: "Livraison offerte dès 15 000 FCFA" },
-                { icon: "💰", label: "Cashback 3% sur tout" },
-                { icon: "🎂", label: "Cadeau d'anniversaire" },
-              ].map((perk) => (
-                <div key={perk.label} className="flex items-center gap-3 rounded-2xl border border-border bg-surface-elevated p-4">
-                  <span className="text-2xl">{perk.icon}</span>
-                  <span className="text-sm font-medium">{perk.label}</span>
-                </div>
-              ))}
-            </div>
+            <div className="space-y-3">
+              {orders.length > 0 ? (
+                orders.map((order) => {
+                  const statusColors = ORDER_STATUS_COLORS[order.status] || ORDER_STATUS_COLORS.draft;
+                  return (
+                    <Link
+                      key={order.id}
+                      href={`/customer/dashboard_client?tab=orders`}
+                      className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-[#F2EFE8] p-4 transition-all hover:border-[#1f4d3f]/20 hover:bg-[#FAFAF8] hover:shadow-[0_4px_20px_-8px_rgba(0,0,0,0.08)]"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#F7F5F0] text-[#8A9080] transition-colors group-hover:bg-white group-hover:text-[#1f4d3f] group-hover:shadow-sm">
+                          <Package className="h-5 w-5" strokeWidth={1.75} />
+                        </div>
+                        <div>
+                          <p className="text-[14px] font-bold text-[#1f241c]">{order.reference}</p>
+                          <p className="text-[12px] text-[#8A9080]">{formatDate(order.created_at)}</p>
+                        </div>
+                      </div>
 
-            {/* Comment gagner */}
-            <h3 className="mb-4 mt-8 font-display text-lg font-bold">Comment gagner des points</h3>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              {[
-                { action: "Achat", points: "1f = 10 pts", icon: ShoppingBagIcon },
-                { action: "Parrainage", points: "+500 pts", icon: Gift },
-                { action: "Avis produit", points: "+50 pts", icon: Star },
-              ].map((item) => (
-                <div key={item.action} className="rounded-2xl border border-border bg-surface-elevated p-5 text-center">
-                  <item.icon className="mx-auto h-6 w-6 text-primary" />
-                  <p className="mt-2 font-semibold">{item.action}</p>
-                  <p className="text-sm text-primary font-medium">{item.points}</p>
+                      <div className="flex items-center justify-between sm:justify-end gap-6 sm:w-1/2">
+                        <span className={`inline-flex items-center whitespace-nowrap rounded-lg border px-2.5 py-1 text-[11px] font-bold ${statusColors}`}>
+                          {ORDER_STATUS_LABELS[order.status] || order.status}
+                        </span>
+                        <div className="text-right">
+                          <p className="text-[14px] font-black text-[#1f4d3f]">{formatAmount(order.total_final)}</p>
+                          <p className="text-[11px] font-semibold text-[#8A9080]">{order.items_total} article(s)</p>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })
+              ) : (
+                <div className="flex flex-col items-center justify-center py-10 text-center">
+                  <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F7F5F0]">
+                    <Package className="h-6 w-6 text-[#C4BFB6]" strokeWidth={1.5} />
+                  </div>
+                  <p className="text-[14px] font-bold text-[#1f241c]">Aucune commande</p>
+                  <p className="text-[12px] text-[#8A9080]">Vous n'avez pas encore passé de commande.</p>
                 </div>
-              ))}
+              )}
             </div>
           </motion.div>
-        )}
+
+          {/* Grille secondaire (Transactions & Favoris) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            
+            {/* Transactions du portefeuille */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.4 }}
+              className="rounded-3xl border border-[#E8E3D8] bg-white p-6 shadow-sm"
+            >
+              <div className="mb-5 flex items-center justify-between">
+                <h3 className="text-[14px] font-black tracking-tight text-[#1f241c]">Dernières transactions</h3>
+                <Link href="/customer/wallet" className="text-[12px] font-bold text-[#8A9080] hover:text-[#1f241c]">Voir</Link>
+              </div>
+              <div className="space-y-4">
+                {transactions.length > 0 ? (
+                  transactions.map((tx) => {
+                    const isCredit = tx.transaction_type === "deposit" || tx.transaction_type === "refund" || tx.transaction_type === "cashback";
+                    return (
+                      <div key={tx.id} className="flex items-center gap-3">
+                        <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${isCredit ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"}`}>
+                          {isCredit ? <ArrowDownLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-[12.5px] font-bold text-[#1f241c]">{WALLET_TRANSACTION_TYPE_LABELS[tx.transaction_type]}</p>
+                          <p className="text-[10px] text-[#8A9080]">{formatDate(tx.created_at)}</p>
+                        </div>
+                        <p className={`text-[13px] font-black ${isCredit ? "text-emerald-600" : "text-[#1f241c]"}`}>
+                          {isCredit ? "+" : "-"}{formatAmount(tx.amount)}
+                        </p>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="py-4 text-center text-[12px] text-[#8A9080]">Aucune transaction récente.</p>
+                )}
+              </div>
+            </motion.div>
+
+            {/* Favoris récents */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+              className="rounded-3xl border border-[#E8E3D8] bg-white p-6 shadow-sm"
+            >
+              <div className="mb-5 flex items-center justify-between">
+                <h3 className="text-[14px] font-black tracking-tight text-[#1f241c]">Favoris récents</h3>
+                <Link href="/customer/notes-favoris" className="text-[12px] font-bold text-[#8A9080] hover:text-[#1f241c]">Voir</Link>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {favorites.length > 0 ? (
+                  favorites.map((product) => {
+                    const imgUrl = mediaUrl(product.image);
+                    return (
+                      <Link key={product.id} href={`/product/${product.slug}`} className="group block overflow-hidden rounded-xl border border-[#E8E3D8] bg-[#F7F5F0] transition-colors hover:border-red-200 hover:bg-white">
+                        <div className="relative h-20 w-full overflow-hidden bg-white">
+                          {imgUrl ? (
+                            <Image src={imgUrl} alt={product.name} fill className="object-cover transition-transform group-hover:scale-105" sizes="100px" />
+                          ) : (
+                            <div className="flex h-full items-center justify-center"><Heart className="h-5 w-5 text-gray-300" /></div>
+                          )}
+                        </div>
+                        <div className="p-2">
+                          <p className="truncate text-[11px] font-bold text-[#1f241c]">{product.name}</p>
+                          <p className="text-[11px] font-black text-[#1f4d3f]">{formatAmount(product.price)}</p>
+                        </div>
+                      </Link>
+                    );
+                  })
+                ) : (
+                  <div className="col-span-2 py-4 text-center">
+                    <p className="text-[12px] text-[#8A9080]">Aucun favori enregistré.</p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-
-/* Alias pour éviter conflit de nom avec l'import lucide */
-function ShoppingBagIcon({ className }: { className?: string }) {
-  return <Package className={className} />;
-}
-

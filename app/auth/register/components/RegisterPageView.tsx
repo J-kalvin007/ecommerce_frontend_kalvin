@@ -2,23 +2,26 @@
 
 import { Suspense } from "react";
 import { RegisterForm } from "./RegisterForm";
+import { ContainerFormAuth } from "@/app/auth/components/ContainerFormAuth";
 
 /* ─────────────────────────────────────────────────────────────────
    RegisterPageView
-   The RegisterForm is now fully self-contained (it renders its own
-   full-page layout with the left/right split), so this wrapper just
-   provides the Suspense boundary and the page-level background.
+   The RegisterForm is self-contained (own left/right layout).
+   ContainerFormAuth adds the full-screen atmosphere layer:
+   floating leaves, produce images and gradient background.
 ───────────────────────────────────────────────────────────────── */
 export function RegisterPageView() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-screen items-center justify-center bg-[#F0EDE6]">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#0F2D20]/20 border-t-[#0F2D20]" />
-        </div>
-      }
-    >
-      <RegisterForm />
-    </Suspense>
+    <ContainerFormAuth>
+      <Suspense
+        fallback={
+          <div className="flex min-h-screen items-center justify-center bg-[#F0EDE6]">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#0F2D20]/20 border-t-[#0F2D20]" />
+          </div>
+        }
+      >
+        <RegisterForm />
+      </Suspense>
+    </ContainerFormAuth>
   );
 }

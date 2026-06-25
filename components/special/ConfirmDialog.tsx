@@ -207,7 +207,8 @@ const ConfirmDialog = ({
           <div
             className="gc-cd-root"
             style={{
-              position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px',
+              position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px',
+              pointerEvents: 'auto',
               '--cd-cancel-color': isDark ? 'rgba(232,237,233,0.52)' : 'rgba(17,24,18,0.6)',
               '--cd-cancel-bg': isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
               '--cd-cancel-border': isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',

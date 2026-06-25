@@ -15,6 +15,7 @@ import {
   Loader2,
   Mail,
   ArrowLeft,
+  Mails,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getVerifyEmailError } from "@/lib/auth-errors";
@@ -123,7 +124,7 @@ export default function VerifyEmailClient() {
     try {
       // Simulation d'un appel API pour la démo
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      
+
       const success = true; // Remplacez par le résultat de votre API
       if (!success) throw new Error("Code invalide");
 
@@ -209,8 +210,8 @@ export default function VerifyEmailClient() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="flex items-center gap-3"
                 >
-                  <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-white/20 bg-white/10">
-                    <Image src={logoImage} alt="Atelier du Terroir" width={36} height={36} className="object-contain p-1" />
+                  <div className="flex h-18 w-18 items-center justify-center overflow-hidden rounded-xl border border-white/20 bg-white/10">
+                    <Image src={logoImage} alt="Atelier du Terroir" width={56} height={56} className="object-contain p-1" />
                   </div>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#C9963A]">Atelier du Terroir</p>
@@ -266,7 +267,7 @@ export default function VerifyEmailClient() {
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.9 }} className="relative mt-10">
                 <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                  <Sparkles className="h-4 w-4 text-[#C9963A]" />
+                  <Mails className="h-4 w-4 text-[#C9963A]" />
                   <p className="text-xs text-white/55">Vérification instantanée · Accès sécurisé</p>
                 </div>
               </motion.div>
@@ -325,7 +326,7 @@ export default function VerifyEmailClient() {
                     disabled={isLoading || verificationCode.length !== 6}
                     whileHover={{ scale: isLoading || verificationCode.length !== 6 ? 1 : 1.012, y: isLoading || verificationCode.length !== 6 ? 0 : -1 }}
                     whileTap={{ scale: isLoading || verificationCode.length !== 6 ? 1 : 0.988 }}
-                    className="relative flex w-full items-center justify-center gap-2.5 overflow-hidden rounded-xl bg-[#0F2D20] py-3.5 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(15,45,32,0.25)] transition disabled:cursor-not-allowed disabled:opacity-60"
+                    className="relative flex w-full cursor-pointer items-center justify-center gap-2.5 overflow-hidden rounded-xl bg-[#0F2D20] py-3.5 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(15,45,32,0.25)] transition disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <motion.div
                       className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent"
@@ -343,11 +344,11 @@ export default function VerifyEmailClient() {
                 <motion.div variants={fadeUp} className="mt-8 flex flex-col items-center justify-center gap-3 border-t border-[#f0f2eb] pt-6">
                   <p className="text-center text-sm text-[#8a9685]">
                     Je n'ai pas reçu le code ?{" "}
-                    <button type="button" className="font-semibold text-[#0F2D20] underline-offset-2 hover:underline">
+                    <button type="button" className="cursor-pointer font-semibold text-[#0F2D20] underline-offset-2 hover:underline">
                       Renvoyer le code
                     </button>
                   </p>
-                  <Link href="/auth/login" className="group mt-2 inline-flex items-center gap-1 text-sm font-semibold text-[#0F2D20] underline-offset-2 hover:underline">
+                  <Link href="/auth/login" className="group mt-2 inline-flex cursor-pointer items-center gap-1 text-sm font-semibold text-[#0F2D20] underline-offset-2 hover:underline">
                     <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
                     Retour à la connexion
                   </Link>

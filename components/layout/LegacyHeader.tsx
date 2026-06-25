@@ -167,7 +167,7 @@ export function Header() {
 
   const goToDashboard = () => {
     setIsProfileDropdownOpen(false);
-    const dashboardPath = isAdmin ? "/admin" : "/dashboard_client";
+    const dashboardPath = isAdmin ? "/admin" : "/customer/dashboard_client";
     router.push(dashboardPath);
   };
 
