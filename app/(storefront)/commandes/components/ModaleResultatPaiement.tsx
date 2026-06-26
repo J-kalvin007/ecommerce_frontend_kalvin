@@ -13,7 +13,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { Dialog, DialogContent } from "@/components/special/Dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/special/Dialog";
 import { useThemeStore } from "@/store/theme.store";
 
 // Chargement dynamique de lottie-react pour éviter SSR issues
@@ -64,6 +64,14 @@ export default function ModaleResultatPaiement({
       if (!isSuccess) onClose();
     }}>
       <DialogContent className="sm:max-w-md p-8 text-center">
+        {/* Requis par Radix UI pour l'accessibilité (lecteurs d'écran) — visuellement masqué */}
+        <DialogTitle className="sr-only">
+          {isSuccess ? "Paiement réussi" : "Échec du paiement"}
+        </DialogTitle>
+        <DialogDescription className="sr-only">
+          {isSuccess ? "Votre commande a été validée avec succès." : "Une erreur est survenue lors du paiement."}
+        </DialogDescription>
+
         <div className="mx-auto mb-6 flex h-32 w-32 items-center justify-center">
           <Lottie
             animationData={isSuccess ? successAnimation : errorAnimation}
