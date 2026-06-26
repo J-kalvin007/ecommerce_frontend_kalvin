@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/special/Dialog";
-import { depositWallet } from "@/fonctions_api/wallets-paiements.api";
+import { depositWallet, getMyWallet } from "@/fonctions_api/wallets-paiements.api";
 import { useThemeStore } from "@/store/theme.store";
 import PhoneInputWithCountry from "@/components/special/PhoneInputWithCountry";
 
@@ -45,26 +45,33 @@ export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 500
       setError("Le montant doit être supérieur à 100 FCFA");
       return;
     }
-    if (!phone || phone.length < 8) {
-      setError("Veuillez saisir un numéro de téléphone valide");
-      return;
-    }
 
     setLoading(true);
     setError(null);
 
     try {
+      // 1. Récupérer le walletId
+      const walletRes = await getMyWallet();
+      if (!walletRes.ok || !walletRes.data) {
+        setError("Impossible de récupérer les informations de votre portefeuille.");
+        setLoading(false);
+        return;
+      }
+      
+      const walletId = walletRes.data.id;
+
+      // 2. Initier la recharge avec la nouvelle architecture
       const res = await depositWallet({
+        order_id: walletId,
         amount: numAmount.toString(),
-        phone_number: phone,
+        description: "RECHARGE-WALLET",
       });
 
       if (res.ok) {
-        // Redirection vers PayDunya dans un nouvel onglet
-        window.open(res.data.redirect_url, "_blank");
-        onOpenChange(false);
+        // Redirection automatique vers PayDunya
+        window.location.href = res.data.payment_url;
       } else {
-        setError(res.error.message || "Erreur lors de l'initiation de la recharge");
+        setError(res.error?.message || "Erreur lors de l'initiation de la recharge");
       }
     } catch (err) {
       setError("Une erreur inattendue est survenue");
@@ -93,7 +100,7 @@ export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 500
             <label className="mb-2 flex items-center text-sm font-semibold" style={{ color: text }}>
               Montant à recharger (FCFA)
             </label>
-            <div 
+            <div
               className="flex items-center w-full rounded-xl px-4 transition-all focus-within:ring-2 focus-within:ring-[#1f4d3f]/50"
               style={{ background: inputBg, border: `1px solid ${border}` }}
             >

@@ -29,34 +29,162 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handlePayer = async () => {
-    if (!phone || phone.length < 8) {
-      setError("Veuillez saisir un numéro de téléphone valide.");
-      return;
-    }
 
+
+
+
+  // const handlePayer = async () => {
+
+  //   // if (!phone || phone.length < 8) {
+  //   //   setError("Veuillez saisir un numéro de téléphone valide.");
+  //   //   return;
+  //   // }
+
+  //   setLoading(true);
+  //   setError(null);
+
+  //   try {
+  //     const res = await initiateDirectPayment({
+  //       order_id: orderId,
+  //       amount: String(amount),
+  //       // phone_number: phone,
+  //       phone_number: "+22962693544",
+  //     });
+
+  //     console.
+
+  //     if (res.ok) {
+  //       // Redirection vers l'interface PayDunya dans le même onglet
+  //       window.location.href = res.data.redirect_url;
+  //     } else {
+  //       setError(res.error.message || "Erreur lors de l'initiation du paiement avec PayDunya.");
+  //     }
+  //   } catch (err) {
+  //     setError("Une erreur inattendue est survenue.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const handlePayer = async () => {
+    console.log("══════════════════════════════════════════════");
+    console.log("💳 DÉBUT DU PROCESSUS DE PAIEMENT");
+    console.log("══════════════════════════════════════════════");
+
+    console.log("📌 Etat actuel avant traitement :");
+    console.log("   • orderId :", orderId);
+    console.log("   • amount :", amount);
+    console.log("   • phone :", "+22962693544");
+
+    // if (!phone || phone.length < 8) {
+    //   console.warn("⚠️ Numéro de téléphone invalide.");
+    //   setError("Veuillez saisir un numéro de téléphone valide.");
+    //   return;
+    // }
+
+    console.log("⏳ Activation du loader...");
     setLoading(true);
+
+    console.log("🧹 Suppression des anciennes erreurs...");
     setError(null);
 
     try {
-      const res = await initiateDirectPayment({
+      const payload = {
         order_id: orderId,
         amount: String(amount),
-        phone_number: phone,
-      });
+        phone_number: "+22962693544",
+      };
+
+      console.log("════════════════════════════════════");
+      console.log("🚀 ENVOI DE LA REQUÊTE D'INITIATION");
+      console.log("════════════════════════════════════");
+      console.log("Payload envoyé :", payload);
+
+      const res = await initiateDirectPayment(payload);
+
+      console.log("════════════════════════════════════");
+      console.log("📥 RÉPONSE REÇUE DE initiateDirectPayment()");
+      console.log("════════════════════════════════════");
+
+      console.log("Réponse complète :", res);
 
       if (res.ok) {
-        // Redirection vers l'interface PayDunya dans le même onglet
-        window.location.href = res.data.redirect_url;
+        console.log("✅ Paiement initié avec succès.");
+        console.log("Informations retournées :");
+        console.log("   • order_id :", res.data.order_id);
+        console.log("   • success :", res.data.success);
+        console.log("   • token :", res.data.token);
+        console.log("   • payment_url :", res.data.payment_url);
+        console.log("   • Données complètes  :", res.data);
+
+        console.log("🌍 Redirection vers PayDunya...");
+        console.log("URL :", res.data.payment_url);
+
+        window.open(res.data.payment_url, "_blank", "noopener,noreferrer");
+
+        console.log("➡️ Redirection demandée au navigateur.");
       } else {
-        setError(res.error.message || "Erreur lors de l'initiation du paiement avec PayDunya.");
+        console.error("❌ L'API a retourné une erreur.");
+
+        console.error("Status :", res.error.status);
+        console.error("Message :", res.error.message);
+        console.error("Réponse brute :", res.error.raw);
+
+        setError(
+          res.error.message ||
+          "Erreur lors de l'initiation du paiement avec PayDunya."
+        );
       }
     } catch (err) {
+      console.error("════════════════════════════════════");
+      console.error("💥 EXCEPTION CAPTURÉE");
+      console.error("════════════════════════════════════");
+
+      console.error("Erreur :", err);
+
+      if (err instanceof Error) {
+        console.error("erreur :", err);
+        console.error("Nom :", err.name);
+        console.error("Message :", err.message);
+        console.error("Stack :", err.stack);
+      }
+
       setError("Une erreur inattendue est survenue.");
     } finally {
+      console.log("⏹ Désactivation du loader...");
       setLoading(false);
+
+      console.log("════════════════════════════════════");
+      console.log("🏁 FIN DU PROCESSUS DE PAIEMENT");
+      console.log("════════════════════════════════════");
     }
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const bg = isDark ? "rgba(255,255,255,0.04)" : "#ffffff";
   const border = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
@@ -74,12 +202,12 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
       </p>
 
       <div className="space-y-4">
-        <div>
+        {/* <div>
           <label className="mb-1.5 block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300">
             Numéro Mobile Money <span className="text-[#1f4d3f]">*</span>
           </label>
           <PhoneInputWithCountry value={phone} onChange={setPhone} required />
-        </div>
+        </div> */}
 
         {error && (
           <div className="flex items-center gap-2 rounded-lg bg-red-500/10 p-3 text-sm text-red-500">

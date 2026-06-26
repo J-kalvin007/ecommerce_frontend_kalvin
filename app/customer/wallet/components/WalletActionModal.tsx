@@ -57,6 +57,7 @@ interface WalletActionModalProps {
   mode: WalletActionMode;
   onClose: () => void;
   onSuccess: (message: string) => void;
+  walletId?: string;
 }
 
 /**
@@ -70,10 +71,10 @@ export default function WalletActionModal({
   mode,
   onClose,
   onSuccess,
+  walletId,
 }: WalletActionModalProps) {
   /* ── État du formulaire dépôt ────────────────────────────────────────── */
   const [depositAmount, setDepositAmount] = useState("");
-  const [depositPhone, setDepositPhone] = useState("");
 
   /* ── État du formulaire remboursement ───────────────────────────────── */
   const [refundOrderId, setRefundOrderId] = useState("");
@@ -91,7 +92,6 @@ export default function WalletActionModal({
   useEffect(() => {
     if (isOpen) {
       setDepositAmount("");
-      setDepositPhone("");
       setRefundOrderId("");
       setErrorMsg(null);
       setSuccessRedirectUrl(null);
@@ -126,34 +126,37 @@ export default function WalletActionModal({
       e.preventDefault();
       setErrorMsg(null);
 
+      if (!walletId) {
+        setErrorMsg("Wallet introuvable. Veuillez recharger la page.");
+        return;
+      }
+
       const amount = parseFloat(depositAmount);
       if (!depositAmount || isNaN(amount) || amount < 100) {
         setErrorMsg("Le montant minimum est de 100 FCFA.");
         return;
       }
-      if (!depositPhone || depositPhone.trim().length < 8) {
-        setErrorMsg("Veuillez saisir un numéro de téléphone valide.");
-        return;
-      }
 
       setIsSubmitting(true);
       const result = await depositWallet({
+        order_id: walletId,
         amount: String(amount),
-        phone_number: depositPhone.trim(),
+        description: "RECHARGE-WALLET",
       });
       setIsSubmitting(false);
 
       if (result.ok) {
-        setSuccessRedirectUrl(result.data.redirect_url);
+        setSuccessRedirectUrl(result.data.payment_url);
         onSuccess("Recharge initiée ! Vous allez être redirigé vers PayDunya.");
+        window.location.href = result.data.payment_url;
       } else {
         setErrorMsg(
           result.error?.message ||
-            "Impossible d'initier la recharge. Réessayez."
+          "Impossible d'initier la recharge. Réessayez."
         );
       }
     },
-    [depositAmount, depositPhone, onSuccess]
+    [depositAmount, walletId, onSuccess]
   );
 
   /* ── Soumission du formulaire remboursement ──────────────────────────── */
@@ -177,7 +180,7 @@ export default function WalletActionModal({
       } else {
         setErrorMsg(
           result.error?.message ||
-            "Impossible de traiter le remboursement. Réessayez."
+          "Impossible de traiter le remboursement. Réessayez."
         );
       }
     },
@@ -238,12 +241,12 @@ export default function WalletActionModal({
             }}
           >
             {/* Barre décorative supérieure */}
-            <div
+            {/* <div
               className="h-1 w-full"
               style={{
                 background: `linear-gradient(90deg, transparent, ${config.iconColor}88, ${config.iconColor}, ${config.iconColor}88, transparent)`,
               }}
-            />
+            /> */}
 
             {/* En-tête */}
             <div className="border-b border-[#F2EFE8] bg-[#FAFAF8] px-6 py-5">
@@ -335,11 +338,10 @@ export default function WalletActionModal({
                           key={amt}
                           type="button"
                           onClick={() => setDepositAmount(String(amt))}
-                          className={`rounded-xl border py-2.5 text-[12.5px] font-bold transition-all duration-200 ${
-                            depositAmount === String(amt)
+                          className={`rounded-xl border py-2.5 text-[12.5px] font-bold transition-all duration-200 ${depositAmount === String(amt)
                               ? "border-emerald-400 bg-emerald-50 text-emerald-700 shadow-sm"
                               : "border-[#E8E3D8] bg-white text-[#1f241c] hover:border-emerald-200 hover:bg-emerald-50/50"
-                          }`}
+                            }`}
                         >
                           {formatAmount(amt)}
                         </button>
@@ -366,26 +368,7 @@ export default function WalletActionModal({
                     </div>
                   </div>
 
-                  {/* Numéro de téléphone */}
-                  <div>
-                    <label className="mb-1.5 block text-[12px] font-bold uppercase tracking-[0.08em] text-[#8A9080]">
-                      Numéro Mobile Money
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A9080]" />
-                      <input
-                        type="tel"
-                        placeholder="Ex : 77 000 00 00"
-                        value={depositPhone}
-                        onChange={(e) => setDepositPhone(e.target.value)}
-                        maxLength={20}
-                        className="w-full rounded-xl border border-[#E8E3D8] bg-white py-3 pl-10 pr-4 text-[14px] text-[#1f241c] outline-none transition-colors focus:border-[#1f4d3f] focus:ring-2 focus:ring-[#1f4d3f]/10 placeholder:text-[#8A9080]/60"
-                      />
-                    </div>
-                    <p className="mt-1.5 text-[11px] text-[#8A9080]">
-                      Orange Money, Wave ou Free Money acceptés.
-                    </p>
-                  </div>
+
 
                   {/* Bouton de soumission */}
                   <motion.button
@@ -438,8 +421,8 @@ export default function WalletActionModal({
                     </label>
                     {isLoadingOrders ? (
                       <div className="flex items-center gap-2 py-3 px-4 rounded-xl border border-[#E8E3D8] bg-[#F7F5F0]">
-                         <Loader2 className="h-4 w-4 animate-spin text-[#1f4d3f]" />
-                         <span className="text-[13px] text-[#8A9080]">Chargement de vos commandes...</span>
+                        <Loader2 className="h-4 w-4 animate-spin text-[#1f4d3f]" />
+                        <span className="text-[13px] text-[#8A9080]">Chargement de vos commandes...</span>
                       </div>
                     ) : (
                       <select

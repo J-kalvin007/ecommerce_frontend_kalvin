@@ -210,6 +210,7 @@ export default function CustomerWalletPage() {
           mode={activeModal}
           onClose={() => setActiveModal(null)}
           onSuccess={handleActionSuccess}
+          walletId={wallet?.id}
         />
       )}
 

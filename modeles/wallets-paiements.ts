@@ -235,10 +235,12 @@ export interface WalletStatusUpdatePayload {
  * Endpoint : POST /api/v1/paiements/wallet/deposit/
  */
 export interface DepositPayload {
+  /** UUID du wallet (reçu par le backend comme order_id) */
+  order_id: string;
   /** Montant en FCFA (string décimal) */
   amount: string;
-  /** Numéro Mobile Money (max 30 char) */
-  phone_number: string;
+  /** Description de la recharge (toujours "RECHARGE-WALLET") */
+  description: string;
 }
 
 /**
@@ -281,8 +283,9 @@ export interface InitiatePaymentPayload {
  * Endpoint : POST /api/v1/paiements/wallet/deposit/
  */
 export interface WalletDepositResponse {
-  payment_id: number;
-  redirect_url: string;
+  success: boolean;
+  wallet_id: string;
+  payment_url: string;
   token: string;
 }
 
@@ -291,9 +294,10 @@ export interface WalletDepositResponse {
  * Endpoint : POST /api/v1/paiements/initier-paiement-direct/
  */
 export interface InitiatePaymentResponse {
-  payment_id: number;
-  redirect_url: string;
-  token: string;
+  order_id: string;    // UUID de la commande (ex: "d385dffa-e9e9-41e9-83b5-6eb29fb07a1e")
+  success: boolean;    // true si l'initiation a réussi
+  payment_url: string; // URL de redirection vers l'interface PayDunya
+  token: string;       // Token PayDunya (ex: "test_S3XdTKpARA")
 }
 
 /**

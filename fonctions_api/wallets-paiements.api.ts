@@ -202,7 +202,7 @@ export const depositWallet = async (
 ): Promise<Result<WalletDepositResponse>> => {
   try {
     const response = await apiPrivate.post<WalletDepositResponse>(
-      "/api/v1/paiements/wallet/deposit/",
+      "/api/v1/paiements/recharge-user-wallet/",
       payload
     );
     return { ok: true, data: response.data };
