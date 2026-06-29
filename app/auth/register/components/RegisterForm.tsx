@@ -15,7 +15,7 @@ import {
   CheckCircle2,
   Loader2,
   AlertCircle,
-  Sparkles,
+  Star,
   ShieldCheck,
   Wallet,
   PackageSearch,
@@ -320,7 +320,7 @@ export function RegisterForm({
 
     setToast({ show: true, type: "success", message: "Compte créé avec succès ! Redirection…" });
     setTimeout(() => {
-      router.push(`/auth/login?registered=1&email=${encodeURIComponent(email.trim())}`);
+      router.push(`/auth/acces-information?email=${encodeURIComponent(email.trim())}`);
     }, 1500);
   }
 

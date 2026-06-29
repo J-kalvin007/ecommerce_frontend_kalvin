@@ -2,7 +2,7 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MessageCircle, Send, Sparkles, X } from "lucide-react";
+import { MessageCircle, Send, Star, X } from "lucide-react";
 import {
   askCommerceAssistant,
   type AIChatMessage,
@@ -76,7 +76,7 @@ export default function ChatBot() {
             <div className="border-b border-border bg-background px-5 py-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/12 text-primary">
-                  <Sparkles className="h-5 w-5" />
+                  <Star className="h-5 w-5" />
                 </div>
                 <div>
                   <h3 className="text-base font-semibold text-foreground">Assistant IA</h3>

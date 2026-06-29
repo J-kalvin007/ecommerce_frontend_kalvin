@@ -26,10 +26,10 @@ import {
   AlertCircle,
   RefreshCw,
 } from "lucide-react";
+import { mediaUrl } from "@/lib/mediaUrl";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/pannierStore";
 import { useUIStore } from "@/store/uiStore";
-import { mediaUrl } from "@/lib/mediaUrl";
 import { getMyFavorites, toggleFavorite } from "@/fonctions_api/notes-favoris.api";
 import { getMyRatings } from "@/fonctions_api/notes-favoris.api";
 import {
@@ -37,6 +37,7 @@ import {
   type FavoriteProduct,
   type UserRatingsMap,
 } from "@/modeles/notes-favoris";
+import ConfirmDialog from "@/components/special/ConfirmDialog";
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Sous-composant : étoiles de notation
@@ -107,6 +108,7 @@ export default function FavorisClient() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<FavoriteProduct | null>(null);
 
   const addItem = useCartStore((s) => s.addItem);
 
@@ -174,6 +176,22 @@ export default function FavorisClient() {
   /* --- Rendu --------------------------------------------------------------- */
   return (
     <div className="page-transition">
+      <ConfirmDialog
+        isOpen={!!itemToDelete}
+        onConfirm={() => {
+          if (itemToDelete) {
+            void handleRemove(itemToDelete);
+            setItemToDelete(null);
+          }
+        }}
+        onCancel={() => setItemToDelete(null)}
+        title="Retirer des favoris ?"
+        message={`Êtes-vous sûr de vouloir retirer "${itemToDelete?.name}" de vos favoris ?`}
+        confirmText="Retirer"
+        cancelText="Annuler"
+        type="danger"
+        isLoading={removingId === itemToDelete?.id}
+      />
       {/* En-tête de section */}
       <div className="border-b border-border bg-surface/50">
         <div className="mx-auto max-w-[var(--content-max-width)] px-[var(--spacing-page-x)] py-8">
@@ -254,7 +272,8 @@ export default function FavorisClient() {
               {favoris.map((item) => {
                 const userScore = ratingsMap.get(item.id) ?? null;
                 const isRemoving = removingId === item.id;
-                const imageUrl = item.image ? mediaUrl(item.image) || item.image : null;
+                // BUG FIX: On ne doit pas appeler mediaUrl(imageUrl) deux fois.
+                const imageUrl = mediaUrl(item.image);
 
                 return (
                   <motion.div
@@ -262,36 +281,66 @@ export default function FavorisClient() {
                     layout
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, x: -120, transition: { duration: 0.25 } }}
-                    className="flex flex-col gap-4 rounded-2xl border border-border bg-surface-elevated p-4 sm:flex-row sm:items-center"
+                    exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+                    className={cn(
+                      "group relative flex flex-col sm:flex-row sm:items-center overflow-hidden",
+                      "rounded-2xl border border-[#e7dfd2] bg-white",
+                      "transition-all duration-300",
+                      "hover:border-[#1f4d3f]/20 hover:shadow-[0_8px_32px_rgba(31,77,63,0.10)]",
+                      "gap-4 p-4 sm:p-5"
+                    )}
                   >
+                    {/* Bord gauche vert qui monte au hover */}
+                    <motion.span
+                      className="absolute bottom-0 left-0 top-0 z-10 w-[3px] origin-bottom rounded-l-2xl"
+                      style={{
+                        background: "linear-gradient(to top, #1f4d3fcc, #1f4d3f20)",
+                      }}
+                      initial={{ scaleY: 0 }}
+                      whileHover={{ scaleY: 1 }}
+                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                      aria-hidden
+                    />
+
                     {/* Image produit */}
                     <Link
                       onClick={() => useUIStore.getState().setActiveProductId(item.id)}
                       href={`/products/${item.slug}`}
-                      className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-surface-alt"
+                      className="relative aspect-square w-24 shrink-0 overflow-hidden bg-[#f3ede2] rounded-xl sm:w-32"
                     >
                       {imageUrl ? (
                         <Image
                           src={imageUrl}
                           alt={item.name}
                           fill
-                          className="object-cover transition-transform duration-300 hover:scale-105"
-                          sizes="96px"
+                          className={cn(
+                            "object-cover transition-transform duration-700 ease-out group-hover:scale-105",
+                            !item.is_in_stock && "opacity-50 grayscale"
+                          )}
+                          sizes="(max-width: 640px) 96px, 128px"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <ShoppingBag className="h-8 w-8 text-muted-foreground/30" />
+                          <ShoppingBag className="h-8 w-8 text-[#c4b59b]" />
+                        </div>
+                      )}
+                      
+                      {/* Badges image */}
+                      {!item.is_in_stock && (
+                        <div className="absolute left-2 top-2 z-10 flex flex-col gap-1">
+                          <span className="rounded-full bg-red-500/90 px-2 py-0.5 text-[9px] font-bold tracking-wide text-white shadow-sm">
+                            Rupture
+                          </span>
                         </div>
                       )}
                     </Link>
 
                     {/* Informations */}
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 flex flex-col justify-center">
                       <Link
                         onClick={() => useUIStore.getState().setActiveProductId(item.id)}
                         href={`/products/${item.slug}`}
-                        className="mt-0.5 block text-sm font-semibold text-foreground hover:text-primary line-clamp-2 transition-colors"
+                        className="mt-0.5 block text-base font-bold leading-snug text-[#1f241c] transition-colors duration-200 group-hover:text-[#1f4d3f] line-clamp-2"
                       >
                         {item.name}
                       </Link>
@@ -302,58 +351,64 @@ export default function FavorisClient() {
                       {/* Badge stock */}
                       <span
                         className={cn(
-                          "mt-1.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold",
+                          "mt-2 inline-flex w-fit rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide shadow-sm",
                           item.is_in_stock
-                            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-                            : "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400"
+                            : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
                         )}
                       >
                         {item.is_in_stock ? "En stock" : "Rupture de stock"}
                       </span>
                     </div>
 
-                    {/* Prix */}
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-lg font-bold">
-                        {formatCurrency(item.price, "FCFA")}
-                      </span>
-                      {item.count_favorites > 0 && (
-                        <span className="flex items-center gap-0.5 text-xs text-muted">
-                          <Heart className="h-3 w-3 fill-primary/40 text-primary/40" />
-                          {item.count_favorites}
+                    {/* Actions & Prix */}
+                    <div className="mt-3 flex flex-col sm:mt-0 sm:w-48 sm:items-end sm:text-right gap-3">
+                      {/* Prix */}
+                      <div className="flex flex-col sm:items-end">
+                        <span className="text-xl font-black tracking-tight text-[#1f4d3f]">
+                          {formatCurrency(item.price, "FCFA")}
                         </span>
-                      )}
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleAddToCart(item)}
-                        disabled={!item.is_in_stock}
-                        className={cn(
-                          "flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all",
-                          item.is_in_stock
-                            ? "bg-primary text-white hover:bg-primary-hover active:scale-95"
-                            : "cursor-not-allowed bg-surface-alt text-muted"
+                        {item.count_favorites > 0 && (
+                          <span className="mt-1 flex items-center gap-1 text-[10px] font-semibold text-[#8a9086]">
+                            <Heart className="h-3 w-3 fill-red-400/20 text-red-400" />
+                            {item.count_favorites} favori{item.count_favorites > 1 ? "s" : ""}
+                          </span>
                         )}
-                      >
-                        <ShoppingBag className="h-4 w-4" />
-                        {item.is_in_stock ? "Ajouter" : "Rupture"}
-                      </button>
+                      </div>
 
-                      {/* Bouton retrait favori */}
-                      <button
-                        onClick={() => void handleRemove(item)}
-                        disabled={isRemoving}
-                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-border text-muted transition-colors hover:border-error/30 hover:bg-error-light hover:text-error disabled:opacity-50"
-                        aria-label={`Retirer ${item.name} des favoris`}
-                      >
-                        {isRemoving ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <Trash2 className="h-4 w-4" />
-                        )}
-                      </button>
+                      {/* Boutons d'action */}
+                      <div className="flex w-full gap-2 sm:mt-2">
+                        {/* Bouton retrait favori */}
+                        <motion.button
+                          type="button"
+                          onClick={() => setItemToDelete(item)}
+                          disabled={isRemoving}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-red-200 bg-red-50 text-red-500 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-600 disabled:opacity-50"
+                          aria-label={`Retirer ${item.name} des favoris`}
+                        >
+                          {isRemoving ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4" />
+                          )}
+                        </motion.button>
+                        
+                        <button
+                          onClick={() => handleAddToCart(item)}
+                          disabled={!item.is_in_stock}
+                          className={cn(
+                            "flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold shadow-md transition-all",
+                            item.is_in_stock
+                              ? "bg-[#1f4d3f] text-white hover:bg-[#17392f] hover:shadow-lg active:scale-95"
+                              : "cursor-not-allowed bg-surface-alt text-muted"
+                          )}
+                        >
+                          <ShoppingBag className="h-4 w-4" />
+                          {item.is_in_stock ? "Ajouter" : "Rupture"}
+                        </button>
+                      </div>
                     </div>
                   </motion.div>
                 );

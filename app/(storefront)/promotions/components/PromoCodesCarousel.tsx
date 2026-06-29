@@ -1,5 +1,6 @@
 "use client";
 
+import { mediaUrl } from "@/lib/mediaUrl";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, type PanInfo } from "framer-motion";
@@ -100,7 +101,7 @@ function PromoCarouselCard({ promo, isActive, offset, onSelect }: PromoCarouselC
           className="pointer-events-none absolute left-1/2 top-0 z-20 h-44 w-36 -translate-x-1/2"
         >
           <Image
-            src={promoImage}
+            src={mediaUrl(promoImage) || "/placeholder.png"}
             alt="Code promo"
             fill
             sizes="160px"

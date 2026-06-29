@@ -520,6 +520,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, Bell, Sun, Moon, User, ChevronDown, LogOut, Home } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
@@ -542,6 +543,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -592,6 +594,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
   const confirmLogout = async () => {
     await logout();
     setShowLogoutConfirm(false);
+    router.push("/auth/login");
   };
 
   const affichetoken = () => {
@@ -609,7 +612,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
               onClick={onMenuClick}
               whileHover={{ scale: 1.06 }}
               whileTap={{ scale: 0.92 }}
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-100 bg-white text-slate-500 shadow-sm transition-colors hover:border-primary/20 hover:text-primary lg:hidden"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-slate-100 text-slate-700 shadow-sm transition-colors hover:border-primary/30 hover:bg-primary/5 hover:text-primary lg:hidden"
               aria-label="Menu"
             >
               <Menu className="h-[18px] w-[18px]" />
@@ -638,31 +641,32 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
               </div>
             </Link>
 
+          </div>
+
+          {/* Droite : thème, notifications, profil */}
+          <div className="flex items-center gap-2">
             {/* ── Bouton retour à l'accueil (visible desktop) ── */}
             <motion.div
-              className="hidden lg:block"
+              className="hidden lg:block mr-2"
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.15, duration: 0.35 }}
             >
               <Link
                 href="/"
-                className="group flex items-center gap-2 rounded-xl border border-slate-100 bg-slate-50/80 px-3.5 py-2 text-[12.5px] font-semibold text-slate-500 shadow-sm transition-all duration-200 hover:border-primary/25 hover:bg-primary/5 hover:text-primary"
+                className="group flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-3.5 py-2 text-[12.5px] font-semibold text-slate-700 shadow-sm transition-all duration-200 hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
               >
                 <Home className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
                 <span>Retour au site</span>
               </Link>
             </motion.div>
-          </div>
 
-          {/* Droite : thème, notifications, profil */}
-          <div className="flex items-center gap-2">
             {/* Thème */}
             <motion.button
               onClick={toggleTheme}
               whileHover={{ scale: 1.06 }}
               whileTap={{ scale: 0.92 }}
-              className="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-white text-slate-500 shadow-sm transition-colors hover:border-primary/20 hover:text-primary"
+              className="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-100 text-slate-700 shadow-sm transition-colors hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
               aria-label="Changer de thème"
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -688,7 +692,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
               onClick={affichetoken}
               whileHover={{ scale: 1.06 }}
               whileTap={{ scale: 0.92 }}
-              className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-100 bg-white text-slate-500 shadow-sm transition-colors hover:border-primary/20 hover:text-primary"
+              className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-slate-100 text-slate-700 shadow-sm transition-colors hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
             >
               <Bell className="h-[18px] w-[18px]" />
               <span className="absolute -right-1 -top-1 flex h-4 w-4">
@@ -706,7 +710,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                  className="flex items-center gap-2. cursor-pointer rounded-2xl border border-slate-100 bg-white py-1.5 pl-1.5 pr-3 shadow-sm transition-colors hover:border-primary/20"
+                  className="flex items-center gap-2 cursor-pointer rounded-2xl border border-slate-200 bg-slate-100 py-1.5 pl-1.5 pr-3 shadow-sm transition-colors hover:border-primary/30 hover:bg-primary/5"
                 >
                   <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary to-highlight ring-2 ring-white shadow-sm">
                     {user?.profile_image ? (
@@ -727,7 +731,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
                   </div>
 
                   <motion.span animate={{ rotate: isProfileDropdownOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                    <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+                    <ChevronDown className="h-3.5 w-3.5 text-slate-500" />
                   </motion.span>
                 </motion.button>
 

@@ -17,7 +17,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
-  Sparkles,
+  Star,
   ShoppingBag,
   Hash,
   CheckCircle2,
@@ -193,7 +193,7 @@ export default function RedeemPointsModal({
             <div className="border-b border-[#F2EFE8] bg-[#FAFAF8] px-6 py-5">
               <div className="flex items-center gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-50 border border-amber-200/50">
-                  <Sparkles className="h-5 w-5 text-amber-500" strokeWidth={2} />
+                  <Star className="h-5 w-5 text-amber-500" strokeWidth={2} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h2 className="text-[15px] font-black tracking-tight text-[#1f241c]">
@@ -272,10 +272,10 @@ export default function RedeemPointsModal({
                   {/* Saisie rapide */}
                   <div className="mb-2 grid grid-cols-4 gap-1.5">
                     {[
-                      { label: "25%",  fraction: 0.25 },
-                      { label: "50%",  fraction: 0.5  },
-                      { label: "75%",  fraction: 0.75 },
-                      { label: "Max",  fraction: 1    },
+                      { label: "25%", fraction: 0.25 },
+                      { label: "50%", fraction: 0.5 },
+                      { label: "75%", fraction: 0.75 },
+                      { label: "Max", fraction: 1 },
                     ].map((q) => (
                       <button
                         key={q.label}

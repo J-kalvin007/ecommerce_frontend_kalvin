@@ -12,7 +12,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Check, ChevronRight, Star } from "lucide-react";
+import { Star, Check, ChevronRight, Star } from "lucide-react";
 import { useThemeStore } from "@/store/theme.store";
 import { LoyaltyProfile, getTierConfig } from "@/modeles/fidelites";
 import { formatCurrency } from "@/lib/utils";

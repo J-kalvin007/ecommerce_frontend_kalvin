@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/widgets_originaux/special/ui/Dialog";
-import { Save, Loader2, Tag, Percent, Banknote, Truck, Clock, Sparkles, Check, Search, Layers, Package } from "lucide-react";
+import { Save, Loader2, Tag, Percent, Banknote, Truck, Clock, Star, Check, Search, Layers, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AdminPromoCode, DiscountType } from "@/modeles/promotions";
 import { motion, AnimatePresence, Variants } from "framer-motion";
@@ -128,7 +128,7 @@ export function PromoCodeModal({
                             <div className="grid gap-6 md:grid-cols-2">
                                 <motion.div variants={itemVariants}>
                                     <label className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        <Sparkles className="h-3.5 w-3.5 text-primary" />
+                                        <Star className="h-3.5 w-3.5 text-primary" />
                                         Code Promo *
                                     </label>
                                     <input

@@ -21,7 +21,7 @@ import {
   Star,
   Crown,
   Gem,
-  Sparkles,
+  Star,
   Award,
   CheckCircle2,
   Lock,
@@ -31,11 +31,11 @@ import { getTierConfig } from "@/modeles/fidelites";
 
 /* ── Map des icônes de palier ────────────────────────────────────────────── */
 const TIER_ICONS: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
-  Bronze:   Medal,
-  Silver:   Star,
-  Gold:     Crown,
+  Bronze: Medal,
+  Silver: Star,
+  Gold: Crown,
   Platinum: Gem,
-  Diamond:  Sparkles,
+  Diamond: Star,
 };
 
 /* ── Utilitaires ────────────────────────────────────────────────────────── */

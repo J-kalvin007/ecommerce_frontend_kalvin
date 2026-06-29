@@ -4,6 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
@@ -16,6 +17,7 @@ import {
   X,
   LogOut,
   FolderTree,
+  ArrowLeft,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -26,6 +28,9 @@ import LogoutDialog from "@/components/special/LogoutDialog";
 import { Home } from "lucide-react";
 
 const LOGO_PATH = "/assets/images/LOGO.png";
+
+const SIDEBAR_BG = "linear-gradient(160deg, #0D2318 0%, #102A1E 45%, #0F2218 100%)";
+const SIDEBAR_ACTIVE = "linear-gradient(135deg, #C9963A 0%, #E8B450 100%)";
 
 /* ------------------------------------------------------------------ */
 /*  Types & Constantes                                                */
@@ -65,44 +70,46 @@ function NavButton({
   isActive,
   collapsed,
   onClick,
-  layoutId,
 }: {
   item: NavItem;
   isActive: boolean;
   collapsed: boolean;
   onClick: () => void;
-  layoutId: string;
+  layoutId?: string;
 }) {
   return (
     <motion.button
       onClick={onClick}
       whileTap={{ scale: 0.97 }}
       className={cn(
-        "group relative flex w-full cursor-pointer items-center gap-3 rounded-2xl px-3 py-2.5 text-[13.5px] font-medium transition-colors duration-200",
-        isActive ? "text-slate-900" : "text-slate-500 hover:text-slate-900"
+        "group relative flex w-full cursor-pointer items-center gap-3 rounded-2xl px-3 py-2.5 text-[14px] font-medium transition-all duration-200",
+        isActive
+          ? "text-white"
+          : "text-white/80 hover:text-white"
       )}
     >
       {isActive && (
         <motion.span
-          layoutId={layoutId}
-          transition={{ type: "spring", stiffness: 420, damping: 34 }}
-          className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/[0.08] via-primary/[0.05] to-transparent ring-1 ring-primary/15"
+          layoutId="admin-active-pill"
+          transition={{ type: "spring", stiffness: 400, damping: 32 }}
+          className="absolute inset-0 rounded-2xl"
+          style={{
+            background: SIDEBAR_ACTIVE,
+            boxShadow: "0 4px 20px -6px rgba(201,150,58,0.55)",
+          }}
         />
       )}
       <span
         className={cn(
           "relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-all duration-200",
           isActive
-            ? "bg-white text-primary shadow-[0_2px_10px_-2px_rgba(15,23,42,0.18)] ring-1 ring-black/[0.04]"
-            : "text-slate-400 group-hover:bg-slate-50 group-hover:text-slate-600"
+            ? "bg-white/20 text-white shadow-sm"
+            : "bg-white/10 text-white/80 group-hover:bg-white/20 group-hover:text-white"
         )}
       >
         <item.icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.2 : 1.8} />
       </span>
-      {!collapsed && <span className="relative z-10 truncate">{item.label}</span>}
-      {isActive && !collapsed && (
-        <span className="relative z-10 ml-auto h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-      )}
+      {!collapsed && <span className="relative z-10 truncate flex-1 text-left">{item.label}</span>}
     </motion.button>
   );
 }
@@ -115,6 +122,7 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { user, logout } = useAuthStore();
+  const router = useRouter();
 
   const adminDisplayName = user?.name || user?.email?.split("@")[0] || "Admin";
   const adminInitial = adminDisplayName.charAt(0).toUpperCase() || "A";
@@ -132,6 +140,7 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
   const confirmLogout = async () => {
     await logout();
     setShowLogoutConfirm(false);
+    router.push("/auth/login");
   };
 
   const getAvatar = () => {
@@ -153,10 +162,10 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
           {/* --- Sidebar desktop --- */}
           <aside
             className={cn(
-              "relative hidden lg:flex flex-col bg-white transition-[width] duration-300 ease-out",
-              "shadow-[1px_0_0_0_rgba(15,23,42,0.06),10px_0_28px_-16px_rgba(15,23,42,0.08)]",
-              collapsed ? "w-[78px]" : "w-[268px]"
+              "relative hidden lg:flex flex-col transition-[width] duration-300 ease-out z-20",
+              collapsed ? "w-[88px]" : "w-[280px]"
             )}
+            style={{ background: SIDEBAR_BG }}
           >
             {/* Bouton collapse/expand flottant */}
             <motion.button
@@ -165,7 +174,7 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
               transition={{ type: "spring", stiffness: 300, damping: 22 }}
               whileHover={{ scale: 1.12 }}
               whileTap={{ scale: 0.92 }}
-              className="absolute -right-3 top-[72px] z-20 cursor-pointer flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.18)] transition-colors hover:border-primary/30 hover:text-primary"
+              className="absolute -right-3 top-[72px] z-20 cursor-pointer flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-[#16332b] text-white/50 shadow-md transition-colors hover:border-[#C9963A]/50 hover:text-[#C9963A]"
               aria-label={collapsed ? "Déplier le menu" : "Réduire le menu"}
             >
               <ChevronLeft className="h-3.5 w-3.5" />
@@ -196,10 +205,10 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
 
                   </div>
                   <div className="flex min-w-0 flex-col">
-                    <span className="truncate text-[13.5px] font-bold leading-none tracking-tight text-slate-900">
+                    <span className="truncate text-[13.5px] font-bold leading-none tracking-tight text-white">
                       TABLEAU DE BORD
                     </span>
-                    <span className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-primary/70">
+                    <span className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#C9963A]">
                       Espace administration
                     </span>
                   </div>
@@ -215,12 +224,12 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
                 </Link>
               )}
             </div>
-            <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent" />
+            <div className="mx-4 h-px bg-white/10" />
 
             {/* Navigation principale */}
-            <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-200">
+            <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/10">
               {!collapsed && (
-                <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-300">
+                <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/30">
                   Menu principal
                 </p>
               )}
@@ -236,29 +245,46 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
               ))}
             </nav>
 
-            {/* Déconnexion en bas de sidebar (desktop uniquement) */}
-            {!collapsed && (
-              <div className="p-3">
-                <div className="mb-3 h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent" />
-                <motion.button
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleLogoutClick}
-                  className="group flex w-full cursor-pointer items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-2.5 shadow-sm transition-colors duration-200 hover:border-red-100 hover:bg-red-50/50"
+            {/* Zone bas de sidebar (desktop) */}
+            <div className="p-4 flex flex-col gap-2">
+              <div className="mb-2 h-px bg-white/10" />
+              
+              {!collapsed && (
+                <Link
+                  href="/"
+                  className="group flex w-full cursor-pointer items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-2.5 transition-all duration-200 hover:border-[#C9963A]/20 hover:bg-[#C9963A]/10"
                 >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary to-highlight ring-2 ring-white shadow-sm">
-                    {getAvatar()}
-                  </div>
-                  <div className="min-w-0 flex-1 text-left">
-                    <p className="truncate text-xs font-semibold text-slate-800">{adminDisplayName}</p>
-                    <p className="truncate text-[10px] text-slate-400 transition-colors group-hover:text-red-400">
-                      Déconnexion
-                    </p>
-                  </div>
-                  <LogOut className="h-4 w-4 shrink-0 text-slate-300 transition-colors duration-200 group-hover:text-red-400" />
-                </motion.button>
-              </div>
-            )}
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/8 text-white/50 transition-colors group-hover:text-[#C9963A]">
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                  </span>
+                  <span className="text-[12px] font-semibold text-white/50 transition-colors group-hover:text-[#C9963A]">
+                    Retour à l'accueil
+                  </span>
+                </Link>
+              )}
+
+              <motion.button
+                whileHover={{ y: -1 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleLogoutClick}
+                className="group flex w-full cursor-pointer items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-2.5 transition-all duration-200 hover:border-red-500/20 hover:bg-red-500/10"
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#1f4d3f] to-[#C9963A] ring-2 ring-white/20 shadow-sm">
+                  {getAvatar()}
+                </div>
+                {!collapsed && (
+                  <>
+                    <div className="min-w-0 flex-1 text-left">
+                      <p className="truncate text-xs font-semibold text-white/90">{adminDisplayName}</p>
+                      <p className="truncate text-[10px] text-white/40 transition-colors group-hover:text-red-400">
+                        Déconnexion
+                      </p>
+                    </div>
+                    <LogOut className="h-4 w-4 shrink-0 text-white/30 transition-colors duration-200 group-hover:text-red-400" />
+                  </>
+                )}
+              </motion.button>
+            </div>
           </aside>
 
           {/* --- Sidebar mobile --- */}
@@ -277,7 +303,8 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
                   animate={{ x: 0 }}
                   exit={{ x: "-100%" }}
                   transition={{ type: "spring", stiffness: 340, damping: 36 }}
-                  className="fixed left-0 top-0 z-50 flex h-full w-[284px] flex-col bg-white shadow-2xl lg:hidden"
+                  className="fixed left-0 top-0 z-50 flex h-full w-[284px] flex-col shadow-2xl lg:hidden"
+                  style={{ background: SIDEBAR_BG }}
                 >
                   <div className="flex h-[72px] items-center justify-between px-4">
                     <Link href="/admin" className="flex items-center gap-3 overflow-hidden">
@@ -294,10 +321,10 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
                         </div>
                       </div>
                       <div className="flex min-w-0 flex-col">
-                        <span className="truncate text-[13.5px] font-bold leading-none tracking-tight text-slate-900">
+                        <span className="truncate text-[13.5px] font-bold leading-none tracking-tight text-white">
                           TABLEAU DE BORD
                         </span>
-                        <span className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-primary/70">
+                        <span className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#C9963A]">
                           ATELIER DU TERROIR
                         </span>
                       </div>
@@ -306,15 +333,15 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
                       whileHover={{ scale: 1.08 }}
                       whileTap={{ scale: 0.92 }}
                       onClick={() => setMobileOpen(false)}
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-slate-400 transition-colors hover:border-red-100 hover:text-red-400"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#16332b] text-white/50 shadow-md transition-colors hover:border-[#C9963A]/50 hover:text-[#C9963A]"
                       aria-label="Fermer le menu"
                     >
                       <X className="h-4 w-4" />
                     </motion.button>
                   </div>
-                  <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent" />
+                  <div className="mx-4 h-px bg-white/10" />
 
-                  <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-200">
+                  <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/10">
                     {NAV_ITEMS.map((item, index) => (
                       <motion.div
                         key={item.id}
@@ -336,23 +363,36 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
                     ))}
                   </nav>
 
-                  {/* Déconnexion mobile */}
-                  <div className="p-3">
-                    <div className="mb-3 h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent" />
+                  {/* Zone bas de sidebar (mobile) */}
+                  <div className="p-4 flex flex-col gap-2">
+                    <div className="mb-2 h-px bg-white/10" />
+
+                    <Link
+                      href="/"
+                      className="group flex w-full cursor-pointer items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-2.5 transition-all duration-200 hover:border-[#C9963A]/20 hover:bg-[#C9963A]/10"
+                    >
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/8 text-white/50 transition-colors group-hover:text-[#C9963A]">
+                        <ArrowLeft className="h-3.5 w-3.5" />
+                      </span>
+                      <span className="text-[12px] font-semibold text-white/50 transition-colors group-hover:text-[#C9963A]">
+                        Retour à l'accueil
+                      </span>
+                    </Link>
+
                     <button
                       onClick={handleLogoutClick}
-                      className="group flex w-full items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-2.5 shadow-sm transition-colors duration-200 hover:border-red-100 hover:bg-red-50/50"
+                      className="group flex w-full cursor-pointer items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-2.5 transition-all duration-200 hover:border-red-500/20 hover:bg-red-500/10"
                     >
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary to-highlight ring-2 ring-white shadow-sm">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#1f4d3f] to-[#C9963A] ring-2 ring-white/20 shadow-sm">
                         {getAvatar()}
                       </div>
                       <div className="min-w-0 flex-1 text-left">
-                        <p className="truncate text-xs font-semibold text-slate-800">{adminDisplayName}</p>
-                        <p className="truncate text-[10px] text-slate-400 transition-colors group-hover:text-red-400">
+                        <p className="truncate text-xs font-semibold text-white/90">{adminDisplayName}</p>
+                        <p className="truncate text-[10px] text-white/40 transition-colors group-hover:text-red-400">
                           Déconnexion
                         </p>
                       </div>
-                      <LogOut className="h-4 w-4 shrink-0 text-slate-300 transition-colors duration-200 group-hover:text-red-400" />
+                      <LogOut className="h-4 w-4 shrink-0 text-white/30 transition-colors duration-200 group-hover:text-red-400" />
                     </button>
                   </div>
                 </motion.aside>

@@ -9,7 +9,7 @@ import {
   Mail,
   RefreshCw,
   ShieldCheck,
-  Sparkles,
+  Star,
   Clock,
   CheckCircle2,
   Loader2,

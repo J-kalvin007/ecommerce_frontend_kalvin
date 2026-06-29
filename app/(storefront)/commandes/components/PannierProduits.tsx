@@ -12,6 +12,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/pannierStore";
+import { useUIStore } from "@/store/uiStore";
+import { mediaUrl } from "@/lib/mediaUrl";
 
 export default function CartDrawer() {
   const { items, isDrawerOpen, toggleDrawer, updateQuantity, removeItem, getTotal, getItemCount, clearCart } = useCartStore();
@@ -110,7 +112,7 @@ export default function CartDrawer() {
                       {/* Image */}
                       <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-surface-alt">
                         {item.image ? (
-                          <Image src={item.image} alt={item.name} fill className="object-cover" sizes="80px" />
+                          <Image src={mediaUrl(item.image) || "/placeholder.png"} alt={item.name} fill className="object-cover" sizes="80px" />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center">
                             <ShoppingBag className="h-6 w-6 text-muted-foreground/30" />
@@ -122,7 +124,7 @@ export default function CartDrawer() {
                         <div>
                           <Link
                             href={`/products/${item.slug}`}
-                            onClick={() => toggleDrawer(false)}
+                            onClick={() => { useUIStore.getState().setActiveProductId(item.productId); toggleDrawer(false); }}
                             className="text-sm font-semibold leading-snug text-foreground hover:text-primary line-clamp-2"
                           >
                             {item.name}

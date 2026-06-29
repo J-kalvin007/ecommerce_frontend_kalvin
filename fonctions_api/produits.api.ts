@@ -104,6 +104,7 @@ export interface GetPublicProductsParams {
   category?: string;
   ordering?: string;
   search?: string;
+  slug?: string;
   page?: number;
   page_size?: number;
   is_top?: boolean; 

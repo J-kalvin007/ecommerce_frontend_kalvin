@@ -1,7 +1,7 @@
 // app/admin/components/fidelites/LoyaltyTiersPanel.tsx
 "use client";
 import { motion } from "framer-motion";
-import { Medal, Star, Crown, Gem, Sparkles, ChevronRight } from "lucide-react";
+import { Medal, Star, Crown, Gem, Star, ChevronRight } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { getTierConfig } from "@/modeles/fidelites";
 import type { Tier } from "@/modeles/fidelites";
@@ -16,7 +16,7 @@ interface LoyaltyTiersPanelProps {
 }
 
 const ICONS: Record<string, React.ElementType> = {
-    Bronze: Medal, Silver: Star, Gold: Crown, Platinum: Gem, Diamond: Sparkles,
+    Bronze: Medal, Silver: Star, Gold: Crown, Platinum: Gem, Diamond: Star,
 };
 
 export function LoyaltyTiersPanel({ tiers, currentTierName, isAdmin, onAdd, onEdit, onDelete }: LoyaltyTiersPanelProps) {
@@ -35,7 +35,7 @@ export function LoyaltyTiersPanel({ tiers, currentTierName, isAdmin, onAdd, onEd
                 </div>
             )}
             {sorted.map((tier, i) => {
-                const cfg  = getTierConfig(tier.name);
+                const cfg = getTierConfig(tier.name);
                 const Icon = ICONS[tier.name] ?? Medal;
                 const isCurrent = tier.name === currentTierName;
 
@@ -103,7 +103,7 @@ export function LoyaltyTiersPanel({ tiers, currentTierName, isAdmin, onAdd, onEd
                                                 className="rounded-lg border border-border bg-surface p-2 text-muted-foreground hover:bg-surface-alt hover:text-foreground transition-colors"
                                                 title="Modifier"
                                             >
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
                                             </button>
                                         )}
                                         {onDelete && (
@@ -112,7 +112,7 @@ export function LoyaltyTiersPanel({ tiers, currentTierName, isAdmin, onAdd, onEd
                                                 className="rounded-lg border border-red-500/20 bg-red-500/10 p-2 text-red-500 hover:bg-red-500/20 transition-colors"
                                                 title="Supprimer"
                                             >
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
                                             </button>
                                         )}
                                     </div>

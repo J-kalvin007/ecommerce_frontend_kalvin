@@ -7,9 +7,9 @@ import AgriShowcaseSection from "@/app/(storefront)/components/AgriShowcaseSecti
 import FermeSolimeSection from "@/app/(storefront)/components/FermeSolimeSection";
 import FeaturesSection from "@/app/(storefront)/components/FeaturesSection";
 import TestimonialsSection from "@/app/(storefront)/components/TestimonialsSection";
-import TrustBand from "@/app/(storefront)/components/TrustBand";
-import HomeTrendingProducts from "./components/HomeTrendingProducts";
-import HomePromotionsSection from "./components/HomePromotionsSection";
+import TrustBand from "@/app/(storefront)/components/BandeCodePromo";
+import HomeTrendingProducts from "./components/ProduitsFavoris";
+import HomePromotionsSection from "./components/PubSection";
 import HeroSection from "./components/HeroSection";
 
 export const metadata: Metadata = {

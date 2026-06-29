@@ -1,10 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2, Leaf, Sprout } from "lucide-react";
 import { legumeImage } from "@/assets/images";
+import { getActiveRecommendations } from "@/fonctions_api/promotions.api";
+import { mediaUrl } from "@/lib/mediaUrl";
 
 const LEAVES = [
   { className: "left-[7%] top-[14%] h-9 w-9", rotate: -18, delay: 0.1, duration: 5.2 },
@@ -16,6 +19,21 @@ const LEAVES = [
 const BENEFITS = ["Frais et naturel", "Production suivie", "Distribution fiable"] as const;
 
 export default function FermeSolimeSection() {
+  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    getActiveRecommendations("popup").then((res) => {
+      if (res.ok && res.data.length > 0) {
+        // Trier par position ascendante et prendre la première (position la plus basse)
+        const sorted = [...res.data].sort((a, b) => a.position - b.position);
+        const firstBanner = sorted[0];
+        if (firstBanner?.image_url) {
+          setBannerUrl(mediaUrl(firstBanner.image_url) ?? null);
+        }
+      }
+    });
+  }, []);
+
   return (
     <section className="relative overflow-hidden bg-[#fbf7e8] py-16 sm:py-20 lg:py-24">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -65,7 +83,7 @@ export default function FermeSolimeSection() {
           </div>
 
           <h2 className="max-w-xl font-display text-5xl font-black leading-[0.95] tracking-tight text-[#111111] sm:text-6xl lg:text-7xl">
-            FRESH<span className="text-primary">&amp;</span>GREEN
+            FRESH<span className="text-primary">&</span>GREEN
           </h2>
 
           <p className="mt-6 max-w-xl text-sm font-medium leading-7 text-[#4f5d4b] sm:text-base">
@@ -119,13 +137,23 @@ export default function FermeSolimeSection() {
             transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
             className="absolute left-1/2 top-1/2 h-[18rem] w-[18rem] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-[12px] border-white bg-white shadow-[0_35px_80px_rgba(35,59,36,0.23)] sm:h-[25rem] sm:w-[25rem] lg:h-[29rem] lg:w-[29rem]"
           >
-            <Image
-              src={legumeImage}
-              alt="Produits frais Ferme Solime"
-              fill
-              className="object-cover"
-              sizes="(min-width: 1024px) 460px, 90vw"
-            />
+            {bannerUrl ? (
+              <Image
+                src={bannerUrl}
+                alt="Bannière Ferme Solime"
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 460px, 90vw"
+              />
+            ) : (
+              <Image
+                src={legumeImage}
+                alt="Produits frais Ferme Solime"
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 460px, 90vw"
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-white/10" />
           </motion.div>
 
@@ -141,3 +169,4 @@ export default function FermeSolimeSection() {
     </section>
   );
 }
+

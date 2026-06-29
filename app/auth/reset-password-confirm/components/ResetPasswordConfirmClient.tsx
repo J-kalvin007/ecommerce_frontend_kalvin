@@ -16,11 +16,12 @@ import {
   EyeOff,
   Lock,
   ShieldCheck,
-  Sparkles,
+  Star,
   CheckCircle2,
   Loader2,
   ArrowLeft,
   KeyRound,
+  Star,
 } from "lucide-react";
 import SendEmailReset from "./send-email-reset";
 import { confirmPasswordReset } from "@/fonctions_api/auth.api";
@@ -205,9 +206,12 @@ export default function ResetPasswordConfirmClient() {
     }
 
     setIsLoading(true);
+    const decodedUid = decodeURIComponent(uid);
+    const decodedToken = decodeURIComponent(token);
+
     const result = await confirmPasswordReset({
-      uid,
-      token,
+      uid: decodedUid,
+      token: decodedToken,
       new_password1: password1,
       new_password2: password2,
     });
@@ -359,7 +363,7 @@ export default function ResetPasswordConfirmClient() {
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.9 }} className="relative mt-10">
                 <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                  <Sparkles className="h-4 w-4 text-[#C9963A]" />
+                  <Star className="h-4 w-4 text-[#C9963A]" />
                   <p className="text-xs text-white/55">Mise à jour chiffrée · Aucune donnée stockée en clair</p>
                 </div>
               </motion.div>

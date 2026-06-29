@@ -2,7 +2,7 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Crown, Search, LayoutGrid, List } from "lucide-react";
+import { Star, Crown, Search, LayoutGrid, List } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import {
@@ -225,7 +225,7 @@ export default function LoyaltySection() {
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-surface-elevated p-2 rounded-2xl border border-border shadow-sm">
                 <div className="flex gap-2 w-full sm:w-auto">
                     {([
-                        { key: "profiles", label: "Profils clients", icon: <Sparkles className="h-4 w-4" /> },
+                        { key: "profiles", label: "Profils clients", icon: <Star className="h-4 w-4" /> },
                         { key: "tiers", label: "Paliers & Avantages", icon: <Crown className="h-4 w-4" /> },
                     ] as const).map(t => (
                         <button
@@ -287,7 +287,7 @@ export default function LoyaltySection() {
                     <EmptyState
                         title="Aucun profil de fidélité"
                         description={search ? `Aucun résultat pour "${search}".` : "Il n'y a pas encore de clients inscrits au programme de fidélité."}
-                        icon={Sparkles}
+                        icon={Star}
                     />
                 ) : (
                     <LoyaltyProfileGrid

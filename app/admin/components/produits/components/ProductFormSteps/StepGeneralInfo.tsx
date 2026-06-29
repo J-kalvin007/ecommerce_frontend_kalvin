@@ -2,7 +2,7 @@
 // components/admin/produits/ProductFormSteps/StepGeneralInfo.tsx
 "use client";
 import { useState } from "react";
-import { ChevronDown, Sparkles, Tag, Hash, FileText, DollarSign, Package, Weight, Globe } from "lucide-react";
+import { ChevronDown, Star, Tag, Hash, FileText, DollarSign, Package, Weight, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { slugify } from "../../productsUtils";
 import type { ProductFormState, ProductFormErrors } from "../../productsUtils";
@@ -235,7 +235,7 @@ export function StepGeneralInfo({
           className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:-alt/80"
         >
           <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-primary" />
+            <Star className="h-4 w-4 text-primary" />
             <div>
               <p className="text-sm font-semibold text-foreground">Options avancées</p>
               <p className="text-xs text-muted-foreground">SEO, mise en avant</p>

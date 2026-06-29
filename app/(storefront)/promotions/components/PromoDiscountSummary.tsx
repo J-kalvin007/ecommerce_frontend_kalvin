@@ -32,9 +32,8 @@ export function PromoDiscountSummary({
         </div>
       ) : null}
       <div
-        className={`flex justify-between font-semibold text-[#1f241c] ${
-          hasDiscount ? "mt-2 border-t border-[#eadfca] pt-2" : "mt-2"
-        }`}
+        className={`flex justify-between font-semibold text-[#1f241c] ${hasDiscount ? "mt-2 border-t border-[#eadfca] pt-2" : "mt-2"
+          }`}
       >
         <span>{hasDiscount ? "Total apres reduction" : "Total"}</span>
         <span className={hasDiscount ? "text-lg text-[#ef8219]" : ""}>

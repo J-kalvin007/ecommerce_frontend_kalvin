@@ -5,7 +5,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Package, Calendar, ChevronRight, SlidersHorizontal,
-  ChevronDown, ArrowUpRight, Sparkles
+  ChevronDown, ArrowUpRight, Star
 } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import type { OrderList, OrderStatus } from "@/modeles/commandes";
@@ -256,7 +256,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
             <Package className={cn("relative h-6 w-6", cfg.color)} />
             {/* Sparkle on hover */}
             <div className="absolute -right-1 -top-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-              <Sparkles className={cn("h-3 w-3", cfg.color)} />
+              <Star className={cn("h-3 w-3", cfg.color)} />
             </div>
           </div>
 

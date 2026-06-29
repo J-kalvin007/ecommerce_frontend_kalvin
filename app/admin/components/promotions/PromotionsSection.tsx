@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Tag, Zap, Plus, LayoutGrid, List, Sparkles } from "lucide-react";
+import { Tag, Zap, Plus, LayoutGrid, List, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
     getAdminPromoCodes,
@@ -226,7 +226,7 @@ export default function PromotionsSection() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
-                        <Sparkles className="h-8 w-8 text-primary" />
+                        <Star className="h-8 w-8 text-primary" />
                         Promotions
                     </h1>
                     <p className="mt-1.5 text-sm text-muted-foreground max-w-xl">

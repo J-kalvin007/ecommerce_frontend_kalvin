@@ -1,5 +1,6 @@
 "use client";
 
+import { mediaUrl } from "@/lib/mediaUrl";
 import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -671,7 +672,7 @@ export default function CommandesClient() {
                       <li key={item.productId} className="flex gap-4">
                         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-alt">
                           {item.image && (
-                            <Image src={item.image} alt={item.name} fill className="object-cover" sizes="64px" />
+                            <Image src={mediaUrl(item.image) || "/placeholder.png"} alt={item.name} fill className="object-cover" sizes="64px" />
                           )}
                         </div>
                         <div className="flex-1 min-w-0 pt-1">

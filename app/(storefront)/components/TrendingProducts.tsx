@@ -89,7 +89,7 @@ export function TrendingProducts({
                 {loading
                   ? "Les donnees de promotions arrivent depuis l'API."
                   : featuredPromo?.description ||
-                    "Des que les promotions sont disponibles cote backend, elles s'affichent ici."}
+                  "Des que les promotions sont disponibles cote backend, elles s'affichent ici."}
               </p>
             </article>
 

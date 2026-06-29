@@ -422,7 +422,7 @@ import {
     X, Package, MapPin, Phone, CreditCard, Calendar, Clock,
     ChevronRight, Loader2, RotateCcw, Truck, CheckCircle2,
     XCircle, FileText, ShoppingBag, Hash, History, AlertTriangle,
-    ArrowRight, Sparkles, Receipt, MessageSquare, Send
+    ArrowRight, Star, Receipt, MessageSquare, Send
 } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { getAdminOrderByReference, getOrderHistory } from "@/fonctions_api/commandes.api";
@@ -554,7 +554,7 @@ function HistoryEntry({ entry, index, total }: { entry: OrderHistory; index: num
                     : "border-border/60 bg-white-elevated"
             )}>
                 {isFirst
-                    ? <Sparkles className="h-3.5 w-3.5 text-white" />
+                    ? <Star className="h-3.5 w-3.5 text-white" />
                     : <div className="h-2 w-2 rounded-full bg-border" />
                 }
             </div>
@@ -899,7 +899,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                         <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent overflow-hidden">
                                             {/* Header */}
                                             <div className="flex items-center gap-2.5 border-b border-primary/15 bg-primary/5 px-5 py-3.5">
-                                                <Sparkles className="h-4 w-4 text-primary" />
+                                                <Star className="h-4 w-4 text-primary" />
                                                 <p className="text-[10px] font-black uppercase tracking-widest text-primary/70">Faire avancer la commande</p>
                                             </div>
 

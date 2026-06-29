@@ -1,7 +1,7 @@
 // // app/admin/components/fidelites/LoyaltyTierBadge.tsx
 // "use client";
 // import { motion } from "framer-motion";
-// import { Medal, Star, Crown, Gem, Sparkles } from "lucide-react";
+// import { Medal, Star, Crown, Gem, Star } from "lucide-react";
 // import { cn } from "@/lib/utils";
 // import { getTierConfig } from "@/modeles/fidelites";
 
@@ -12,7 +12,7 @@
 // }
 
 // const ICONS: Record<string, React.ElementType> = {
-//     Bronze: Medal, Silver: Star, Gold: Crown, Platinum: Gem, Diamond: Sparkles,
+//     Bronze: Medal, Silver: Star, Gold: Crown, Platinum: Gem, Diamond: Star,
 // };
 
 // const SIZES = {
@@ -62,7 +62,7 @@
 // app/admin/components/fidelites/LoyaltyTierBadge.tsx
 "use client";
 import { motion } from "framer-motion";
-import { Medal, Star, Crown, Gem, Sparkles } from "lucide-react";
+import { Medal, Star, Crown, Gem, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getTierConfig } from "@/modeles/fidelites";
 
@@ -77,21 +77,21 @@ const ICONS: Record<string, React.ElementType> = {
   Silver: Star,
   Gold: Crown,
   Platinum: Gem,
-  Diamond: Sparkles,
+  Diamond: Star,
 };
 
 const SIZES = {
   sm: { wrap: "h-6 px-2.5 gap-1 text-[10px]", icon: "h-3 w-3" },
   md: { wrap: "h-8 px-3 gap-1.5 text-[11px]", icon: "h-3.5 w-3.5" },
-  lg: { wrap: "h-10 px-5 gap-2 text-sm",      icon: "h-4.5 w-4.5" },
+  lg: { wrap: "h-10 px-5 gap-2 text-sm", icon: "h-4.5 w-4.5" },
 };
 
 const PREMIUM_TIERS = new Set(["Gold", "Platinum", "Diamond"]);
 
 export function LoyaltyTierBadge({ tierName, size = "md", animate = true }: LoyaltyTierBadgeProps) {
-  const cfg  = getTierConfig(tierName);
+  const cfg = getTierConfig(tierName);
   const Icon = ICONS[tierName] ?? Medal;
-  const sz   = SIZES[size];
+  const sz = SIZES[size];
   const isPremium = animate && PREMIUM_TIERS.has(tierName);
 
   return (

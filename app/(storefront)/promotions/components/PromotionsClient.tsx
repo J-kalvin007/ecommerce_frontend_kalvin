@@ -5,6 +5,7 @@
 
 "use client";
 
+import { useUIStore } from "@/store/uiStore";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -155,8 +156,7 @@ export default function PromotionsClient() {
                     className="group overflow-hidden rounded-xl border border-border bg-surface-elevated transition-shadow hover:shadow-md"
                   >
                     {/* Image */}
-                    <Link
-                      href={`/products/${product.slug}`}
+                    <Link href={`/products/${product.slug}`} onClick={() => useUIStore.getState().setActiveProductId(product.id)}
                       className="relative block aspect-square overflow-hidden bg-surface-alt"
                     >
                       {product.primary_image ? (
@@ -180,8 +180,7 @@ export default function PromotionsClient() {
 
                     {/* Card body */}
                     <div className="p-4">
-                      <Link
-                        href={`/products/${product.slug}`}
+                      <Link href={`/products/${product.slug}`} onClick={() => useUIStore.getState().setActiveProductId(product.id)}
                         className="line-clamp-2 text-[0.85rem] font-semibold text-foreground transition-colors hover:text-primary"
                       >
                         {product.name}

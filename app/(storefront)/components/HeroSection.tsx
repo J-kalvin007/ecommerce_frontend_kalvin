@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Layers, Play, Sparkles, Leaf, Award, Heart, X } from "lucide-react";
+import { ArrowRight, Layers, Play, Star, Leaf, Award, Heart, X } from "lucide-react";
 import {
   pimentHeroImage,
   poivronsImage,
@@ -172,11 +172,10 @@ export default function HeroSection() {
                   type="button"
                   onClick={() => setCurrentImageIndex(index)}
                   aria-label={`Afficher l'image ${index + 1}`}
-                  className={`h-1.5 rounded-full transition-all duration-500 ${
-                    currentImageIndex === index
+                  className={`h-1.5 rounded-full transition-all duration-500 ${currentImageIndex === index
                       ? "w-8 bg-[#c2e662] shadow-[0_0_12px_rgba(194,230,98,0.5)]"
                       : "w-1.5 bg-white/40 hover:bg-white/70"
-                  }`}
+                    }`}
                 />
               ))}
             </div>
@@ -237,9 +236,8 @@ export default function HeroSection() {
                     {ROTATING_TEXTS.map((_, idx) => (
                       <div
                         key={idx}
-                        className={`h-1 w-4 rounded-full transition-all duration-500 ${
-                          textIndex === idx ? "bg-[#c2e662]" : "bg-white/30"
-                        }`}
+                        className={`h-1 w-4 rounded-full transition-all duration-500 ${textIndex === idx ? "bg-[#c2e662]" : "bg-white/30"
+                          }`}
                       />
                     ))}
                   </div>

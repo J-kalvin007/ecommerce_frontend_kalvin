@@ -14,7 +14,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { formatCurrency } from "@/lib/utils";
 import { useThemeStore } from "@/store/theme.store";
-import { Receipt, Truck, Tag, Sparkles } from "lucide-react";
+import { Receipt, Truck, Tag, Star } from "lucide-react";
 
 interface RecapitulatifCommandeProps {
   sousTotal: number;
@@ -54,9 +54,8 @@ export default function RecapitulatifCommande({
         key={valeur}
         initial={{ opacity: 0, y: -5 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`${isTotal ? "text-2xl font-black tracking-tight" : "text-sm font-semibold"} ${
-          negatif ? "text-[#1f4d3f]" : ""
-        }`}
+        className={`${isTotal ? "text-2xl font-black tracking-tight" : "text-sm font-semibold"} ${negatif ? "text-[#1f4d3f]" : ""
+          }`}
         style={{ color: isTotal || negatif ? undefined : text }}
       >
         {negatif ? "-" : ""}
@@ -82,13 +81,13 @@ export default function RecapitulatifCommande({
       <div className="space-y-3 border-b pb-4" style={{ borderColor: border }}>
         <Ligne label="Sous-total" valeur={sousTotal} />
         <Ligne label="Frais de livraison" valeur={fraisLivraison} icon={Truck} />
-        
+
         {remisePromo > 0 && (
           <Ligne label="Code promotionnel" valeur={remisePromo} icon={Tag} negatif />
         )}
-        
+
         {remiseFidelite > 0 && (
-          <Ligne label="Points de fidélité" valeur={remiseFidelite} icon={Sparkles} negatif />
+          <Ligne label="Points de fidélité" valeur={remiseFidelite} icon={Star} negatif />
         )}
       </div>
 

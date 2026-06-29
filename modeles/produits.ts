@@ -269,6 +269,9 @@ export interface ProductList {
 
   /** Nombre de favoris — readOnly */
   readonly count_favorites: number;
+
+  /** Order count */
+  order_count?: number;
 }
 
 

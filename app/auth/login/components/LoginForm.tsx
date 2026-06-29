@@ -17,7 +17,7 @@ import {
   Lock,
   Mail,
   ShieldCheck,
-  Sparkles,
+  Star,
   Star,
   Truck,
   UserCheck,
@@ -26,6 +26,7 @@ import { login as loginApi } from "@/fonctions_api/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { getLoginError } from "@/lib/auth-errors";
 import Toast from "@/components/special/Toast";
+import { VerifyEmailModal } from "@/app/auth/components/VerifyEmailModal";
 import { logoImage } from "@/assets/images";
 import { cn } from "@/lib/utils";
 
@@ -130,6 +131,8 @@ export function LoginForm({
     message: string;
   }>({ show: false, type: "info", message: "" });
 
+  const [verifyModal, setVerifyModal] = useState<{ show: boolean; email: string }>({ show: false, email: "" });
+
   // Notices URL
   const requestedRedirect = redirectPath ?? searchParams.get("redirect");
   const sessionExpiredNotice = searchParams.get("reason") === "session-expired";
@@ -164,11 +167,16 @@ export function LoginForm({
       return;
     }
 
+    if (result.data.user && result.data.user.is_verified === false) {
+      setVerifyModal({ show: true, email: result.data.user.email });
+      return;
+    }
+
     setUser(result.data.user, result.data.key);
     setToast({ show: true, type: "success", message: "Connexion réussie !" });
 
     const destination =
-      requestedRedirect ?? (result.data.user.role === "platform_admin" ? "/admin" : "/customer/dashboard_client");
+      requestedRedirect ?? (result.data.user.role === "platform_admin" ? "/admin" : "/products");
 
     setTimeout(() => {
       router.push(destination);
@@ -192,6 +200,12 @@ export function LoginForm({
         type={toast.type}
         message={toast.message}
         onClose={() => setToast({ ...toast, show: false })}
+      />
+
+      <VerifyEmailModal
+        isOpen={verifyModal.show}
+        email={verifyModal.email}
+        onClose={() => setVerifyModal({ show: false, email: "" })}
       />
 
       <div className="flex min-h-screen w-full items-center justify-center bg-[#F0EDE6] p-4 md:p-8">

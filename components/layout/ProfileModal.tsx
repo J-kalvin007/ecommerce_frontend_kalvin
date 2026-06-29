@@ -27,7 +27,7 @@ import {
   Upload,
   Trash2,
   AtSign,
-  Sparkles,
+  Star,
   Clock3,
   Activity,
   Copy,
@@ -301,7 +301,7 @@ export default function ProfileModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent 
+        <DialogContent
           className="max-w-5xl overflow-hidden rounded-[28px] border p-0 shadow-2xl ring-1 ring-black/5 bg-white border-black/5 dark:bg-[#121212] dark:border-white/10"
           onInteractOutside={(e) => {
             if (showLogoutConfirm) {

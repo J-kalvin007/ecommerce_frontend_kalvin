@@ -134,8 +134,8 @@ export const resendVerificationEmail = async (
   data: ResendEmailRequest
 ): Promise<Result<ResendEmailResponse>> => {
   try {
-    const response = await apiPrivate.post<ResendEmailResponse>(
-      "/api/auth/registration/resend-email/",
+    const response = await apiPublic.post<ResendEmailResponse>(
+      "/api/auth/registration/force-resend-email/",
       data
     );
     return { ok: true, data: response.data };
@@ -170,7 +170,7 @@ export const confirmPasswordReset = async (
   data: PasswordResetConfirmRequest
 ): Promise<Result<PasswordResetConfirmResponse>> => {
   try {
-    const response = await apiPrivate.post<PasswordResetConfirmResponse>(
+    const response = await apiPublic.post<PasswordResetConfirmResponse>(
       "/api/auth/password/reset/confirm/",
       data
     );

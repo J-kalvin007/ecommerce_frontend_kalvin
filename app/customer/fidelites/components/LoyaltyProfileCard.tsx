@@ -19,7 +19,7 @@ import {
   Star,
   Crown,
   Gem,
-  Sparkles,
+  Star,
   TrendingUp,
   ChevronRight,
   Award,
@@ -35,7 +35,7 @@ const TIER_ICONS: Record<string, React.ComponentType<{ className?: string; strok
   Silver: Star,
   Gold: Crown,
   Platinum: Gem,
-  Diamond: Sparkles,
+  Diamond: Star,
 };
 
 /* ── Utilitaires ────────────────────────────────────────────────────────── */
