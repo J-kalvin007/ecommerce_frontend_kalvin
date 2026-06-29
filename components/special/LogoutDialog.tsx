@@ -7,19 +7,23 @@
  *   • Accent chaud → champagne doux (#d8c4ab) + or (#C9963A)
  *   • Fond page    → crème (#F0EDE6) comme la page login
  *
- * Props (inchangées) :
+ * Props :
  *   isOpen    — contrôle l'affichage
- *   onConfirm — callback de confirmation
+ *   onConfirm — callback async de confirmation (Promise<void>)
  *   onCancel  — callback d'annulation
- *   isLoading — état de chargement optionnel
+ *
+ * Notifications :
+ *   • Succès → Toast vert  « Déconnexion réussie »  (auto-fermeture 3 s)
+ *   • Erreur → Toast rouge « Échec de la déconnexion » (fermeture manuelle)
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Lottie from 'lottie-react';
 import exitAnimation from '@/public/assets/lottis/logout.json';
 import { LogOut, Shield, X } from 'lucide-react';
+import Toast from '@/components/special/Toast';
 
 /* ──────────────────────────────────────────────────────────────────────────
    Tokens de couleur — identiques au panneau gauche de la page login
@@ -68,9 +72,9 @@ function FloatingOrb({
 
 interface LogoutDialogProps {
   isOpen: boolean;
-  onConfirm: () => void;
+  /** Callback async — doit retourner une Promise (resolve = succès, reject = erreur) */
+  onConfirm: () => Promise<void>;
   onCancel: () => void;
-  isLoading?: boolean;
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -111,8 +115,50 @@ export default function LogoutDialog({
   isOpen,
   onConfirm,
   onCancel,
-  isLoading = false,
 }: LogoutDialogProps) {
+
+  /* — État de chargement interne — */
+  const [isLoading, setIsLoading] = useState(false);
+
+  /* — État du Toast de feedback — */
+  const [toast, setToast] = useState<{
+    show: boolean;
+    type: 'success' | 'error';
+    message: string;
+  }>({
+    show: false,
+    type: 'success',
+    message: '',
+  });
+
+  const closeToast = useCallback(() =>
+    setToast(prev => ({ ...prev, show: false })),
+  []);
+
+  /* — Handler de confirmation avec gestion succès / erreur — */
+  const handleConfirm = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await onConfirm();
+      setToast({
+        show: true,
+        type: 'success',
+        message: 'Déconnexion réussie. À bientôt !',
+      });
+    } catch (err) {
+      const msg =
+        err instanceof Error
+          ? err.message
+          : 'Une erreur est survenue lors de la déconnexion.';
+      setToast({
+        show: true,
+        type: 'error',
+        message: msg,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [onConfirm]);
 
   /* — Bloquer le scroll de la page quand la modale est ouverte — */
   useEffect(() => {
@@ -121,8 +167,9 @@ export default function LogoutDialog({
   }, [isOpen]);
 
   return (
-    <AnimatePresence mode="wait">
-      {isOpen && (
+    <>
+      <AnimatePresence mode="wait">
+        {isOpen && (
         <div
           className="fixed inset-0 z-[200] isolate flex items-center justify-center p-4 sm:p-6"
           role="dialog"
@@ -337,7 +384,7 @@ export default function LogoutDialog({
 
                 {/* Confirmer — or / champagne — accent principal de la marque */}
                 <motion.button
-                  onClick={onConfirm}
+                  onClick={handleConfirm}
                   disabled={isLoading}
                   whileHover={!isLoading ? { scale: 1.03, y: -1 } : {}}
                   whileTap={!isLoading ? { scale: 0.96 } : {}}
@@ -381,5 +428,16 @@ export default function LogoutDialog({
         </div>
       )}
     </AnimatePresence>
+
+    {/* ── Toast de feedback déconnexion ── */}
+    <Toast
+      show={toast.show}
+      type={toast.type}
+      message={toast.message}
+      onClose={closeToast}
+      duration={toast.type === 'success' ? 3000 : 0}
+      position="top-center"
+    />
+    </>
   );
 }

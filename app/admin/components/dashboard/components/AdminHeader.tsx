@@ -589,8 +589,8 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
     setShowLogoutConfirm(true);
   };
 
-  const confirmLogout = () => {
-    logout();
+  const confirmLogout = async () => {
+    await logout();
     setShowLogoutConfirm(false);
   };
 

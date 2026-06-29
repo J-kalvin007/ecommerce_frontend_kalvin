@@ -129,8 +129,8 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
 
   const handleLogoutClick = () => setShowLogoutConfirm(true);
 
-  const confirmLogout = () => {
-    logout();
+  const confirmLogout = async () => {
+    await logout();
     setShowLogoutConfirm(false);
   };
 

@@ -228,7 +228,7 @@ export function LoginForm({
                     <Image src={logoImage} alt="Atelier du Terroir" fill className="object-contain p-2" sizes="44px" />
                   </div>
                   <div>
-                    <p className="font-display text-base font-semibold leading-tight">Atelier du Terroir</p>
+                    <p className="font-display text-base text-[20px] font-semibold leading-tight">Atelier du Terroir</p>
                     <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-white/55">
                       Épicerie fine &amp; terroir
                     </p>

@@ -294,8 +294,8 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
     setShowLogoutConfirm(true);
   };
 
-  const confirmLogout = () => {
-    logout();
+  const confirmLogout = async () => {
+    await logout();
     setShowLogoutConfirm(false);
     router.push("/auth/login");
   };

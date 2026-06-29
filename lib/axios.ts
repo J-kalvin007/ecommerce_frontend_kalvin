@@ -24,7 +24,7 @@ import CryptoJS from "crypto-js";
 //   process.env.NEXT_PUBLIC_API_URL || "https://outrage-dealer-entrap.ngrok-free.dev";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://shed-croak-unending.ngrok-free.dev";
+  process.env.NEXT_PUBLIC_API_URL || "https://outrage-dealer-entrap.ngrok-free.dev";
 
 /** Clé d'encryption pour sécuriser les tokens côté client */
 const ENCRYPTION_KEY =

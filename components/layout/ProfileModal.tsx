@@ -55,7 +55,7 @@ interface ProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
   profile: User | null;
-  onLogout: () => void;
+  onLogout: () => void | Promise<void>;
   onProfileUpdate: (user: Partial<User>) => void;
 }
 
@@ -924,9 +924,9 @@ export default function ProfileModal({
 
       <LogoutDialog
         isOpen={showLogoutConfirm}
-        onConfirm={() => {
+        onConfirm={async () => {
           setShowLogoutConfirm(false);
-          onLogout();
+          await onLogout();
         }}
         onCancel={() => setShowLogoutConfirm(false)}
       />

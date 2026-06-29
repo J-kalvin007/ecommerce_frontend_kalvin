@@ -154,9 +154,9 @@ export function Header() {
     setIsLogoutModalOpen(true);
   };
 
-  const confirmLogout = () => {
+  const confirmLogout = async () => {
     setIsLogoutModalOpen(false);
-    logout();
+    await logout();
     router.push("/");
   };
 

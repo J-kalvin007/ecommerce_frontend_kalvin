@@ -22,6 +22,7 @@ import {
   ArrowLeft,
   KeyRound,
 } from "lucide-react";
+import SendEmailReset from "./send-email-reset";
 import { confirmPasswordReset } from "@/fonctions_api/auth.api";
 import { getResetPasswordError } from "@/lib/auth-errors";
 import { cn } from "@/lib/utils";
@@ -175,6 +176,8 @@ export default function ResetPasswordConfirmClient() {
   const [showPassword2, setShowPassword2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showResend, setShowResend] = useState(false);
+  const [resendError, setResendError] = useState("");
 
   const [toast, setToast] = useState<{
     show: boolean;
@@ -196,7 +199,8 @@ export default function ResetPasswordConfirmClient() {
     }
 
     if (!uid || !token) {
-      setToast({ show: true, type: "error", message: "Le lien de réinitialisation est invalide ou expiré." });
+      setResendError("Le lien de réinitialisation est manquant, invalide ou expiré.");
+      setShowResend(true);
       return;
     }
 
@@ -215,12 +219,30 @@ export default function ResetPasswordConfirmClient() {
         result.error?.raw,
         result.error?.status
       );
+
+      // Si l'erreur concerne le token/uid, on redirige vers l'écran de demande
+      if (
+        errorMessage.toLowerCase().includes("expiré") ||
+        errorMessage.toLowerCase().includes("invalide") ||
+        errorMessage.toLowerCase().includes("incorrect") ||
+        errorMessage.toLowerCase().includes("uid") ||
+        errorMessage.toLowerCase().includes("expire")
+      ) {
+        setResendError(errorMessage);
+        setShowResend(true);
+        return;
+      }
+
       setToast({ show: true, type: "error", message: errorMessage });
       return;
     }
 
     setSuccess(true);
   };
+
+  if (!uid || !token || showResend) {
+    return <SendEmailReset errorInitial={resendError || "Lien de réinitialisation invalide ou expiré."} />;
+  }
 
   return (
     <>

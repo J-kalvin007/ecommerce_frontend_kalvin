@@ -116,6 +116,10 @@ export function getLoginError(raw: RawError, status?: number): string {
     return "Le serveur rencontre un problème. Réessayez dans quelques instants.";
   }
 
+  if (rawMsg) {
+    return rawMsg;
+  }
+
   // Fallback générique
   return "Connexion impossible. Vérifiez vos identifiants ou réessayez plus tard.";
 }
@@ -202,6 +206,10 @@ export function getRegisterError(
     return { toast: fields.name, fields };
   }
 
+  if (globalRaw) {
+    return { toast: globalRaw, fields };
+  }
+
   return { toast: "Une erreur est survenue pendant l'inscription. Vérifiez les champs et réessayez.", fields };
 }
 
@@ -216,7 +224,7 @@ function translateRegisterEmailError(msg: string): string {
   if (l.includes("required") || l.includes("blank")) {
     return "L'adresse e-mail est obligatoire.";
   }
-  return "Adresse e-mail invalide ou déjà utilisée.";
+  return msg;
 }
 
 function translateRegisterNameError(msg: string): string {
@@ -230,7 +238,7 @@ function translateRegisterNameError(msg: string): string {
   if (l.includes("short") || l.includes("minimum")) {
     return "Le nom doit contenir au moins 2 caractères.";
   }
-  return "Nom invalide. Vérifiez votre saisie.";
+  return msg;
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -254,7 +262,7 @@ export function translatePasswordError(msg: string): string {
   if (l.includes("required") || l.includes("blank")) {
     return "Le mot de passe est obligatoire.";
   }
-  return "Le mot de passe ne respecte pas les critères de sécurité.";
+  return msg;
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
