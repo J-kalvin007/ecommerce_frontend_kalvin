@@ -166,15 +166,82 @@ export default function CustomerOrdersPage() {
     <CustomerShell activeSection="orders">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
 
-        {/* ── En-tête ── */}
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#1f241c]">
-            Mes Commandes
-          </h1>
-          <p className="text-[14px] text-[#8A9080]">
-            Consultez, suivez et gérez l'historique de vos achats.
-          </p>
-        </div>
+        {/* ── En-tête avec effet premium ── */}
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col gap-2"
+        >
+          <div className="relative inline-block group">
+            <h2
+              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-5xl premium-title-shine flex items-center gap-3"
+              style={{
+                letterSpacing: "-0.025em",
+                backgroundImage:
+                  "linear-gradient(110deg, #0D2E1E 0%, #1F4D34 45%, #0D2E1E 90%)",
+                backgroundSize: "220% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              <ShoppingBag className="h-10 w-10 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
+              Mes Commandes
+            </h2>
+
+            {/* Kicker discret en lettres espacées doré, signature premium */}
+            <span
+              className="block text-[11px] font-semibold uppercase tracking-[0.35em] mt-2 mb-2"
+              style={{ color: "#B8924A", opacity: 0.85 }}
+            >
+              Consultez, suivez et gérez l'historique de vos achats.
+            </span>
+
+            {/* Gradient SVG caché pour l'icône */}
+            <svg width="0" height="0" className="absolute">
+              <defs>
+                <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#FDE68A" />
+                  <stop offset="50%" stopColor="#D97706" />
+                  <stop offset="100%" stopColor="#B45309" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+
+            {/* Animations scoppées, avec respect du prefers-reduced-motion */}
+            <style>{`
+            @keyframes premium-title-shine-anim {
+              0%, 100% { background-position: 0% center; }
+              50% { background-position: 100% center; }
+            }
+            .premium-title-shine {
+              animation: premium-title-shine-anim 6s ease-in-out infinite;
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .premium-title-shine {
+                animation: none;
+              }
+            }
+          `}</style>
+          </div>
+        </motion.div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         {/* ── Chargement global ── */}
         {isLoading ? (
@@ -222,7 +289,7 @@ export default function CustomerOrdersPage() {
                 {/* Champ de recherche + Vues + Filtres Avancés */}
                 <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
                   <div className="relative flex-1 sm:w-56">
-                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8A9080]" />
+                    <Search className="absolute left-3.5 top-1/2 cursor-pointer -translate-y-1/2 h-4 w-4 text-[#8A9080]" />
                     <input
                       type="text"
                       placeholder="Rechercher (ex: REF-123)"
@@ -235,31 +302,30 @@ export default function CustomerOrdersPage() {
                   {/* Bouton Filtres Avancés */}
                   <button
                     onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                    className={`flex items-center justify-center p-2 rounded-xl border transition-colors ${
-                      showAdvancedFilters 
-                        ? "bg-[#1f4d3f] border-[#1f4d3f] text-white" 
-                        : "bg-white border-[#E8E3D8] text-[#1f241c] hover:bg-[#F7F5F0]"
-                    }`}
+                    className={`flex items-center cursor-pointer justify-center p-2 rounded-xl border transition-colors ${showAdvancedFilters
+                      ? "bg-[#1f4d3f] border-[#1f4d3f] text-white"
+                      : "bg-white border-[#E8E3D8] text-[#1f241c] hover:bg-[#F7F5F0]"
+                      }`}
                     title="Filtres avancés"
                   >
-                    <SlidersHorizontal className="h-4 w-4" />
+                    <SlidersHorizontal className="h-5 w-5" />
                   </button>
 
                   {/* Boutons Vue */}
                   <div className="flex items-center p-1 rounded-xl bg-white border border-[#E8E3D8]">
                     <button
                       onClick={() => setViewMode("grid")}
-                      className={`p-1.5 rounded-lg transition-colors ${viewMode === "grid" ? "bg-[#F7F5F0] text-[#1f4d3f]" : "text-[#8A9080] hover:text-[#1f241c]"}`}
+                      className={`p-1.5 rounded-lg cursor-pointer transition-colors ${viewMode === "grid" ? "bg-[#F7F5F0] text-[#1f4d3f]" : "text-[#8A9080] hover:text-[#1f241c]"}`}
                       title="Vue Grille"
                     >
-                      <Grid className="h-4 w-4" />
+                      <Grid className="h-5 w-5" />
                     </button>
                     <button
                       onClick={() => setViewMode("list")}
-                      className={`p-1.5 rounded-lg transition-colors ${viewMode === "list" ? "bg-[#F7F5F0] text-[#1f4d3f]" : "text-[#8A9080] hover:text-[#1f241c]"}`}
+                      className={`p-1.5 rounded-lg cursor-pointer transition-colors ${viewMode === "list" ? "bg-[#F7F5F0] text-[#1f4d3f]" : "text-[#8A9080] hover:text-[#1f241c]"}`}
                       title="Vue Liste"
                     >
-                      <List className="h-4 w-4" />
+                      <List className="h-5 w-5" />
                     </button>
                   </div>
                 </div>
@@ -275,31 +341,31 @@ export default function CustomerOrdersPage() {
                     className="overflow-hidden mt-3"
                   >
                     <div className="p-4 rounded-2xl bg-[#F7F5F0] border border-[#E8E3D8] flex flex-wrap gap-4 items-center">
-                      <span className="text-[13px] font-semibold text-[#1f241c] mr-2">Trier par :</span>
-                      
+                      <span className="text-[14px] font-semibold text-[#1f241c] mr-2">Trier par :</span>
+
                       <button
                         onClick={() => setSortBy("date_desc")}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-[13px] transition-colors ${sortBy === "date_desc" ? "bg-white border border-[#1f4d3f] text-[#1f4d3f] shadow-sm" : "bg-transparent border border-transparent text-[#8A9080] hover:bg-white/60 hover:text-[#1f241c]"}`}
+                        className={`flex items-center cursor-pointer gap-2 px-3 py-1.5 rounded-lg text-[14px] transition-colors ${sortBy === "date_desc" ? "bg-white border border-[#1f4d3f] text-[#1f4d3f] shadow-sm" : "bg-transparent border border-transparent text-[#8A9080] hover:bg-white/60 hover:text-[#1f241c]"}`}
                       >
-                        <Calendar className="h-3.5 w-3.5" /> Date (Plus récent)
+                        <Calendar className="h-4 w-4" /> Date (Plus récent)
                       </button>
                       <button
                         onClick={() => setSortBy("date_asc")}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-[13px] transition-colors ${sortBy === "date_asc" ? "bg-white border border-[#1f4d3f] text-[#1f4d3f] shadow-sm" : "bg-transparent border border-transparent text-[#8A9080] hover:bg-white/60 hover:text-[#1f241c]"}`}
+                        className={`flex items-center cursor-pointer gap-2 px-3 py-1.5 rounded-lg text-[14px] transition-colors ${sortBy === "date_asc" ? "bg-white border border-[#1f4d3f] text-[#1f4d3f] shadow-sm" : "bg-transparent border border-transparent text-[#8A9080] hover:bg-white/60 hover:text-[#1f241c]"}`}
                       >
-                        <Calendar className="h-3.5 w-3.5" /> Date (Plus ancien)
+                        <Calendar className="h-4 w-4" /> Date (Plus ancien)
                       </button>
                       <button
                         onClick={() => setSortBy("amount_desc")}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-[13px] transition-colors ${sortBy === "amount_desc" ? "bg-white border border-[#1f4d3f] text-[#1f4d3f] shadow-sm" : "bg-transparent border border-transparent text-[#8A9080] hover:bg-white/60 hover:text-[#1f241c]"}`}
+                        className={`flex items-center cursor-pointer gap-2 px-3 py-1.5 rounded-lg text-[14px] transition-colors ${sortBy === "amount_desc" ? "bg-white border border-[#1f4d3f] text-[#1f4d3f] shadow-sm" : "bg-transparent border border-transparent text-[#8A9080] hover:bg-white/60 hover:text-[#1f241c]"}`}
                       >
-                        <DollarSign className="h-3.5 w-3.5" /> Montant (Décroissant)
+                        <DollarSign className="h-4 w-4" /> Montant (Décroissant)
                       </button>
                       <button
                         onClick={() => setSortBy("amount_asc")}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-[13px] transition-colors ${sortBy === "amount_asc" ? "bg-white border border-[#1f4d3f] text-[#1f4d3f] shadow-sm" : "bg-transparent border border-transparent text-[#8A9080] hover:bg-white/60 hover:text-[#1f241c]"}`}
+                        className={`flex items-center cursor-pointer gap-2 px-3 py-1.5 rounded-lg text-[14px] transition-colors ${sortBy === "amount_asc" ? "bg-white border border-[#1f4d3f] text-[#1f4d3f] shadow-sm" : "bg-transparent border border-transparent text-[#8A9080] hover:bg-white/60 hover:text-[#1f241c]"}`}
                       >
-                        <DollarSign className="h-3.5 w-3.5" /> Montant (Croissant)
+                        <DollarSign className="h-4 w-4" /> Montant (Croissant)
                       </button>
                     </div>
                   </motion.div>
@@ -338,7 +404,7 @@ export default function CustomerOrdersPage() {
                     transition={{ duration: 0.3 }}
                     className={
                       viewMode === "grid"
-                        ? "grid grid-cols-1 gap-4 lg:grid-cols-2"
+                        ? "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
                         : "flex flex-col gap-4"
                     }
                   >

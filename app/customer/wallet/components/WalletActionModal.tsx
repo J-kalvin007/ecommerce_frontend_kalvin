@@ -265,15 +265,15 @@ export default function WalletActionModal({
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-[15px] font-black tracking-tight text-[#1f241c]">
+                  <h2 className="text-[22px] font-bold tracking-tight text-[#1f241c]">
                     {config.title}
                   </h2>
-                  <p className="text-[12px] text-[#8A9080]">{config.subtitle}</p>
+                  <p className="text-[14px] text-[#8A9080]">{config.subtitle}</p>
                 </div>
                 <button
                   onClick={onClose}
                   disabled={isSubmitting}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-[#E8E3D8] bg-white text-[#8A9080] transition-colors hover:bg-[#F7F5F0] hover:text-[#1f241c] disabled:opacity-40"
+                  className="flex h-8 w-8 cursor-pointer shrink-0 items-center justify-center rounded-xl border border-[#E8E3D8] bg-white text-[#8A9080] transition-colors hover:bg-[#F7F5F0] hover:text-[#1f241c] disabled:opacity-40"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -307,14 +307,14 @@ export default function WalletActionModal({
                   >
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                     <div className="flex-1">
-                      <p className="text-[12.5px] font-semibold text-emerald-800">
+                      <p className="text-[14px] font-semibold text-emerald-800">
                         Recharge initiée avec succès !
                       </p>
                       <a
                         href={successRedirectUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2 flex items-center gap-1.5 text-[12px] font-bold text-emerald-700 underline underline-offset-2"
+                        className="mt-2 flex items-center gap-1.5 text-[14px] font-bold text-emerald-700 underline underline-offset-2"
                       >
                         <ExternalLink className="h-3.5 w-3.5" />
                         Finaliser sur PayDunya
@@ -329,7 +329,7 @@ export default function WalletActionModal({
                 <form onSubmit={handleDepositSubmit} className="space-y-5">
                   {/* Montants rapides */}
                   <div>
-                    <label className="mb-2 block text-[12px] font-bold uppercase tracking-[0.08em] text-[#8A9080]">
+                    <label className="mb-2 block text-[14px] font-bold uppercase tracking-[0.08em] text-[#8A9080]">
                       Montant rapide
                     </label>
                     <div className="grid grid-cols-3 gap-2">
@@ -338,9 +338,9 @@ export default function WalletActionModal({
                           key={amt}
                           type="button"
                           onClick={() => setDepositAmount(String(amt))}
-                          className={`rounded-xl border py-2.5 text-[12.5px] font-bold transition-all duration-200 ${depositAmount === String(amt)
-                              ? "border-emerald-400 bg-emerald-50 text-emerald-700 shadow-sm"
-                              : "border-[#E8E3D8] bg-white text-[#1f241c] hover:border-emerald-200 hover:bg-emerald-50/50"
+                          className={`rounded-xl cursor-pointer border py-2.5 text-[14px] font-bold transition-all duration-200 ${depositAmount === String(amt)
+                            ? "border-emerald-400 bg-emerald-50 text-emerald-700 shadow-sm"
+                            : "border-[#E8E3D8] bg-white text-[#1f241c] hover:border-emerald-200 hover:bg-emerald-50/50"
                             }`}
                         >
                           {formatAmount(amt)}
@@ -351,7 +351,7 @@ export default function WalletActionModal({
 
                   {/* Montant personnalisé */}
                   <div>
-                    <label className="mb-1.5 block text-[12px] font-bold uppercase tracking-[0.08em] text-[#8A9080]">
+                    <label className="mb-1.5 block text-[14px] font-bold uppercase tracking-[0.08em] text-[#8A9080]">
                       Montant (FCFA)
                     </label>
                     <div className="relative">
@@ -376,7 +376,7 @@ export default function WalletActionModal({
                     whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex w-full items-center justify-center gap-2.5 rounded-2xl py-3.5 text-[14px] font-bold text-white transition-opacity disabled:opacity-60"
+                    className="flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-2xl py-3.5 text-[14px] font-bold text-white transition-opacity disabled:opacity-60"
                     style={{
                       background:
                         "linear-gradient(135deg, #10b981 0%, #059669 100%)",

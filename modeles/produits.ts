@@ -272,6 +272,9 @@ export interface ProductList {
 
   /** Order count */
   order_count?: number;
+
+  /** Variantes du produit (incluses par le serializer) */
+  variants?: ProductVariant[];
 }
 
 
@@ -325,6 +328,9 @@ export interface ProductListPublicTop {
 
   /** Nombre de favoris — readOnly */
   readonly count_favorites: number;
+
+  /** Variantes du produit (incluses par le serializer) */
+  variants?: ProductVariant[];
 }
 
 /** Alias pour la compatibilité avec certains composants frontend */

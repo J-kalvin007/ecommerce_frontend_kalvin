@@ -41,6 +41,7 @@ import {
 import type { LoyaltyEvent, LoyaltyEventReason } from "@/modeles/fidelites";
 import { LOYALTY_EVENT_LABELS } from "@/modeles/fidelites";
 import { cn } from "@/lib/utils";
+import EmptyState from "@/components/special/EmptyState";
 
 /* ── Map des icônes d'événements ────────────────────────────────────────── */
 const EVENT_ICONS: Record<LoyaltyEventReason, React.ComponentType<{ className?: string; strokeWidth?: number; style?: React.CSSProperties }>> = {
@@ -172,10 +173,10 @@ export default function LoyaltyHistoryList({
       {/* ── Titre ── */}
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="text-[15px] font-black tracking-tight text-[#1f241c]">
+          <h2 className="text-[16px] font-black tracking-tight text-[#1f241c]">
             Journal des événements
           </h2>
-          <p className="text-[12px] text-[#8A9080]">
+          <p className="text-[13px] text-[#8A9080]">
             {filteredEvents.length} événement{filteredEvents.length !== 1 ? "s" : ""} trouvé
             {filteredEvents.length !== 1 ? "s" : ""}
           </p>
@@ -186,7 +187,7 @@ export default function LoyaltyHistoryList({
           <button
             onClick={() => setViewMode("list")}
             className={cn(
-              "flex items-center justify-center p-1.5 rounded-lg transition-colors",
+              "flex items-center justify-center p-1.5 rounded-lg transition-colors cursor-pointer",
               viewMode === "list" ? "bg-white text-[#1f4d3f] shadow-sm" : "text-[#8A9080] hover:text-[#1f241c]"
             )}
             title="Vue liste"
@@ -196,7 +197,7 @@ export default function LoyaltyHistoryList({
           <button
             onClick={() => setViewMode("grid")}
             className={cn(
-              "flex items-center justify-center p-1.5 rounded-lg transition-colors",
+              "flex items-center justify-center p-1.5 rounded-lg transition-colors cursor-pointer",
               viewMode === "grid" ? "bg-white text-[#1f4d3f] shadow-sm" : "text-[#8A9080] hover:text-[#1f241c]"
             )}
             title="Vue grille"
@@ -227,7 +228,7 @@ export default function LoyaltyHistoryList({
                     setFilterDirection(f.value);
                     setVisibleCount(PAGE_SIZE);
                   }}
-                  className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all duration-200 ${isActive
+                  className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-[14px] font-semibold transition-all duration-200 cursor-pointer ${isActive
                       ? "shadow-sm"
                       : "bg-[#F7F5F0] text-[#8A9080] hover:bg-[#EEE9E0] hover:text-[#1f241c]"
                     }`}
@@ -256,12 +257,12 @@ export default function LoyaltyHistoryList({
                   setSearchQuery(e.target.value);
                   setVisibleCount(PAGE_SIZE);
                 }}
-                className="w-full rounded-xl border border-[#E8E3D8] bg-white py-2 pl-9 pr-3 text-[12px] text-[#1f241c] outline-none transition-colors focus:border-[#1f4d3f] focus:ring-1 focus:ring-[#1f4d3f]/15 placeholder:text-[#8A9080]/60"
+                className="w-full rounded-xl border border-[#E8E3D8] bg-white py-2 pl-9 pr-3 text-[14px] text-[#1f241c] outline-none transition-colors focus:border-[#1f4d3f] focus:ring-1 focus:ring-[#1f4d3f]/15 placeholder:text-[#8A9080]/60"
               />
             </div>
             <button
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className={`flex items-center justify-center rounded-xl border p-2 transition-colors ${showAdvanced
+              className={`flex items-center justify-center rounded-xl border p-2 transition-colors cursor-pointer ${showAdvanced
                   ? "border-[#1f4d3f] bg-[#1f4d3f] text-white"
                   : "border-[#E8E3D8] bg-white text-[#1f241c] hover:bg-[#F7F5F0]"
                 }`}
@@ -294,7 +295,7 @@ export default function LoyaltyHistoryList({
                           setFilterReason("all");
                           setVisibleCount(PAGE_SIZE);
                         }}
-                        className={`rounded-lg px-2.5 py-1.5 text-[12px] font-semibold transition-all ${filterReason === "all"
+                        className={`rounded-lg px-2.5 py-1.5 text-[13px] font-semibold transition-all cursor-pointer ${filterReason === "all"
                             ? "bg-[#1f4d3f] text-white shadow-sm"
                             : "bg-white text-[#8A9080] hover:text-[#1f241c]"
                           }`}
@@ -312,7 +313,7 @@ export default function LoyaltyHistoryList({
                               setFilterReason(reason);
                               setVisibleCount(PAGE_SIZE);
                             }}
-                            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-semibold transition-all"
+                            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] font-semibold transition-all cursor-pointer"
                             style={
                               isActive
                                 ? { background: cfg.color, color: "#fff", boxShadow: `0 3px 10px ${cfg.color}40` }
@@ -348,7 +349,7 @@ export default function LoyaltyHistoryList({
                         <button
                           key={s.value}
                           onClick={() => setSortBy(s.value)}
-                          className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[12px] font-semibold transition-all ${isActive
+                          className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[13px] font-semibold transition-all cursor-pointer ${isActive
                               ? "border-[#1f4d3f] bg-white text-[#1f4d3f] shadow-sm"
                               : "border-transparent bg-white text-[#8A9080] hover:border-[#E8E3D8] hover:text-[#1f241c]"
                             }`}
@@ -389,29 +390,13 @@ export default function LoyaltyHistoryList({
               </div>
             </motion.div>
           ) : filteredEvents.length === 0 ? (
-            <motion.div
-              key="empty"
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex flex-col items-center py-14 text-center"
-            >
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#E8E3D8] bg-[#F7F5F0]">
-                <Inbox className="h-7 w-7 text-[#8A9080]" strokeWidth={1.5} />
-              </div>
-              <p className="text-[14px] font-bold text-[#1f241c]">Aucun événement</p>
-              <p className="mt-1 text-[12px] text-[#8A9080]">
-                Aucun événement ne correspond à vos filtres.
-              </p>
-              {(filterReason !== "all" || filterDirection !== "all" || searchQuery) && (
-                <button
-                  onClick={handleReset}
-                  className="mt-4 rounded-xl bg-[#F7F5F0] px-4 py-2 text-[12px] font-semibold text-[#1f4d3f] transition-colors hover:bg-[#EEE9E0]"
-                >
-                  Réinitialiser les filtres
-                </button>
-              )}
-            </motion.div>
+            <EmptyState
+              icon={Inbox}
+              title="Aucun événement"
+              description="Aucun événement ne correspond à vos filtres. Essayez de modifier vos critères de recherche."
+              actionText={filterReason !== "all" || filterDirection !== "all" || searchQuery ? "Réinitialiser les filtres" : undefined}
+              onAction={filterReason !== "all" || filterDirection !== "all" || searchQuery ? handleReset : undefined}
+            />
           ) : (
             <motion.div key="list">
               {viewMode === "list" ? (
@@ -449,11 +434,11 @@ export default function LoyaltyHistoryList({
                         {/* Infos */}
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
-                            <span className="truncate text-[13px] font-bold text-[#1f241c]">
+                            <span className="truncate text-[14px] font-bold text-[#1f241c]">
                               {event.reason_display || LOYALTY_EVENT_LABELS[event.reason]}
                             </span>
                           </div>
-                          <div className="mt-0.5 flex items-center gap-2 text-[11px] text-[#8A9080]">
+                          <div className="mt-0.5 flex items-center gap-2 text-[13px] text-[#8A9080]">
                             {event.description && (
                               <span className="truncate max-w-[200px]">
                                 {event.description}
@@ -467,13 +452,13 @@ export default function LoyaltyHistoryList({
                         {/* Delta de points */}
                         <div className="shrink-0 text-right">
                           <p
-                            className="text-[15px] font-black tracking-tight"
+                            className="text-[16px] font-black tracking-tight"
                             style={{ color: isGain ? "#10b981" : "#ef4444" }}
                           >
                             {isGain ? "+" : ""}
                             {new Intl.NumberFormat("fr-FR").format(event.points_delta)}
                           </p>
-                          <p className="mt-0.5 text-[10px] text-[#8A9080]">
+                          <p className="mt-0.5 text-[12px] text-[#8A9080]">
                             → {new Intl.NumberFormat("fr-FR").format(event.new_points_balance_after)} pts
                           </p>
                         </div>
@@ -522,15 +507,15 @@ export default function LoyaltyHistoryList({
                         </div>
 
                         {/* Body */}
-                        <p className="text-[12.5px] font-bold text-[#1f241c] leading-snug mb-1">
+                        <p className="text-[14px] font-bold text-[#1f241c] leading-snug mb-1">
                           {event.reason_display || LOYALTY_EVENT_LABELS[event.reason]}
                         </p>
                         {event.description && (
-                          <p className="text-[11px] text-[#8A9080] truncate mb-2">{event.description}</p>
+                          <p className="text-[12px] text-[#8A9080] truncate mb-2">{event.description}</p>
                         )}
 
                         {/* Footer */}
-                        <div className="mt-auto flex items-center justify-between text-[10.5px] text-[#8A9080]">
+                        <div className="mt-auto flex items-center justify-between text-[12px] text-[#8A9080]">
                           <span>{formatDate(event.created_at)}</span>
                           <span
                             className="rounded-full px-2 py-0.5 font-semibold"
@@ -550,7 +535,7 @@ export default function LoyaltyHistoryList({
                 <div className="border-t border-[#E8E3D8] px-4 py-3 text-center">
                   <button
                     onClick={handleLoadMore}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl py-2 text-[12px] font-semibold text-[#8A9080] transition-colors hover:bg-[#F7F5F0] hover:text-[#1f241c]"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl py-2 text-[13px] font-semibold text-[#8A9080] transition-colors hover:bg-[#F7F5F0] hover:text-[#1f241c] cursor-pointer"
                   >
                     <ChevronDown className="h-3.5 w-3.5" />
                     Voir plus ({filteredEvents.length - visibleCount} restant

@@ -78,8 +78,8 @@ function SectionHeader({
         <Icon className="h-5 w-5 text-[#1f4d3f]" strokeWidth={1.75} />
       </div>
       <div>
-        <h2 className="text-[15px] font-bold text-[#1f241c]">{title}</h2>
-        <p className="mt-0.5 text-[13px] text-[#8A9080]">{subtitle}</p>
+        <h2 className="text-[16px] font-bold text-[#1f241c]">{title}</h2>
+        <p className="mt-0.5 text-[14px] text-[#8A9080]">{subtitle}</p>
       </div>
     </div>
   );
@@ -95,7 +95,7 @@ function FeedbackBanner({ feedback }: { feedback: FeedbackState }) {
           exit={{ opacity: 0, y: -8, scale: 0.98 }}
           transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
           className={cn(
-            "flex items-center gap-2.5 rounded-xl px-4 py-3 text-[13px] font-medium",
+            "flex items-center gap-2.5 rounded-xl px-4 py-3 text-[14px] font-medium",
             feedback.type === "success"
               ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
               : "border border-red-200 bg-red-50 text-red-700"
@@ -122,7 +122,7 @@ function FieldWrapper({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8A9080]">
+      <label className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#8A9080]">
         {label}
       </label>
       {children}
@@ -159,7 +159,7 @@ function StyledInput({
         placeholder={placeholder}
         disabled={disabled}
         className={cn(
-          "w-full rounded-xl border border-[#E8E3D8] bg-white py-2.5 pl-10 pr-4 text-[14px] text-[#1f241c] outline-none transition-all",
+          "w-full rounded-xl border border-[#E8E3D8] bg-white py-2.5 pl-10 pr-4 text-[15px] text-[#1f241c] outline-none transition-all",
           "placeholder:text-[#C4BFB6]",
           "focus:border-[#1f4d3f]/40 focus:ring-2 focus:ring-[#1f4d3f]/10",
           "disabled:cursor-not-allowed disabled:bg-[#F7F5F0] disabled:text-[#8A9080]",
@@ -189,7 +189,7 @@ function SaveButton({
       whileHover={{ scale: isLoading ? 1 : 1.01 }}
       whileTap={{ scale: isLoading ? 1 : 0.98 }}
       className={cn(
-        "flex items-center gap-2 rounded-xl px-5 py-2.5 text-[13px] font-semibold text-white shadow-sm transition-all",
+        "flex items-center gap-2 rounded-xl px-5 py-2.5 text-[14px] font-semibold text-white shadow-sm transition-all cursor-pointer",
         isLoading
           ? "cursor-not-allowed bg-[#1f4d3f]/60"
           : "bg-[#1f4d3f] hover:bg-[#17392f] hover:shadow-md"
@@ -354,32 +354,67 @@ export default function SettingsClient() {
   /* ── Rendu ─────────────────────────────────────────────────────────────────── */
   return (
     <CustomerShell activeSection="settings">
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
 
-        {/* ── En-tête ── */}
+        {/* ── En-tête avec effet premium ── */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col gap-2"
         >
-          <div className="flex items-center gap-2.5">
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-xl border"
+          <div className="relative inline-block group">
+            <h2
+              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-5xl premium-title-shine flex items-center gap-3"
               style={{
-                background: "rgba(31,77,63,0.08)",
-                borderColor: "rgba(31,77,63,0.15)",
+                letterSpacing: "-0.025em",
+                backgroundImage:
+                  "linear-gradient(110deg, #0D2E1E 0%, #1F4D34 45%, #0D2E1E 90%)",
+                backgroundSize: "220% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
-              <Settings className="h-4 w-4 text-[#1f4d3f]" strokeWidth={1.75} />
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#1f241c]">
+              <Settings className="h-7 w-7 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
               Paramètres du compte
-            </h1>
+            </h2>
+
+            {/* Kicker discret en lettres espacées doré, signature premium */}
+            <span
+              className="block text-[11px] font-semibold uppercase tracking-[0.35em] mt-2 mb-2"
+              style={{ color: "#B8924A", opacity: 0.85 }}
+            >
+              Gérez vos informations personnelles et la sécurité de votre compte.
+            </span>
+
+            {/* Gradient SVG caché pour l'icône */}
+            <svg width="0" height="0" className="absolute">
+              <defs>
+                <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#FDE68A" />
+                  <stop offset="50%" stopColor="#D97706" />
+                  <stop offset="100%" stopColor="#B45309" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            {/* Animations scoppées, avec respect du prefers-reduced-motion */}
+            <style>{`
+              @keyframes premium-title-shine-anim {
+                0%, 100% { background-position: 0% center; }
+                50% { background-position: 100% center; }
+              }
+              .premium-title-shine {
+                animation: premium-title-shine-anim 6s ease-in-out infinite;
+              }
+              @media (prefers-reduced-motion: reduce) {
+                .premium-title-shine {
+                  animation: none;
+                }
+              }
+            `}</style>
           </div>
-          <p className="text-[14px] text-[#8A9080]">
-            Gérez vos informations personnelles et la sécurité de votre compte.
-          </p>
         </motion.div>
 
         {/* ── Grille principale ── */}
@@ -403,7 +438,7 @@ export default function SettingsClient() {
 
               {isLoadingProfile ? (
                 <div className="flex min-h-48 items-center justify-center">
-                  <div className="flex items-center gap-2.5 text-[13px] text-[#8A9080]">
+                  <div className="flex items-center gap-2.5 text-[14px] text-[#8A9080]">
                     <Loader2 className="h-5 w-5 animate-spin text-[#1f4d3f]" />
                     Chargement du profil…
                   </div>
@@ -476,7 +511,7 @@ export default function SettingsClient() {
                         <button
                           type="button"
                           onClick={() => setShowPwd1((s) => !s)}
-                          className="text-[#8A9080] transition-colors hover:text-[#1f4d3f]"
+                          className="text-[#8A9080] transition-colors hover:text-[#1f4d3f] cursor-pointer"
                         >
                           {showPwd1 ? (
                             <EyeOff className="h-4 w-4" strokeWidth={1.75} />
@@ -499,7 +534,7 @@ export default function SettingsClient() {
                         <button
                           type="button"
                           onClick={() => setShowPwd2((s) => !s)}
-                          className="text-[#8A9080] transition-colors hover:text-[#1f4d3f]"
+                          className="text-[#8A9080] transition-colors hover:text-[#1f4d3f] cursor-pointer"
                         >
                           {showPwd2 ? (
                             <EyeOff className="h-4 w-4" strokeWidth={1.75} />
@@ -523,7 +558,7 @@ export default function SettingsClient() {
                     >
                       <div
                         className={cn(
-                          "flex items-center gap-2 rounded-lg px-3 py-2 text-[12.5px] font-medium",
+                          "flex items-center gap-2 rounded-lg px-3 py-2 text-[14px] font-medium",
                           passwordForm.new_password1 === passwordForm.new_password2
                             ? "bg-emerald-50 text-emerald-600"
                             : "bg-red-50 text-red-600"
@@ -560,7 +595,7 @@ export default function SettingsClient() {
           >
             {/* Carte profil */}
             <div className="rounded-2xl border border-[#E8E3D8] bg-white p-5 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)]">
-              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#8A9080]">
+              <p className="mb-4 text-[13px] font-semibold uppercase tracking-[0.14em] text-[#8A9080]">
                 Votre compte
               </p>
 
@@ -584,10 +619,10 @@ export default function SettingsClient() {
                   <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white bg-emerald-400" />
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate text-[14px] font-bold text-[#1f241c]">
+                  <p className="truncate text-[16px] font-bold text-[#1f241c]">
                     {user?.name || "—"}
                   </p>
-                  <p className="truncate text-[12px] text-[#8A9080]">
+                  <p className="truncate text-[14px] text-[#8A9080]">
                     {user?.email || "—"}
                   </p>
                 </div>
@@ -597,7 +632,7 @@ export default function SettingsClient() {
               <div className="space-y-2">
                 <div
                   className={cn(
-                    "flex items-center gap-2 rounded-xl px-3 py-2.5 text-[12.5px] font-medium",
+                    "flex items-center gap-2 rounded-xl px-3 py-2.5 text-[14px] font-medium",
                     user?.is_verified
                       ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
                       : "border border-amber-200 bg-amber-50 text-amber-700"
@@ -613,7 +648,7 @@ export default function SettingsClient() {
 
                 <div
                   className={cn(
-                    "flex items-center gap-2 rounded-xl px-3 py-2.5 text-[12.5px] font-medium",
+                    "flex items-center gap-2 rounded-xl px-3 py-2.5 text-[14px] font-medium",
                     user?.is_active
                       ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
                       : "border border-red-200 bg-red-50 text-red-700"
@@ -627,7 +662,7 @@ export default function SettingsClient() {
                   {user?.is_active ? "Compte actif" : "Compte désactivé"}
                 </div>
 
-                <div className="flex items-center gap-2 rounded-xl border border-[#E8E3D8] bg-[#F7F5F0] px-3 py-2.5 text-[12.5px] font-medium text-[#8A9080]">
+                <div className="flex items-center gap-2 rounded-xl border border-[#E8E3D8] bg-[#F7F5F0] px-3 py-2.5 text-[14px] font-medium text-[#8A9080]">
                   <ShieldCheck className="h-4 w-4 shrink-0 text-[#1f4d3f]" />
                   {user?.role === "platform_admin" ? "Administrateur" : "Client"}
                 </div>
@@ -636,11 +671,11 @@ export default function SettingsClient() {
 
             {/* Note de sécurité */}
             <div className="rounded-2xl border border-[#E8E3D8] bg-[#F7F5F0] p-4">
-              <p className="mb-1.5 flex items-center gap-2 text-[12px] font-semibold text-[#1f241c]">
+              <p className="mb-1.5 flex items-center gap-2 text-[14px] font-semibold text-[#1f241c]">
                 <Lock className="h-3.5 w-3.5 text-[#1f4d3f]" strokeWidth={2} />
                 Conseils de sécurité
               </p>
-              <ul className="space-y-1 text-[11.5px] leading-5 text-[#8A9080]">
+              <ul className="space-y-1 text-[13px] leading-5 text-[#8A9080]">
                 <li>• Utilisez au moins 8 caractères</li>
                 <li>• Mélangez lettres, chiffres et symboles</li>
                 <li>• Ne réutilisez pas un ancien mot de passe</li>

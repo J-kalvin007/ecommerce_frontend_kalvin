@@ -154,10 +154,10 @@ export default function WalletBalanceCard({
               <Wallet className="h-5 w-5 text-emerald-400" strokeWidth={1.75} />
             </div>
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">
+              <p className="text-[14px] font-semibold uppercase tracking-[0.14em] text-white/40">
                 Mon Portefeuille
               </p>
-              <p className="text-[13px] font-bold text-white/80">
+              <p className="text-[16px] font-bold text-white/80">
                 Atelier du Terroir
               </p>
             </div>
@@ -184,7 +184,7 @@ export default function WalletBalanceCard({
               whileTap={{ scale: 0.94 }}
               onClick={onRefresh}
               disabled={isRefreshing}
-              className="flex h-9 w-9 items-center justify-center rounded-xl transition-colors"
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl transition-colors"
               style={{
                 background: "rgba(255,255,255,0.06)",
                 border: "1px solid rgba(255,255,255,0.1)",
@@ -207,7 +207,7 @@ export default function WalletBalanceCard({
 
         {/* ── Affichage du solde principal ── */}
         <div className="mb-8">
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/35">
+          <p className="mb-2 text-[14px] font-semibold uppercase tracking-[0.16em] text-white/35">
             Solde disponible
           </p>
           <div className="flex items-end gap-3">
@@ -223,13 +223,13 @@ export default function WalletBalanceCard({
             >
               {integerPart}
             </motion.p>
-            <span className="mb-2 text-xl font-bold text-white/50">FCFA</span>
+            <span className="mb-2 text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white/50">FCFA</span>
           </div>
 
           {/* Indicateur de sécurité */}
           <div className="mt-3 flex items-center gap-1.5">
             <Shield className="h-3 w-3 text-emerald-400/70" strokeWidth={2} />
-            <p className="text-[11px] text-white/35">
+            <p className="text-[14px] text-white/35">
               Solde protégé et sécurisé
             </p>
           </div>
@@ -243,7 +243,7 @@ export default function WalletBalanceCard({
             whileTap={{ scale: 0.97 }}
             onClick={onDeposit}
             disabled={!isActive}
-            className="flex flex-1 items-center justify-center gap-2.5 rounded-2xl py-3.5 text-[13.5px] font-bold tracking-tight transition-opacity disabled:opacity-40"
+            className="flex flex-1 cursor-pointer items-center justify-center gap-2.5 rounded-2xl py-3.5 text-[16px] font-bold tracking-tight transition-opacity disabled:opacity-40"
             style={{
               background:
                 "linear-gradient(135deg, #10b981 0%, #059669 100%)",
@@ -252,7 +252,7 @@ export default function WalletBalanceCard({
               color: "#fff",
             }}
           >
-            <Plus className="h-4 w-4" strokeWidth={2.5} />
+            <Plus className="h-6 w-6" strokeWidth={2.5} />
             Recharger
           </motion.button>
 
@@ -262,7 +262,7 @@ export default function WalletBalanceCard({
             whileTap={{ scale: 0.97 }}
             onClick={onRefund}
             disabled={!isActive}
-            className="flex flex-1 items-center justify-center gap-2.5 rounded-2xl py-3.5 text-[13.5px] font-bold tracking-tight transition-opacity disabled:opacity-40"
+            className="flex flex-1 cursor-pointer items-center justify-center gap-2.5 rounded-2xl py-3.5 text-[16px] font-bold tracking-tight transition-opacity disabled:opacity-40"
             style={{
               background: "rgba(255,255,255,0.07)",
               border: "1px solid rgba(255,255,255,0.12)",
@@ -270,7 +270,7 @@ export default function WalletBalanceCard({
               color: "rgba(255,255,255,0.85)",
             }}
           >
-            <ArrowDownLeft className="h-4 w-4" strokeWidth={2} />
+            <ArrowDownLeft className="h-6 w-6" strokeWidth={2} />
             Remboursement
           </motion.button>
         </div>

@@ -98,7 +98,7 @@ const NAV_ITEMS: NavItem[] = [
     sublabel: "Suivi en temps réel",
     icon: ShoppingBag,
     href: "/customer/commandes",
-    badge: 2,
+    // badge: 2,
   },
   {
     id: "deliveries",
@@ -121,13 +121,7 @@ const NAV_ITEMS: NavItem[] = [
     icon: Crown,
     href: "/customer/fidelites",
   },
-  // {
-  //   id: "favorites",
-  //   label: "Mes Favoris",
-  //   sublabel: "Produits sauvegardés",
-  //   icon: Heart,
-  //   href: "/customer/favoris",
-  // },
+
   {
     id: "notes",
     label: "Notes & Avis",
@@ -396,6 +390,7 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
                 whileTap={{ scale: 0.92 }}
                 className="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-[#E5E0D6] bg-white text-[#5A6755] shadow-sm transition-colors hover:border-[#1f4d3f]/25 hover:text-[#1f4d3f] dark:border-white/10 dark:bg-white/5 dark:text-white/60"
                 aria-label="Changer le thème"
+                disabled={true}
               >
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.span

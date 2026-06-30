@@ -107,7 +107,7 @@ export default function PhoneInputWithCountry({
 
   return (
     <div
-      className={`flex items-stretch w-full rounded-xl transition-all focus-within:ring-2 focus-within:ring-[#1f4d3f]/50 ${className}`}
+      className={`flex items-stretch w-full h-[45px] rounded-xl transition-all focus-within:ring-2 focus-within:ring-[#1f4d3f]/50 ${className}`}
       style={{ background: inputBg, border: `1px solid ${border}` }}
     >
       <DropdownMenu.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -115,13 +115,13 @@ export default function PhoneInputWithCountry({
           <button
             type="button"
             disabled={disabled}
-            className="flex shrink-0 cursor-pointer items-center gap-2 rounded-l-xl px-4 py-3.5 outline-none transition-colors hover:bg-black/5 dark:hover:bg-white/5 disabled:opacity-50"
+            className="flex shrink-0 cursor-pointer items-center gap-2 rounded-l-xl px-4 py-.5 outline-none transition-colors hover:bg-black/5 dark:hover:bg-white/5 disabled:opacity-50"
             style={{ borderRight: `1px solid ${border}` }}
           >
             <ReactCountryFlag
               countryCode={selectedCountry.iso2}
               svg
-              style={{ width: "1.5em", height: "1.5em", borderRadius: "4px", objectFit: "cover" }}
+              style={{ width: "1.5em", height: "1.2em", borderRadius: "4px", objectFit: "cover" }}
               title={selectedCountry.name}
             />
             <span className="text-sm font-bold" style={{ color: text }}>
@@ -198,7 +198,7 @@ export default function PhoneInputWithCountry({
         <Phone className="mr-3 h-5 w-5 shrink-0" style={{ color: muted }} />
         <input
           type="tel"
-          placeholder="77 123 45 67"
+          placeholder="98 77 23 85"
           value={phoneNumber}
           onChange={handlePhoneChange}
           required={required}

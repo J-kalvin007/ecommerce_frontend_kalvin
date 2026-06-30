@@ -18,7 +18,6 @@ import {
   Mail,
   ShieldCheck,
   Star,
-  Star,
   Truck,
   UserCheck,
 } from "lucide-react";

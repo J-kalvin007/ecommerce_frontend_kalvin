@@ -189,7 +189,7 @@ export default function RatingProductCard({
         <div className="absolute left-3 top-3">
           <div className="flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 shadow-sm backdrop-blur-sm">
             <Star className="h-3 w-3 fill-amber-400 text-amber-400" strokeWidth={2} />
-            <span className="text-[11px] font-black text-amber-600">
+            <span className="text-[13px] font-black text-amber-600">
               {currentScore}/5
             </span>
           </div>
@@ -201,7 +201,7 @@ export default function RatingProductCard({
           whileTap={{ scale: 0.9 }}
           onClick={handleDelete}
           disabled={isDeleting}
-          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur-sm transition-colors hover:bg-red-50 disabled:opacity-60"
+          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur-sm transition-colors hover:bg-red-50 disabled:opacity-60 cursor-pointer"
           title="Supprimer ma note"
         >
           {isDeleting ? (
@@ -214,17 +214,17 @@ export default function RatingProductCard({
 
       {/* ── Corps de la carte ── */}
       <div className={cn("p-4 flex flex-1 flex-col", viewMode === "list" ? "justify-center" : "")}>
-        <h3 className="mb-1 truncate text-[14px] font-bold text-[#1f241c] leading-snug">
+        <h3 className="mb-1 truncate text-[16px] font-bold text-[#1f241c] leading-snug">
           {product.name}
         </h3>
 
-        <p className="mb-3 text-[15px] font-black tracking-tight text-[#1f4d3f]">
+        <p className="mb-3 text-[17px] font-black tracking-tight text-[#1f4d3f]">
           {formatPrice(product.price)}
         </p>
 
         {/* Étoiles interactives */}
         <div className="mb-3">
-          <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8A9080]">
+          <p className="mb-1.5 text-[13px] font-semibold uppercase tracking-[0.08em] text-[#8A9080]">
             Ma note
           </p>
           <div className="flex items-center gap-2">
@@ -241,7 +241,7 @@ export default function RatingProductCard({
                   initial={{ opacity: 0, x: 6 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0 }}
-                  className="flex items-center gap-1 text-[11px] text-amber-500"
+                  className="flex items-center gap-1 text-[13px] text-amber-500"
                 >
                   <Loader2 className="h-3 w-3 animate-spin" />
                   Enregistrement…
@@ -253,7 +253,7 @@ export default function RatingProductCard({
                   initial={{ opacity: 0, x: 6 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0 }}
-                  className="flex items-center gap-1 text-[11px] text-emerald-500"
+                  className="flex items-center gap-1 text-[13px] text-emerald-500"
                 >
                   <CheckCircle2 className="h-3 w-3" />
                   Mis à jour !
@@ -268,7 +268,7 @@ export default function RatingProductCard({
           href={`/products/${product.slug}`}
           onClick={() => useUIStore.getState().setActiveProductId(product.id)}
           className={cn(
-            "flex items-center justify-center gap-1.5 rounded-xl border border-[#E8E3D8] py-2.5 text-[12.5px] font-semibold text-[#1f4d3f] transition-colors hover:border-[#1f4d3f]/25 hover:bg-[#1f4d3f]/5",
+            "flex items-center justify-center gap-1.5 rounded-xl border border-[#E8E3D8] py-2.5 text-[14px] font-semibold text-[#1f4d3f] transition-colors hover:border-[#1f4d3f]/25 hover:bg-[#1f4d3f]/5 cursor-pointer",
             viewMode === "list" ? "w-fit px-6 mt-4" : "w-full mt-auto"
           )}
         >

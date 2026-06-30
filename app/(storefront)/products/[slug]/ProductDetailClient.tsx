@@ -253,7 +253,8 @@ export default function ProductDetailClient({ slug, id }: Props) {
     ) => {
       if (!product) return;
 
-      const selectedVariant = variantId ? product.variants.find((v) => v.id === variantId) : null;
+      const defaultVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
+      const selectedVariant = variantId ? product.variants.find((v) => v.id === variantId) : defaultVariant;
       const actualStock = selectedVariant ? selectedVariant.stock : product.stock;
 
       if (quantity > (actualStock || 0)) {
@@ -263,10 +264,10 @@ export default function ProductDetailClient({ slug, id }: Props) {
 
       addItem({
         productId: product.id,
-        variantId,
-        name: variantName ? `${product.name} — ${variantName}` : product.name,
+        variantId: selectedVariant ? selectedVariant.id : null,
+        name: selectedVariant ? `${product.name} — ${selectedVariant.name}` : product.name,
         sku: selectedVariant?.sku || product.sku,
-        price,
+        price: selectedVariant ? selectedVariant.price : price,
         compareAtPrice: comparePrice!,
         image: images[0] ?? null,
         quantity,
@@ -276,13 +277,13 @@ export default function ProductDetailClient({ slug, id }: Props) {
       });
 
       setIsPurchaseModalOpen(false);
-      setToast({
-        show: true,
-        type: "success",
-        message: variantName
-          ? `${product.name} — ${variantName} (×${quantity}) ajouté au panier`
-          : `${product.name} (×${quantity}) ajouté au panier`,
-      });
+      // setToast({
+      //   show: true,
+      //   type: "success",
+      //   message: variantName
+      //     ? `${product.name} — ${variantName} (×${quantity}) ajouté au panier`
+      //     : `${product.name} (×${quantity}) ajouté au panier`,
+      // });
     },
     [product, addItem, comparePrice, images]
   );

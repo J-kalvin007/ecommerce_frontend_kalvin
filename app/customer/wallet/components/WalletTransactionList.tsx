@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import type { WalletTransaction } from "@/modeles/wallets-paiements";
 import WalletTransactionRow from "./WalletTransactionRow";
+import LoadingKalvin from "@/components/special/loadingKalvin";
 
 /* ── Types internes ─────────────────────────────────────────────────────── */
 
@@ -65,23 +66,23 @@ const TYPE_FILTERS: Array<{
   icon: React.ComponentType<{ className?: string }>;
   color: string;
 }> = [
-  { value: "all", label: "Tout", icon: SlidersHorizontal, color: "#1f4d3f" },
-  { value: "deposit", label: "Dépôts", icon: ArrowUpRight, color: "#10b981" },
-  { value: "payment", label: "Paiements", icon: CreditCard, color: "#f59e0b" },
-  { value: "refund", label: "Remboursements", icon: RefreshCcw, color: "#818cf8" },
-  {
-    value: "cashback",
-    label: "Cashback",
-    icon: Gift,
-    color: "#C9963A",
-  },
-  {
-    value: "withdrawal",
-    label: "Retraits",
-    icon: ArrowDownLeft,
-    color: "#ef4444",
-  },
-];
+    { value: "all", label: "Tout", icon: SlidersHorizontal, color: "#1f4d3f" },
+    { value: "deposit", label: "Dépôts", icon: ArrowUpRight, color: "#10b981" },
+    { value: "payment", label: "Paiements", icon: CreditCard, color: "#f59e0b" },
+    { value: "refund", label: "Remboursements", icon: RefreshCcw, color: "#818cf8" },
+    {
+      value: "cashback",
+      label: "Cashback",
+      icon: Gift,
+      color: "#C9963A",
+    },
+    {
+      value: "withdrawal",
+      label: "Retraits",
+      icon: ArrowDownLeft,
+      color: "#ef4444",
+    },
+  ];
 
 /* ── Configuration des filtres de statut ───────────────────────────────── */
 
@@ -91,12 +92,12 @@ const STATUS_FILTERS: Array<{
   icon: React.ComponentType<{ className?: string }>;
   color: string;
 }> = [
-  { value: "all", label: "Tous statuts", icon: SlidersHorizontal, color: "#1f4d3f" },
-  { value: "success", label: "Réussis", icon: CheckCircle2, color: "#10b981" },
-  { value: "pending", label: "En attente", icon: Clock, color: "#f59e0b" },
-  { value: "failed", label: "Échoués", icon: AlertCircle, color: "#ef4444" },
-  { value: "cancelled", label: "Annulés", icon: XCircle, color: "#94a3b8" },
-];
+    { value: "all", label: "Tous statuts", icon: SlidersHorizontal, color: "#1f4d3f" },
+    { value: "success", label: "Réussis", icon: CheckCircle2, color: "#10b981" },
+    { value: "pending", label: "En attente", icon: Clock, color: "#f59e0b" },
+    { value: "failed", label: "Échoués", icon: AlertCircle, color: "#ef4444" },
+    { value: "cancelled", label: "Annulés", icon: XCircle, color: "#94a3b8" },
+  ];
 
 /* ── Constante de pagination ─────────────────────────────────────────────── */
 const PAGE_SIZE = 10;
@@ -178,10 +179,10 @@ export default function WalletTransactionList({
       {/* ── Titre de section ── */}
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="text-[15px] font-black tracking-tight text-[#1f241c]">
+          <h2 className="text-[22px] md:text-[24px] xl:text-[26px] font-black tracking-tight text-[#1f241c]">
             Historique des transactions
           </h2>
-          <p className="text-[12px] text-[#8A9080]">
+          <p className="text-[14px] text-[#8A9080]">
             {filteredTransactions.length} transaction
             {filteredTransactions.length !== 1 ? "s" : ""} trouvée
             {filteredTransactions.length !== 1 ? "s" : ""}
@@ -205,18 +206,17 @@ export default function WalletTransactionList({
                     setFilterType(f.value);
                     setVisibleCount(PAGE_SIZE);
                   }}
-                  className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all duration-200 ${
-                    isActive
-                      ? "shadow-sm"
-                      : "bg-[#F7F5F0] text-[#8A9080] hover:bg-[#EEE9E0] hover:text-[#1f241c]"
-                  }`}
+                  className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-[16px] font-semibold transition-all duration-200 ${isActive
+                    ? "shadow-sm"
+                    : "bg-[#F7F5F0] text-[#8A9080] hover:bg-[#EEE9E0] hover:text-[#1f241c]"
+                    }`}
                   style={
                     isActive
                       ? {
-                          background: f.color,
-                          color: "#fff",
-                          boxShadow: `0 4px 12px ${f.color}40`,
-                        }
+                        background: f.color,
+                        color: "#fff",
+                        boxShadow: `0 4px 12px ${f.color}40`,
+                      }
                       : undefined
                   }
                 >
@@ -239,20 +239,19 @@ export default function WalletTransactionList({
                   setSearchQuery(e.target.value);
                   setVisibleCount(PAGE_SIZE);
                 }}
-                className="w-full rounded-xl border border-[#E8E3D8] bg-white py-2 pl-9 pr-3 text-[12px] text-[#1f241c] outline-none transition-colors focus:border-[#1f4d3f] focus:ring-1 focus:ring-[#1f4d3f]/15 placeholder:text-[#8A9080]/60"
+                className="w-full rounded-xl border border-[#E8E3D8] bg-white py-2 pl-9 pr-3 text-[15px] text-[#1f241c] outline-none transition-colors focus:border-[#1f4d3f] focus:ring-1 focus:ring-[#1f4d3f]/15 placeholder:text-[#8A9080]/60"
               />
             </div>
 
             <button
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className={`flex items-center justify-center rounded-xl border p-2 transition-colors ${
-                showAdvanced
-                  ? "border-[#1f4d3f] bg-[#1f4d3f] text-white"
-                  : "border-[#E8E3D8] bg-white text-[#1f241c] hover:bg-[#F7F5F0]"
-              }`}
+              className={`flex cursor-pointer items-center justify-center rounded-xl border p-2 transition-colors ${showAdvanced
+                ? "border-[#1f4d3f] bg-[#1f4d3f] text-white"
+                : "border-[#E8E3D8] bg-white text-[#1f241c] hover:bg-[#F7F5F0]"
+                }`}
               title="Filtres avancés"
             >
-              <SlidersHorizontal className="h-4 w-4" />
+              <SlidersHorizontal className="h-5 w-5" />
             </button>
           </div>
         </div>
@@ -270,7 +269,7 @@ export default function WalletTransactionList({
               <div className="mt-3 rounded-xl border border-[#E8E3D8] bg-[#F7F5F0] p-4 space-y-4">
                 {/* Filtre par statut */}
                 <div>
-                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A9080]">
+                  <p className="mb-2 text-[14px] font-bold uppercase tracking-[0.1em] text-[#8A9080]">
                     Statut
                   </p>
                   <div className="flex flex-wrap gap-1.5">
@@ -284,22 +283,21 @@ export default function WalletTransactionList({
                             setFilterStatus(f.value);
                             setVisibleCount(PAGE_SIZE);
                           }}
-                          className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-semibold transition-all duration-200 ${
-                            isActive
-                              ? "shadow-sm"
-                              : "border border-transparent bg-white text-[#8A9080] hover:text-[#1f241c]"
-                          }`}
+                          className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[14px] font-semibold transition-all duration-200 ${isActive
+                            ? "shadow-sm"
+                            : "border border-transparent bg-white text-[#8A9080] hover:text-[#1f241c]"
+                            }`}
                           style={
                             isActive
                               ? {
-                                  background: f.color,
-                                  color: "#fff",
-                                  boxShadow: `0 3px 10px ${f.color}40`,
-                                }
+                                background: f.color,
+                                color: "#fff",
+                                boxShadow: `0 3px 10px ${f.color}40`,
+                              }
                               : undefined
                           }
                         >
-                          <Icon className="h-3 w-3" />
+                          <Icon className="h-4s w-4" />
                           {f.label}
                         </button>
                       );
@@ -309,7 +307,7 @@ export default function WalletTransactionList({
 
                 {/* Trier par */}
                 <div>
-                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A9080]">
+                  <p className="mb-2 text-[14px] font-bold uppercase tracking-[0.1em] text-[#8A9080]">
                     Trier par
                   </p>
                   <div className="flex flex-wrap gap-1.5">
@@ -339,13 +337,12 @@ export default function WalletTransactionList({
                         <button
                           key={s.value}
                           onClick={() => setSortBy(s.value)}
-                          className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[12px] font-semibold transition-all duration-200 ${
-                            isActive
-                              ? "border-[#1f4d3f] bg-white text-[#1f4d3f] shadow-sm"
-                              : "border-transparent bg-white text-[#8A9080] hover:border-[#E8E3D8] hover:text-[#1f241c]"
-                          }`}
+                          className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[14px] font-semibold transition-all duration-200 ${isActive
+                            ? "border-[#1f4d3f] bg-white text-[#1f4d3f] shadow-sm"
+                            : "border-transparent bg-white text-[#8A9080] hover:border-[#E8E3D8] hover:text-[#1f241c]"
+                            }`}
                         >
-                          <Icon className="h-3 w-3" />
+                          <Icon className="h-4 w-4" />
                           {s.label}
                         </button>
                       );
@@ -371,14 +368,7 @@ export default function WalletTransactionList({
               className="py-12 text-center"
             >
               <div className="inline-flex flex-col items-center gap-3">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="h-8 w-8 rounded-full border-2 border-[#E8E3D8] border-t-[#1f4d3f]"
-                />
-                <p className="text-[13px] text-[#8A9080]">
-                  Chargement des transactions…
-                </p>
+                <LoadingKalvin message="Chargement des transactions…" />
               </div>
             </motion.div>
           ) : filteredTransactions.length === 0 ? (
@@ -402,13 +392,13 @@ export default function WalletTransactionList({
               {(filterType !== "all" ||
                 filterStatus !== "all" ||
                 searchQuery) && (
-                <button
-                  onClick={handleResetFilters}
-                  className="mt-4 rounded-xl bg-[#F7F5F0] px-4 py-2 text-[12px] font-semibold text-[#1f4d3f] transition-colors hover:bg-[#EEE9E0]"
-                >
-                  Réinitialiser les filtres
-                </button>
-              )}
+                  <button
+                    onClick={handleResetFilters}
+                    className="mt-4 rounded-xl cursor-pointer bg-[#F7F5F0] px-4 py-2 text-[12px] font-semibold text-[#1f4d3f] transition-colors hover:bg-[#EEE9E0]"
+                  >
+                    Réinitialiser les filtres
+                  </button>
+                )}
             </motion.div>
           ) : (
             /* Liste filtrée */
@@ -428,7 +418,7 @@ export default function WalletTransactionList({
                 <div className="border-t border-[#E8E3D8] px-4 py-3 text-center">
                   <button
                     onClick={handleLoadMore}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl py-2 text-[12px] font-semibold text-[#8A9080] transition-colors hover:bg-[#F7F5F0] hover:text-[#1f241c]"
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl py-2 text-[14px] font-semibold text-[#8A9080] transition-colors hover:bg-[#F7F5F0] hover:text-[#1f241c]"
                   >
                     <ChevronDown className="h-3.5 w-3.5" />
                     Voir plus ({filteredTransactions.length - visibleCount}{" "}

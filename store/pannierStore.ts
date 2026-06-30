@@ -54,7 +54,7 @@ interface CartState {
   isDrawerOpen: boolean;
 
   /* --- Actions --- */
-  addItem: (item: CartItem) => void;
+  addItem: (item: CartItem, preventOpenDrawer?: boolean) => void;
   removeItem: (productId: string, variantId: string | null) => void;
   updateQuantity: (productId: string, variantId: string | null, qty: number) => void;
   clearCart: () => void;
@@ -81,7 +81,7 @@ export const useCartStore = create<CartState>()(
       loyaltyPointsToUse: 0,
       isDrawerOpen: false,
 
-      addItem: (item) => {
+      addItem: (item, preventOpenDrawer = false) => {
         set((state) => {
           const existingIndex = state.items.findIndex(
             (i) => i.productId === item.productId && i.variantId === item.variantId
@@ -96,11 +96,11 @@ export const useCartStore = create<CartState>()(
               existing.maxStock
             );
             updated[existingIndex] = { ...existing, quantity: newQty };
-            return { items: updated, isDrawerOpen: true };
+            return { items: updated, isDrawerOpen: preventOpenDrawer ? state.isDrawerOpen : true };
           }
 
           /* Nouvel article */
-          return { items: [...state.items, item], isDrawerOpen: true };
+          return { items: [...state.items, item], isDrawerOpen: preventOpenDrawer ? state.isDrawerOpen : true };
         });
       },
 

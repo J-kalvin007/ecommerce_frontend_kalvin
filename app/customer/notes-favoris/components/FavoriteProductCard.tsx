@@ -128,7 +128,7 @@ export default function FavoriteProductCard({
             {/* Badge stock */}
             <div className="absolute left-3 top-3">
               <span
-                className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[10.5px] font-bold shadow-sm ${
+                className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[12px] font-bold shadow-sm ${
                   product.is_in_stock
                     ? "bg-emerald-500 text-white"
                     : "bg-red-500 text-white"
@@ -149,7 +149,7 @@ export default function FavoriteProductCard({
               whileTap={{ scale: 0.9 }}
               onClick={handleRemove}
               disabled={isRemoving}
-              className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur-sm transition-colors hover:bg-red-50 disabled:opacity-60"
+              className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur-sm transition-colors hover:bg-red-50 disabled:opacity-60 cursor-pointer"
               title="Retirer des favoris"
             >
               {isRemoving ? (
@@ -165,17 +165,17 @@ export default function FavoriteProductCard({
 
           {/* ── Infos du produit ── */}
           <div className={cn("p-4 flex flex-1 flex-col", viewMode === "list" ? "justify-center" : "")}>
-            <h3 className="mb-1 truncate text-[14px] font-bold text-[#1f241c] leading-snug">
+            <h3 className="mb-1 truncate text-[16px] font-bold text-[#1f241c] leading-snug">
               {product.name}
             </h3>
 
             {/* Prix */}
-            <p className="mb-3 text-[16px] font-black tracking-tight text-[#1f4d3f]">
+            <p className="mb-3 text-[18px] font-black tracking-tight text-[#1f4d3f]">
               {formatPrice(product.price)}
             </p>
 
             {/* Méta : date + compteur */}
-            <div className="flex items-center justify-between text-[11px] text-[#8A9080]">
+            <div className="flex items-center justify-between text-[13px] text-[#8A9080]">
               <span className="flex items-center gap-1">
                 <CalendarDays className="h-3 w-3" />
                 {formatDate(product.favorited_at)}
@@ -192,7 +192,7 @@ export default function FavoriteProductCard({
               href={`/products/${product.slug}`}
               onClick={() => useUIStore.getState().setActiveProductId(product.id)}
               className={cn(
-                "flex items-center justify-center gap-1.5 rounded-xl border border-[#E8E3D8] py-2.5 text-[12.5px] font-semibold text-[#1f4d3f] transition-colors hover:border-[#1f4d3f]/25 hover:bg-[#1f4d3f]/5",
+                "flex items-center justify-center gap-1.5 rounded-xl border border-[#E8E3D8] py-2.5 text-[14px] font-semibold text-[#1f4d3f] transition-colors hover:border-[#1f4d3f]/25 hover:bg-[#1f4d3f]/5 cursor-pointer",
                 viewMode === "list" ? "w-fit px-6 mt-4" : "w-full mt-3"
               )}
             >

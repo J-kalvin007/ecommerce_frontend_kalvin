@@ -835,7 +835,7 @@ function SectionCard({
         >
           <Icon className="h-4 w-4" style={{ color: "#1f4d3f" }} />
         </div>
-        <h2 className="font-bold text-sm tracking-tight" style={{ color: text }}>
+        <h2 className="font-bold text-sm" style={{ color: text }}>
           {title}
         </h2>
       </div>
@@ -904,8 +904,8 @@ function OrderJourney({
                   border: isCurrent
                     ? "2px solid #1f4d3f"
                     : isDone
-                    ? "2px solid #1f4d3f"
-                    : `2px solid ${isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.12)"}`,
+                      ? "2px solid #1f4d3f"
+                      : `2px solid ${isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.12)"}`,
                   boxShadow: isCurrent ? "0 0 16px rgba(31,77,63,0.5)" : "none",
                 }}
               >

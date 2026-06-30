@@ -18,6 +18,7 @@ import {
   LogOut,
   FolderTree,
   ArrowLeft,
+  Truck,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -48,6 +49,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: "categories", label: "Catégories", icon: FolderTree, href: "/admin?section=categories" },
   { id: "products", label: "Produits", icon: Package, href: "/admin?section=products" },
   { id: "orders", label: "Commandes", icon: ShoppingCart, href: "/admin?section=orders" },
+  { id: "livraisons", label: "Livraisons", icon: Truck, href: "/admin?section=livraisons" },
   { id: "clients", label: "Clients", icon: Users, href: "/admin?section=clients" },
   { id: "wallets", label: "Comptes bancaires", icon: Users, href: "/admin?section=wallets" },
   { id: "promotions", label: "Promotions", icon: Tag, href: "/admin?section=promotions" },

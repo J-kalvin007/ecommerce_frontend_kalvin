@@ -26,10 +26,9 @@ import {
   Star,
   Search,
   SlidersHorizontal,
-  ShoppingBag,
-  Inbox,
   Grid,
   List,
+  Inbox,
 } from "lucide-react";
 
 import CustomerShell from "@/app/customer/components/CustomerShell";
@@ -37,6 +36,7 @@ import { cn } from "@/lib/utils";
 import Toast from "@/components/special/Toast";
 import LoadingStyle from "@/components/special/loadingStyle";
 import ErrorState from "@/components/special/ErrorState";
+import EmptyState from "@/components/special/EmptyState";
 
 import {
   getMyFavorites,
@@ -63,7 +63,7 @@ export default function CustomerNotesFavorisPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("favorites");
 
   /* ── État : Vue ─────────────────────────────────────────────────────── */
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   /* ── État : Favoris ─────────────────────────────────────────────────── */
   const [favorites, setFavorites] = useState<FavoriteProduct[]>([]);
@@ -218,20 +218,67 @@ export default function CustomerNotesFavorisPage() {
      ═══════════════════════════════════════════════════════════════════════ */
   return (
     <CustomerShell activeSection="favorites">
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
 
-        {/* ── En-tête ── */}
+        {/* ── En-tête avec effet premium ── */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col gap-2"
         >
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#1f241c]">
-            Favoris & Notes
-          </h1>
-          <p className="mt-1 text-[14px] text-[#8A9080]">
-            Retrouvez vos produits préférés et gérez vos évaluations.
-          </p>
+          <div className="relative inline-block group">
+            <h2
+              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-5xl premium-title-shine flex items-center gap-3"
+              style={{
+                letterSpacing: "-0.025em",
+                backgroundImage:
+                  "linear-gradient(110deg, #0D2E1E 0%, #1F4D34 45%, #0D2E1E 90%)",
+                backgroundSize: "220% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              <Heart className="h-10 w-10 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
+              Favoris & Notes
+            </h2>
+
+            {/* Kicker discret en lettres espacées doré, signature premium */}
+            <span
+              className="block text-[11px] font-semibold uppercase tracking-[0.35em] mt-2 mb-2"
+              style={{ color: "#B8924A", opacity: 0.85 }}
+            >
+              Retrouvez vos produits préférés et gérez vos évaluations.
+            </span>
+
+            {/* Gradient SVG caché pour l'icône */}
+            <svg width="0" height="0" className="absolute">
+              <defs>
+                <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#FDE68A" />
+                  <stop offset="50%" stopColor="#D97706" />
+                  <stop offset="100%" stopColor="#B45309" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            {/* Animations scoppées, avec respect du prefers-reduced-motion */}
+            <style>{`
+              @keyframes premium-title-shine-anim {
+                0%, 100% { background-position: 0% center; }
+                50% { background-position: 100% center; }
+              }
+              .premium-title-shine {
+                animation: premium-title-shine-anim 6s ease-in-out infinite;
+              }
+              @media (prefers-reduced-motion: reduce) {
+                .premium-title-shine {
+                  animation: none;
+                }
+              }
+            `}</style>
+          </div>
         </motion.div>
 
         {/* ── Tabulation ── */}
@@ -253,9 +300,8 @@ export default function CustomerNotesFavorisPage() {
           {/* Onglet Favoris */}
           <button
             onClick={() => setActiveTab("favorites")}
-            className={`relative z-10 flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[13.5px] font-bold transition-colors ${
-              activeTab === "favorites" ? "text-[#1f241c]" : "text-[#8A9080] hover:text-[#4A5540]"
-            }`}
+            className={`relative z-10 flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[15px] font-bold transition-colors cursor-pointer ${activeTab === "favorites" ? "text-[#1f241c]" : "text-[#8A9080] hover:text-[#4A5540]"
+              }`}
           >
             <Heart
               className="h-4 w-4"
@@ -268,11 +314,10 @@ export default function CustomerNotesFavorisPage() {
             Mes Favoris
             {favorites.length > 0 && (
               <span
-                className={`rounded-full px-2 py-0.5 text-[10.5px] font-black ${
-                  activeTab === "favorites"
-                    ? "bg-red-100 text-red-600"
-                    : "bg-[#E8E3D8] text-[#8A9080]"
-                }`}
+                className={`rounded-full px-2 py-0.5 text-[12px] font-black ${activeTab === "favorites"
+                  ? "bg-red-100 text-red-600"
+                  : "bg-[#E8E3D8] text-[#8A9080]"
+                  }`}
               >
                 {favorites.length}
               </span>
@@ -282,9 +327,8 @@ export default function CustomerNotesFavorisPage() {
           {/* Onglet Notes */}
           <button
             onClick={() => setActiveTab("ratings")}
-            className={`relative z-10 flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[13.5px] font-bold transition-colors ${
-              activeTab === "ratings" ? "text-[#1f241c]" : "text-[#8A9080] hover:text-[#4A5540]"
-            }`}
+            className={`relative z-10 flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[15px] font-bold transition-colors cursor-pointer ${activeTab === "ratings" ? "text-[#1f241c]" : "text-[#8A9080] hover:text-[#4A5540]"
+              }`}
           >
             <Star
               className="h-4 w-4"
@@ -297,11 +341,10 @@ export default function CustomerNotesFavorisPage() {
             Mes Notes
             {ratings.length > 0 && (
               <span
-                className={`rounded-full px-2 py-0.5 text-[10.5px] font-black ${
-                  activeTab === "ratings"
-                    ? "bg-amber-100 text-amber-600"
-                    : "bg-[#E8E3D8] text-[#8A9080]"
-                }`}
+                className={`rounded-full px-2 py-0.5 text-[12px] font-black ${activeTab === "ratings"
+                  ? "bg-amber-100 text-amber-600"
+                  : "bg-[#E8E3D8] text-[#8A9080]"
+                  }`}
               >
                 {ratings.length}
               </span>
@@ -343,19 +386,18 @@ export default function CustomerNotesFavorisPage() {
                       <div className="flex gap-1.5">
                         {(
                           [
-                            { value: "all",           label: "Tous" },
-                            { value: "in_stock",      label: "En stock" },
-                            { value: "out_of_stock",  label: "Épuisés" },
+                            { value: "all", label: "Tous" },
+                            { value: "in_stock", label: "En stock" },
+                            { value: "out_of_stock", label: "Épuisés" },
                           ] as Array<{ value: StockFilter; label: string }>
                         ).map((f) => (
                           <button
                             key={f.value}
                             onClick={() => setStockFilter(f.value)}
-                            className={`rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${
-                              stockFilter === f.value
-                                ? "bg-[#1f4d3f] text-white shadow-sm"
-                                : "bg-[#F7F5F0] text-[#8A9080] hover:bg-[#EEE9E0] hover:text-[#1f241c]"
-                            }`}
+                            className={`rounded-xl px-3 py-1.5 text-[14px] font-semibold transition-all cursor-pointer ${stockFilter === f.value
+                              ? "bg-[#1f4d3f] text-white shadow-sm"
+                              : "bg-[#F7F5F0] text-[#8A9080] hover:bg-[#EEE9E0] hover:text-[#1f241c]"
+                              }`}
                           >
                             {f.label}
                           </button>
@@ -371,19 +413,19 @@ export default function CustomerNotesFavorisPage() {
                             placeholder="Rechercher un produit…"
                             value={favSearch}
                             onChange={(e) => setFavSearch(e.target.value)}
-                            className="w-full rounded-xl border border-[#E8E3D8] bg-white py-2 pl-9 pr-3 text-[12px] text-[#1f241c] outline-none transition-colors focus:border-[#1f4d3f] focus:ring-1 focus:ring-[#1f4d3f]/15 placeholder:text-[#8A9080]/60"
+                            className="w-full rounded-xl border border-[#E8E3D8] bg-white py-2 pl-9 pr-3 text-[14px] text-[#1f241c] outline-none transition-colors focus:border-[#1f4d3f] focus:ring-1 focus:ring-[#1f4d3f]/15 placeholder:text-[#8A9080]/60"
                           />
                         </div>
                         <div className="flex items-center rounded-xl bg-[#F7F5F0] border border-[#E8E3D8] p-1 shrink-0">
                           <button
                             onClick={() => setViewMode("grid")}
-                            className={`flex items-center justify-center p-1.5 rounded-lg transition-colors ${viewMode === "grid" ? "bg-white text-[#1f4d3f] shadow-sm" : "text-[#8A9080] hover:text-[#1f241c]"}`}
+                            className={`flex items-center justify-center p-1.5 rounded-lg transition-colors cursor-pointer ${viewMode === "grid" ? "bg-white text-[#1f4d3f] shadow-sm" : "text-[#8A9080] hover:text-[#1f241c]"}`}
                           >
                             <Grid className="h-3.5 w-3.5" />
                           </button>
                           <button
                             onClick={() => setViewMode("list")}
-                            className={`flex items-center justify-center p-1.5 rounded-lg transition-colors ${viewMode === "list" ? "bg-white text-[#1f4d3f] shadow-sm" : "text-[#8A9080] hover:text-[#1f241c]"}`}
+                            className={`flex items-center justify-center p-1.5 rounded-lg transition-colors cursor-pointer ${viewMode === "list" ? "bg-white text-[#1f4d3f] shadow-sm" : "text-[#8A9080] hover:text-[#1f241c]"}`}
                           >
                             <List className="h-3.5 w-3.5" />
                           </button>
@@ -394,41 +436,24 @@ export default function CustomerNotesFavorisPage() {
 
                   {/* Grille Favoris */}
                   {favorites.length === 0 ? (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="flex flex-col items-center py-20 text-center"
-                    >
-                      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#E8E3D8] bg-[#F7F5F0]">
-                        <Heart className="h-8 w-8 text-[#C4BFB6]" strokeWidth={1.5} />
-                      </div>
-                      <p className="text-[15px] font-bold text-[#1f241c]">
-                        Aucun favori pour l'instant
-                      </p>
-                      <p className="mt-1 text-[13px] text-[#8A9080]">
-                        Ajoutez des produits à vos favoris pour les retrouver ici.
-                      </p>
-                      <a
-                        href="/"
-                        className="mt-5 flex items-center gap-2 rounded-xl bg-[#1f4d3f] px-5 py-2.5 text-[13px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
-                      >
-                        <ShoppingBag className="h-4 w-4" />
-                        Explorer la boutique
-                      </a>
-                    </motion.div>
+                    <EmptyState
+                      icon={Heart}
+                      title="Aucun favori pour l'instant"
+                      description="Ajoutez des produits à vos favoris pour les retrouver ici. Explorez la boutique et cliquez sur le cœur ❤️ pour sauvegarder vos coups de cœur."
+                      actionText="Explorer la boutique"
+                      onAction={() => window.location.href = "/"}
+                    />
                   ) : filteredFavorites.length === 0 ? (
-                    <div className="flex flex-col items-center py-14 text-center">
-                      <Inbox className="mb-3 h-10 w-10 text-[#C4BFB6]" strokeWidth={1.5} />
-                      <p className="text-[14px] font-bold text-[#1f241c]">Aucun résultat</p>
-                      <p className="text-[12px] text-[#8A9080]">
-                        Aucun favori ne correspond à vos filtres.
-                      </p>
-                    </div>
+                    <EmptyState
+                      icon={Inbox}
+                      title="Aucun résultat"
+                      description="Aucun favori ne correspond à vos critères de recherche ou de filtre. Essayez de modifier vos filtres."
+                    />
                   ) : (
                     <motion.div
                       className={cn(
-                        viewMode === "grid" 
-                          ? "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3" 
+                        viewMode === "grid"
+                          ? "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
                           : "flex flex-col gap-4"
                       )}
                       layout
@@ -474,11 +499,10 @@ export default function CustomerNotesFavorisPage() {
                         <div className="flex gap-1">
                           <button
                             onClick={() => setRatingScoreFilter("all")}
-                            className={`rounded-xl px-3 py-1.5 text-[12px] font-semibold transition-all ${
-                              ratingScoreFilter === "all"
-                                ? "bg-amber-400 text-white shadow-sm"
-                                : "bg-[#F7F5F0] text-[#8A9080] hover:bg-amber-50"
-                            }`}
+                            className={`rounded-xl px-3 py-1.5 text-[14px] font-semibold transition-all cursor-pointer ${ratingScoreFilter === "all"
+                              ? "bg-amber-400 text-white shadow-sm"
+                              : "bg-[#F7F5F0] text-[#8A9080] hover:bg-amber-50"
+                              }`}
                           >
                             Tout
                           </button>
@@ -490,11 +514,10 @@ export default function CustomerNotesFavorisPage() {
                                   ratingScoreFilter === score ? "all" : score
                                 )
                               }
-                              className={`flex items-center gap-1 rounded-xl px-2.5 py-1.5 text-[12px] font-semibold transition-all ${
-                                ratingScoreFilter === score
-                                  ? "bg-amber-400 text-white shadow-sm"
-                                  : "bg-[#F7F5F0] text-[#8A9080] hover:bg-amber-50"
-                              }`}
+                              className={`flex items-center gap-1 rounded-xl px-2.5 py-1.5 text-[14px] font-semibold transition-all cursor-pointer ${ratingScoreFilter === score
+                                ? "bg-amber-400 text-white shadow-sm"
+                                : "bg-[#F7F5F0] text-[#8A9080] hover:bg-amber-50"
+                                }`}
                             >
                               <Star
                                 className="h-3 w-3"
@@ -517,11 +540,10 @@ export default function CustomerNotesFavorisPage() {
                         {/* Bouton filtres avancés */}
                         <button
                           onClick={() => setShowAdvancedNotes(!showAdvancedNotes)}
-                          className={`ml-auto flex items-center gap-1.5 rounded-xl border p-2 transition-colors ${
-                            showAdvancedNotes
-                              ? "border-amber-400 bg-amber-400 text-white"
-                              : "border-[#E8E3D8] bg-white text-[#1f241c] hover:bg-[#F7F5F0]"
-                          }`}
+                          className={`ml-auto flex items-center gap-1.5 rounded-xl border p-2 transition-colors cursor-pointer ${showAdvancedNotes
+                            ? "border-amber-400 bg-amber-400 text-white"
+                            : "border-[#E8E3D8] bg-white text-[#1f241c] hover:bg-[#F7F5F0]"
+                            }`}
                         >
                           <SlidersHorizontal className="h-4 w-4" />
                         </button>
@@ -530,13 +552,13 @@ export default function CustomerNotesFavorisPage() {
                         <div className="flex items-center rounded-xl bg-[#F7F5F0] border border-[#E8E3D8] p-1 shrink-0 ml-1">
                           <button
                             onClick={() => setViewMode("grid")}
-                            className={`flex items-center justify-center p-1.5 rounded-lg transition-colors ${viewMode === "grid" ? "bg-white text-amber-500 shadow-sm" : "text-[#8A9080] hover:text-[#1f241c]"}`}
+                            className={`flex items-center justify-center p-1.5 rounded-lg transition-colors cursor-pointer ${viewMode === "grid" ? "bg-white text-amber-500 shadow-sm" : "text-[#8A9080] hover:text-[#1f241c]"}`}
                           >
                             <Grid className="h-3.5 w-3.5" />
                           </button>
                           <button
                             onClick={() => setViewMode("list")}
-                            className={`flex items-center justify-center p-1.5 rounded-lg transition-colors ${viewMode === "list" ? "bg-white text-amber-500 shadow-sm" : "text-[#8A9080] hover:text-[#1f241c]"}`}
+                            className={`flex items-center justify-center p-1.5 rounded-lg transition-colors cursor-pointer ${viewMode === "list" ? "bg-white text-amber-500 shadow-sm" : "text-[#8A9080] hover:text-[#1f241c]"}`}
                           >
                             <List className="h-3.5 w-3.5" />
                           </button>
@@ -561,7 +583,7 @@ export default function CustomerNotesFavorisPage() {
                                   placeholder="Rechercher un produit noté…"
                                   value={ratingSearch}
                                   onChange={(e) => setRatingSearch(e.target.value)}
-                                  className="w-full rounded-xl border border-[#E8E3D8] bg-white py-2 pl-9 pr-3 text-[12px] text-[#1f241c] outline-none transition-colors focus:border-amber-400 focus:ring-1 focus:ring-amber-400/15 placeholder:text-[#8A9080]/60"
+                                  className="w-full rounded-xl border border-[#E8E3D8] bg-white py-2 pl-9 pr-3 text-[14px] text-[#1f241c] outline-none transition-colors focus:border-amber-400 focus:ring-1 focus:ring-amber-400/15 placeholder:text-[#8A9080]/60"
                                 />
                               </div>
                             </div>
@@ -573,34 +595,24 @@ export default function CustomerNotesFavorisPage() {
 
                   {/* Grille Notes */}
                   {ratings.length === 0 ? (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="flex flex-col items-center py-20 text-center"
-                    >
-                      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#E8E3D8] bg-[#F7F5F0]">
-                        <Star className="h-8 w-8 text-[#C4BFB6]" strokeWidth={1.5} />
-                      </div>
-                      <p className="text-[15px] font-bold text-[#1f241c]">
-                        Vous n'avez noté aucun produit
-                      </p>
-                      <p className="mt-1 text-[13px] text-[#8A9080]">
-                        Notez vos achats pour aider la communauté.
-                      </p>
-                    </motion.div>
+                    <EmptyState
+                      icon={Star}
+                      title="Vous n'avez noté aucun produit"
+                      description="Notez vos achats pour aider la communauté et retrouver facilement vos expériences. Votre avis compte !"
+                      actionText="Explorer la boutique"
+                      onAction={() => window.location.href = "/"}
+                    />
                   ) : ratedProducts.length === 0 ? (
-                    <div className="flex flex-col items-center py-14 text-center">
-                      <Inbox className="mb-3 h-10 w-10 text-[#C4BFB6]" strokeWidth={1.5} />
-                      <p className="text-[14px] font-bold text-[#1f241c]">Aucun résultat</p>
-                      <p className="text-[12px] text-[#8A9080]">
-                        Aucun produit noté ne correspond à vos filtres.
-                      </p>
-                    </div>
+                    <EmptyState
+                      icon={Inbox}
+                      title="Aucun résultat"
+                      description="Aucun produit noté ne correspond à vos critères de recherche. Essayez de modifier vos filtres."
+                    />
                   ) : (
                     <motion.div
                       className={cn(
-                        viewMode === "grid" 
-                          ? "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3" 
+                        viewMode === "grid"
+                          ? "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
                           : "flex flex-col gap-4"
                       )}
                       layout

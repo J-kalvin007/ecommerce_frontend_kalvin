@@ -134,27 +134,85 @@ export default function CustomerWalletPage() {
      ═══════════════════════════════════════════════════════════════════════ */
   return (
     <CustomerShell activeSection="wallet">
-      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
 
-        {/* ── En-tête ── */}
+        {/* ── En-tête avec effet premium ── */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col gap-2"
         >
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#1f4d3f]/8 border border-[#1f4d3f]/12">
-              <WalletIcon className="h-4.5 w-4.5 text-[#1f4d3f]" style={{ width: 18, height: 18 }} strokeWidth={1.75} />
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#1f241c]">
+          <div className="relative inline-block group">
+            <h2
+              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-5xl premium-title-shine flex items-center gap-3"
+              style={{
+                letterSpacing: "-0.025em",
+                backgroundImage:
+                  "linear-gradient(110deg, #0D2E1E 0%, #1F4D34 45%, #0D2E1E 90%)",
+                backgroundSize: "220% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              <WalletIcon className="h-7 w-7 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
               Mon Portefeuille
-            </h1>
+            </h2>
+
+            {/* Kicker discret en lettres espacées doré, signature premium */}
+            <span
+              className="block text-[11px] font-semibold uppercase tracking-[0.35em] mt-2 mb-2"
+              style={{ color: "#B8924A", opacity: 0.85 }}
+            >
+              Gérez votre solde, rechargez et consultez vos transactions.
+            </span>
+
+            {/* Gradient SVG caché pour l'icône */}
+            <svg width="0" height="0" className="absolute">
+              <defs>
+                <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#FDE68A" />
+                  <stop offset="50%" stopColor="#D97706" />
+                  <stop offset="100%" stopColor="#B45309" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            {/* Animations scoppées, avec respect du prefers-reduced-motion */}
+            <style>{`
+              @keyframes premium-title-shine-anim {
+                0%, 100% { background-position: 0% center; }
+                50% { background-position: 100% center; }
+              }
+              .premium-title-shine {
+                animation: premium-title-shine-anim 6s ease-in-out infinite;
+              }
+              @media (prefers-reduced-motion: reduce) {
+                .premium-title-shine {
+                  animation: none;
+                }
+              }
+            `}</style>
           </div>
-          <p className="text-[14px] text-[#8A9080]">
-            Gérez votre solde, rechargez et consultez vos transactions.
-          </p>
         </motion.div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         {/* ── État chargement global ── */}
         {isLoadingWallet ? (

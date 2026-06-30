@@ -475,12 +475,12 @@ function PurchaseModal({
                 >
 
                     {/* Ligne d'accentuation supérieure */}
-                    <div className="absolute inset-x-0 top-0 z-10 h-[2px] bg-gradient-to-r from-transparent via-[#1f4d3f]/65 to-transparent" />
+                    {/* <div className="absolute inset-x-0 top-0 z-10 h-[2px] bg-gradient-to-r from-transparent via-[#1f4d3f]/65 to-transparent" /> */}
 
                     {/* Handle de glissement (affordance swipe mobile) */}
-                    <div className="pointer-events-none absolute inset-x-0 top-2.5 flex justify-center sm:hidden">
+                    {/* <div className="pointer-events-none absolute inset-x-0 top-2.5 flex justify-center sm:hidden">
                         <div className="h-1 w-9 rounded-full bg-[#c9bfaf]" />
-                    </div>
+                    </div> */}
 
                     {/* ── Bouton de fermeture ───────────────────────────────────── */}
                     <motion.button
@@ -571,22 +571,22 @@ function PurchaseModal({
                                         Choisir une variante
                                     </p>
                                     <span className="rounded-full bg-[#f0e8dc] px-2 py-0.5 text-[10px] font-bold text-[#8b5e34]">
-                                        {activeVariants.length} option{activeVariants.length > 1 ? "s" : ""}
+                                        {activeVariants.length} variation{activeVariants.length > 1 ? "s" : ""}
                                     </span>
                                 </div>
 
                                 {/* ── Mode dropdown (> 4 variantes) ─────────────────── */}
-                                {activeVariants.length > 4 ? (
+                                {activeVariants.length > 2 ? (
                                     <div className="relative">
                                         <motion.button
                                             type="button"
                                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                             whileTap={{ scale: 0.99 }}
                                             transition={SPRING_SNAPPY}
-                                            className="flex w-full items-center justify-between rounded-2xl border-2 border-[#e0d5c5] bg-white px-4 py-3.5 text-left transition-colors hover:border-[#1f4d3f]/40 focus-visible:border-[#1f4d3f] focus-visible:outline-none"
+                                            className="flex w-full items-center cursor-pointer justify-between rounded-2xl border-2 border-[#e0d5c5] bg-white px-4 py-3.5 text-left transition-colors hover:border-[#1f4d3f]/40 focus-visible:border-[#1f4d3f] focus-visible:outline-none"
                                         >
                                             {selectedVariant ? (
-                                                <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
+                                                <div className="flex min-w-0 flex-1 cursor-pointer items-center justify-between gap-3">
                                                     <div className="min-w-0">
                                                         <p className="truncate text-sm font-bold text-[#1f241c]">
                                                             {selectedVariant.name}
@@ -610,7 +610,7 @@ function PurchaseModal({
                                             <motion.div
                                                 animate={{ rotate: isDropdownOpen ? 180 : 0 }}
                                                 transition={{ duration: 0.22, ease: EASE_OUT_CUBIC }}
-                                                className="ml-2 shrink-0"
+                                                className="ml-2 shrink-0 cursor-pointer"
                                             >
                                                 <ChevronDown className="h-5 w-5 text-[#8b5e34]" />
                                             </motion.div>
@@ -642,7 +642,7 @@ function PurchaseModal({
                                                                 initial={{ opacity: 0, x: -10 }}
                                                                 animate={{ opacity: 1, x: 0 }}
                                                                 transition={{ delay: i * 0.035, ...SPRING_SNAPPY }}
-                                                                className={`relative flex w-full items-center justify-between rounded-xl px-3.5 py-3 text-left transition-colors ${isSelected
+                                                                className={`relative flex w-full cursor-pointer items-center justify-between rounded-xl px-3.5 py-3 text-left transition-colors ${isSelected
                                                                     ? "bg-[#1f4d3f]/[0.07]"
                                                                     : isOOS
                                                                         ? "cursor-not-allowed opacity-40"

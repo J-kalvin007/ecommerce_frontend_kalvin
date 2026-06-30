@@ -239,7 +239,7 @@ export default function FavorisClient() {
   const handleAddToCart = (item: FavoriteProduct) => {
     addItem({
       productId: item.id,
-      variantId: null,
+      variantId: item.default_variant_id ?? null,
       name: item.name,
       sku: item.slug,
       price: item.price,

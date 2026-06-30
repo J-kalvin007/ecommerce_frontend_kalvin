@@ -129,10 +129,10 @@ export default function CarteGoogleMaps({ open, initialCoords, onConfirm, onClos
                   <MapPin className="w-5 h-5" style={{ color: accent }} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg" style={{ color: textColor, fontFamily: "'Playfair Display', Georgia, serif" }}>
-                    Localisation de la ferme
+                  <h3 className="font-bold text-lg" style={{ color: textColor }}>
+                    Localisationen temps reel
                   </h3>
-                  <p className="text-xs" style={{ color: mutedColor }}>Cliquez sur la carte pour positionner la ferme</p>
+                  <p className="text-xs" style={{ color: mutedColor }}>Cliquez sur la carte pour ajouter votre position</p>
                 </div>
               </div>
               <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all hover:scale-110"

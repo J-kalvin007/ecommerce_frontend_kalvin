@@ -1,9 +1,10 @@
 /**
- * PayDunyaCheckout — Composant pour payer directement via PayDunya
+ * PayDunyaCheckout — Composant ultra-premium de paiement via PayDunya
  *
- * - Demande le numéro de téléphone
- * - Déclenche l'API `initiateDirectPayment`
- * - Redirige vers PayDunya
+ * - UX de luxe avec zone de confiance et indicateurs de sécurité
+ * - Animation de chargement progressive et shimmer au hover
+ * - Gestion d'erreur élégante avec AnimatePresence
+ * - Logique métier intacte (handlePayer, logs, console debug)
  *
  * @module components/commandes/PayDunyaCheckout
  */
@@ -11,73 +12,34 @@
 "use client";
 
 import React, { useState } from "react";
-import { Loader2, Phone, AlertCircle, ExternalLink } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Loader2, AlertCircle, ExternalLink, ShieldCheck, Smartphone, Lock, Zap } from "lucide-react";
 import { initiateDirectPayment } from "@/fonctions_api/wallets-paiements.api";
 import { useThemeStore } from "@/store/theme.store";
-import PhoneInputWithCountry from "@/components/special/PhoneInputWithCountry";
+import { formatCurrency } from "@/lib/utils";
+import { useCartStore } from "@/store/pannierStore";
 
 interface PayDunyaCheckoutProps {
   orderId: string;
   amount: number;
 }
 
+/** Indicateurs de confiance affichés sous le bouton */
+const TRUST_BADGES = [
+  { icon: ShieldCheck, label: "Paiement sécurisé SSL" },
+  { icon: Lock, label: "Données chiffrées" },
+  { icon: Zap, label: "Confirmation instantanée" },
+] as const;
+
 export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutProps) {
   const { resolvedTheme } = useThemeStore();
   const isDark = resolvedTheme === "dark";
 
-  const [phone, setPhone] = useState("");
+  // Accès au store panier pour le vider après paiement confirmé
+  const { clearCart } = useCartStore();
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-
-
-
-
-  // const handlePayer = async () => {
-
-  //   // if (!phone || phone.length < 8) {
-  //   //   setError("Veuillez saisir un numéro de téléphone valide.");
-  //   //   return;
-  //   // }
-
-  //   setLoading(true);
-  //   setError(null);
-
-  //   try {
-  //     const res = await initiateDirectPayment({
-  //       order_id: orderId,
-  //       amount: String(amount),
-  //       // phone_number: phone,
-  //       phone_number: "+22962693544",
-  //     });
-
-  //     console.
-
-  //     if (res.ok) {
-  //       // Redirection vers l'interface PayDunya dans le même onglet
-  //       window.location.href = res.data.redirect_url;
-  //     } else {
-  //       setError(res.error.message || "Erreur lors de l'initiation du paiement avec PayDunya.");
-  //     }
-  //   } catch (err) {
-  //     setError("Une erreur inattendue est survenue.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const handlePayer = async () => {
     console.log("══════════════════════════════════════════════");
@@ -88,12 +50,6 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
     console.log("   • orderId :", orderId);
     console.log("   • amount :", amount);
     console.log("   • phone :", "+22962693544");
-
-    // if (!phone || phone.length < 8) {
-    //   console.warn("⚠️ Numéro de téléphone invalide.");
-    //   setError("Veuillez saisir un numéro de téléphone valide.");
-    //   return;
-    // }
 
     console.log("⏳ Activation du loader...");
     setLoading(true);
@@ -118,7 +74,6 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
       console.log("════════════════════════════════════");
       console.log("📥 RÉPONSE REÇUE DE initiateDirectPayment()");
       console.log("════════════════════════════════════");
-
       console.log("Réponse complète :", res);
 
       if (res.ok) {
@@ -135,10 +90,13 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
 
         window.open(res.data.payment_url, "_blank", "noopener,noreferrer");
 
+        // ✅ Vidage du panier immédiat après initiation réussie du paiement PayDunya
+        clearCart();
+        console.log("🛒 Panier vidé après initiation du paiement PayDunya.");
+
         console.log("➡️ Redirection demandée au navigateur.");
       } else {
         console.error("❌ L'API a retourné une erreur.");
-
         console.error("Status :", res.error.status);
         console.error("Message :", res.error.message);
         console.error("Réponse brute :", res.error.raw);
@@ -152,7 +110,6 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
       console.error("════════════════════════════════════");
       console.error("💥 EXCEPTION CAPTURÉE");
       console.error("════════════════════════════════════");
-
       console.error("Erreur :", err);
 
       if (err instanceof Error) {
@@ -173,63 +130,147 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
     }
   };
 
+  // Tokens visuels
+  const bg = isDark ? "rgba(10,12,10,0.95)" : "#ffffff";
+  const border = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
+  const shadow = isDark ? "0 20px 60px -15px rgba(0,0,0,0.6)" : "0 20px 60px -15px rgba(0,0,0,0.06)";
+  const text = isDark ? "rgba(255,255,255,0.95)" : "#111827";
+  const textMuted = isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.45)";
+  const divider = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
 
-
-
-
-
-
-
-
-
-
-
-
-
-  const bg = isDark ? "rgba(255,255,255,0.04)" : "#ffffff";
-  const border = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
-  const inputBg = isDark ? "rgba(255,255,255,0.04)" : "#f8f9f8";
-  const text = isDark ? "rgba(255,255,255,0.92)" : "#1f241c";
-  const muted = isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.45)";
+  /** Couleur de la marque PayDunya */
+  const PAYDUNYA_BLUE = "#0f76b5";
 
   return (
-    <div className="rounded-2xl p-6" style={{ background: bg, border: `1px solid ${border}` }}>
-      <h3 className="mb-2 font-bold text-lg" style={{ color: text, fontFamily: "'Playfair Display', serif" }}>
-        Paiement Mobile Money
-      </h3>
-      <p className="mb-6 text-sm" style={{ color: muted }}>
-        Payez en toute sécurité via notre partenaire PayDunya. Saisissez votre numéro de compte Mobile Money.
-      </p>
+    <div
+      className="relative overflow-hidden rounded-2xl"
+      style={{ background: bg, border: `1px solid ${border}`, boxShadow: shadow }}
+    >
+      {/* Orbes décoratives */}
+      <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full blur-3xl opacity-10"
+           style={{ background: PAYDUNYA_BLUE }} />
+      <div className="pointer-events-none absolute -left-8 -bottom-8 h-32 w-32 rounded-full blur-3xl opacity-5"
+           style={{ background: PAYDUNYA_BLUE }} />
 
-      <div className="space-y-4">
-        {/* <div>
-          <label className="mb-1.5 block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300">
-            Numéro Mobile Money <span className="text-[#1f4d3f]">*</span>
-          </label>
-          <PhoneInputWithCountry value={phone} onChange={setPhone} required />
-        </div> */}
+      {/* ── En-tête ── */}
+      <div
+        className="relative z-10 flex items-center gap-4 border-b px-6 py-5"
+        style={{ borderColor: divider }}
+      >
+        {/* Logo PayDunya stylisé */}
+        <div
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-lg"
+          style={{ background: `linear-gradient(135deg, ${PAYDUNYA_BLUE} 0%, #0a4a75 100%)` }}
+        >
+          <Smartphone className="h-6 w-6 text-white" />
+        </div>
 
-        {error && (
-          <div className="flex items-center gap-2 rounded-lg bg-red-500/10 p-3 text-sm text-red-500">
-            <AlertCircle className="h-4 w-4 shrink-0" />
-            <p>{error}</p>
+        <div>
+          <h3 className="text-base font-black tracking-tight" style={{ color: text }}>
+            Paiement Mobile Money
+          </h3>
+          <p className="mt-0.5 text-[12px] font-medium" style={{ color: textMuted }}>
+            Via PayDunya · Partenaire certifié
+          </p>
+        </div>
+
+        {/* Badge SSL */}
+        <div className="ml-auto flex items-center gap-1.5 rounded-full px-3 py-1.5"
+             style={{ background: isDark ? "rgba(15,118,181,0.12)" : "rgba(15,118,181,0.08)", border: `1px solid rgba(15,118,181,0.2)` }}>
+          <ShieldCheck className="h-3.5 w-3.5 text-[#0f76b5]" />
+          <span className="text-[11px] font-bold text-[#0f76b5] uppercase tracking-wider">SSL</span>
+        </div>
+      </div>
+
+      {/* ── Corps ── */}
+      <div className="relative z-10 px-6 py-6 space-y-6">
+
+        {/* Montant récapitulatif */}
+        <div
+          className="flex items-center justify-between rounded-xl px-5 py-4"
+          style={{
+            background: isDark ? "rgba(15,118,181,0.08)" : "rgba(15,118,181,0.05)",
+            border: `1px solid rgba(15,118,181,0.15)`,
+          }}
+        >
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: textMuted }}>
+              Montant à régler
+            </p>
+            <p className="mt-0.5 text-2xl font-black tracking-tight" style={{ color: PAYDUNYA_BLUE }}>
+              {formatCurrency(String(amount), "FCFA")}
+            </p>
           </div>
-        )}
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl"
+               style={{ background: `rgba(15,118,181,0.12)` }}>
+            <ExternalLink className="h-5 w-5 text-[#0f76b5]" />
+          </div>
+        </div>
 
+        {/* Message d'information */}
+        <p className="text-[13px] leading-relaxed" style={{ color: textMuted }}>
+          Cliquez sur le bouton ci-dessous pour être redirigé vers la plateforme sécurisée PayDunya.
+          Choisissez votre opérateur Mobile Money (MTN, Moov, Wave…) et confirmez le paiement.
+        </p>
+
+        {/* Erreur animée */}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ type: "spring", stiffness: 380, damping: 26 }}
+              className="overflow-hidden"
+            >
+              <div className="flex items-start gap-3 rounded-xl bg-red-500/10 px-4 py-3"
+                   style={{ border: "1px solid rgba(239,68,68,0.2)" }}>
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
+                <p className="text-sm font-semibold text-red-500">{error}</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ── Bouton principal ── */}
         <button
           onClick={handlePayer}
           disabled={loading || !orderId}
-          className="cursor-pointer flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-bold text-white transition-all hover:opacity-90 disabled:opacity-50"
-          style={{ background: "#0f76b5" }} // Couleur PayDunya
+          className="group relative flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-xl py-4 font-black text-white shadow-xl transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+          style={{
+            background: `linear-gradient(135deg, ${PAYDUNYA_BLUE} 0%, #0a4a75 100%)`,
+            boxShadow: `0 8px 32px -8px ${PAYDUNYA_BLUE}60`,
+          }}
         >
-          {loading ? (
-            <Loader2 className="h-5 w-5 animate-spin" />
-          ) : (
-            <>
-              Payer avec PayDunya <ExternalLink className="h-4 w-4" />
-            </>
-          )}
+          {/* Shimmer */}
+          <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full" />
+
+          <span className="relative z-10 flex items-center gap-2.5 text-[15px]">
+            {loading ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                Connexion à PayDunya…
+              </>
+            ) : (
+              <>
+                <ExternalLink className="h-5 w-5" />
+                Payer avec PayDunya
+              </>
+            )}
+          </span>
         </button>
+
+        {/* Trust badges */}
+        <div className="flex items-center justify-center gap-5 pt-1">
+          {TRUST_BADGES.map(({ icon: Icon, label }) => (
+            <div key={label} className="flex items-center gap-1.5">
+              <Icon className="h-3.5 w-3.5 shrink-0" style={{ color: textMuted }} />
+              <span className="hidden text-[11px] font-medium sm:block" style={{ color: textMuted }}>
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

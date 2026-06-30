@@ -211,11 +211,11 @@ export default function WalletTransactionRow({
       <div className="min-w-0 flex-1">
         {/* Ligne 1 : Type + Statut badge */}
         <div className="flex items-center gap-2">
-          <span className="truncate text-[13px] font-bold text-[#1f241c]">
+          <span className="truncate text-[18px] font-bold text-[#1f241c]">
             {WALLET_TRANSACTION_TYPE_LABELS[transaction.transaction_type]}
           </span>
           <span
-            className="flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold"
+            className="flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[14px] font-semibold"
             style={{
               color: statusConfig.color,
               background: statusConfig.bg,
@@ -228,11 +228,11 @@ export default function WalletTransactionRow({
         </div>
 
         {/* Ligne 2 : Référence + Date */}
-        <div className="mt-0.5 flex items-center gap-2 text-[11px] text-[#8A9080]">
-          <span className="font-mono tracking-tight">
+        <div className="mt-0.5 flex items-center gap-2 text-[16px] text-[#8A9080]">
+          {/* <span className="font-mono tracking-tight">
             {truncateRef(transaction.reference)}
-          </span>
-          <span>·</span>
+          </span> */}
+          {/* <span>·</span> */}
           <span>{formatDate(transaction.created_at)}</span>
         </div>
       </div>
@@ -240,7 +240,7 @@ export default function WalletTransactionRow({
       {/* Montant signé */}
       <div className="shrink-0 text-right">
         <p
-          className="text-[15px] font-black tracking-tight"
+          className="text-[20px] font-black tracking-tight"
           style={{
             color: isCredit ? "#10b981" : "#ef4444",
           }}
@@ -248,7 +248,7 @@ export default function WalletTransactionRow({
           {typeConfig.sign}
           {amountFormatted}
         </p>
-        <p className="mt-0.5 text-[10px] text-[#8A9080]">FCFA</p>
+        <p className="mt-0.5 text-[14px] text-[#8A9080]">FCFA</p>
       </div>
     </motion.div>
   );

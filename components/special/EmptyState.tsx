@@ -194,7 +194,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           style={{ marginBottom: actionText ? 36 : 0, position: 'relative', zIndex: 2 }}
         >
           <h3 style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
+
             fontSize: 'clamp(20px, 3vw, 26px)',
             fontWeight: 700,
             color: isDark ? '#e8ede9' : '#111812',

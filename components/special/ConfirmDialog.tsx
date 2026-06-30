@@ -329,7 +329,7 @@ const ConfirmDialog = ({
                 <h3
                   id="gc-cd-title"
                   style={{
-                    fontFamily: "'Playfair Display', Georgia, serif",
+
                     fontSize: 22,
                     fontWeight: 700,
                     color: isDark ? '#e8ede9' : '#111812',

@@ -161,6 +161,7 @@ import AdminShell from "./AdminShell";
 const ProductsSection = dynamic(() => import("../../../components/produits/ProductsSection"), { ssr: false });
 const CategoriesSection = dynamic(() => import("../../../components/categories/CategoriesSection"), { ssr: false });
 const OrdersSection = dynamic(() => import("../../../components/commandes/OrdersSection"), { ssr: false });
+const DeliveriesSection = dynamic(() => import("../../../components/livraisons/DeliveriesSection"), { ssr: false });
 const ClientsSection = dynamic(() => import("../../../components/clients/ClientsSection"), { ssr: false });
 const SettingsSection = dynamic(() => import("../../../components/parametres/SettingsSection"), { ssr: false });
 const LoyaltySection = dynamic(() => import("../../../components/fidelites/LoyaltySection"), { ssr: false });
@@ -192,6 +193,8 @@ export default function AdminDashboard() {
         return <CategoriesSection />;
       case "orders":
         return <OrdersSection />;
+      case "livraisons":
+        return <DeliveriesSection />;
       case "clients":
         return <ClientsSection />;
       case "promotions":

@@ -35,22 +35,32 @@ const BACKEND_DOMAINS = [
 export function mediaUrl(src: string | null | undefined): string | null {
   if (!src) return null;
 
-  // Forcer HTTPS (les URLs http:// vers Ngrok causent des problèmes de mixed content)
-  const secureUrl = src.replace(/^http:\/\//i, "https://");
-
   try {
-    const parsed = new URL(secureUrl);
+    const parsed = new URL(src);
     const isNgrok = BACKEND_DOMAINS.some((domain) =>
       parsed.hostname.endsWith(domain)
     );
 
-    // En développement avec Ngrok, on passe par le proxy
+    // En développement avec Ngrok, on passe par le proxy et on force HTTPS
     if (isNgrok) {
+      const secureUrl = src.replace(/^http:\/\//i, "https://");
       return `/api/media?url=${encodeURIComponent(secureUrl)}`;
     }
 
-    // En production ou pour d'autres domaines, URL directe en HTTPS
-    return secureUrl;
+    // Détection d'une IP locale ou de localhost
+    const isLocal = 
+      parsed.hostname === 'localhost' || 
+      parsed.hostname === '127.0.0.1' || 
+      parsed.hostname.startsWith('192.168.') || 
+      parsed.hostname.startsWith('10.');
+
+    // Pour les domaines en production (hors localhost/IPs), on force HTTPS
+    if (!isLocal) {
+      return src.replace(/^http:\/\//i, "https://");
+    }
+
+    // Pour le local, on garde l'URL telle quelle (http://)
+    return src;
   } catch {
     // URL relative (ex: "/media/image.jpg") → la préfixer avec le backend
     if (src.startsWith("/")) {

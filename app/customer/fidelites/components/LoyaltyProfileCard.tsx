@@ -19,7 +19,6 @@ import {
   Star,
   Crown,
   Gem,
-  Star,
   TrendingUp,
   ChevronRight,
   Award,
@@ -185,7 +184,7 @@ export default function LoyaltyProfileCard({
             whileTap={{ scale: 0.94 }}
             onClick={onRefresh}
             disabled={isRefreshing}
-            className="flex h-9 w-9 items-center justify-center rounded-xl transition-colors"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl transition-colors"
             style={{
               background: "rgba(255,255,255,0.06)",
               border: "1px solid rgba(255,255,255,0.1)",
@@ -233,7 +232,7 @@ export default function LoyaltyProfileCard({
               <span className="text-[11.5px] text-white/40">
                 Total gagné :{" "}
                 <span className="font-bold text-white/60">
-                  {formatPoints(profile.total_points_earned)} pts
+                  {formatPoints(profile.total_points_gagne)} pts
                 </span>
               </span>
             </div>
@@ -293,8 +292,9 @@ export default function LoyaltyProfileCard({
         <motion.button
           whileHover={{ scale: 1.02, y: -1 }}
           whileTap={{ scale: 0.97 }}
-          onClick={onRedeem}
-          className="flex w-full items-center justify-center gap-2.5 rounded-2xl py-3.5 text-[14px] font-bold tracking-tight text-white"
+          // onClick={onRedeem}
+          onClick={() => window.location.href = "/products"}
+          className="flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-2xl py-3.5 text-[14px] font-bold tracking-tight text-white"
           style={{
             background: `linear-gradient(135deg, ${tierCfg.color} 0%, ${tierCfg.color}bb 100%)`,
             boxShadow: `0 8px 24px ${tierCfg.color}40, inset 0 1px 0 rgba(255,255,255,0.15)`,

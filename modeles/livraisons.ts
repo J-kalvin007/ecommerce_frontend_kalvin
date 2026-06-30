@@ -61,3 +61,20 @@ export interface Delivery {
   updated_at: string;
   is_active: boolean;
 }
+
+export type PatchedDelivery = Partial<
+  Omit<Delivery, "id" | "order_reference" | "delivery_person_name" | "created_at" | "updated_at">
+>;
+
+export interface FraisLivraison {
+  id: string;
+  prix_livraison: string;
+  coordonnee_admin: string;
+  created_at: string;
+  updated_at: string;
+  is_active: boolean;
+}
+
+export type PatchedFraisLivraison = Partial<
+  Omit<FraisLivraison, "id" | "created_at" | "updated_at">
+>;

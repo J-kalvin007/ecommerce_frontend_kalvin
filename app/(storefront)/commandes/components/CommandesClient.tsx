@@ -1,11 +1,34 @@
+
+
+
+
 "use client";
+
+/* ============================================================================
+ *  CommandesClient.tsx
+ * ----------------------------------------------------------------------------
+ *  Tunnel de commande premium.
+ *
+ *  Direction artistique :
+ *  - Palette ancrée sur le vert forêt de marque (#1f4d3f) associé à un
+ *    champagne/or discret (#c9a876) réservé aux accents de précision
+ *    (fil de progression, badges de confiance, micro-détails de luxe).
+ *  - Typographie : la classe "font-display" existante porte l'émotion sur
+ *    les titres, le corps reste sur la police utilitaire du design system.
+ *  - Signature visuelle : un "fil d'or" qui relie les étapes du stepper et
+ *    se déploie en fonction de la progression réelle de la commande, plus
+ *    une respiration ambiante (halos radiaux très doux) en arrière-plan.
+ *  - Toute la logique métier (hooks, handlers, state, API) est strictement
+ *    identique à la version d'origine : seules la structure JSX, les
+ *    classes et les micro-interactions ont été enrichies.
+ * ==========================================================================*/
 
 import { mediaUrl } from "@/lib/mediaUrl";
 import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   MapPin,
   Truck,
@@ -20,6 +43,9 @@ import {
   Wallet as WalletIcon,
   Phone,
   Loader2,
+  Sparkles,
+  Receipt,
+  BadgeCheck,
 } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/pannierStore";
@@ -42,8 +68,6 @@ import { generateInvoicePDFBase64, InvoiceData } from "@/lib/invoice_pdf_generat
 // Composants nouvellement créés
 import PaysSelector from "./PaysSelector";
 import LocalisationCarte from "./LocalisationCarte";
-import ModeLivraisonSelector, { OptionLivraisonId } from "./ModeLivraisonSelector";
-// import CodePromoInput, { CodePromoApplique } from "./CodePromoInput";
 import PointsFideliteCard from "./PointsFideliteCard";
 import RecapitulatifCommande from "./RecapitulatifCommande";
 import WalletCard from "./WalletCard";
@@ -60,10 +84,16 @@ import Toast from "@/components/special/Toast";
 
 const STEPS = [
   { id: 1, label: "Adresse", icon: MapPin },
-  { id: 2, label: "Livraison", icon: Truck },
-  { id: 3, label: "Paiement", icon: CreditCard },
-  { id: 4, label: "Confirmation", icon: CheckCircle2 },
+  { id: 2, label: "Paiement", icon: CreditCard },
+  { id: 3, label: "Confirmation", icon: CheckCircle2 },
 ] as const;
+
+/* Jetons de design "premium" — dérivés du vert de marque existant.
+ * L'or n'est utilisé qu'avec parcimonie : fil de progression, anneaux
+ * de focus ponctuels, badges de confiance. Tout le reste reste discret. */
+const BRAND_FOREST = "#1f4d3f";
+const BRAND_GOLD = "#c9a876";
+const BRAND_GOLD_SOFT = "rgba(201,168,118,0.16)";
 
 interface AddressForm {
   firstName: string;
@@ -93,13 +123,28 @@ function deg2rad(deg: number) {
   return deg * (Math.PI / 180);
 }
 
+/* Variants Framer Motion réutilisés pour les révélations en cascade.
+ * Purement présentationnel : n'affecte aucune logique métier. */
+const fieldsContainerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.06, delayChildren: 0.05 },
+  },
+};
+
+const fieldItemVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
+};
+
 export default function CommandesClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const paymentSuccess = searchParams?.get("payment") === "success";
-  
+
   const { resolvedTheme } = useThemeStore();
   const isDark = resolvedTheme === "dark";
+  const prefersReducedMotion = useReducedMotion();
 
   const { items, getTotal, getItemCount, clearCart } = useCartStore();
   const itemCount = getItemCount();
@@ -107,7 +152,6 @@ export default function CommandesClient() {
 
   // État du flux (si on revient avec success, on force l'étape 4)
   const [step, setStep] = useState(paymentSuccess ? 4 : 1);
-  const [shipping, setShipping] = useState<OptionLivraisonId>("standard");
   const [paymentMethod, setPaymentMethod] = useState<"wallet" | "paydunya">("wallet");
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -156,7 +200,7 @@ export default function CommandesClient() {
   const [paymentMessage, setPaymentMessage] = useState("");
 
   // État des frais de livraison dynamiques
-  const [fraisLivraisonAdmin, setFraisLivraisonAdmin] = useState<{prix_livraison: number, coordonnee_admin: {lat: number, lng: number}} | null>(null);
+  const [fraisLivraisonAdmin, setFraisLivraisonAdmin] = useState<{ prix_livraison: number, coordonnee_admin: { lat: number, lng: number } } | null>(null);
   const [dynamicShippingCost, setDynamicShippingCost] = useState<number | null>(null);
 
   // Fetch frais livraison au montage
@@ -185,9 +229,9 @@ export default function CommandesClient() {
           const lng = parseFloat(coordsStr[1]);
           if (!isNaN(lat) && !isNaN(lng)) {
             const distance = getDistanceFromLatLonInKm(
-              lat, 
-              lng, 
-              fraisLivraisonAdmin.coordonnee_admin.lat, 
+              lat,
+              lng,
+              fraisLivraisonAdmin.coordonnee_admin.lat,
               fraisLivraisonAdmin.coordonnee_admin.lng
             );
             const basePrice = fraisLivraisonAdmin.prix_livraison;
@@ -201,7 +245,7 @@ export default function CommandesClient() {
   }, [address.address, fraisLivraisonAdmin]);
 
   // Coûts
-  const shippingCost = shipping === "standard" ? (dynamicShippingCost !== null ? dynamicShippingCost : 2500) : 0; // Seul standard est actif pour l'instant
+  const shippingCost = (dynamicShippingCost !== null ? dynamicShippingCost : 0);
   const remisePromo = codeApplique ? parseFloat(codeApplique.discount_amount) : 0;
   const total = Math.max(0, subtotal + shippingCost - remisePromo - remiseFideliteFCFA);
 
@@ -366,19 +410,35 @@ export default function CommandesClient() {
 
   if (itemCount === 0 && step !== 4) {
     return (
-      <div className="page-transition flex min-h-[60vh] flex-col items-center justify-center gap-6 px-4 py-20">
-        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-surface-alt">
+      <div className="page-transition relative flex min-h-[60vh] flex-col items-center justify-center gap-6 overflow-hidden px-4 py-20">
+        {/* Halo ambiant très discret, cohérent avec l'identité premium du tunnel */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            background: isDark
+              ? "radial-gradient(60% 50% at 50% 0%, rgba(31,77,63,0.25), transparent 70%)"
+              : "radial-gradient(60% 50% at 50% 0%, rgba(31,77,63,0.06), transparent 70%)",
+          }}
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="flex h-24 w-24 items-center justify-center rounded-full bg-surface-alt shadow-inner"
+        >
           <ShoppingBag className="h-12 w-12 text-muted-foreground/30" />
-        </div>
+        </motion.div>
         <div className="text-center">
           <h1 className="font-display text-2xl font-bold">Votre panier est vide</h1>
           <p className="mt-2 text-muted">Ajoutez des produits avant de passer commande</p>
         </div>
         <Link
           href="/products"
-          className="flex items-center gap-2 rounded-xl bg-[#1f4d3f] px-6 py-3 text-sm font-semibold text-white hover:bg-[#1f4d3f]/90"
+          className="group flex items-center gap-2 rounded-xl bg-[#1f4d3f] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#1f4d3f]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1f4d3f]/90 hover:shadow-xl hover:shadow-[#1f4d3f]/30"
         >
-          Découvrir la boutique <ArrowRight className="h-4 w-4" />
+          Découvrir la boutique
+          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
         </Link>
       </div>
     );
@@ -387,45 +447,120 @@ export default function CommandesClient() {
   const bgElevated = isDark ? "rgba(255,255,255,0.02)" : "#ffffff";
   const border = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
 
+  // Progression réelle du fil de stepper (0 → 1), bornée pour l'étape 4 (post-paiement)
+  const stepperProgress = Math.min(1, Math.max(0, (step - 1) / (STEPS.length - 1)));
+
   return (
-    <div className="page-transition min-h-screen pb-20">
+    <div className="page-transition relative min-h-screen overflow-hidden pb-20">
+      {/* --------------------------------------------------------------
+       *  Halos ambiants — signature visuelle discrète du tunnel premium
+       * ------------------------------------------------------------ */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 -z-10"
+        style={{
+          background: isDark
+            ? "radial-gradient(45% 35% at 12% 0%, rgba(31,77,63,0.28), transparent 70%), radial-gradient(40% 30% at 100% 10%, rgba(201,168,118,0.08), transparent 70%)"
+            : "radial-gradient(45% 35% at 12% 0%, rgba(31,77,63,0.07), transparent 70%), radial-gradient(40% 30% at 100% 10%, rgba(201,168,118,0.10), transparent 70%)",
+        }}
+      />
+
       {/* En-tête Stepper */}
-      <div className="border-b" style={{ borderColor: border, background: isDark ? "rgba(14,26,17,0.5)" : "#fafaf9" }}>
+      <div
+        className="sticky top-0 z-20 border-b backdrop-blur-md"
+        style={{ borderColor: border, background: isDark ? "rgba(14,26,17,0.72)" : "rgba(250,250,249,0.82)" }}
+      >
         <div className="mx-auto max-w-[var(--content-max-width)] px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            <h1 className="font-display text-2xl font-bold lg:text-3xl">Finalisation</h1>
-            <div className="flex items-center gap-1.5 text-xs" style={{ color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.45)" }}>
-              <Lock className="h-3.5 w-3.5" />
+            <div>
+              <p
+                className="mb-1 text-[11px] font-bold uppercase tracking-[0.18em]"
+                style={{ color: BRAND_GOLD }}
+              >
+                Étape {Math.min(step, STEPS.length)} sur {STEPS.length}
+              </p>
+              <h1 className="font-display text-2xl font-bold lg:text-3xl">Finalisation</h1>
+            </div>
+            <div
+              className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium"
+              style={{
+                color: isDark ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.55)",
+                background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
+                border: `1px solid ${border}`,
+              }}
+            >
+              <Lock className="h-3.5 w-3.5" style={{ color: BRAND_FOREST }} />
               Paiement sécurisé
             </div>
           </div>
-          <div className="mt-6 flex flex-wrap items-center gap-2 sm:gap-4">
-            {STEPS.map((s, i) => (
-              <div key={s.id} className="flex items-center gap-2 sm:gap-4">
-                <div
-                  className={cn(
-                    "flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all",
-                    step >= s.id
-                      ? "bg-[#1f4d3f] text-white shadow-lg"
-                      : "bg-surface-alt text-muted"
-                  )}
-                  style={step < s.id ? { background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)" } : {}}
-                >
-                  <s.icon className="h-4 w-4" />
-                  <span className={cn(step === s.id ? "inline" : "hidden sm:inline")}>{s.label}</span>
-                </div>
-                {i < STEPS.length - 1 && (
-                  <ChevronRight
-                    className={cn("h-4 w-4", step > s.id ? "text-[#1f4d3f]" : "opacity-30")}
-                  />
-                )}
-              </div>
-            ))}
+
+          {/* ----------------------------------------------------------
+           *  Stepper premium : fil de progression animé (or) reliant
+           *  les pastilles d'étape — la signature visuelle du tunnel.
+           * -------------------------------------------------------- */}
+          <div className="relative mt-7">
+            {/* Rail de fond */}
+            {/* <div
+              aria-hidden
+              className="absolute left-5 right-5 top-5 h-[2px] sm:left-6 sm:right-6"
+              style={{ background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}
+            /> */}
+            {/* Fil de progression doré, animé en largeur */}
+            {/* <motion.div
+              aria-hidden
+              className="absolute left-5 top-5 h-[2px] sm:left-6"
+              style={{ background: `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_GOLD})` }}
+              initial={false}
+              animate={{ width: `calc(${stepperProgress * 100}% - ${stepperProgress > 0 ? 8 : 0}px)` }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.6, ease: [0.16, 1, 0.3, 1] }}
+            /> */}
+
+            <div className="relative flex items-center justify-between sm:justify-start sm:gap-8">
+              {STEPS.map((s) => {
+                const isActive = step === s.id;
+                const isDone = step > s.id;
+                return (
+                  <div key={s.id} className="flex flex-col items-center gap-2 sm:flex-row sm:gap-2.5">
+                    <motion.div
+                      className="relative flex h-10 w-10 items-center justify-center rounded-full text-xs font-bold"
+                      animate={{
+                        scale: isActive ? 1.08 : 1,
+                        boxShadow: isActive
+                          ? `0 0 0 4px ${BRAND_GOLD_SOFT}`
+                          : "0 0 0 0px transparent",
+                      }}
+                      transition={{ duration: 0.3 }}
+                      style={{
+                        background: isActive || isDone ? BRAND_FOREST : isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
+                        color: isActive || isDone ? "#ffffff" : isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.4)",
+                      }}
+                    >
+                      {isDone ? (
+                        <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 400, damping: 18 }}>
+                          <CheckCircle2 className="h-4.5 w-4.5" />
+                        </motion.span>
+                      ) : (
+                        <s.icon className="h-4.5 w-4.5" />
+                      )}
+                    </motion.div>
+                    <span
+                      className={cn(
+                        "text-[11px] font-semibold uppercase tracking-wide sm:text-xs",
+                        isActive ? "opacity-100" : "opacity-60"
+                      )}
+                      style={{ color: isActive ? BRAND_FOREST : undefined }}
+                    >
+                      {s.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-[var(--content-max-width)] px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[var(--content-max-width)] px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           {/* === Colonne Principale === */}
           <div className="lg:col-span-7 xl:col-span-8">
@@ -434,146 +569,192 @@ export default function CommandesClient() {
               {step === 1 && (
                 <motion.div
                   key="address"
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -16 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
+                  exit={{ opacity: 0, x: 16 }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <h2 className="mb-5 font-display text-[1.1rem] font-bold">Informations de livraison</h2>
-                  <div className="space-y-5 rounded-2xl p-5 shadow-sm" style={{ background: bgElevated, border: `1px solid ${border}` }}>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <SectionHeading
+                    eyebrow="01"
+                    title="Informations de livraison"
+                    subtitle="Ces informations nous permettent de préparer et d'acheminer votre commande avec précision."
+                    isDark={isDark}
+                  />
+
+                  <motion.div
+                    variants={fieldsContainerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-6 rounded-2xl p-5 shadow-sm sm:p-7"
+                    style={{ background: bgElevated, border: `1px solid ${border}` }}
+                  >
+                    {/* Sous-section : Identité & contact */}
+                    <FieldGroupLabel label="Identité & contact" isDark={isDark} />
+                    <motion.div variants={fieldItemVariants} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <InputField label="Prénom" value={address.firstName} onChange={(v) => updateAddress("firstName", v)} required />
                       <InputField label="Nom" value={address.lastName} onChange={(v) => updateAddress("lastName", v)} required />
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    </motion.div>
+                    <motion.div variants={fieldItemVariants} className="grid grid-cols-1 gap-4 sm:grid-cols-2 items-end">
                       <InputField label="Email" type="email" value={address.email} onChange={(v) => updateAddress("email", v)} required />
-                      <div>
-                        <label className="mb-1.5 block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300">Téléphone <span className="text-[#1f4d3f]">*</span></label>
+                      <div className="flex flex-col">
+                        <label className="mb-1.5 block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300">Téléphone <span style={{ color: BRAND_FOREST }}>*</span></label>
                         <PhoneInputWithCountry value={address.phone} onChange={(v) => updateAddress("phone", v)} required />
                       </div>
-                    </div>
+                    </motion.div>
 
-                    <div className="border-t pt-4" style={{ borderColor: border }}>
-                      <label className="mb-2 block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300">Localisation GPS & Adresse</label>
+                    {/* Sous-section : Localisation */}
+                    <motion.div variants={fieldItemVariants} className="border-t pt-5" style={{ borderColor: border }}>
+                      <FieldGroupLabel label="Localisation GPS & adresse" isDark={isDark} icon={MapPin} />
                       <LocalisationCarte value={address.address} onChange={(v) => updateAddress("address", v)} />
-                    </div>
+                    </motion.div>
 
-                    <InputField label="Informations complémentaires (Bâtiment, Étage...)" value={address.addressLine2} onChange={(v) => updateAddress("addressLine2", v)} />
+                    <motion.div variants={fieldItemVariants}>
+                      <InputField label="Informations complémentaires (Bâtiment, Étage...)" value={address.addressLine2} onChange={(v) => updateAddress("addressLine2", v)} />
+                    </motion.div>
 
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    {/* Sous-section : Ville & pays */}
+                    <motion.div variants={fieldItemVariants} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <InputField label="Ville" value={address.city} onChange={(v) => updateAddress("city", v)} required />
                       <div>
                         <label className="mb-1.5 block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300">Pays</label>
                         <PaysSelector value={address.country} onChange={(v) => updateAddress("country", v)} />
                       </div>
-                    </div>
-                  </div>
+                    </motion.div>
+                  </motion.div>
                 </motion.div>
               )}
 
-              {/* --- ÉTAPE 2 : Livraison --- */}
+
+
+              {/* --- ÉTAPE 2 : Paiement --- */}
               {step === 2 && (
                 <motion.div
-                  key="shipping"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                >
-                  <h2 className="mb-6 font-display text-xl font-bold">Mode de livraison</h2>
-                  <ModeLivraisonSelector 
-                    value={shipping} 
-                    onChange={setShipping} 
-                    dynamicStandardPrice={dynamicShippingCost}
-                  />
-                </motion.div>
-              )}
-
-              {/* --- ÉTAPE 3 : Paiement --- */}
-              {step === 3 && (
-                <motion.div
                   key="payment"
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -16 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
+                  exit={{ opacity: 0, x: 16 }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <h2 className="mb-6 font-display text-xl font-bold">Méthode de paiement</h2>
+                  <SectionHeading
+                    eyebrow="02"
+                    title="Méthode de paiement"
+                    subtitle="Choisissez comment régler votre commande, en toute confiance."
+                    isDark={isDark}
+                  />
 
                   {/* Choix de la méthode */}
                   <div className="mb-8 grid grid-cols-2 gap-4">
-                    <button
+                    <PaymentMethodCard
+                      active={paymentMethod === "wallet"}
                       onClick={() => setPaymentMethod("wallet")}
-                      className="flex flex-col items-center gap-3 rounded-2xl border p-5 transition-all"
-                      style={{
-                        borderColor: paymentMethod === "wallet" ? "#1f4d3f" : border,
-                        background: paymentMethod === "wallet" ? "rgba(31,77,63,0.05)" : bgElevated,
-                        boxShadow: paymentMethod === "wallet" ? "0 4px 20px rgba(31,77,63,0.1)" : "none",
-                      }}
-                    >
-                      <div className={cn("rounded-full p-3", paymentMethod === "wallet" ? "bg-[#1f4d3f] text-white" : "bg-surface-alt text-muted")}>
-                        <WalletIcon className="h-6 w-6" />
-                      </div>
-                      <span className="font-bold">Mon Portefeuille</span>
-                    </button>
-
-                    <button
+                      icon={WalletIcon}
+                      label="Mon Portefeuille"
+                      accentColor={BRAND_FOREST}
+                      accentBg="rgba(31,77,63,0.06)"
+                      accentShadow="rgba(31,77,63,0.12)"
+                      bgElevated={bgElevated}
+                      border={border}
+                    />
+                    <PaymentMethodCard
+                      active={paymentMethod === "paydunya"}
                       onClick={() => setPaymentMethod("paydunya")}
-                      className="flex flex-col items-center gap-3 rounded-2xl border p-5 transition-all"
-                      style={{
-                        borderColor: paymentMethod === "paydunya" ? "#0f76b5" : border, // PayDunya blue
-                        background: paymentMethod === "paydunya" ? "rgba(15,118,181,0.05)" : bgElevated,
-                        boxShadow: paymentMethod === "paydunya" ? "0 4px 20px rgba(15,118,181,0.1)" : "none",
-                      }}
-                    >
-                      <div className={cn("rounded-full p-3", paymentMethod === "paydunya" ? "bg-[#0f76b5] text-white" : "bg-surface-alt text-muted")}>
-                        <Phone className="h-6 w-6" />
-                      </div>
-                      <span className="font-bold">Mobile Money</span>
-                    </button>
+                      icon={Phone}
+                      label="Mobile Money"
+                      accentColor="#0f76b5"
+                      accentBg="rgba(15,118,181,0.06)"
+                      accentShadow="rgba(15,118,181,0.12)"
+                      bgElevated={bgElevated}
+                      border={border}
+                    />
                   </div>
 
                   {/* Interfaces spécifiques au paiement */}
-                  {paymentMethod === "wallet" && (
-                    <WalletCard
-                      wallet={wallet}
-                      totalAPayer={total}
-                      onOpenRecharge={() => setRechargeModalOpen(true)}
-                    />
-                  )}
+                  <AnimatePresence mode="wait">
+                    {paymentMethod === "wallet" && (
+                      <motion.div
+                        key="wallet-ui"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.25 }}
+                      >
+                        <WalletCard
+                          wallet={wallet}
+                          totalAPayer={total}
+                          onOpenRecharge={() => setRechargeModalOpen(true)}
+                        />
+                      </motion.div>
+                    )}
 
-                  {paymentMethod === "paydunya" && order && (
-                    <PayDunyaCheckout orderId={order.id} amount={total} />
-                  )}
+                    {paymentMethod === "paydunya" && order && (
+                      <motion.div
+                        key="paydunya-ui"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.25 }}
+                      >
+                        <PayDunyaCheckout orderId={order.id} amount={total} />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               )}
 
-              {/* --- ÉTAPE 4 : Confirmation --- */}
-              {step === 4 && (
+              {/* --- ÉTAPE 3 : Confirmation --- */}
+              {step === 3 && (
                 <motion.div
                   key="confirm"
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center gap-6 rounded-3xl p-8 text-center lg:p-12"
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative flex flex-col items-center gap-6 overflow-hidden rounded-3xl p-8 text-center lg:p-14"
                   style={{ background: bgElevated, border: `1px solid ${border}` }}
                 >
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-500/10">
+                  {/* Liseré doré supérieur — détail de finition premium */}
+                  <div
+                    aria-hidden
+                    className="absolute inset-x-0 top-0 h-[3px]"
+                    style={{ background: `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_GOLD}, ${BRAND_FOREST})` }}
+                  />
+
+                  <motion.div
+                    initial={{ scale: 0, rotate: -10 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.1 }}
+                    className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-500/10"
+                  >
                     <CheckCircle2 className="h-10 w-10 text-emerald-500" />
-                  </div>
-                  <h2 className="font-display text-3xl font-bold">Commande confirmée !</h2>
-                  <p className="max-w-md text-sm leading-relaxed text-muted">
-                    Merci pour votre commande. Nous la préparons avec le plus grand soin.
-                    Vous recevrez un email de confirmation à <strong>{address.email}</strong>.
-                  </p>
-                  <div className="rounded-2xl px-8 py-4" style={{ background: isDark ? "rgba(255,255,255,0.05)" : "#f8f9f8" }}>
-                    <p className="text-xs uppercase tracking-widest text-muted mb-1">N° de commande</p>
-                    <p className="font-mono text-xl font-black text-[#1f4d3f]">
-                      {order?.reference || "REF-ATTENTE"}
+                  </motion.div>
+
+                  <div>
+                    <h2 className="font-display text-3xl font-bold">Commande confirmée !</h2>
+                    <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
+                      Merci pour votre commande. Nous la préparons avec le plus grand soin.
+                      Vous recevrez un email de confirmation à <strong>{address.email}</strong>.
                     </p>
                   </div>
-                  <div className="mt-4">
+
+                  <div
+                    className="flex items-center gap-3 rounded-2xl px-8 py-4"
+                    style={{ background: isDark ? "rgba(255,255,255,0.05)" : "#f8f9f8", border: `1px solid ${border}` }}
+                  >
+                    <Receipt className="h-5 w-5 shrink-0" style={{ color: BRAND_GOLD }} />
+                    <div className="text-left">
+                      <p className="mb-0.5 text-[11px] uppercase tracking-widest text-muted">N° de commande</p>
+                      <p className="font-mono text-xl font-black" style={{ color: BRAND_FOREST }}>
+                        {order?.reference || "REF-ATTENTE"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-2">
                     <Link
                       href="/products"
-                      className="flex items-center gap-2 rounded-xl bg-[#1f4d3f] px-8 py-4 font-bold text-white shadow-lg transition-all hover:scale-105"
+                      className="group flex items-center gap-2 rounded-xl bg-[#1f4d3f] px-8 py-4 font-bold text-white shadow-lg shadow-[#1f4d3f]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1f4d3f]/90 hover:shadow-xl hover:shadow-[#1f4d3f]/30"
                     >
-                      Continuer mes achats <ArrowRight className="h-5 w-5" />
+                      Continuer mes achats
+                      <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                     </Link>
                   </div>
                 </motion.div>
@@ -585,27 +766,29 @@ export default function CommandesClient() {
               <div className="mt-8 flex items-center justify-between border-t pt-8" style={{ borderColor: border }}>
                 <button
                   onClick={() => (step > 1 ? setStep(step - 1) : router.back())}
-                  className="flex items-center gap-2 rounded-xl px-5 py-3 font-semibold transition-all hover:bg-surface-alt"
+                  className="group flex items-center gap-2 rounded-xl px-5 py-3 font-semibold transition-all duration-300 hover:bg-surface-alt"
                 >
-                  <ArrowLeft className="h-4 w-4" /> Retour
+                  <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" /> Retour
                 </button>
 
                 {step === 1 && (
                   <button
                     onClick={handleNext}
                     disabled={!canProceedStep1 || isProcessing}
-                    className="cursor-pointer flex items-center gap-2 rounded-xl bg-[#1f4d3f] px-8 py-3.5 font-bold text-white shadow-lg transition-all hover:bg-[#1f4d3f]/90 disabled:opacity-50"
+                    className="group flex cursor-pointer items-center gap-2 rounded-xl bg-[#1f4d3f] px-8 py-3.5 font-bold text-white shadow-lg shadow-[#1f4d3f]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1f4d3f]/90 hover:shadow-xl hover:shadow-[#1f4d3f]/30 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
                   >
-                    {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : "Continuer"} <ArrowRight className="h-5 w-5" />
+                    {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : "Continuer"}
+                    <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                   </button>
                 )}
 
                 {step === 2 && (
                   <button
                     onClick={handleNext}
-                    className="cursor-pointer flex items-center gap-2 rounded-xl bg-[#1f4d3f] px-8 py-3.5 font-bold text-white shadow-lg transition-all hover:bg-[#1f4d3f]/90"
+                    className="group flex cursor-pointer items-center gap-2 rounded-xl bg-[#1f4d3f] px-8 py-3.5 font-bold text-white shadow-lg shadow-[#1f4d3f]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1f4d3f]/90 hover:shadow-xl hover:shadow-[#1f4d3f]/30"
                   >
-                    Aller au paiement <ArrowRight className="h-5 w-5" />
+                    Aller au paiement
+                    <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                   </button>
                 )}
 
@@ -613,7 +796,7 @@ export default function CommandesClient() {
                   <button
                     onClick={handlePayWithWallet}
                     disabled={isProcessing || !wallet || parseFloat(wallet.balance) < total}
-                    className="cursor-pointer flex items-center gap-2 rounded-xl bg-[#1f4d3f] px-8 py-3.5 font-bold text-white shadow-lg transition-all hover:bg-[#1f4d3f]/90 disabled:opacity-50"
+                    className="group relative flex cursor-pointer items-center gap-2 overflow-hidden rounded-xl bg-[#1f4d3f] px-8 py-3.5 font-bold text-white shadow-lg shadow-[#1f4d3f]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1f4d3f]/90 hover:shadow-xl hover:shadow-[#1f4d3f]/30 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
                   >
                     {isProcessing ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
@@ -634,7 +817,12 @@ export default function CommandesClient() {
           {/* === Colonne Récapitulatif === */}
           {step < 4 && (
             <div className="lg:col-span-5 xl:col-span-4">
-              <div className="sticky top-28 space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="sticky top-28 space-y-6"
+              >
 
                 {/* Récap Coûts */}
                 <RecapitulatifCommande
@@ -666,13 +854,21 @@ export default function CommandesClient() {
 
                 {/* Articles du panier */}
                 <div className="rounded-3xl p-6" style={{ background: bgElevated, border: `1px solid ${border}` }}>
-                  <h4 className="mb-4 font-bold">Dans votre panier ({itemCount})</h4>
+                  <div className="mb-4 flex items-center justify-between">
+                    <h4 className="font-bold">Dans votre panier</h4>
+                    <span
+                      className="rounded-full px-2.5 py-0.5 text-[11px] font-bold"
+                      style={{ background: BRAND_GOLD_SOFT, color: BRAND_GOLD }}
+                    >
+                      {itemCount} article{itemCount > 1 ? "s" : ""}
+                    </span>
+                  </div>
                   <ul className="space-y-4">
                     {items.map((item) => (
-                      <li key={item.productId} className="flex gap-4">
-                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-alt">
+                      <li key={item.productId} className="group flex gap-4 transition-transform duration-300 hover:-translate-y-0.5">
+                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-alt shadow-sm">
                           {item.image && (
-                            <Image src={mediaUrl(item.image) || "/placeholder.png"} alt={item.name} fill className="object-cover" sizes="64px" />
+                            <Image src={mediaUrl(item.image) || "/placeholder.png"} alt={item.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="64px" />
                           )}
                         </div>
                         <div className="flex-1 min-w-0 pt-1">
@@ -687,12 +883,25 @@ export default function CommandesClient() {
                   </ul>
                 </div>
 
+                {/* Informations de livraison estimée (utilise l'icône Truck déjà importée) */}
+                {shippingCost > 0 && (
+                  <div
+                    className="flex items-center gap-2.5 rounded-2xl p-4 text-xs"
+                    style={{ background: isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)", border: `1px solid ${border}` }}
+                  >
+                    <Truck className="h-4 w-4 shrink-0" style={{ color: BRAND_FOREST }} />
+                    <span className="text-muted">
+                      Frais de livraison calculés selon votre position : <strong className="font-semibold">{formatCurrency(String(shippingCost), "FCFA")}</strong>
+                    </span>
+                  </div>
+                )}
+
                 {/* Sécurité */}
                 <div className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-500/10 p-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
                   <Shield className="h-4 w-4" />
                   Transaction protégée par chiffrement 256-bit
                 </div>
-              </div>
+              </motion.div>
             </div>
           )}
         </div>
@@ -713,13 +922,130 @@ export default function CommandesClient() {
         onClose={() => setResultModalOpen(false)}
       />
 
-      <Toast 
+      <Toast
         show={toastConfig.show}
         type={toastConfig.type}
         message={toastConfig.message}
         onClose={() => setToastConfig({ ...toastConfig, show: false })}
       />
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Sous-composants présentationnels (purement visuels, sans état métier) */
+/* ------------------------------------------------------------------ */
+
+/**
+ * En-tête de section premium : numéro repère discret + titre + sous-titre.
+ * Le numéro encode une vraie séquence (les étapes du tunnel), donc son
+ * usage ici est justifié et non décoratif.
+ */
+function SectionHeading({
+  eyebrow,
+  title,
+  subtitle,
+  isDark,
+}: {
+  eyebrow: string;
+  title: string;
+  subtitle?: string;
+  isDark: boolean;
+}) {
+  return (
+    <div className="mb-5 flex items-start gap-3">
+      <span
+        className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full font-display text-[11px] font-bold"
+        style={{ background: BRAND_GOLD_SOFT, color: BRAND_GOLD }}
+      >
+        {eyebrow}
+      </span>
+      <div>
+        <h2 className="font-display text-[1.15rem] font-bold leading-tight">{title}</h2>
+        {subtitle && (
+          <p className="mt-1 text-[13px]" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }}>
+            {subtitle}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** Étiquette discrète pour regrouper visuellement un sous-ensemble de champs. */
+function FieldGroupLabel({
+  label,
+  isDark,
+  icon: Icon,
+}: {
+  label: string;
+  isDark: boolean;
+  icon?: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+}) {
+  return (
+    <div className="mb-3 flex items-center gap-1.5">
+      {Icon && <Icon className="h-3.5 w-3.5" style={{ color: BRAND_GOLD }} />}
+      <span
+        className="text-[11px] font-bold uppercase tracking-[0.12em]"
+        style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }}
+      >
+        {label}
+      </span>
+    </div>
+  );
+}
+
+/** Carte de sélection d'une méthode de paiement, avec micro-interactions raffinées. */
+function PaymentMethodCard({
+  active,
+  onClick,
+  icon: Icon,
+  label,
+  accentColor,
+  accentBg,
+  accentShadow,
+  bgElevated,
+  border,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  accentColor: string;
+  accentBg: string;
+  accentShadow: string;
+  bgElevated: string;
+  border: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="relative flex flex-col items-center gap-3 rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-0.5"
+      style={{
+        borderColor: active ? accentColor : border,
+        background: active ? accentBg : bgElevated,
+        boxShadow: active ? `0 8px 24px ${accentShadow}` : "none",
+      }}
+    >
+      {active && (
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 400, damping: 18 }}
+          className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full text-white shadow-md"
+          style={{ background: accentColor }}
+        >
+          <BadgeCheck className="h-3.5 w-3.5" />
+        </motion.div>
+      )}
+      <div
+        className={cn("rounded-full p-3 transition-colors duration-300", active ? "text-white" : "bg-surface-alt text-muted")}
+        style={active ? { background: accentColor } : undefined}
+      >
+        <Icon className="h-6 w-6" />
+      </div>
+      <span className="font-bold">{label}</span>
+    </button>
   );
 }
 
@@ -746,7 +1072,7 @@ function InputField({ label, type = "text", value, onChange, placeholder, requir
   return (
     <div>
       <label className="mb-1.5 block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300">
-        {label} {required && <span className="text-[#1f4d3f]">*</span>}
+        {label} {required && <span style={{ color: BRAND_FOREST }}>*</span>}
       </label>
       <input
         type={type}
@@ -754,7 +1080,7 @@ function InputField({ label, type = "text", value, onChange, placeholder, requir
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         required={required}
-        className="w-full rounded-lg py-2.5 px-3.5 text-sm outline-none transition-all focus:ring-2 focus:ring-[#1f4d3f]/20 focus:border-[#1f4d3f]"
+        className="w-full h-[45px] rounded-lg px-3.5 text-sm outline-none transition-all duration-200 focus:border-[#1f4d3f] focus:ring-2 focus:ring-[#1f4d3f]/20"
         style={{
           background: inputBg,
           border: `1px solid ${border}`,

@@ -60,7 +60,7 @@ interface OrderCardProps {
  * du statut, accès au détail en un clic.
  */
 export default function OrderCard({ order, index, onView }: OrderCardProps) {
-  const totalFinal  = formatAmount(order.total_final);
+  const totalFinal = formatAmount(order.total_final);
   const formattedDate = formatDate(order.created_at);
 
   return (
@@ -85,13 +85,13 @@ export default function OrderCard({ order, index, onView }: OrderCardProps) {
         className="absolute inset-y-0 left-0 w-1 rounded-l-2xl"
         style={{
           background:
-            order.status === "delivered"  ? "linear-gradient(180deg, #10b981, #059669)" :
-            order.status === "shipped"    ? "linear-gradient(180deg, #06b6d4, #0284c7)" :
-            order.status === "processing" ? "linear-gradient(180deg, #f59e0b, #d97706)" :
-            order.status === "confirmed"  ? "linear-gradient(180deg, #3b82f6, #2563eb)" :
-            order.status === "cancelled"  ? "linear-gradient(180deg, #ef4444, #dc2626)" :
-            order.status === "paid"       ? "linear-gradient(180deg, #22c55e, #16a34a)" :
-            "linear-gradient(180deg, #94a3b8, #64748b)",
+            order.status === "delivered" ? "linear-gradient(180deg, #10b981, #059669)" :
+              order.status === "shipped" ? "linear-gradient(180deg, #06b6d4, #0284c7)" :
+                order.status === "processing" ? "linear-gradient(180deg, #f59e0b, #d97706)" :
+                  order.status === "confirmed" ? "linear-gradient(180deg, #3b82f6, #2563eb)" :
+                    order.status === "cancelled" ? "linear-gradient(180deg, #ef4444, #dc2626)" :
+                      order.status === "paid" ? "linear-gradient(180deg, #22c55e, #16a34a)" :
+                        "linear-gradient(180deg, #94a3b8, #64748b)",
         }}
       />
 
@@ -106,21 +106,21 @@ export default function OrderCard({ order, index, onView }: OrderCardProps) {
         <div className="min-w-0 flex-1 space-y-1.5">
           {/* Ligne 1 : référence + badge statut */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[13.5px] font-bold tracking-tight text-[#1f241c]">
+            <span className="text-[16px] font-bold tracking-tight text-[#1f241c]">
               {order.reference}
             </span>
             <OrderStatusBadge status={order.status} size="sm" animated />
           </div>
 
           {/* Ligne 2 : date + frais livraison */}
-          <div className="flex flex-wrap items-center gap-3 text-[11.5px] text-[#8A9080]">
+          <div className="flex flex-wrap items-center gap-3 text-[14px] text-[#8A9080]">
             <span className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
+              <Calendar className="h-4 w-4" />
               {formattedDate}
             </span>
             {parseFloat(order.frais_livraison) > 0 && (
               <span className="flex items-center gap-1">
-                <MapPin className="h-3 w-3" />
+                <MapPin className="h-4 w-4" />
                 Livraison : {formatAmount(order.frais_livraison)}
               </span>
             )}
@@ -132,7 +132,7 @@ export default function OrderCard({ order, index, onView }: OrderCardProps) {
           <p className="text-[14px] font-black tracking-tight text-[#1f4d3f]">
             {totalFinal}
           </p>
-          <p className="mt-0.5 text-[10.5px] text-[#8A9080]">
+          <p className="mt-0.5 text-[14px] text-[#8A9080]">
             Total TTC
           </p>
         </div>

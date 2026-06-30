@@ -6,8 +6,8 @@
 
 import type { Metadata } from "next";
 import { RegisterPageView } from "./components/RegisterPageView";
-import { LegacyFooter } from "@/components/layout/LegacyFooter";
-import { Header } from "@/components/layout/LegacyHeader";
+import { LegacyFooter } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
 // import RegisterClient from "./components/RegisterClient";
 
 export const metadata: Metadata = {

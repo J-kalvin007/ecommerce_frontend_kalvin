@@ -59,6 +59,9 @@ export interface FavoriteProduct {
    * @default 0
    */
   count_favorites: number;
+
+  /** Identifiant de la variante par défaut, si elle existe */
+  default_variant_id?: string | null;
 }
 
 // ─── TOGGLE FAVORIS ───────────────────────────────────────────────────────────

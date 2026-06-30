@@ -37,49 +37,49 @@ export default function ErrorState({
     return (
         <>
             <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
 
-        .gc-err-root { font-family: 'Inter', system-ui, sans-serif; }
+                .gc-err-root { font-family: 'Inter', system-ui, sans-serif; }
 
-        .gc-err-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 9px;
-          height: 48px;
-          padding: 0 28px;
-          background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-          color: #fff;
-          border: 1px solid rgba(239,68,68,0.3);
-          border-radius: 14px;
-          font-size: 14px;
-          font-weight: 700;
-          letter-spacing: -0.01em;
-          cursor: pointer;
-          position: relative;
-          overflow: hidden;
-          box-shadow: 0 8px 28px rgba(220,38,38,0.4), inset 0 1px 0 rgba(255,255,255,0.13);
-          transition: all 0.28s cubic-bezier(0.22,1,0.36,1);
-          font-family: 'Inter', system-ui, sans-serif;
-        }
-        .gc-err-btn::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 55%);
-          opacity: 0;
-          transition: opacity 0.25s;
-        }
-        .gc-err-btn:hover::before { opacity: 1; }
-        .gc-err-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 16px 44px rgba(220,38,38,0.55), inset 0 1px 0 rgba(255,255,255,0.18);
-        }
-        .gc-err-btn:active { transform: translateY(0); }
+                .gc-err-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 9px;
+                height: 48px;
+                padding: 0 28px;
+                background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+                color: #fff;
+                border: 1px solid rgba(239,68,68,0.3);
+                border-radius: 14px;
+                font-size: 14px;
+                font-weight: 700;
+                letter-spacing: -0.01em;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 8px 28px rgba(220,38,38,0.4), inset 0 1px 0 rgba(255,255,255,0.13);
+                transition: all 0.28s cubic-bezier(0.22,1,0.36,1);
+                font-family: 'Inter', system-ui, sans-serif;
+                }
+                .gc-err-btn::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 55%);
+                opacity: 0;
+                transition: opacity 0.25s;
+                }
+                .gc-err-btn:hover::before { opacity: 1; }
+                .gc-err-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 16px 44px rgba(220,38,38,0.55), inset 0 1px 0 rgba(255,255,255,0.18);
+                }
+                .gc-err-btn:active { transform: translateY(0); }
 
-        @media (prefers-reduced-motion: reduce) {
-          *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-        }
-      `}</style>
+                @media (prefers-reduced-motion: reduce) {
+                *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+                }
+            `}</style>
 
             <motion.div
                 className="gc-err-root"
@@ -97,20 +97,20 @@ export default function ErrorState({
                     borderRadius: 26,
                     overflow: 'hidden',
                     width: '100%',
-                    background: cardBg,
+                    background: "#ffffff",
                     border: `1px solid ${cardBorder}`,
                     boxShadow: cardShadow,
                     backdropFilter: isDark ? 'blur(12px)' : 'none',
                 }}
             >
                 {/* Top accent stripe */}
-                <div style={{
+                {/* <div style={{
                     position: 'absolute', top: 0, left: 0, right: 0, height: 3,
                     background: 'linear-gradient(90deg, transparent, rgba(239,68,68,0.5), rgba(249,115,22,0.6), rgba(239,68,68,0.5), transparent)',
-                }} />
+                }} /> */}
 
                 {/* Ambient orbs */}
-                <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+                {/* <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
                     <motion.div
                         animate={{ scale: [1, 1.2, 1], opacity: [0.08, 0.14, 0.08] }}
                         transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -133,14 +133,14 @@ export default function ErrorState({
                             filter: 'blur(75px)',
                         }}
                     />
-                </div>
+                </div> */}
 
                 {/* Grain */}
-                <div style={{
+                {/* <div style={{
                     position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.025,
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
                     backgroundSize: '128px',
-                }} />
+                }} /> */}
 
                 {/* ── Lottie + code badge ──────────────────────────────────────────── */}
                 <motion.div
@@ -182,7 +182,7 @@ export default function ErrorState({
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
                     style={{
-                        fontFamily: "'Playfair Display', Georgia, serif",
+
                         fontSize: 'clamp(20px, 3vw, 26px)',
                         fontWeight: 700,
                         color: titleColor,

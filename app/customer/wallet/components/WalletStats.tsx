@@ -157,14 +157,14 @@ export default function WalletStats({ transactions }: WalletStatsProps) {
 
             {/* Valeur */}
             <p
-              className="truncate text-[1.05rem] font-black leading-tight tracking-tight"
+              className="truncate text-[1.4rem] font-black leading-tight tracking-tight"
               style={{ color: kpi.color }}
             >
               {kpi.value}
             </p>
 
             {/* Label */}
-            <p className="mt-1 text-[11px] font-semibold text-[#8A9080]">
+            <p className="mt-1 text-[14px] font-semibold text-[#8A9080]">
               {kpi.label}
             </p>
           </motion.div>

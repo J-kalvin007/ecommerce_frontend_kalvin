@@ -40,7 +40,7 @@ interface OrdersStatsProps {
  */
 export default function OrdersStats({ orders }: OrdersStatsProps) {
   /* ── Calculs des KPIs ───────────────────────────────────────────────── */
-  const total     = orders.length;
+  const total = orders.length;
   const delivered = orders.filter((o) => o.status === "delivered").length;
   const inProgress = orders.filter(
     (o) => !["delivered", "cancelled", "refunded", "draft"].includes(o.status)
@@ -121,24 +121,32 @@ export default function OrdersStats({ orders }: OrdersStatsProps) {
               style={{ background: stat.bg }}
             />
 
-            {/* Icône */}
-            <div
-              className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl"
-              style={{ background: stat.bg, border: `1px solid ${stat.border}` }}
-            >
-              <Icon className="h-4.5 w-4.5" style={{ color: stat.color, width: 18, height: 18 }} strokeWidth={1.75} />
+            <div className="flex items-center justify-between">
+
+
+              {/* Valeur */}
+              <p
+                className="text-[1.5rem] font-black leading-none tracking-tight"
+                style={{ color: stat.color }}
+              >
+                {stat.value}
+              </p>
+
+
+
+              {/* Icône */}
+              <div
+                className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl"
+                style={{ background: stat.bg, border: `1px solid ${stat.border}` }}
+              >
+                <Icon className="h-6 w-6" style={{ color: stat.color, width: 20, height: 20 }} strokeWidth={1.75} />
+              </div>
+
             </div>
 
-            {/* Valeur */}
-            <p
-              className="text-[1.2rem] font-black leading-none tracking-tight"
-              style={{ color: stat.color }}
-            >
-              {stat.value}
-            </p>
 
             {/* Label */}
-            <p className="mt-1 text-[11px] font-semibold text-[#8A9080]">
+            <p className="mt-1 text-[16px] font-semibold text-[#8A9080]">
               {stat.label}
             </p>
           </motion.div>
