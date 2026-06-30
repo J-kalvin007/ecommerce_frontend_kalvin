@@ -5,7 +5,7 @@
 
 "use client";
 
-import { PromoCodeUseButton } from "./PromoCodeUseButton";
+import { PromoCodeUseButton } from "./CardFinaleCodePromo";
 import type { PromoCodeList } from "@/modeles/promotions";
 
 type PromoCodeOfferCardProps = {
@@ -13,6 +13,7 @@ type PromoCodeOfferCardProps = {
   variant?: "home" | "page";
   index?: number;
   className?: string;
+  layoutMode?: "grid" | "list";
 };
 
 export function PromoCodeOfferCard({
@@ -20,6 +21,7 @@ export function PromoCodeOfferCard({
   variant = "home",
   index = 0,
   className,
+  layoutMode = "grid",
 }: PromoCodeOfferCardProps) {
   return (
     <PromoCodeUseButton
@@ -28,6 +30,7 @@ export function PromoCodeOfferCard({
       showDescription
       index={index}
       className={className}
+      layoutMode={layoutMode}
     />
   );
 }

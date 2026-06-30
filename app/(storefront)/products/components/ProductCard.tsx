@@ -631,7 +631,6 @@ import {
   Package,
   ShieldCheck,
   Check,
-  Star,
 } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/pannierStore";

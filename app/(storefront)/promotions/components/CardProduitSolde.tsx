@@ -196,18 +196,7 @@ export function PromoOfferCard({
   const rotateX = useSpring(useTransform(rawY, [-0.5, 0.5], [6, -6]), { stiffness: 300, damping: 30 });
   const rotateY = useSpring(useTransform(rawX, [-0.5, 0.5], [-6, 6]), { stiffness: 300, damping: 30 });
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    if (dimmed) return;
-    const rect = cardRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    rawX.set((e.clientX - rect.left) / rect.width - 0.5);
-    rawY.set((e.clientY - rect.top) / rect.height - 0.5);
-  }, [dimmed, rawX, rawY]);
 
-  const handleMouseLeave = useCallback(() => {
-    rawX.set(0);
-    rawY.set(0);
-  }, [rawX, rawY]);
 
   /* ── Calcul de la remise ── */
   const discountLabel =
@@ -389,8 +378,6 @@ export function PromoOfferCard({
       <article
         ref={cardRef}
         className={cardClassName}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
         style={{ perspective: "900px", minHeight: "160px" }}
       >
         <motion.div
@@ -410,8 +397,6 @@ export function PromoOfferCard({
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.55, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       className={cardClassName}
       style={{ perspective: "900px", minHeight: "160px" }}
     >

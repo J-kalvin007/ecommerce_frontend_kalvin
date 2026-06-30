@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file PromoCodeUseButton.tsx
  * @description Carte / bouton de code promo ultra-premium edition luxe.
  *
@@ -37,6 +37,7 @@ type PromoCodeUseButtonProps = {
   variant?: "home" | "page";
   showDescription?: boolean;
   index?: number;
+  layoutMode?: "grid" | "list";
 };
 
 /* ─── Utilitaires ─────────────────────────────────────────────────────────── */
@@ -64,6 +65,7 @@ export function PromoCodeUseButton({
   variant = "page",
   showDescription = true,
   index = 0,
+  layoutMode = "grid",
 }: PromoCodeUseButtonProps) {
   /* ── Stores et hooks ── */
   const { applyCode, applyingCode, activePromoCode } = useApplyPromoCode();
@@ -114,7 +116,7 @@ export function PromoCodeUseButton({
           damping: 22,
           delay: index * 0.08,
         }}
-        className="h-full"
+        className="flex-1 flex flex-col w-full"
       >
         {/* ── Bouton principal : apparence ticket ── */}
         <motion.button
@@ -127,7 +129,8 @@ export function PromoCodeUseButton({
           whileTap={{ scale: 0.985 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
           className={cn(
-            "group relative flex h-full min-h-[200px] w-full cursor-pointer flex-col overflow-hidden rounded-3xl border-2 border-dashed text-left",
+            "group relative flex flex-1 w-full cursor-pointer overflow-hidden rounded-3xl border-2 border-dashed text-left",
+            layoutMode === "grid" ? "flex-col min-h-[200px]" : "flex-col sm:flex-row min-h-[140px] sm:items-center",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ef8219]/40 focus-visible:ring-offset-2",
             "disabled:cursor-wait disabled:opacity-80",
             "shadow-[0_8px_28px_rgba(15,23,42,0.07)] transition-shadow hover:shadow-[0_16px_48px_rgba(15,23,42,0.12)]",
@@ -176,9 +179,15 @@ export function PromoCodeUseButton({
           </AnimatePresence>
 
           {/* ── Contenu de la carte ── */}
-          <div className="relative z-10 flex h-full flex-col gap-3 p-5">
+          <div className={cn(
+            "relative z-10 flex h-full gap-3 p-5",
+            layoutMode === "grid" ? "flex-col" : "flex-col sm:flex-row sm:items-center w-full"
+          )}>
             {/* En-tete : type de remise */}
-            <div className="flex items-start justify-between gap-2">
+            <div className={cn(
+              "flex items-start justify-between gap-2",
+              layoutMode === "list" && "sm:min-w-[180px] sm:shrink-0"
+            )}>
               <div className="flex items-center gap-2">
                 <div
                   className="flex h-9 w-9 items-center justify-center rounded-xl"
@@ -202,18 +211,19 @@ export function PromoCodeUseButton({
                   </p>
                   <p
                     className={cn(
-                      "text-[11px] font-bold uppercase tracking-[0.12em]",
+                      "text-[10px] font-bold uppercase tracking-[0.12em]",
                       isActive ? "text-emerald-600" : "text-[#ef8219]"
                     )}
                   >
-                    {label}
+                    {/* {label} */}
+                    Reduction
                   </p>
                 </div>
               </div>
 
               {/* Badge remise */}
               <span
-                className="inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[10px] font-black uppercase tracking-wide text-white"
+                className="inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[12px] font-black uppercase tracking-wide text-white"
                 style={{
                   background: isActive
                     ? "linear-gradient(135deg, #10b981, #059669)"
@@ -223,44 +233,63 @@ export function PromoCodeUseButton({
                     : "0 3px 10px rgba(239,130,25,0.4)",
                 }}
               >
-                <Zap className="h-3 w-3 fill-current" aria-hidden="true" />
+                <Zap className="h-4 w-4 fill-current" aria-hidden="true" />
                 {label}
               </span>
             </div>
 
             {/* Separateur style ticket */}
-            <div className="relative my-1 flex items-center gap-2">
-              <div className="h-[1px] flex-1 border-t-2 border-dashed border-[#e8ddd0]" />
-              <div
-                className="h-3 w-3 rounded-full border border-[#e8ddd0]"
-                style={{ background: "#f9f6ee" }}
-                aria-hidden="true"
-              />
-              <div className="h-[1px] flex-1 border-t-2 border-dashed border-[#e8ddd0]" />
-            </div>
+            {layoutMode === "grid" ? (
+              <div className="relative my-1 flex items-center gap-2">
+                <div className="h-[1px] flex-1 border-t-2 border-dashed border-[#e8ddd0]" />
+                <div
+                  className="h-3 w-3 rounded-full border border-[#e8ddd0]"
+                  style={{ background: "#f9f6ee" }}
+                  aria-hidden="true"
+                />
+                <div className="h-[1px] flex-1 border-t-2 border-dashed border-[#e8ddd0]" />
+              </div>
+            ) : (
+              <div className="hidden sm:block h-16 w-[2px] border-l-2 border-dashed border-[#e8ddd0] mx-2 shrink-0" />
+            )}
 
             {/* Code en gros */}
-            <div className="text-center">
-              <p className="font-mono text-2xl font-black tracking-[0.28em] text-[#1f241c]">
+            <div className={cn(
+              "text-center",
+              layoutMode === "list" && "sm:text-left sm:flex-1"
+            )}>
+              <p className={cn(
+                "font-mono font-black tracking-[0.28em] text-[#1f241c]",
+                layoutMode === "grid" ? "text-2xl" : "text-xl"
+              )}>
                 {promo.code}
               </p>
+              {/* Description optionnelle pour mode list */}
+              {layoutMode === "list" && showDescription && promo.description && (
+                <p className="mt-1 line-clamp-2 text-[12px] leading-relaxed text-[#5c6a59]">
+                  {promo.description}
+                </p>
+              )}
             </div>
 
-            {/* Description optionnelle */}
-            {showDescription && promo.description && (
+            {/* Description optionnelle pour mode grid */}
+            {layoutMode === "grid" && showDescription && promo.description && (
               <p className="line-clamp-2 text-center text-[12px] leading-relaxed text-[#5c6a59]">
                 {promo.description}
               </p>
             )}
 
             {/* CTA */}
-            <div className="mt-auto">
+            <div className={cn(
+              layoutMode === "grid" ? "mt-auto w-full" : "mt-auto w-full sm:mt-0 sm:w-auto sm:ml-auto sm:shrink-0"
+            )}>
               <motion.div
                 animate={{ scale: 1, opacity: 1 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className={cn(
-                  "flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-[11px] font-black uppercase tracking-[0.2em]",
+                  "flex items-center justify-center gap-2 rounded-2xl py-3 text-[11px] font-black uppercase tracking-[0.2em]",
+                  layoutMode === "grid" ? "w-full" : "w-full sm:px-6",
                   isActive
                     ? "bg-emerald-500 text-white shadow-[0_4px_14px_rgba(16,185,129,0.4)]"
                     : "text-white shadow-[0_4px_14px_rgba(239,130,25,0.35)] hover:shadow-[0_6px_20px_rgba(239,130,25,0.5)]"
@@ -284,7 +313,7 @@ export function PromoCodeUseButton({
                 ) : (
                   <>
                     <Star className="h-3.5 w-3.5" aria-hidden="true" />
-                    Utiliser le code
+                    Utiliser sur mon panier actuel
                   </>
                 )}
               </motion.div>
@@ -294,24 +323,26 @@ export function PromoCodeUseButton({
       </motion.div>
 
       {/* ── Feedback ── */}
-      <AnimatePresence>
-        {feedback && (
-          <motion.p
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ type: "spring", stiffness: 300, damping: 24 }}
-            className={cn(
-              "text-center text-[11px] font-semibold",
-              feedback.type === "success" ? "text-emerald-600" : "text-red-500"
-            )}
-            role="alert"
-            aria-live="polite"
-          >
-            {feedback.message}
-          </motion.p>
-        )}
-      </AnimatePresence>
+      <div className="h-4 w-full flex items-start justify-center">
+        <AnimatePresence>
+          {feedback && (
+            <motion.p
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ type: "spring", stiffness: 300, damping: 24 }}
+              className={cn(
+                "text-center text-[11px] font-semibold leading-none",
+                feedback.type === "success" ? "text-emerald-600" : "text-red-500"
+              )}
+              role="alert"
+              aria-live="polite"
+            >
+              {feedback.message}
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

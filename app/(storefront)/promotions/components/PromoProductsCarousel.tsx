@@ -49,7 +49,7 @@ import {
   useSpring,
 } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { PromoOfferCard } from "./PromoOfferCard";
+import { PromoOfferCard } from "./CardProduitSolde";
 import { PromoProductCard } from "./PromotionsPage";
 import { cn } from "@/lib/utils";
 
@@ -159,11 +159,11 @@ function NavigationArrow({
       )}
       style={{
         // background: "rgba(13,46,30,0.75)",
-        background: "rgba(232,113,26,0.75)",
+        background: "rgba(13,46,30,0.75)",
         borderColor: "rgba(47,158,111,0.25)",
         backdropFilter: "blur(12px)",
         boxShadow: "0 4px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.08)",
-        color: "rgba(13,46,30,0.75)",
+        color: "#ffff",
       }}
     >
       {isLeft ? (
@@ -373,16 +373,19 @@ function DesktopCoverflow({
       {/* ── Flèches de navigation ── */}
       {count > 1 && (
         <>
+
           <NavigationArrow
             direction="left"
             onClick={() => goTo(activeIndex - 1)}
             ariaLabel="Produit précédent"
           />
+
           <NavigationArrow
             direction="right"
             onClick={() => goTo(activeIndex + 1)}
             ariaLabel="Produit suivant"
           />
+
         </>
       )}
 
@@ -435,6 +438,7 @@ function DesktopCoverflow({
                 disableEntrance
                 dimmed={!isActive}
               />
+
             </motion.div>
           );
         })}

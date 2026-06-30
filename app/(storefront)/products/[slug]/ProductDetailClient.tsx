@@ -18,7 +18,6 @@ import {
   Package,
   Weight,
   Layers,
-  Star,
   ArrowRight,
   Shield,
   Truck,
@@ -35,6 +34,7 @@ import type { Soldes } from "@/modeles/promotions";
 import Toast from "@/components/special/Toast";
 import LoadingSpinner from "@/components/special/LoadingSpinner";
 import PurchaseModal from "../components/MadaleAchat";
+import LoadingKalvin from "@/components/special/loadingKalvin";
 
 type Props = {
   slug: string;
@@ -51,17 +51,6 @@ function formatWeight(grams: number | null | undefined): string {
   return `${grams} g`;
 }
 
-/* ──────────────────────────────────────────────────────────────────────────────
-   Modale de configuration d'achat
-   ────────────────────────────────────────────────────────────────────────── */
-
-type PurchaseModalProps = {
-  product: ProductDetail;
-  images: string[];
-  flashSale: Soldes | null;
-  onClose: () => void;
-  onConfirm: (variantId: string | null, variantName: string | null, price: string, quantity: number, weight: number | null) => void;
-};
 
 
 
@@ -255,24 +244,33 @@ export default function ProductDetailClient({ slug, id }: Props) {
 
   /* --- Handler d'ajout au panier ------------------------------------------ */
   const handleAddToCart = useCallback(
-    (variantId: string | null, variantName: string | null, price: string, quantity: number, weight: number | null) => {
+    (
+      variantId: string | null,
+      variantName: string | null,
+      price: string,
+      quantity: number,
+      weight: number | null | undefined
+    ) => {
       if (!product) return;
 
-      if (quantity > (product.stock || 0) && !variantId) {
+      const selectedVariant = variantId ? product.variants.find((v) => v.id === variantId) : null;
+      const actualStock = selectedVariant ? selectedVariant.stock : product.stock;
+
+      if (quantity > (actualStock || 0)) {
         setToast({ show: true, type: "error", message: "Stock insuffisant pour la quantité demandée." });
         return;
       }
 
       addItem({
-        productId: variantId || product.id,
+        productId: product.id,
         variantId,
         name: variantName ? `${product.name} — ${variantName}` : product.name,
-        sku: product.sku,
+        sku: selectedVariant?.sku || product.sku,
         price,
         compareAtPrice: comparePrice!,
         image: images[0] ?? null,
         quantity,
-        maxStock: Math.max(product.stock, 1),
+        maxStock: Math.max(actualStock, 1),
         currency: "FCFA",
         slug: product.slug ?? "",
       });
@@ -332,12 +330,16 @@ export default function ProductDetailClient({ slug, id }: Props) {
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-10">
+
         {/* États de chargement / erreur */}
         {loading ? (
+
           <div className="flex min-h-[50vh] items-center justify-center">
-            <LoadingSpinner size="lg" variant="luxury" label="Chargement du produit" />
+            <LoadingKalvin message="Chargement des details du produit..." />
           </div>
+
         ) : error || !product ? (
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

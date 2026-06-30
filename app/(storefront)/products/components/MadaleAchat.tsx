@@ -46,6 +46,12 @@ import {
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
+function formatWeight(grams: number | null | undefined): string {
+    if (!grams) return "";
+    if (grams >= 1000) return `${(grams / 1000).toFixed(grams % 1000 === 0 ? 0 : 1)} kg`;
+    return `${grams} g`;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // §0 — TYPES (à adapter selon votre fichier de types global)
 //      Ces interfaces documentent la forme attendue des données.
@@ -218,9 +224,7 @@ function WeightDeltaBadge({ delta }: { delta: number | null }) {
 
     const isHeavier = delta > 0;
 
-    function formatWeight(arg0: number): import("react").ReactNode | import("motion-dom").MotionValue<number> | import("motion-dom").MotionValue<string> {
-        throw new Error("Function not implemented.");
-    }
+
 
     return (
         <motion.span
@@ -253,9 +257,7 @@ function WeightChip({
     weight: number;
     isSelected?: boolean;
 }) {
-    function formatWeight(weight: number): import("react").ReactNode {
-        throw new Error("Function not implemented.");
-    }
+
 
     return (
         <span
@@ -426,9 +428,7 @@ function PurchaseModal({
         setQuantity(1);
     }, []);
 
-    function formatWeight(currentWeight: number): import("react").ReactNode {
-        throw new Error("Function not implemented.");
-    }
+
 
     // ─────────────────────────────────────────────────────────────────────────
     // §4.6 RENDU

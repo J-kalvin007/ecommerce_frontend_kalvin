@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file PromotionsPage.tsx
  * @description Page des promotions - edition ultra-premium "Atelier du Terroir".
  *
@@ -33,8 +33,11 @@ import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
   Leaf, Loader2, Star, Tag, Zap,
-  ArrowRight, Clock, ShoppingBag, TrendingDown, Star,
+  ArrowRight, Clock, ShoppingBag, TrendingDown,
+  LayoutGrid,
+  List,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { getActiveSales, getActivePromoCodes } from "@/fonctions_api/promotions.api";
 import type { Soldes, PromoCodeList } from "@/modeles/promotions";
 import { formatCurrency } from "@/lib/utils";
@@ -182,7 +185,7 @@ function HeroSection({ featured, loading }: HeroSectionProps) {
   const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
   const heroImage = featured?.product_image || FALLBACK_HERO;
-  const heroPrice = featured?.sale_price ?? "5900";
+  const heroPrice = featured?.sale_price ?? "00";
   const heroCompare = featured?.original_price ?? null;
   const heroLink = featured ? `/products/${featured.product_slug}` : "/products";
   const hasDiscount = !!(heroCompare && Number(heroCompare) > Number(heroPrice));
@@ -304,11 +307,26 @@ function HeroSection({ featured, loading }: HeroSectionProps) {
               savourer le terroir a prix avantageux.
             </motion.p>
 
+            {/* Titre Produit Vedette */}
+            {featured?.product_name && (
+              <motion.div variants={itemVariants} className="mt-6 flex flex-col gap-1.5 border-l-2 border-[#F5A623] pl-4">
+                <div className="flex items-center gap-1.5">
+                  <Star className="h-3.5 w-3.5 text-[#F5A623]" fill="currentColor" aria-hidden="true" />
+                  <span className="text-[12px] font-bold uppercase tracking-widest text-[#F5A623]">
+                    Notre meilleure réduction
+                  </span>
+                </div>
+                <h2 className="max-w-md text-2xl font-bold leading-tight text-white sm:text-4xl line-clamp-2">
+                  {featured.product_name}
+                </h2>
+              </motion.div>
+            )}
+
             {/* Prix hero */}
             {!loading && (
               <motion.div variants={itemVariants} className="mt-7 flex flex-wrap items-end gap-3">
                 <p
-                  className="text-4xl font-black leading-none text-white"
+                  className="text-5xl font-black leading-none text-white"
                   style={{ textShadow: "0 4px 16px rgba(0,0,0,0.4)" }}
                 >
                   {formatCurrency(parseFloat(heroPrice), "FCFA")}
@@ -319,14 +337,14 @@ function HeroSection({ featured, loading }: HeroSectionProps) {
                       {formatCurrency(parseFloat(heroCompare!), "FCFA")}
                     </p>
                     <span
-                      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-black uppercase tracking-widest text-white"
+                      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-black uppercase tracking-widest text-white"
                       style={{
                         background: "linear-gradient(135deg, #E8711A, #F5A623)",
                         boxShadow: "0 4px 16px rgba(232,113,26,0.45)",
                         animation: "promo-badge-float 3s ease-in-out infinite",
                       }}
                     >
-                      <TrendingDown className="h-3 w-3" aria-hidden="true" />
+                      <TrendingDown className="h-4 w-4" aria-hidden="true" />
                       -{discountPct}%
                     </span>
                   </>
@@ -474,10 +492,10 @@ function HeroSection({ featured, loading }: HeroSectionProps) {
         </div>
       </div>
 
-      {/* Vague de transition */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0" aria-hidden="true">
-        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full" preserveAspectRatio="none">
-          <path d="M0 60 L0 30 Q360 0 720 30 Q1080 60 1440 24 L1440 60 Z" fill="#f9f6ee" />
+      {/* Courbe de transition adoucie pour le bas de section */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden leading-none" aria-hidden="true">
+        <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full block translate-y-[1px] scale-105" preserveAspectRatio="none">
+          <path d="M0,80 L0,40 C480,100 960,100 1440,40 L1440,80 Z" fill="#f9f6ee" />
         </svg>
       </div>
     </section>
@@ -492,32 +510,57 @@ interface SectionHeaderProps {
   icon: React.ElementType;
   label: string;
   title: string;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
 }
 
-function SectionHeader({ icon: Icon, label, title, subtitle }: SectionHeaderProps) {
+function SectionHeader({ icon: Icon, label, title, subtitle, action }: SectionHeaderProps & { action?: React.ReactNode }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ type: "spring", stiffness: 240, damping: 22 }}
-      className="mb-10"
+      initial={{ opacity: 0, y: 35, filter: "blur(4px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="mb-14 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between relative"
     >
-      <span
-        className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em]"
-        style={{
-          background: "rgba(31,77,63,0.10)",
-          border: "1px solid rgba(31,77,63,0.20)",
-          color: "#1f4d3f",
-        }}
-      >
-        <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-        {label}
-      </span>
-      <h2 className="mt-3 text-2xl font-black text-[#1f241c] sm:text-3xl">{title}</h2>
-      {subtitle && (
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#5c6a59]">{subtitle}</p>
+      {/* Halo de fond luxueux avec pulsation douce */}
+      <motion.div
+        animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.8, 0.5] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -left-12 -top-12 -z-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(232,113,26,0.15)_0%,transparent_70%)] blur-2xl"
+      />
+
+      <div className="relative">
+        <div className="flex items-center gap-4 mb-4">
+          {/* Ligne decoratrice avec animation d'entree */}
+          <motion.span
+            initial={{ width: 0 }}
+            whileInView={{ width: 40 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="h-[2px] rounded-full"
+            style={{ background: "linear-gradient(90deg, #E8711A 0%, #F5A623 100%)" }}
+          />
+          <span className="flex items-center gap-2 text-[12px] font-black uppercase tracking-[0.3em] text-[#E8711A]">
+            <Icon className="h-4 w-4" aria-hidden="true" />
+            {label}
+          </span>
+        </div>
+
+        <h2 className="text-4xl font-bold tracking-tight text-[#1f241c] sm:text-5xl md:text-[3.5rem] leading-[1.05]">
+          {title}
+        </h2>
+
+        {subtitle && (
+          <div className="mt-5 max-w-2xl text-[15px] leading-relaxed text-[#5c6a59] font-medium border-l-[3px] border-[#e8ddd0] pl-5">
+            {subtitle}
+          </div>
+        )}
+      </div>
+
+      {action && (
+        <div className="shrink-0">
+          {action}
+        </div>
       )}
     </motion.div>
   );
@@ -571,6 +614,7 @@ export default function PromotionsPage() {
   const [promoCards, setPromoCards] = useState<PromoProductCard[]>([]);
   const [promoCodes, setPromoCodes] = useState<PromoCodeList[]>([]);
   const [loading, setLoading] = useState(true);
+  const [layoutMode, setLayoutMode] = useState<"grid" | "list">("list");
 
   /* Chargement des donnees API */
   useEffect(() => {
@@ -622,7 +666,9 @@ export default function PromotionsPage() {
 
         {/* Etat de chargement / contenu */}
         <AnimatePresence mode="wait">
+
           {loading ? (
+
             <motion.div
               key="skeleton"
               initial={{ opacity: 0 }}
@@ -630,20 +676,25 @@ export default function PromotionsPage() {
               exit={{ opacity: 0 }}
               className="space-y-14"
             >
+
               <div>
                 <div className="mb-8 h-8 w-48 animate-pulse rounded-full bg-[#e0dbd0]" />
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)}
                 </div>
               </div>
+
               <div>
                 <div className="mb-8 h-8 w-56 animate-pulse rounded-full bg-[#e0dbd0]" />
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)}
                 </div>
               </div>
+
             </motion.div>
+
           ) : (
+
             <motion.div
               key="content"
               initial={{ opacity: 0 }}
@@ -657,10 +708,41 @@ export default function PromotionsPage() {
                   <SectionHeader
                     icon={Tag}
                     label="Codes promo"
-                    title="Vos codes de reduction"
-                    subtitle="Cliquez sur un code pour l'appliquer directement a votre panier."
+                    title="Vos codes de réduction"
+                    subtitle={
+                      <>
+                        Des réductions merveilleuses pour nos clients d'élite. Profitez-en vite !<br />
+                        <span className="mt-2 inline-block text-[13px] font-semibold text-[#E8711A]">
+                          * Le code promo utilisé agit directement sur votre panier actuel (un seul code utilisable à la fois).
+                        </span>
+                      </>
+                    }
+                    action={
+                      <div className="flex items-center gap-1 rounded-full bg-white p-1 shadow-sm">
+                        <button
+                          onClick={() => setLayoutMode("grid")}
+                          className={cn(
+                            "flex items-center cursor-pointer justify-center rounded-full p-2 transition-colors",
+                            layoutMode === "grid" ? "bg-[#1f4d3f] text-white" : "text-[#5c6a59] hover:bg-[#f3ede2]"
+                          )}
+                          aria-label="Vue en grille"
+                        >
+                          <LayoutGrid className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => setLayoutMode("list")}
+                          className={cn(
+                            "flex items-center cursor-pointer justify-center rounded-full p-2 transition-colors",
+                            layoutMode === "list" ? "bg-[#1f4d3f] text-white" : "text-[#5c6a59] hover:bg-[#f3ede2]"
+                          )}
+                          aria-label="Vue en liste"
+                        >
+                          <List className="h-4 w-4" />
+                        </button>
+                      </div>
+                    }
                   />
-                  <PromoCodesGrid promos={promoCodes} />
+                  <PromoCodesGrid promos={promoCodes} layoutMode={layoutMode} />
                 </section>
               )}
 
@@ -670,7 +752,7 @@ export default function PromotionsPage() {
                   icon={Star}
                   label="Ventes flash"
                   title="Produits en promotion"
-                  subtitle="Des offres limitees selectionnees parmi les meilleurs produits du terroir."
+                  subtitle="Des offres limitées sélectionnées parmi les meilleurs produits du terroir pour vous offrir l'excellence à prix doux."
                 />
                 {promoCards.length === 0 ? (
                   <EmptyState message="Aucune vente flash active pour le moment. Les promotions configurees dans l'administration apparaitront ici automatiquement." />
@@ -699,8 +781,11 @@ export default function PromotionsPage() {
             Explorer toute la boutique
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </Link>
+
         </motion.div>
+
       </div>
+
     </div>
   );
 }

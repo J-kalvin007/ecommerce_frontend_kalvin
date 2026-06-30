@@ -735,6 +735,7 @@ import { ProductGridSkeleton } from "@/components/shared/LoadingSkeleton";
 import { ProductsPageHeader } from "./ProductsPageHeader";
 import { ProductCard } from "./ProductCard";
 import { useAuthStore } from "@/store/authStore";
+import LoadingKalvin from "@/components/special/loadingKalvin";
 
 /* ─────────────────────────────────────────────────────────────
    TYPES EXPORTÉS — conservation intégrale
@@ -1065,7 +1066,12 @@ export function ProductsCatalogClient() {
     return result;
   }, [products, sales, categories, priceRange, searchQuery, selectedCategory, sortBy]);
 
+
+
   const totalCategoryCount = useMemo(() => countCategories(categories), [categories]);
+
+
+
 
   /* ── Handlers — conservation des noms d'origine ── */
   const toggleCategoryExpand = (id: string) => {
@@ -1076,6 +1082,9 @@ export function ProductsCatalogClient() {
       return next;
     });
   };
+
+
+
 
   const handleSelectCategory = (slug: string | null) => {
     setSelectedCategory(slug);
@@ -1089,11 +1098,17 @@ export function ProductsCatalogClient() {
     });
   };
 
+
+
+
   /* ── Nombre de filtres actifs (pour le badge mobile) ── */
   const activeFiltersCount = [
     selectedCategory !== null,
     priceRange[1] < 100000,
   ].filter(Boolean).length;
+
+
+
 
   /* ─────────────────────────────────────────────────────────────
      RENDU
@@ -1139,7 +1154,7 @@ export function ProductsCatalogClient() {
                   type="button"
                   onClick={() => setSearchQuery("")}
                   className={cn(
-                    "flex h-5 w-5 items-center justify-center rounded-full",
+                    "flex h-5 w-5 cursor-pointer items-center justify-center rounded-full",
                     "bg-[#e7dfd2] text-[#8a9086]",
                     "transition-all hover:bg-[#1f4d3f] hover:text-white",
                     "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#1f4d3f]"
@@ -1310,10 +1325,7 @@ export function ProductsCatalogClient() {
                           </li>
 
                           {loadingCategories ? (
-                            <li className="px-3 py-2 text-sm text-[#8a9086]">
-                              <Loader2 className="mr-2 inline h-3 w-3 animate-spin" aria-hidden />
-                              Chargement...
-                            </li>
+                            <LoadingKalvin message="Chargement des catégories..." />
                           ) : categoriesError ? (
                             <li className="px-3 py-2 text-xs text-red-500">{categoriesError}</li>
                           ) : (
@@ -1403,8 +1415,8 @@ export function ProductsCatalogClient() {
                 <p className="text-sm font-medium text-red-600">{productsError}</p>
                 <button
                   type="button"
-                  onClick={() => setSortBy(sortBy)} // re-trigger l'useEffect
-                  className="flex items-center gap-2 rounded-xl bg-red-500 px-5 py-2 text-sm font-semibold text-white hover:bg-red-600 transition-colors"
+                  onClick={() => setSortBy(sortBy)}
+                  className="flex items-center cursor-pointer gap-2 rounded-xl bg-red-500 px-5 py-2 text-sm font-semibold text-white hover:bg-red-600 transition-colors"
                 >
                   <RefreshCw className="h-4 w-4" />
                   Réessayer

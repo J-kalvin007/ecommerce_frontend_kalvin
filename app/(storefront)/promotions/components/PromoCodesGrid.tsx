@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file PromoCodesGrid.tsx
  * @description Grille responsive des codes promo — wrapper de mise en page.
  *
@@ -14,28 +14,34 @@
 
 "use client";
 
-import { PromoCodeOfferCard } from "./PromoCodeOfferCard";
+import { PromoCodeOfferCard } from "./CardCodePromo";
 import type { PromoCodeList } from "@/modeles/promotions";
 
-/* ─── Types ───────────────────────────────────────────────────────────────── */
+// Types
 
 type PromoCodesGridProps = {
   promos: PromoCodeList[];
+  layoutMode?: "grid" | "list";
 };
 
-/* ─── Composant ───────────────────────────────────────────────────────────── */
+// Composant
 
-export function PromoCodesGrid({ promos }: PromoCodesGridProps) {
+export function PromoCodesGrid({ promos, layoutMode = "grid" }: PromoCodesGridProps) {
   if (promos.length === 0) return null;
 
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+    <div className={
+      layoutMode === "grid"
+        ? "grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3"
+        : "flex flex-col gap-4 mx-auto"
+    }>
       {promos.map((promo, index) => (
         <PromoCodeOfferCard
           key={promo.id}
           promo={promo}
           variant="page"
           index={index}
+          layoutMode={layoutMode}
         />
       ))}
     </div>
