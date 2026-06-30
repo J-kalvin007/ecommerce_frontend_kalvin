@@ -23,8 +23,8 @@ import { CheckCircle2, XCircle, Copy, Check, ArrowRight, RefreshCcw } from "luci
 // Chargement dynamique de lottie-react pour éviter SSR issues
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
-import successAnimation from "@/public/assets/lottis/success_01.json";
-import errorAnimation from "@/public/assets/lottis/error13.json";
+import successAnimation from "@/public/assets/lottis/success.json";
+import errorAnimation from "@/public/assets/lottis/attention.json";
 
 interface ModaleResultatPaiementProps {
   open: boolean;
@@ -53,15 +53,12 @@ export default function ModaleResultatPaiement({
 
   const handleAction = () => {
     if (isSuccess) {
-      // Si succès, on redirige vers le détail de la commande (ou liste)
       router.push(`/commandes/${orderReference || ""}`);
     } else {
-      // Si erreur, on permet de réessayer en fermant la modale
       onClose();
     }
   };
 
-  /** Copie la référence commande dans le presse-papier */
   const handleCopyRef = () => {
     if (!orderReference) return;
     navigator.clipboard.writeText(orderReference).then(() => {
@@ -70,210 +67,198 @@ export default function ModaleResultatPaiement({
     });
   };
 
-  const text = isDark ? "rgba(255,255,255,0.95)" : "#111827";
-  const textMuted = isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)";
+  const text = isDark ? "rgba(255,255,255,0.95)" : "#0f172a";
+  const textMuted = isDark ? "rgba(255,255,255,0.6)" : "#475569";
+  const bgSurface = isDark ? "#0f172a" : "#ffffff";
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(val) => {
-        // Empêcher la fermeture si succès, forcer le clic sur le bouton
-        if (!isSuccess) onClose();
-      }}
-    >
-      <DialogContent className="sm:max-w-md overflow-hidden p-0">
-        {/* Requis par Radix UI pour l'accessibilité (lecteurs d'écran) — visuellement masqué */}
+    <Dialog open={open} onOpenChange={(val) => { if (!isSuccess) onClose(); }}>
+      <DialogContent className="sm:max-w-md overflow-hidden p-0 border-none shadow-[0_32px_64px_-12px_rgba(0,0,0,0.3)] bg-transparent">
         <DialogTitle className="sr-only">
           {isSuccess ? "Paiement réussi" : "Échec du paiement"}
         </DialogTitle>
         <DialogDescription className="sr-only">
-          {isSuccess
-            ? "Votre commande a été validée avec succès."
-            : "Une erreur est survenue lors du paiement."}
+          {isSuccess ? "Votre commande a été validée." : "Erreur lors du paiement."}
         </DialogDescription>
 
-        {/* ── Bande de couleur en haut ── */}
-        <div
-          className="relative h-2 w-full"
-          style={{
-            background: isSuccess
-              ? "linear-gradient(90deg, #1f4d3f, #2d7a62, #1f4d3f)"
-              : "linear-gradient(90deg, #dc2626, #ef4444, #dc2626)",
-          }}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          className="relative overflow-hidden rounded-3xl"
+          style={{ backgroundColor: bgSurface }}
         >
-          {/* Animation slide-in de la barre */}
-          <motion.div
-            className="absolute inset-0"
-            initial={{ scaleX: 0, originX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              background: isSuccess
-                ? "linear-gradient(90deg, #1f4d3f, #2d7a62)"
-                : "linear-gradient(90deg, #dc2626, #ef4444)",
-            }}
-          />
-        </div>
-
-        {/* ── Corps ── */}
-        <div className="px-8 pb-8 pt-6 text-center">
-
-          {/* Lottie + icône de statut */}
-          <div className="relative mx-auto mb-6 flex h-32 w-32 items-center justify-center">
-            {/* Orbe de fond */}
-            <div
-              className="absolute inset-0 rounded-full opacity-10 blur-xl"
-              style={{ background: isSuccess ? "#1f4d3f" : "#ef4444" }}
+          {/* ── Background Ambiance ── */}
+          <div className="absolute inset-0 pointer-events-none">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 1 }}
+              className="absolute -top-32 -left-32 h-64 w-64 rounded-full mix-blend-multiply blur-3xl opacity-30 dark:opacity-20 dark:mix-blend-screen"
+              style={{ background: isSuccess ? "#34d399" : "#f87171" }}
             />
             <motion.div
-              initial={{ scale: 0.6, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 280, damping: 20, delay: 0.1 }}
-              className="relative z-10 h-full w-full"
-            >
-              <Lottie
-                animationData={isSuccess ? successAnimation : errorAnimation}
-                loop={!isSuccess}
-                autoplay={true}
-                style={{ width: "100%", height: "100%" }}
-              />
-            </motion.div>
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 1 }}
+              className="absolute -bottom-32 -right-32 h-64 w-64 rounded-full mix-blend-multiply blur-3xl opacity-20 dark:opacity-10 dark:mix-blend-screen"
+              style={{ background: isSuccess ? "#1f4d3f" : "#991b1b" }}
+            />
           </div>
 
-          {/* Titre principal */}
-          <motion.h2
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 300, damping: 24 }}
-            className="mb-2 text-2xl font-black tracking-tight"
-            style={{ color: text }}
-          >
-            {isSuccess ? "Paiement réussi ! 🎉" : "Échec du paiement"}
-          </motion.h2>
-
-          {/* Message descriptif */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="mb-7 text-[14px] leading-relaxed"
-            style={{ color: textMuted }}
-          >
-            {message || (isSuccess
-              ? "Votre commande a été validée avec succès. Nous préparons sa livraison avec soin."
-              : "Une erreur est survenue lors de la transaction. Veuillez vérifier votre solde ou réessayer.")}
-          </motion.p>
-
-          {/* ── Référence commande (succès uniquement) ── */}
-          <AnimatePresence>
-            {isSuccess && orderReference && (
-              <motion.div
-                initial={{ opacity: 0, y: 10, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: 0.35, type: "spring", stiffness: 300, damping: 24 }}
-                className="mb-7 rounded-2xl px-5 py-4"
-                style={{
-                  background: isDark ? "rgba(31,77,63,0.12)" : "rgba(31,77,63,0.06)",
-                  border: "1px solid rgba(31,77,63,0.15)",
-                }}
-              >
-                <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-[#1f4d3f]/70">
-                  Référence commande
-                </p>
-                <div className="flex items-center justify-center gap-3">
-                  <p className="font-mono text-xl font-black text-[#1f4d3f]">
-                    {orderReference}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={handleCopyRef}
-                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all hover:bg-[#1f4d3f]/15 active:scale-95"
-                    title="Copier la référence"
-                  >
-                    <AnimatePresence mode="wait">
-                      {copied ? (
-                        <motion.div
-                          key="check"
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          exit={{ scale: 0 }}
-                        >
-                          <Check className="h-4 w-4 text-[#1f4d3f]" />
-                        </motion.div>
-                      ) : (
-                        <motion.div
-                          key="copy"
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          exit={{ scale: 0 }}
-                        >
-                          <Copy className="h-4 w-4 text-[#1f4d3f]/60" />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </button>
-                </div>
-                {copied && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="mt-1 text-[11px] font-semibold text-[#1f4d3f]"
-                  >
-                    Référence copiée !
-                  </motion.p>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* ── Bouton d'action ── */}
-          <motion.button
-            onClick={handleAction}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, type: "spring", stiffness: 300, damping: 24 }}
-            className="group relative flex w-full cursor-pointer items-center justify-center gap-2.5 overflow-hidden rounded-xl py-4 font-black text-white shadow-xl transition-all active:scale-[0.98]"
+          {/* ── Top Border Indicator ── */}
+          <div
+            className="relative h-1.5 w-full"
             style={{
               background: isSuccess
-                ? "linear-gradient(135deg, #1f4d3f 0%, #0f2018 100%)"
-                : "linear-gradient(135deg, #dc2626 0%, #991b1b 100%)",
-              boxShadow: isSuccess
-                ? "0 8px 32px -8px rgba(31,77,63,0.45)"
-                : "0 8px 32px -8px rgba(220,38,38,0.4)",
+                ? "linear-gradient(90deg, #10b981, #1f4d3f, #059669)"
+                : "linear-gradient(90deg, #ef4444, #991b1b, #dc2626)",
             }}
-          >
-            {/* Shimmer */}
-            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+          />
 
-            <span className="relative z-10 flex items-center gap-2 text-[15px]">
-              {isSuccess ? (
-                <>
-                  Voir ma commande
-                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-0.5" />
-                </>
-              ) : (
-                <>
-                  <RefreshCcw className="h-4 w-4" />
-                  Réessayer
-                </>
-              )}
-            </span>
-          </motion.button>
+          {/* ── Content ── */}
+          <div className="relative z-10 px-8 pb-10 pt-10 text-center">
+            {/* Lottie Container */}
+            <div className="relative mx-auto mb-8 flex h-40 w-40 items-center justify-center">
+              {/* Rotating glowing halo */}
+              <motion.div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: isSuccess 
+                    ? "conic-gradient(from 0deg, transparent, #34d399, transparent)" 
+                    : "conic-gradient(from 0deg, transparent, #f87171, transparent)",
+                  opacity: 0.15,
+                  filter: "blur(10px)"
+                }}
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+              />
+              <motion.div
+                initial={{ scale: 0.4, opacity: 0, y: 10 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                transition={{ type: "spring", stiffness: 220, damping: 15, delay: 0.15 }}
+                className="relative z-10 h-[120%] w-[120%] drop-shadow-2xl"
+              >
+                <Lottie
+                  animationData={isSuccess ? successAnimation : errorAnimation}
+                  loop={!isSuccess}
+                  autoplay={true}
+                  style={{ width: "100%", height: "100%" }}
+                />
+              </motion.div>
+            </div>
 
-          {/* ── Message de bas de page ── */}
-          {isSuccess && (
+            {/* Typography */}
+            <motion.h2
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, type: "spring", stiffness: 300, damping: 20 }}
+              className="font-display mb-3 text-3xl font-extrabold tracking-tight"
+              style={{ color: text }}
+            >
+              {isSuccess ? "Paiement réussi !" : "Paiement refusé"}
+            </motion.h2>
+
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.55 }}
-              className="mt-4 text-[12px] font-medium"
+              transition={{ delay: 0.35, duration: 0.5 }}
+              className="mx-auto mb-8 max-w-sm text-[15px] leading-relaxed font-medium"
               style={{ color: textMuted }}
             >
-              Un e-mail de confirmation vous a été envoyé
+              {message || (isSuccess
+                ? "Votre transaction a été validée avec succès. Nous préparons votre commande avec le plus grand soin."
+                : "Une erreur inattendue a bloqué la transaction. Veuillez vérifier votre moyen de paiement et réessayer.")}
             </motion.p>
-          )}
-        </div>
+
+            {/* Order Reference */}
+            <AnimatePresence>
+              {isSuccess && orderReference && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ delay: 0.4, type: "spring", stiffness: 300, damping: 20 }}
+                  className="mx-auto mb-8 flex max-w-xs flex-col items-center justify-center overflow-hidden rounded-2xl p-4 shadow-inner"
+                  style={{
+                    background: isDark ? "rgba(255,255,255,0.03)" : "#f8fafc",
+                    border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "#e2e8f0"}`,
+                  }}
+                >
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: textMuted }}>
+                    Référence de la commande
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono text-xl font-black tracking-wider" style={{ color: text }}>
+                      {orderReference}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleCopyRef}
+                      className="group flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-primary/10 transition-colors hover:bg-primary/20 active:scale-95"
+                      title="Copier la référence"
+                    >
+                      <AnimatePresence mode="wait">
+                        {copied ? (
+                          <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                            <Check className="h-4 w-4 text-emerald-600" />
+                          </motion.div>
+                        ) : (
+                          <motion.div key="copy" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                            <Copy className="h-4 w-4 text-primary transition-transform group-hover:scale-110" />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </button>
+                  </div>
+                  {copied && (
+                    <motion.span
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute bottom-2 text-[10px] font-bold text-emerald-600"
+                    >
+                      Copié !
+                    </motion.span>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Action Button */}
+            <motion.button
+              onClick={handleAction}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, type: "spring", stiffness: 300, damping: 20 }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative mx-auto flex w-full max-w-sm cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-2xl py-4 font-black text-white shadow-xl transition-all"
+              style={{
+                background: isSuccess
+                  ? "linear-gradient(135deg, #1f4d3f 0%, #115e59 100%)"
+                  : "linear-gradient(135deg, #ef4444 0%, #991b1b 100%)",
+                boxShadow: isSuccess
+                  ? "0 10px 40px -10px rgba(31,77,63,0.5)"
+                  : "0 10px 40px -10px rgba(239,68,68,0.4)",
+              }}
+            >
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+              
+              <span className="relative z-10 flex items-center gap-2.5 text-[15px]">
+                {isSuccess ? (
+                  <>
+                    Suivre ma commande
+                    <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </>
+                ) : (
+                  <>
+                    <RefreshCcw className="h-4 w-4 transition-transform duration-500 group-hover:rotate-180" />
+                    Réessayer le paiement
+                  </>
+                )}
+              </span>
+            </motion.button>
+          </div>
+        </motion.div>
       </DialogContent>
     </Dialog>
   );

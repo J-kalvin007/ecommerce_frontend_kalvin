@@ -1,0 +1,16 @@
+﻿# nginx/ssl/.gitkeep
+# This directory holds your TLS certificates.
+#
+# Expected files:
+#   fullchain.pem  — Full certificate chain (cert + intermediates)
+#   privkey.pem    — Private key (600 permissions, non-world-readable)
+#
+# Recommended: Use Certbot (Let's Encrypt) or your own CA.
+#
+# Certbot example (on the host, before starting containers):
+#   certbot certonly --standalone -d your-domain.com -d www.your-domain.com
+#   cp /etc/letsencrypt/live/your-domain.com/fullchain.pem ./nginx/ssl/
+#   cp /etc/letsencrypt/live/your-domain.com/privkey.pem   ./nginx/ssl/
+#   chmod 600 ./nginx/ssl/privkey.pem
+#
+# NEVER commit real certificates to version control.

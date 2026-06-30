@@ -49,10 +49,14 @@ function KPICard({
         >
             <div className={cn("absolute -right-4 -top-4 h-20 w-20 rounded-full blur-2xl opacity-60", accent)} />
             <div className="relative">
-                <div className={cn("mb-3 inline-flex items-center justify-center rounded-xl p-2.5", accent, "bg-opacity-20")}>
-                    {icon}
+
+                <div className="flex items-center justify-between">
+                    <p className="text-3xl font-extrabold tracking-tight text-foreground">{value}</p>
+                    <div className={cn("mb-3 inline-flex items-center justify-center rounded-xl p-2.5", accent, "bg-opacity-20")}>
+                        {icon}
+                    </div>
                 </div>
-                <p className="text-3xl font-extrabold tracking-tight text-foreground">{value}</p>
+
                 <p className="mt-1 text-xs font-semibold text-muted-foreground">{label}</p>
                 {sub && <p className="mt-0.5 text-[10px] text-muted-foreground/60">{sub}</p>}
             </div>

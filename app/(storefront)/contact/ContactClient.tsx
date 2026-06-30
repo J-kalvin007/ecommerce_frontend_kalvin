@@ -165,16 +165,11 @@ export default function ContactClient() {
     setError(null);
 
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const { sendContactMessage } = await import("@/fonctions_api/notifications.api");
+      const res = await sendContactMessage(formData);
 
-      const data = await res.json();
-
-      if (!res.ok || data.error) {
-        throw new Error(data.error || "Erreur inconnue");
+      if (!res.ok) {
+        throw new Error(res.error?.message || "Une erreur est survenue. Veuillez réessayer.");
       }
 
       setIsSent(true);

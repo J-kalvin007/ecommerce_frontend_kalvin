@@ -36,6 +36,7 @@ import { getCurrentUser, patchUser, changePassword } from "@/fonctions_api/auth.
 import { useAuthStore } from "@/store/authStore";
 import { mediaUrl } from "@/lib/mediaUrl";
 import { cn } from "@/lib/utils";
+import LoadingStyle from "@/components/special/loadingStyle";
 
 /* ── Types locaux ──────────────────────────────────────────────────────────── */
 
@@ -354,7 +355,7 @@ export default function SettingsClient() {
   /* ── Rendu ─────────────────────────────────────────────────────────────────── */
   return (
     <CustomerShell activeSection="settings">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+      <div className="mx-auto max-w-8xl px-20 py-8 sm:px-6 lg:px-20 space-y-10">
 
         {/* ── En-tête avec effet premium ── */}
         <motion.div
@@ -365,7 +366,7 @@ export default function SettingsClient() {
         >
           <div className="relative inline-block group">
             <h2
-              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-5xl premium-title-shine flex items-center gap-3"
+              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-4xl premium-title-shine flex items-center gap-3"
               style={{
                 letterSpacing: "-0.025em",
                 backgroundImage:
@@ -376,7 +377,7 @@ export default function SettingsClient() {
                 backgroundClip: "text",
               }}
             >
-              <Settings className="h-7 w-7 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
+              <Settings className="h-10 w-10 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
               Paramètres du compte
             </h2>
 
@@ -437,20 +438,20 @@ export default function SettingsClient() {
               />
 
               {isLoadingProfile ? (
+
                 <div className="flex min-h-48 items-center justify-center">
-                  <div className="flex items-center gap-2.5 text-[14px] text-[#8A9080]">
-                    <Loader2 className="h-5 w-5 animate-spin text-[#1f4d3f]" />
-                    Chargement du profil…
-                  </div>
+                  <LoadingStyle label="Chargement du profil…" />
                 </div>
+
               ) : (
+
                 <form onSubmit={handleProfileSubmit} className="space-y-4">
                   <div className="grid gap-4 sm:grid-cols-2">
                     <FieldWrapper label="Nom complet">
                       <StyledInput
                         value={profile.name}
                         onChange={(v) => setProfile((p) => ({ ...p, name: v }))}
-                        placeholder="Jean Dupont"
+                        placeholder="Jonas Eméga"
                         icon={UserIcon}
                       />
                     </FieldWrapper>
@@ -460,7 +461,7 @@ export default function SettingsClient() {
                         type="email"
                         value={profile.email}
                         onChange={(v) => setProfile((p) => ({ ...p, email: v }))}
-                        placeholder="client@example.com"
+                        placeholder="shaun@example.com"
                         icon={Mail}
                       />
                     </FieldWrapper>
@@ -471,7 +472,7 @@ export default function SettingsClient() {
                       type="tel"
                       value={profile.phone_number}
                       onChange={(v) => setProfile((p) => ({ ...p, phone_number: v }))}
-                      placeholder="+225 07 00 00 00 00"
+                      placeholder="+228 98 45 23 67"
                       icon={Phone}
                     />
                   </FieldWrapper>

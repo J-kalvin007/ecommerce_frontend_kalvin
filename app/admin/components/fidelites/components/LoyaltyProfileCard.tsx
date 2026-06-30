@@ -1,287 +1,3 @@
-// // app/admin/components/fidelites/LoyaltyProfileCard.tsx
-// "use client";
-// import { useRef, useEffect, useState } from "react";
-// import { motion } from "framer-motion";
-// import { Eye, Zap, Calendar, TrendingUp } from "lucide-react";
-// import { cn, formatCurrency } from "@/lib/utils";
-// import { getTierConfig } from "@/modeles/fidelites";
-// import type { LoyaltyProfile, Tier } from "@/modeles/fidelites";
-// import { LoyaltyTierBadge } from "./LoyaltyTierBadge";
-// import { LoyaltyTierProgressBar } from "./LoyaltyTierProgressBar";
-
-// interface LoyaltyProfileCardProps {
-//     profile: LoyaltyProfile;
-//     tiers: Tier[];
-//     onView: () => void;
-//     onAdjust: () => void;
-//     viewMode?: "grid" | "list";
-// }
-
-// function useCountUp(target: number, duration = 1000) {
-//     const [val, setVal] = useState(0);
-//     const raf = useRef<number | null>(null);
-//     useEffect(() => {
-//         if (!target) return;
-//         const start = performance.now();
-//         const tick = (now: number) => {
-//             const t = Math.min((now - start) / duration, 1);
-//             setVal(Math.round((1 - Math.pow(1 - t, 3)) * target));
-//             if (t < 1) raf.current = requestAnimationFrame(tick);
-//         };
-//         raf.current = requestAnimationFrame(tick);
-//         return () => { if (raf.current) cancelAnimationFrame(raf.current); };
-//     }, [target, duration]);
-//     return val;
-// }
-
-// export function LoyaltyProfileCard({ profile, tiers, onView, onAdjust, viewMode = "grid" }: LoyaltyProfileCardProps) {
-//     const cfg    = getTierConfig(profile.tier_name);
-//     const count  = useCountUp(profile.points_balance, 900);
-//     const months = Math.max(0, Math.round(
-//         (Date.now() - new Date(profile.created_at).getTime()) / (1000 * 60 * 60 * 24 * 30)
-//     ));
-    
-//     const userInitials = profile.user.name ? profile.user.name.substring(0, 2).toUpperCase() : profile.user.email.substring(0, 2).toUpperCase();
-
-//     if (viewMode === "list") {
-//         return (
-//             <motion.div
-//                 layout
-//                 initial={{ opacity: 0, y: 10 }}
-//                 animate={{ opacity: 1, y: 0 }}
-//                 exit={{ opacity: 0, scale: 0.98 }}
-//                 whileHover={{ scale: 1.005 }}
-//                 className={cn(
-//                     "group relative flex items-center justify-between gap-4 overflow-hidden rounded-xl border bg-surface-elevated px-4 py-3 shadow-sm transition-all hover:shadow-md cursor-pointer",
-//                     cfg.border
-//                 )}
-//                 onClick={onView}
-//             >
-//                 <div className={cn("absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b", cfg.gradient)} />
-                
-//                 <div className="flex items-center gap-3 min-w-[220px]">
-//                     <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-border bg-surface-alt shadow-sm">
-//                         {profile.user.profile_image ? (
-//                             <img src={profile.user.profile_image} alt={profile.user.name || profile.user.email} className="h-full w-full object-cover" />
-//                         ) : (
-//                             <div className={cn("flex h-full w-full items-center justify-center text-xs font-bold", cfg.textColor, cfg.bg)}>
-//                                 {userInitials}
-//                             </div>
-//                         )}
-//                         <div className={cn("absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-surface-elevated", profile.user.is_active ? "bg-emerald-500" : "bg-red-500")} />
-//                     </div>
-//                     <div className="flex min-w-0 flex-col pr-2">
-//                         <p className="truncate text-sm font-bold text-foreground transition-colors group-hover:text-primary">
-//                             {profile.user.name || "Client Anonyme"}
-//                         </p>
-//                         <p className="truncate text-[10px] font-medium text-muted-foreground">
-//                             {profile.user.email}
-//                         </p>
-//                     </div>
-//                 </div>
-
-//                 <div className="hidden lg:flex items-center w-[110px]">
-//                     <LoyaltyTierBadge tierName={profile.tier_name} size="sm" />
-//                 </div>
-
-//                 <div className="flex-1 px-4 hidden md:block">
-//                     <LoyaltyTierProgressBar
-//                         currentPoints={profile.total_points_earned}
-//                         currentTierName={profile.tier_name}
-//                         tiers={tiers}
-//                         compact
-//                     />
-//                 </div>
-
-//                 <div className="flex items-center gap-6 text-right">
-//                     <div>
-//                         <p className="text-[10px] font-bold uppercase text-muted-foreground">Solde</p>
-//                         <p className={cn("text-base font-extrabold", cfg.textColor)}>
-//                             {count.toLocaleString("fr-FR")} <span className="text-xs font-medium">pts</span>
-//                         </p>
-//                     </div>
-//                     <div className="hidden sm:block">
-//                         <p className="text-[10px] font-bold uppercase text-muted-foreground">Lifetime</p>
-//                         <p className="text-sm font-bold text-foreground">{profile.total_points_earned.toLocaleString("fr-FR")} pts</p>
-//                     </div>
-//                     <div className="hidden md:block">
-//                         <p className="text-[10px] font-bold uppercase text-muted-foreground">Dépenses</p>
-//                         <p className="text-sm font-bold text-foreground">{formatCurrency(parseFloat(profile.total_solde || "0"), "FCFA")}</p>
-//                     </div>
-//                 </div>
-
-//                 <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-//                     <button
-//                         onClick={e => { e.stopPropagation(); onAdjust(); }}
-//                         className={cn(
-//                             "flex items-center justify-center rounded-lg p-2 text-white shadow-sm transition-all hover:scale-105",
-//                             cfg.gradient
-//                         )}
-//                         title="Ajuster les points"
-//                     >
-//                         <Zap className="h-4 w-4" />
-//                     </button>
-//                     <button
-//                         onClick={e => { e.stopPropagation(); onView(); }}
-//                         className="flex items-center justify-center rounded-lg border border-border bg-surface p-2 text-muted-foreground hover:bg-surface-alt hover:text-foreground transition-all hover:scale-105"
-//                         title="Voir le détail"
-//                     >
-//                         <Eye className="h-4 w-4" />
-//                     </button>
-//                 </div>
-//             </motion.div>
-//         );
-//     }
-
-//     return (
-//         <motion.div
-//             layout
-//             initial={{ opacity: 0, y: 15, scale: 0.98 }}
-//             animate={{ opacity: 1, y: 0, scale: 1 }}
-//             exit={{ opacity: 0, y: -10, scale: 0.98 }}
-//             whileHover={{ y: -2, transition: { duration: 0.2 } }}
-//             className={cn(
-//                 "group relative overflow-hidden rounded-2xl border bg-surface-elevated shadow-sm transition-shadow hover:shadow-lg cursor-pointer",
-//                 cfg.border
-//             )}
-//             onClick={onView}
-//         >
-//             {/* Fond dégradé top */}
-//             <div className={cn("absolute top-0 left-0 right-0 h-16 bg-gradient-to-b opacity-[0.03]", cfg.gradient)} />
-//             <div className={cn("absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r", cfg.gradient)} />
-
-//             <div className="relative p-5">
-//                 {/* Header: badge + user */}
-//                 <div className="flex items-start justify-between">
-//                     <div className="flex items-center gap-3 min-w-0 pr-2">
-//                         <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border-2 border-surface-elevated bg-surface-alt shadow-sm">
-//                             {profile.user.profile_image ? (
-//                                 <img src={profile.user.profile_image} alt={profile.user.name || profile.user.email} className="h-full w-full object-cover" />
-//                             ) : (
-//                                 <div className={cn("flex h-full w-full items-center justify-center text-sm font-bold", cfg.textColor, cfg.bg)}>
-//                                     {userInitials}
-//                                 </div>
-//                             )}
-//                             <div className={cn("absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-surface-elevated", profile.user.is_active ? "bg-emerald-500" : "bg-red-500")} />
-//                         </div>
-//                         <div className="min-w-0">
-//                             <p className="truncate text-sm font-extrabold text-foreground transition-colors group-hover:text-primary">
-//                                 {profile.user.name || "Client Anonyme"}
-//                             </p>
-//                             <p className="truncate text-[10px] font-medium text-muted-foreground">
-//                                 {profile.user.email}
-//                             </p>
-//                         </div>
-//                     </div>
-//                     <div className="shrink-0 flex flex-col items-end">
-//                         <LoyaltyTierBadge tierName={profile.tier_name} size="sm" />
-//                         <div className="flex items-center gap-1 text-[9px] text-muted-foreground/70 mt-1">
-//                             <Calendar className="h-2.5 w-2.5" />
-//                             <span>{months > 0 ? `${months} mois` : "Nouveau"}</span>
-//                         </div>
-//                     </div>
-//                 </div>
-
-//                 {/* Points balance — héros */}
-//                 <div className="mt-4">
-//                     <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground/80">Solde disponible</p>
-//                     <div className="flex items-baseline gap-1 mt-0.5">
-//                         <span className={cn("text-3xl font-extrabold tracking-tight", cfg.textColor)}>
-//                             {count.toLocaleString("fr-FR")}
-//                         </span>
-//                         <span className="text-xs font-bold text-muted-foreground">pts</span>
-//                     </div>
-//                 </div>
-
-//                 {/* Barre de progression */}
-//                 <div className="mt-3">
-//                     <LoyaltyTierProgressBar
-//                         currentPoints={profile.total_points_earned}
-//                         currentTierName={profile.tier_name}
-//                         tiers={tiers}
-//                         compact
-//                     />
-//                 </div>
-
-//                 {/* Métriques secondaires */}
-//                 <div className="mt-4 flex items-center justify-between border-t border-border/40 pt-3">
-//                     <div>
-//                         <p className="text-[9px] font-bold uppercase text-muted-foreground/80">Lifetime</p>
-//                         <p className="text-xs font-extrabold text-foreground mt-0.5">
-//                             {profile.total_points_earned.toLocaleString("fr-FR")} pts
-//                         </p>
-//                     </div>
-//                     <div className="text-right">
-//                         <p className="text-[9px] font-bold uppercase text-muted-foreground/80">Dépenses</p>
-//                         <p className="text-xs font-extrabold text-foreground mt-0.5">
-//                             {formatCurrency(parseFloat(profile.total_solde || "0"), "FCFA")}
-//                         </p>
-//                     </div>
-//                 </div>
-
-//                 {/* CTA Hover */}
-//                 <div className="mt-3 grid grid-cols-2 gap-2 opacity-0 transition-all duration-200 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0">
-//                     <button
-//                         onClick={e => { e.stopPropagation(); onView(); }}
-//                         className="flex items-center justify-center gap-1.5 rounded-lg bg-surface py-1.5 text-[11px] font-bold text-foreground border border-border hover:border-primary/50 hover:text-primary transition-colors"
-//                     >
-//                         <Eye className="h-3.5 w-3.5" /> Détail
-//                     </button>
-//                     <button
-//                         onClick={e => { e.stopPropagation(); onAdjust(); }}
-//                         className={cn(
-//                             "flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-[11px] font-bold text-white border transition-all shadow-sm bg-gradient-to-r hover:opacity-90",
-//                             cfg.gradient, cfg.border
-//                         )}
-//                     >
-//                         <Zap className="h-3 w-3" /> Ajuster
-//                     </button>
-//                 </div>
-//             </div>
-//         </motion.div>
-//     );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -341,10 +57,10 @@ function HoloRing({ tierName, size, hovered }: { tierName: string; size: number;
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="absolute inset-0 pointer-events-none">
       <defs>
         <linearGradient id={`holo-${uid}`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%"   stopColor="#fff" stopOpacity="0.6" />
-          <stop offset="25%"  stopColor={tierName === "Diamond" ? "#a5f3fc" : tierName === "Platinum" ? "#c4b5fd" : "#fde68a"} stopOpacity="0.9" />
-          <stop offset="50%"  stopColor={tierName === "Diamond" ? "#818cf8" : tierName === "Platinum" ? "#8b5cf6" : "#f59e0b"} stopOpacity="1" />
-          <stop offset="75%"  stopColor={tierName === "Diamond" ? "#34d399" : tierName === "Platinum" ? "#ec4899" : "#ef4444"} stopOpacity="0.8" />
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.6" />
+          <stop offset="25%" stopColor={tierName === "Diamond" ? "#a5f3fc" : tierName === "Platinum" ? "#c4b5fd" : "#fde68a"} stopOpacity="0.9" />
+          <stop offset="50%" stopColor={tierName === "Diamond" ? "#818cf8" : tierName === "Platinum" ? "#8b5cf6" : "#f59e0b"} stopOpacity="1" />
+          <stop offset="75%" stopColor={tierName === "Diamond" ? "#34d399" : tierName === "Platinum" ? "#ec4899" : "#ef4444"} stopOpacity="0.8" />
           <stop offset="100%" stopColor="#fff" stopOpacity="0.5" />
         </linearGradient>
       </defs>
@@ -427,7 +143,7 @@ interface LoyaltyProfileCardProps {
 // ═════════════════════════════════════════════════════════════════════════════
 function ListCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardProps, "viewMode">) {
   const [hovered, setHovered] = useState(false);
-  const cfg   = getTierConfig(profile.tier_name);
+  const cfg = getTierConfig(profile.tier_name);
   const count = useCountUp(profile.points_balance, 900);
   const months = Math.max(0, Math.round(
     (Date.now() - new Date(profile.created_at).getTime()) / (1000 * 60 * 60 * 24 * 30)
@@ -542,8 +258,8 @@ function ListCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardP
 // ═════════════════════════════════════════════════════════════════════════════
 function GridCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardProps, "viewMode">) {
   const [hovered, setHovered] = useState(false);
-  const cfg    = getTierConfig(profile.tier_name);
-  const count  = useCountUp(profile.points_balance, 950);
+  const cfg = getTierConfig(profile.tier_name);
+  const count = useCountUp(profile.points_balance, 950);
   const months = Math.max(0, Math.round(
     (Date.now() - new Date(profile.created_at).getTime()) / (1000 * 60 * 60 * 24 * 30)
   ));
@@ -648,7 +364,7 @@ function GridCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardP
             <TrendingUp className="h-2.5 w-2.5" />Lifetime
           </div>
           <p className="text-xs font-black text-foreground tabular-nums">
-            {profile.total_points_earned.toLocaleString("fr-FR")} pts
+            {(profile.total_points_earned ?? profile.total_points_gagne ?? 0).toLocaleString("fr-FR")} pts
           </p>
         </div>
         <div className="flex flex-col items-center py-2.5 bg-surface gap-0.5">

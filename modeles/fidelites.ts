@@ -206,7 +206,7 @@ export function computeLoyaltyStats(profiles: LoyaltyProfile[]): LoyaltyStats {
     let totalSpend = 0;
 
     for (const p of profiles) {
-        totalPointsEarned += p.total_points_earned;
+        totalPointsEarned += (p.total_points_earned ?? p.total_points_gagne ?? 0);
         totalPointsBalance += p.points_balance;
         totalSpend += parseFloat(p.total_solde || "0");
         byTier[p.tier_name] = (byTier[p.tier_name] || 0) + 1;
@@ -219,4 +219,14 @@ export function computeLoyaltyStats(profiles: LoyaltyProfile[]): LoyaltyStats {
         totalSpend,
         byTier,
     };
+}
+
+/** Configuration de la valeur des points (backend) */
+export interface PointValue {
+    readonly id: string;
+    readonly valeur_un_point_frcfa: number;
+    readonly nombre_de_point: number;
+    readonly duree_validite: number;
+    readonly is_active: boolean;
+    readonly updated_at: string;
 }

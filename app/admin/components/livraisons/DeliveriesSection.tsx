@@ -2,14 +2,14 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Plus, Settings2, Search, Truck, MapPin, ClipboardList, Trash2, Edit } from "lucide-react";
+import { Plus, Settings2, Search, Truck, MapPin, ClipboardList, Trash2, Edit, Star } from "lucide-react";
 import type { Delivery, FraisLivraison } from "@/modeles/livraisons";
 import { DELIVERY_STATUS_MAP } from "@/modeles/livraisons";
 import { getDeliveries, deleteDelivery, getFraisLivraison } from "@/fonctions_api/livraisons.api";
-import LoadingStyle from "@/components/widgets_originaux/special/loadingStyle";
-import ErrorState from "@/components/widgets_originaux/special/ErrorState";
-import FraisLivraisonModal from "./FraisLivraisonModal";
-import DeliveryFormModal from "./DeliveryFormModal";
+import FraisLivraisonModal from "./components/FraisLivraisonModal";
+import DeliveryFormModal from "./components/DeliveryFormModal";
+import LoadingStyle from "@/components/special/loadingStyle";
+import ErrorState from "@/components/special/ErrorState";
 
 export default function DeliveriesSection() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
@@ -34,7 +34,7 @@ export default function DeliveriesSection() {
       if (!deliveriesRes.ok) {
         throw new Error(deliveriesRes.error?.message || "Erreur de chargement des livraisons");
       }
-      
+
       setDeliveries(deliveriesRes.data);
 
       if (fraisRes.ok && fraisRes.data) {
@@ -77,22 +77,92 @@ export default function DeliveriesSection() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-20">
       {/* ── En-tête ── */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-black tracking-tight text-[#1f241c] flex items-center gap-2">
-            <Truck className="h-6 w-6 text-[#1f4d3f]" />
-            Livraisons
-          </h1>
-          <p className="text-[13px] text-[#8A9080] mt-1 font-medium">
-            Gérez le suivi des expéditions et les frais de livraison.
-          </p>
-        </div>
+
+
+
+
+
+
+
+
+
+
+
+        {/* ── En-tête avec effet premium ── */}
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col gap-2"
+        >
+          <div className="relative inline-block group">
+            <h2
+              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-4xl premium-title-shine flex items-center gap-3"
+              style={{
+                letterSpacing: "-0.025em",
+                backgroundImage:
+                  "linear-gradient(110deg, #0D2E1E 0%, #1F4D34 45%, #0D2E1E 90%)",
+                backgroundSize: "220% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              <Truck className="h-10 w-10 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
+              Livraisons
+            </h2>
+
+            {/* Kicker discret en lettres espacées doré, signature premium */}
+            <span
+              className="block text-[11px] font-semibold uppercase tracking-[0.35em] mt-2 mb-2"
+              style={{ color: "#B8924A", opacity: 0.85 }}
+            >
+              Gérez le suivi des expéditions et les frais de livraison.
+            </span>
+
+            {/* Gradient SVG caché pour l'icône */}
+            <svg width="0" height="0" className="absolute">
+              <defs>
+                <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#FDE68A" />
+                  <stop offset="50%" stopColor="#D97706" />
+                  <stop offset="100%" stopColor="#B45309" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+
+            {/* Animations scoppées, avec respect du prefers-reduced-motion */}
+            <style>{`
+            @keyframes premium-title-shine-anim {
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+            }
+            .premium-title-shine {
+            animation: premium-title-shine-anim 6s ease-in-out infinite;
+            }
+            @media (prefers-reduced-motion: reduce) {
+            .premium-title-shine {
+                animation: none;
+            }
+            }
+        `}</style>
+          </div>
+        </motion.div>
+
+
+
+
+
+
+
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsFraisModalOpen(true)}
-            className="flex items-center gap-2 rounded-xl border border-[#E8E3D8] bg-white px-4 py-2 text-[13px] font-semibold text-[#1f241c] shadow-sm transition-all hover:bg-[#F7F5F0]"
+            className="flex items-center cursor-pointer gap-2 rounded-xl border border-[#E8E3D8] bg-white px-4 py-2 text-[13px] font-semibold text-[#1f241c] shadow-sm transition-all hover:bg-[#F7F5F0]"
           >
             <Settings2 className="h-4 w-4" />
             <span className="hidden sm:inline">Configuration</span>
@@ -102,7 +172,7 @@ export default function DeliveriesSection() {
               setSelectedDelivery(undefined);
               setIsDeliveryModalOpen(true);
             }}
-            className="flex items-center gap-2 rounded-xl bg-[#1f4d3f] px-4 py-2 text-[13px] font-bold text-white shadow-sm transition-all hover:bg-[#16332b]"
+            className="flex items-center cursor-pointer gap-2 rounded-xl bg-[#1f4d3f] px-4 py-2 text-[13px] font-bold text-white shadow-sm transition-all hover:bg-[#16332b]"
           >
             <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">Nouvelle Livraison</span>
@@ -178,7 +248,7 @@ export default function DeliveriesSection() {
                             <span className="truncate max-w-[200px]">{delivery.delivery_address || "Non précisée"}</span>
                           </div>
                           {delivery.estimated_delivery_date && (
-                             <div className="text-[11px]">Est. : {new Date(delivery.estimated_delivery_date).toLocaleDateString("fr-FR")}</div>
+                            <div className="text-[11px]">Est. : {new Date(delivery.estimated_delivery_date).toLocaleDateString("fr-FR")}</div>
                           )}
                         </div>
                       </td>

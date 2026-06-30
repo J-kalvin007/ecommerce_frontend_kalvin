@@ -25,7 +25,7 @@ import {
   RefreshCw,
   BadgeDollarSign,
 } from "lucide-react";
-import type { LoyaltyProfile, Tier } from "@/modeles/fidelites";
+import type { LoyaltyProfile, Tier, PointValue } from "@/modeles/fidelites";
 import { getTierConfig } from "@/modeles/fidelites";
 
 /* ── Map des icônes de palier ────────────────────────────────────────────── */
@@ -58,6 +58,7 @@ function formatAmount(amount: string): string {
 interface LoyaltyProfileCardProps {
   profile: LoyaltyProfile;
   tiers: Tier[];
+  pointValueConfig?: PointValue | null;
   isRefreshing: boolean;
   onRedeem: () => void;
   onRefresh: () => void;
@@ -72,6 +73,7 @@ interface LoyaltyProfileCardProps {
 export default function LoyaltyProfileCard({
   profile,
   tiers,
+  pointValueConfig,
   isRefreshing,
   onRedeem,
   onRefresh,
@@ -99,6 +101,13 @@ export default function LoyaltyProfileCard({
   }, [tiers, profile.tier_name, profile.points_balance]);
 
   const isMaxTier = progressData.nextTier === null;
+
+  /* ── Calcul Valeur réelle ──────────────────────────────────────────────── */
+  const pointValueRatio =
+    pointValueConfig && pointValueConfig.nombre_de_point > 0
+      ? pointValueConfig.valeur_un_point_frcfa / pointValueConfig.nombre_de_point
+      : 10;
+  const currentFcfaValue = profile.points_balance * pointValueRatio;
 
   return (
     <motion.div
@@ -227,21 +236,30 @@ export default function LoyaltyProfileCard({
 
           {/* Méta info : total gagné + solde */}
           <div className="mt-3 flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-1.5">
-              <TrendingUp className="h-3.5 w-3.5 text-emerald-400/70" strokeWidth={2} />
-              <span className="text-[11.5px] text-white/40">
-                Total gagné :{" "}
-                <span className="font-bold text-white/60">
-                  {formatPoints(profile.total_points_gagne)} pts
+            <div className="flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1">
+              <span className="text-[11.5px] text-white/60">
+                Valeur actuelle :{" "}
+                <span className="font-bold text-white/90" style={{ color: tierCfg.color }}>
+                  {formatAmount(String(currentFcfaValue))}
                 </span>
               </span>
             </div>
-            <div className="h-3 w-px bg-white/15" />
+            {pointValueConfig && pointValueConfig.duree_validite > 0 && (
+              <div className="flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1">
+                <span className="text-[11.5px] text-white/60">
+                  Validité :{" "}
+                  <span className="font-bold text-white/90">
+                    {pointValueConfig.duree_validite} jours
+                  </span>
+                </span>
+              </div>
+            )}
             <div className="flex items-center gap-1.5">
+              <TrendingUp className="h-3.5 w-3.5 text-emerald-400/70" strokeWidth={2} />
               <span className="text-[11.5px] text-white/40">
-                Total dépensé :{" "}
+                Gagné :{" "}
                 <span className="font-bold text-white/60">
-                  {formatAmount(profile.total_solde)}
+                  {formatPoints(profile.total_points_gagne)} pts
                 </span>
               </span>
             </div>

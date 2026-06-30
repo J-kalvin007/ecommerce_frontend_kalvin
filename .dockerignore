@@ -1,0 +1,69 @@
+﻿# ======================================================================
+#  .dockerignore — ecommerce_frontend_kalvin
+#  Tells Docker Build which files NOT to send to the build context.
+#  Smaller context = faster builds, smaller images, fewer secrets leaks.
+# ======================================================================
+
+# ── Version control ──────────────────────────────────────────────────
+.git
+.gitignore
+.gitattributes
+
+# ── Node modules (re-installed inside the image by deps stage) ───────
+node_modules
+.npm
+.yarn
+.pnp.*
+
+# ── Next.js build artifacts (rebuilt inside builder stage) ───────────
+.next
+out
+
+# ── Environment files — NEVER ship secrets in the image ─────────────
+.env
+.env.*
+!.env.example
+
+# ── Local development artefacts ──────────────────────────────────────
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# ── IDE / Editor config ───────────────────────────────────────────────
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# ── OS artefacts ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Test / Coverage ───────────────────────────────────────────────────
+coverage
+__tests__
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# ── CI / CD config (not needed at runtime) ────────────────────────────
+.github
+.gitlab-ci.yml
+Jenkinsfile
+
+# ── Documentation ─────────────────────────────────────────────────────
+README.md
+*.md
+*.txt
+*.log
+
+# ── Docker files themselves (no recursion) ────────────────────────────
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# ── Utility scripts (only needed during dev) ──────────────────────────
+fix_*.js
+refactor_*.js

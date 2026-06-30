@@ -54,13 +54,13 @@ import { useThemeStore } from "@/store/theme.store";
 // API
 import { validateOrder } from "@/fonctions_api/commandes.api";
 import { getMyWallet, payWithWallet } from "@/fonctions_api/wallets-paiements.api";
-import { getMyLoyaltyProfile, redeemLoyaltyPoints } from "@/fonctions_api/fidelites.api";
+import { getMyLoyaltyProfile, redeemLoyaltyPoints, getPointValue } from "@/fonctions_api/fidelites.api";
 import { getFraisLivraison } from "@/fonctions_api/livraisons.api";
 
 // Types
 import { OrderDetail } from "@/modeles/commandes";
 import { Wallet } from "@/modeles/wallets-paiements";
-import { LoyaltyProfile } from "@/modeles/fidelites";
+import { LoyaltyProfile, PointValue } from "@/modeles/fidelites";
 
 // Utilitaires de facturation
 import { generateInvoicePDFBase64, InvoiceData } from "@/lib/invoice_pdf_generator";
@@ -191,6 +191,7 @@ export default function CommandesClient() {
   // État Wallet & Fidélité
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [loyaltyProfile, setLoyaltyProfile] = useState<LoyaltyProfile | null>(null);
+  const [pointValueConfig, setPointValueConfig] = useState<PointValue | null>(null);
   const [loadingData, setLoadingData] = useState(false);
 
   // Modales
@@ -268,12 +269,14 @@ export default function CommandesClient() {
       const loadPaymentData = async () => {
         setLoadingData(true);
         try {
-          const [resWallet, resLoyalty] = await Promise.all([
+          const [resWallet, resLoyalty, resPointValue] = await Promise.all([
             getMyWallet(),
             getMyLoyaltyProfile(),
+            getPointValue(),
           ]);
           if (resWallet.ok) setWallet(resWallet.data);
           if (resLoyalty.ok) setLoyaltyProfile(resLoyalty.data);
+          if (resPointValue.ok) setPointValueConfig(resPointValue.data);
         } catch (error) {
           console.error("Erreur chargement données de paiement", error);
         } finally {
@@ -817,91 +820,91 @@ export default function CommandesClient() {
           {/* === Colonne Récapitulatif === */}
           {step < 4 && (
             <div className="lg:col-span-5 xl:col-span-4">
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="sticky top-28 space-y-6"
-              >
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  className="sticky top-28 space-y-6"
+                >
+                  {/* Récap Coûts */}
+                  <RecapitulatifCommande
+                    sousTotal={subtotal}
+                    fraisLivraison={shippingCost}
+                    remisePromo={remisePromo}
+                    remiseFidelite={remiseFideliteFCFA}
+                  />
 
-                {/* Récap Coûts */}
-                <RecapitulatifCommande
-                  sousTotal={subtotal}
-                  fraisLivraison={shippingCost}
-                  remisePromo={remisePromo}
-                  remiseFidelite={remiseFideliteFCFA}
-                />
+                  {/* Promotions & Fidélité (affiché aux étapes 2 et 3) */}
+                  {step >= 2 && (
+                    <div className="space-y-4">
+                      <CodePromoInput
+                        cartTotal={subtotal + shippingCost}
+                        codeApplique={codeApplique}
+                        onCodeChange={setCodeApplique}
+                      />
+                      <PointsFideliteCard
+                        profil={loyaltyProfile}
+                        totalCommande={subtotal + shippingCost - remisePromo}
+                        valeurPointFCFA={pointValueConfig?.valeur_un_point_frcfa ?? 10}
+                        pointsAppliques={pointsAppliques}
+                        onPointsChange={(pts, fcfa) => {
+                          setPointsAppliques(pts);
+                          setRemiseFideliteFCFA(fcfa);
+                        }}
+                      />
+                    </div>
+                  )}
 
-                {/* Promotions & Fidélité (affiché aux étapes 2 et 3) */}
-                {step >= 2 && (
-                  <div className="space-y-4">
-                    <CodePromoInput
-                      cartTotal={subtotal + shippingCost}
-                      codeApplique={codeApplique}
-                      onCodeChange={setCodeApplique}
-                    />
-                    <PointsFideliteCard
-                      profil={loyaltyProfile}
-                      totalCommande={subtotal + shippingCost - remisePromo}
-                      pointsAppliques={pointsAppliques}
-                      onPointsChange={(pts, fcfa) => {
-                        setPointsAppliques(pts);
-                        setRemiseFideliteFCFA(fcfa);
-                      }}
-                    />
+                  {/* Articles du panier */}
+                  <div className="rounded-3xl p-6" style={{ background: bgElevated, border: `1px solid ${border}` }}>
+                    <div className="mb-4 flex items-center justify-between">
+                      <h4 className="font-bold">Dans votre panier</h4>
+                      <span
+                        className="rounded-full px-2.5 py-0.5 text-[11px] font-bold"
+                        style={{ background: BRAND_GOLD_SOFT, color: BRAND_GOLD }}
+                      >
+                        {itemCount} article{itemCount > 1 ? "s" : ""}
+                      </span>
+                    </div>
+                    <ul className="space-y-4">
+                      {items.map((item) => (
+                        <li key={item.productId} className="group flex gap-4 transition-transform duration-300 hover:-translate-y-0.5">
+                          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-alt shadow-sm">
+                            {item.image && (
+                              <Image src={mediaUrl(item.image) || "/placeholder.png"} alt={item.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="64px" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0 pt-1">
+                            <p className="truncate font-semibold text-sm">{item.name}</p>
+                            <p className="mt-1 text-xs text-muted">Qté: {item.quantity}</p>
+                          </div>
+                          <span className="pt-1 font-bold text-sm">
+                            {formatCurrency(String(parseFloat(item.price) * item.quantity), item.currency)}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                )}
 
-                {/* Articles du panier */}
-                <div className="rounded-3xl p-6" style={{ background: bgElevated, border: `1px solid ${border}` }}>
-                  <div className="mb-4 flex items-center justify-between">
-                    <h4 className="font-bold">Dans votre panier</h4>
-                    <span
-                      className="rounded-full px-2.5 py-0.5 text-[11px] font-bold"
-                      style={{ background: BRAND_GOLD_SOFT, color: BRAND_GOLD }}
+                  {/* Informations de livraison estimée (utilise l'icône Truck déjà importée) */}
+                  {shippingCost > 0 && (
+                    <div
+                      className="flex items-center gap-2.5 rounded-2xl p-4 text-xs"
+                      style={{ background: isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)", border: `1px solid ${border}` }}
                     >
-                      {itemCount} article{itemCount > 1 ? "s" : ""}
-                    </span>
-                  </div>
-                  <ul className="space-y-4">
-                    {items.map((item) => (
-                      <li key={item.productId} className="group flex gap-4 transition-transform duration-300 hover:-translate-y-0.5">
-                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-alt shadow-sm">
-                          {item.image && (
-                            <Image src={mediaUrl(item.image) || "/placeholder.png"} alt={item.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="64px" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0 pt-1">
-                          <p className="truncate font-semibold text-sm">{item.name}</p>
-                          <p className="mt-1 text-xs text-muted">Qté: {item.quantity}</p>
-                        </div>
-                        <span className="pt-1 font-bold text-sm">
-                          {formatCurrency(String(parseFloat(item.price) * item.quantity), item.currency)}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                      <Truck className="h-4 w-4 shrink-0" style={{ color: BRAND_FOREST }} />
+                      <span className="text-muted">
+                        Frais de livraison calculés selon votre position : <strong className="font-semibold">{formatCurrency(String(shippingCost), "FCFA")}</strong>
+                      </span>
+                    </div>
+                  )}
 
-                {/* Informations de livraison estimée (utilise l'icône Truck déjà importée) */}
-                {shippingCost > 0 && (
-                  <div
-                    className="flex items-center gap-2.5 rounded-2xl p-4 text-xs"
-                    style={{ background: isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)", border: `1px solid ${border}` }}
-                  >
-                    <Truck className="h-4 w-4 shrink-0" style={{ color: BRAND_FOREST }} />
-                    <span className="text-muted">
-                      Frais de livraison calculés selon votre position : <strong className="font-semibold">{formatCurrency(String(shippingCost), "FCFA")}</strong>
-                    </span>
+                  {/* Sécurité */}
+                  <div className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-500/10 p-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                    <Shield className="h-4 w-4" />
+                    Transaction protégée par chiffrement 256-bit
                   </div>
-                )}
-
-                {/* Sécurité */}
-                <div className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-500/10 p-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                  <Shield className="h-4 w-4" />
-                  Transaction protégée par chiffrement 256-bit
-                </div>
-              </motion.div>
+                </motion.div>
             </div>
           )}
         </div>

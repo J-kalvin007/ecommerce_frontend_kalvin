@@ -12,6 +12,7 @@ import type {
     AdminAdjustPointsResponse,
     RedeemPointsPayload,
     RedeemPointsResponse,
+    PointValue,
 } from "@/modeles/fidelites";
 
 // ─── Gestion centralisée des erreurs ─────────────────────────────────────────
@@ -214,6 +215,17 @@ export const redeemLoyaltyPoints = async (
             "/api/v1/fidelites/depenser-mes-points/",
             payload
         );
+        return { ok: true, data: res.data };
+    } catch (e) { return handleApiError(e); }
+};
+
+/**
+ * Récupère la configuration actuelle de la valeur des points.
+ * GET /api/v1/fidelites/valeur-des-points/
+ */
+export const getPointValue = async (): Promise<Result<PointValue>> => {
+    try {
+        const res = await apiPrivate.get<PointValue>("/api/v1/fidelites/valeur-des-points/");
         return { ok: true, data: res.data };
     } catch (e) { return handleApiError(e); }
 };

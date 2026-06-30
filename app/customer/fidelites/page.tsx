@@ -35,8 +35,9 @@ import {
   getMyLoyaltyProfile,
   getLoyaltyTiers,
   getLoyaltyHistory,
+  getPointValue,
 } from "@/fonctions_api/fidelites.api";
-import type { LoyaltyProfile, Tier, LoyaltyEvent } from "@/modeles/fidelites";
+import type { LoyaltyProfile, Tier, LoyaltyEvent, PointValue } from "@/modeles/fidelites";
 
 import LoyaltyProfileCard from "./components/LoyaltyProfileCard";
 import LoyaltyTiersGrid from "./components/LoyaltyTiersGrid";
@@ -60,6 +61,9 @@ export default function CustomerFidelitesPage() {
   /* ── État : Historique ──────────────────────────────────────────────── */
   const [events, setEvents] = useState<LoyaltyEvent[]>([]);
   const [isLoadingEvents, setIsLoadingEvents] = useState(true);
+
+  /* ── État : Valeur de points ────────────────────────────────────────── */
+  const [pointValueConfig, setPointValueConfig] = useState<PointValue | null>(null);
 
   /* ── État : Modale de dépense ───────────────────────────────────────── */
   const [showRedeemModal, setShowRedeemModal] = useState(false);
@@ -122,12 +126,19 @@ export default function CustomerFidelitesPage() {
     setIsLoadingEvents(false);
   }, []);
 
+  /* ── Fetch : Valeur de points ────────────────────────────────────── */
+  const fetchPointValue = useCallback(async () => {
+    const result = await getPointValue();
+    if (result.ok) setPointValueConfig(result.data);
+  }, []);
+
   /* ── Chargement initial en parallèle ────────────────────────────── */
   useEffect(() => {
     fetchProfile();
     fetchTiers();
     fetchHistory();
-  }, [fetchProfile, fetchTiers, fetchHistory]);
+    fetchPointValue();
+  }, [fetchProfile, fetchTiers, fetchHistory, fetchPointValue]);
 
   /* ── Callback de succès après dépense de points ─────────────────── */
   const handleRedeemSuccess = useCallback(
@@ -145,7 +156,7 @@ export default function CustomerFidelitesPage() {
      ═══════════════════════════════════════════════════════════════════ */
   return (
     <CustomerShell activeSection="loyalty">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+      <div className="mx-auto max-w-8xl px-20 py-8 sm:px-6 lg:px-20 space-y-10">
 
         {/* ── En-tête avec effet premium ── */}
         <motion.div
@@ -156,7 +167,7 @@ export default function CustomerFidelitesPage() {
         >
           <div className="relative inline-block group">
             <h2
-              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-5xl premium-title-shine flex items-center gap-3"
+              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-4xl premium-title-shine flex items-center gap-3"
               style={{
                 letterSpacing: "-0.025em",
                 backgroundImage:
@@ -173,7 +184,7 @@ export default function CustomerFidelitesPage() {
 
             {/* Kicker discret en lettres espacées doré, signature premium */}
             <span
-              className="block text-[13px] font-semibold uppercase tracking-[0.35em] mt-2"
+              className="block text-[11px] font-semibold uppercase tracking-[0.35em] mt-2"
               style={{ color: "#B8924A", opacity: 0.85 }}
             >
               Suivez vos points, progressez dans les grades et profitez de vos avantages exclusifs.
@@ -238,6 +249,7 @@ export default function CustomerFidelitesPage() {
               <LoyaltyProfileCard
                 profile={profile}
                 tiers={tiers}
+                pointValueConfig={pointValueConfig}
                 isRefreshing={isRefreshing}
                 onRedeem={() => setShowRedeemModal(true)}
                 onRefresh={() => fetchProfile(true)}
@@ -267,6 +279,7 @@ export default function CustomerFidelitesPage() {
         <RedeemPointsModal
           isOpen={showRedeemModal}
           profile={profile}
+          pointValueConfig={pointValueConfig}
           onClose={() => setShowRedeemModal(false)}
           onSuccess={handleRedeemSuccess}
         />

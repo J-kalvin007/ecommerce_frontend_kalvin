@@ -46,8 +46,8 @@ export default function CustomerDeliveriesPage() {
 
   return (
     <CustomerShell activeSection="orders">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
-        
+      <div className="mx-auto max-w-8xl px-20 py-8 sm:px-6 lg:px-20 space-y-10">
+
         {/* ── En-tête Premium ── */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
@@ -57,7 +57,7 @@ export default function CustomerDeliveriesPage() {
         >
           <div className="relative inline-block group">
             <h2
-              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-5xl premium-title-shine flex items-center gap-3"
+              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-4xl premium-title-shine flex items-center gap-3"
               style={{
                 letterSpacing: "-0.025em",
                 backgroundImage:
@@ -72,7 +72,7 @@ export default function CustomerDeliveriesPage() {
               Suivi des Livraisons
             </h2>
             <span
-              className="block text-[13px] font-semibold uppercase tracking-[0.35em] mt-2"
+              className="block text-[11px] font-semibold uppercase tracking-[0.35em] mt-2"
               style={{ color: "#B8924A", opacity: 0.85 }}
             >
               Suivez l'acheminement de vos commandes en temps réel.
@@ -147,11 +147,10 @@ export default function CustomerDeliveriesPage() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
-                    className={`shrink-0 rounded-xl px-4 py-2 text-[14px] font-semibold transition-all cursor-pointer ${
-                      activeTab === tab.id
-                        ? "bg-[#1f4d3f] text-white shadow-sm"
-                        : "bg-[#F7F5F0] text-[#8A9080] hover:bg-[#EEE9E0] hover:text-[#1f241c]"
-                    }`}
+                    className={`shrink-0 rounded-xl px-4 py-2 text-[14px] font-semibold transition-all cursor-pointer ${activeTab === tab.id
+                      ? "bg-[#1f4d3f] text-white shadow-sm"
+                      : "bg-[#F7F5F0] text-[#8A9080] hover:bg-[#EEE9E0] hover:text-[#1f241c]"
+                      }`}
                   >
                     {tab.label}
                   </button>
@@ -172,15 +171,15 @@ export default function CustomerDeliveriesPage() {
 
             {/* Grille des livraisons */}
             {filteredDeliveries.length === 0 ? (
-               <div className="pt-8">
-                 <EmptyState
-                    icon={Inbox}
-                    title="Aucun résultat"
-                    description="Aucune livraison ne correspond à vos filtres actuels."
-                    actionText={searchQuery ? "Effacer la recherche" : undefined}
-                    onAction={() => setSearchQuery("")}
-                 />
-               </div>
+              <div className="pt-8">
+                <EmptyState
+                  icon={Inbox}
+                  title="Aucun résultat"
+                  description="Aucune livraison ne correspond à vos filtres actuels."
+                  actionText={searchQuery ? "Effacer la recherche" : undefined}
+                  onAction={() => setSearchQuery("")}
+                />
+              </div>
             ) : (
               <DeliveryList deliveries={filteredDeliveries} />
             )}

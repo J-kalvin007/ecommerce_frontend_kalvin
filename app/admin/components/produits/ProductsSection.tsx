@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Search, Filter, Plus, Package, Layers, TrendingUp, AlertTriangle,
-  LayoutGrid, List, SlidersHorizontal, X, ChevronDown, Crown, Star, Box
+  LayoutGrid, List, SlidersHorizontal, X, ChevronDown, Crown, Star, Box,
+  Tag
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getAdminCategories } from "@/fonctions_api/categories.api";
@@ -65,22 +66,33 @@ function StatCard({
       <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.08]" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)", backgroundSize: "12px 12px" }} />
 
       {/* Éclairage / Glow */}
-      <div className={cn("absolute -right-4 -top-4 h-20 w-20 rounded-full opacity-20 blur-2xl", color)} />
+      {/* <div className={cn("absolute -right-4 -top-4 h-20 w-20 rounded-full opacity-20 blur-2xl", color)} /> */}
 
       <div className="relative z-10 flex items-start justify-between gap-2">
-        <div className={cn("flex h-8 w-8 items-center justify-center rounded-xl bg-white/50 dark:bg-black/20 shadow-sm border border-white/10 backdrop-blur-sm")}>
-          <Icon className={cn("h-4 w-4", color.replace("bg-", "text-"))} />
-        </div>
-        {sub && (
+
+        {/* {sub && (
           <span className="text-[9px] font-bold text-muted-foreground rounded-full bg-slate-50/50 dark:bg-slate-800/50 backdrop-blur-sm px-2 py-0.5 border border-border/30 shadow-sm">
             {sub}
           </span>
-        )}
+        )} */}
       </div>
-      <div className="relative z-10 mt-3">
-        <p className="text-xl font-black text-foreground tracking-tight leading-none">{value}</p>
-        <p className="mt-1 text-[9px] font-extrabold uppercase tracking-widest text-muted-foreground/80">{label}</p>
+
+
+      <div className="flex items-center justify-between">
+
+        <div className="relative z-10 mt-3">
+          <p className="text-xl font-black text-foreground tracking-tight leading-none">{value}</p>
+          <p className="mt-1 text-[9px] font-extrabold uppercase tracking-widest text-muted-foreground/80">{label}</p>
+        </div>
+
+
+        <div className={cn("flex h-8 w-8 items-center justify-center rounded-xl bg-white/50 dark:bg-black/20 shadow-sm border border-white/10 backdrop-blur-sm")}>
+          <Icon className={cn("h-4 w-4", color.replace("bg-", "text-"))} />
+        </div>
+
       </div>
+
+
     </motion.div>
   );
 }
@@ -100,7 +112,7 @@ export default function ProductsSection() {
   const [toast, setToast] = useState<{ show: boolean; type: "success" | "error"; message: string }>({ show: false, type: "success", message: "" });
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   // Filtres avancés
   const [showFilters, setShowFilters] = useState(false);
   const [filterStock, setFilterStock] = useState("");
@@ -222,7 +234,7 @@ export default function ProductsSection() {
   if (error && !products.length) return <ErrorState message={error} onRetry={loadData} />;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 px-20">
       <Toast show={toast.show} type={toast.type} message={toast.message} onClose={() => setToast(p => ({ ...p, show: false }))} />
       <ConfirmDialog
         isOpen={!!deletingId}
@@ -234,12 +246,84 @@ export default function ProductsSection() {
         type="danger"
       />
 
+
+
+
+
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-foreground leading-tight">Produits</h1>
-          <p className="text-xs text-muted-foreground">{products.length} produit{products.length !== 1 ? "s" : ""}</p>
-        </div>
+
+
+
+
+
+
+
+        {/* ── En-tête avec effet premium ── */}
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col gap-2"
+        >
+          <div className="relative inline-block group">
+            <h2
+              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-4xl premium-title-shine flex items-center gap-3"
+              style={{
+                letterSpacing: "-0.025em",
+                backgroundImage:
+                  "linear-gradient(110deg, #0D2E1E 0%, #1F4D34 45%, #0D2E1E 90%)",
+                backgroundSize: "220% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              <Package className="h-10 w-10 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
+              Produits
+            </h2>
+
+            {/* Kicker discret en lettres espacées doré, signature premium */}
+            <span
+              className="block text-[11px] font-semibold uppercase tracking-[0.35em] mt-2 mb-2"
+              style={{ color: "#B8924A", opacity: 0.85 }}
+            >
+              {products.length} produit{products.length !== 1 ? "s" : ""}
+            </span>
+
+            {/* Gradient SVG caché pour l'icône */}
+            <svg width="0" height="0" className="absolute">
+              <defs>
+                <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#FDE68A" />
+                  <stop offset="50%" stopColor="#D97706" />
+                  <stop offset="100%" stopColor="#B45309" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+
+            {/* Animations scoppées, avec respect du prefers-reduced-motion */}
+            <style>{`
+            @keyframes premium-title-shine-anim {
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+            }
+            .premium-title-shine {
+            animation: premium-title-shine-anim 6s ease-in-out infinite;
+            }
+            @media (prefers-reduced-motion: reduce) {
+            .premium-title-shine {
+                animation: none;
+            }
+            }
+        `}</style>
+          </div>
+        </motion.div>
+
+
+
+
         <div className="flex items-center gap-3">
           <motion.button
             onClick={() => setShowStats(!showStats)}

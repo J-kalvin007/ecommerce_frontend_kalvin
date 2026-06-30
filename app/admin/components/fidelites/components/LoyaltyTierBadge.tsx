@@ -1,59 +1,3 @@
-// // app/admin/components/fidelites/LoyaltyTierBadge.tsx
-// "use client";
-// import { motion } from "framer-motion";
-// import { Medal, Star, Crown, Gem, Star } from "lucide-react";
-// import { cn } from "@/lib/utils";
-// import { getTierConfig } from "@/modeles/fidelites";
-
-// interface LoyaltyTierBadgeProps {
-//     tierName: string;
-//     size?: "sm" | "md" | "lg";
-//     animate?: boolean;
-// }
-
-// const ICONS: Record<string, React.ElementType> = {
-//     Bronze: Medal, Silver: Star, Gold: Crown, Platinum: Gem, Diamond: Star,
-// };
-
-// const SIZES = {
-//     sm: { wrap: "h-6 px-2 gap-1 text-[10px]",   icon: "h-3 w-3" },
-//     md: { wrap: "h-8 px-3 gap-1.5 text-xs",      icon: "h-3.5 w-3.5" },
-//     lg: { wrap: "h-11 px-5 gap-2 text-sm",        icon: "h-5 w-5" },
-// };
-
-// export function LoyaltyTierBadge({ tierName, size = "md", animate = true }: LoyaltyTierBadgeProps) {
-//     const cfg  = getTierConfig(tierName);
-//     const Icon = ICONS[tierName] ?? Medal;
-//     const sz   = SIZES[size];
-//     const isShimmer = animate && (tierName === "Gold" || tierName === "Platinum" || tierName === "Diamond");
-
-//     return (
-//         <div className={cn(
-//             "relative overflow-hidden inline-flex items-center rounded-full border font-bold",
-//             sz.wrap, cfg.border, cfg.bg
-//         )}>
-//             {isShimmer && (
-//                 <motion.div
-//                     className={cn("absolute inset-0 bg-gradient-to-r", cfg.shimmer)}
-//                     animate={{ x: ["-100%", "200%"] }}
-//                     transition={{ repeat: Infinity, duration: 2.5, repeatDelay: 3, ease: "easeInOut" }}
-//                 />
-//             )}
-//             <Icon className={cn("relative z-10 shrink-0", sz.icon, cfg.textColor)} />
-//             <span className={cn("relative z-10 font-black", cfg.textColor)}>{tierName}</span>
-//         </div>
-//     );
-// }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -62,7 +6,7 @@
 // app/admin/components/fidelites/LoyaltyTierBadge.tsx
 "use client";
 import { motion } from "framer-motion";
-import { Medal, Star, Crown, Gem, Star } from "lucide-react";
+import { Medal, Star, Crown, Gem } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getTierConfig } from "@/modeles/fidelites";
 

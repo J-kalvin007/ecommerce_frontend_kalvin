@@ -52,7 +52,7 @@ function StatusDropdown({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -6, scale: 0.96 }}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      className="absolute right-0 top-full z-40 mt-2 w-56 overflow-hidden rounded-2xl border border-border/60 bg-white-elevated shadow-2xl shadow-black/20 backdrop-blur-xl"
+      className="absolute right-0 top-full z-999 mt-2 w-56 overflow-hidden rounded-2xl border border-border/60 shadow-2xl shadow-black/20 backdrop-blur-xl"
     >
       {/* Header */}
       <div className="border-b border-border/40 px-4 py-3">
@@ -69,7 +69,7 @@ function StatusDropdown({
               disabled={isCurrent || isUpdating}
               onClick={() => { onSelect(s); onClose(); }}
               className={cn(
-                "group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold transition-all",
+                "group flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold transition-all",
                 isCurrent
                   ? "cursor-not-allowed opacity-40"
                   : "hover:bg-white-alt"
@@ -185,7 +185,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
               <button
                 onClick={() => setShowStatus(!showStatus)}
                 className={cn(
-                  "flex items-center gap-1.5 rounded-xl border px-3 py-2 text-[11px] font-bold transition-all",
+                  "flex items-center cursor-pointer gap-1.5 rounded-xl border px-3 py-2 text-[11px] font-bold transition-all",
                   showStatus
                     ? "border-primary bg-primary/10 text-primary"
                     : "border-border bg-white text-muted-foreground hover:border-primary/40 hover:text-foreground"
@@ -212,7 +212,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               onClick={onView}
-              className="group/btn relative flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-4 py-2 text-[11px] font-black text-white shadow-md shadow-primary/30 transition-all hover:shadow-lg hover:shadow-primary/40"
+              className="group/btn relative flex cursor-pointer items-center gap-2 overflow-hidden rounded-xl bg-primary px-4 py-2 text-[11px] font-black text-white shadow-md shadow-primary/30 transition-all hover:shadow-lg hover:shadow-primary/40"
             >
               <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-600" />
               Détails
@@ -306,7 +306,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
             <button
               onClick={() => setShowStatus(!showStatus)}
               className={cn(
-                "flex h-9 items-center gap-1.5 rounded-xl border px-3 text-[11px] font-bold transition-all",
+                "flex h-9 items-center cursor-pointer gap-1.5 rounded-xl border px-3 text-[11px] font-bold transition-all",
                 showStatus
                   ? "border-primary bg-primary/10 text-primary"
                   : "border-border bg-white text-muted-foreground hover:border-primary/40 hover:text-foreground"
@@ -333,7 +333,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
             onClick={onView}
-            className="group/btn relative flex h-9 items-center gap-1.5 overflow-hidden rounded-xl bg-primary px-4 text-[11px] font-black text-white shadow-md shadow-primary/30 transition-all hover:shadow-lg hover:shadow-primary/40"
+            className="group/btn relative cursor-pointer flex h-9 items-center gap-1.5 overflow-hidden rounded-xl bg-primary px-4 text-[11px] font-black text-white shadow-md shadow-primary/30 transition-all hover:shadow-lg hover:shadow-primary/40"
           >
             <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-600" />
             Détails

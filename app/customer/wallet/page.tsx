@@ -134,7 +134,7 @@ export default function CustomerWalletPage() {
      ═══════════════════════════════════════════════════════════════════════ */
   return (
     <CustomerShell activeSection="wallet">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+      <div className="mx-auto max-w-8xl px-20 py-8 sm:px-6 lg:px-20 space-y-8">
 
         {/* ── En-tête avec effet premium ── */}
         <motion.div
@@ -145,7 +145,7 @@ export default function CustomerWalletPage() {
         >
           <div className="relative inline-block group">
             <h2
-              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-5xl premium-title-shine flex items-center gap-3"
+              className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-4xl premium-title-shine flex items-center gap-3"
               style={{
                 letterSpacing: "-0.025em",
                 backgroundImage:
@@ -156,7 +156,7 @@ export default function CustomerWalletPage() {
                 backgroundClip: "text",
               }}
             >
-              <WalletIcon className="h-7 w-7 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
+              <WalletIcon className="h-10 w-10 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
               Mon Portefeuille
             </h2>
 

@@ -1,8 +1,9 @@
-// app/admin/components/dashboard/components/AdminShell.tsx
+﻿// app/admin/components/dashboard/components/AdminShell.tsx
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,6 +20,9 @@ import {
   FolderTree,
   ArrowLeft,
   Truck,
+  Globe,
+  CirclePile,
+  Wallet,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -51,10 +55,10 @@ const NAV_ITEMS: NavItem[] = [
   { id: "orders", label: "Commandes", icon: ShoppingCart, href: "/admin?section=orders" },
   { id: "livraisons", label: "Livraisons", icon: Truck, href: "/admin?section=livraisons" },
   { id: "clients", label: "Clients", icon: Users, href: "/admin?section=clients" },
-  { id: "wallets", label: "Comptes bancaires", icon: Users, href: "/admin?section=wallets" },
+  { id: "wallets", label: "Comptes bancaires", icon: Wallet, href: "/admin?section=wallets" },
   { id: "promotions", label: "Promotions", icon: Tag, href: "/admin?section=promotions" },
-  { id: "fidelites", label: "Points de fidélité", icon: Tag, href: "/admin?section=fidelites" },
-  { id: "bannieres_publicitaires", label: "Bannières publicitaires", icon: Tag, href: "/admin?section=bannieres_publicitaires" },
+  { id: "fidelites", label: "Points de fidélité", icon: CirclePile, href: "/admin?section=fidelites" },
+  { id: "bannieres_publicitaires", label: "Bannières publicitaires", icon: Globe, href: "/admin?section=bannieres_publicitaires" },
   { id: "settings", label: "Paramètres", icon: Settings, href: "/admin?section=settings" },
 ];
 
@@ -86,8 +90,8 @@ function NavButton({
       className={cn(
         "group relative flex w-full cursor-pointer items-center gap-3 rounded-2xl px-3 py-2.5 text-[14px] font-medium transition-all duration-200",
         isActive
-          ? "text-white"
-          : "text-white/80 hover:text-white"
+          ? "text-black"
+          : "text-gray-100 hover:text-yellow-400"
       )}
     >
       {isActive && (
@@ -109,7 +113,7 @@ function NavButton({
             : "bg-white/10 text-white/80 group-hover:bg-white/20 group-hover:text-white"
         )}
       >
-        <item.icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.2 : 1.8} />
+        <item.icon className="h-[18px] w-[18px] text-yellow-600" strokeWidth={isActive ? 2.2 : 1.8} />
       </span>
       {!collapsed && <span className="relative z-10 truncate flex-1 text-left">{item.label}</span>}
     </motion.button>
@@ -207,7 +211,7 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
 
                   </div>
                   <div className="flex min-w-0 flex-col">
-                    <span className="truncate text-[13.5px] font-bold leading-none tracking-tight text-white">
+                    <span className="truncate text-[13.5px] font-bold leading-none tracking-tight text-gray-100">
                       TABLEAU DE BORD
                     </span>
                     <span className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#C9963A]">
@@ -231,7 +235,7 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
             {/* Navigation principale */}
             <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/10">
               {!collapsed && (
-                <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/30">
+                <p className="px-3 pb-2 text-[12px] font-semibold uppercase text-gray-100">
                   Menu principal
                 </p>
               )}
@@ -250,16 +254,16 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
             {/* Zone bas de sidebar (desktop) */}
             <div className="p-4 flex flex-col gap-2">
               <div className="mb-2 h-px bg-white/10" />
-              
+
               {!collapsed && (
                 <Link
                   href="/"
                   className="group flex w-full cursor-pointer items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-2.5 transition-all duration-200 hover:border-[#C9963A]/20 hover:bg-[#C9963A]/10"
                 >
                   <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/8 text-white/50 transition-colors group-hover:text-[#C9963A]">
-                    <ArrowLeft className="h-3.5 w-3.5" />
+                    <ArrowLeft className="h-5 w-5" />
                   </span>
-                  <span className="text-[12px] font-semibold text-white/50 transition-colors group-hover:text-[#C9963A]">
+                  <span className="text-[14px] font-semibold text-white/50 transition-colors group-hover:text-[#C9963A]">
                     Retour à l'accueil
                   </span>
                 </Link>
@@ -277,8 +281,8 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
                 {!collapsed && (
                   <>
                     <div className="min-w-0 flex-1 text-left">
-                      <p className="truncate text-xs font-semibold text-white/90">{adminDisplayName}</p>
-                      <p className="truncate text-[10px] text-white/40 transition-colors group-hover:text-red-400">
+                      <p className="truncate text-[14px] font-semibold text-white/90">{adminDisplayName}</p>
+                      <p className="truncate text-[14px] text-white/40 transition-colors group-hover:text-red-400">
                         Déconnexion
                       </p>
                     </div>

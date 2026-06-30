@@ -227,7 +227,7 @@ export default function DashboardClient() {
      Rendu Principal
      ═══════════════════════════════════════════════════════════════════════ */
   return (
-    <div className="relative mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="relative mx-auto max-w-8xl space-y-8 px-20 py-8 sm:px-6 lg:px-20">
 
       {/* ─────────────────────────────────────────────────────────────────────
        *  Halo ambiant — cohérent avec le tunnel de commande

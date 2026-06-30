@@ -26,7 +26,7 @@ import {
   Info,
 } from "lucide-react";
 import { redeemLoyaltyPoints } from "@/fonctions_api/fidelites.api";
-import type { LoyaltyProfile } from "@/modeles/fidelites";
+import type { LoyaltyProfile, PointValue } from "@/modeles/fidelites";
 
 /* ── Utilitaires ────────────────────────────────────────────────────────── */
 
@@ -49,6 +49,7 @@ function formatAmount(amount: string): string {
 interface RedeemPointsModalProps {
   isOpen: boolean;
   profile: LoyaltyProfile;
+  pointValueConfig?: PointValue | null;
   onClose: () => void;
   onSuccess: (message: string) => void;
 }
@@ -62,6 +63,7 @@ interface RedeemPointsModalProps {
 export default function RedeemPointsModal({
   isOpen,
   profile,
+  pointValueConfig,
   onClose,
   onSuccess,
 }: RedeemPointsModalProps) {
@@ -78,14 +80,17 @@ export default function RedeemPointsModal({
   const parsedPoints = parseInt(pointsToSpend || "0", 10);
   const isValidPoints = parsedPoints > 0 && parsedPoints <= maxPoints;
 
-  /* ── Estimation de la réduction (1 point = 1 FCFA approximatif) ─────── */
+  /* ── Estimation de la réduction (valeur du point + bonus grade) ─────── */
   const estimatedDiscount = useMemo(() => {
     if (!isValidPoints) return null;
+    const ratio = pointValueConfig && pointValueConfig.nombre_de_point > 0 
+        ? pointValueConfig.valeur_un_point_frcfa / pointValueConfig.nombre_de_point 
+        : 10;
+    const baseDiscount = parsedPoints * ratio;
     const discountRate = parseFloat(profile.tier.discount_percent || "0") / 100;
-    // La réduction estimée dépend du taux du grade actuel
-    const discount = parsedPoints * (1 + discountRate);
+    const discount = baseDiscount + (baseDiscount * discountRate);
     return formatAmount(String(discount));
-  }, [parsedPoints, isValidPoints, profile.tier.discount_percent]);
+  }, [parsedPoints, isValidPoints, profile.tier.discount_percent, pointValueConfig]);
 
   /* ── Réinitialisation à l'ouverture ─────────────────────────────────── */
   useEffect(() => {

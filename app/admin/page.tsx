@@ -1,31 +1,3 @@
-// /**
-//  * Admin — Page d'entrée du dashboard
-//  * @module app/admin/page
-//  */
-
-// import type { Metadata } from "next";
-// import { Suspense } from "react";
-// import AdminDashboard from "./AdminDashboard";
-
-// export const metadata: Metadata = { title: "Dashboard Administrateur" };
-
-// export default function AdminPage() {
-//   return (
-//     <Suspense fallback={<div>Chargement du dashboard admin...</div>}>
-//       <AdminDashboard />
-//     </Suspense>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
 
 
 

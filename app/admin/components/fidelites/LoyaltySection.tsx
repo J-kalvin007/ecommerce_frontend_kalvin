@@ -2,7 +2,7 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Star, Crown, Search, LayoutGrid, List } from "lucide-react";
+import { Star, Crown, Search, LayoutGrid, List, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import {
@@ -28,8 +28,9 @@ import { LoyaltyProfileDetailModal } from "./components/LoyaltyProfileDetailModa
 import { LoyaltyAdjustPointsModal } from "./components/LoyaltyAdjustPointsModal";
 import { LoyaltyTiersPanel } from "./components/LoyaltyTiersPanel";
 import { LoyaltyTierFormModal } from "./components/LoyaltyTierFormModal";
+import { LoyaltyPointValuePanel } from "./components/LoyaltyPointValuePanel";
 
-type TabType = "profiles" | "tiers";
+type TabType = "profiles" | "tiers" | "config";
 
 export default function LoyaltySection() {
     const [tab, setTab] = useState<TabType>("profiles");
@@ -135,7 +136,7 @@ export default function LoyaltySection() {
     }
 
     return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="space-y-8 px-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* ── Toast ─────────────────────────────────────────────────────── */}
             <Toast
                 show={toast.show}
@@ -205,18 +206,81 @@ export default function LoyaltySection() {
                 onSuccess={loadData}
             />
 
-            {/* ── En-tête ───────────────────────────────────────────────────── */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
-                        <Crown className="h-8 w-8 text-primary" />
+
+
+
+
+            {/* ── En-tête avec effet premium ── */}
+            <motion.div
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="flex flex-col gap-2"
+            >
+                <div className="relative inline-block group">
+                    <h2
+                        className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-4xl premium-title-shine flex items-center gap-3"
+                        style={{
+                            letterSpacing: "-0.025em",
+                            backgroundImage:
+                                "linear-gradient(110deg, #0D2E1E 0%, #1F4D34 45%, #0D2E1E 90%)",
+                            backgroundSize: "220% auto",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                            backgroundClip: "text",
+                        }}
+                    >
+                        <Crown className="h-8 w-8 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
                         Programme de Fidélité
-                    </h1>
-                    <p className="mt-1.5 text-sm text-muted-foreground max-w-xl">
-                        Supervisez les points de vos clients, analysez la répartition par paliers et ajustez manuellement les soldes.
-                    </p>
+                    </h2>
+
+                    {/* Kicker discret en lettres espacées doré, signature premium */}
+                    <span
+                        className="block text-[11px] font-semibold uppercase tracking-[0.35em] mt-2 mb-2"
+                        style={{ color: "#B8924A", opacity: 0.85 }}
+                    >
+                        Supervisez les points de vos clients, analysez la répartition par paliers.
+                    </span>
+
+                    {/* Gradient SVG caché pour l'icône */}
+                    <svg width="0" height="0" className="absolute">
+                        <defs>
+                            <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#FDE68A" />
+                                <stop offset="50%" stopColor="#D97706" />
+                                <stop offset="100%" stopColor="#B45309" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+
+
+                    {/* Animations scoppées, avec respect du prefers-reduced-motion */}
+                    <style>{`
+                @keyframes premium-title-shine-anim {
+                0%, 100% { background-position: 0% center; }
+                50% { background-position: 100% center; }
+                }
+                .premium-title-shine {
+                animation: premium-title-shine-anim 6s ease-in-out infinite;
+                }
+                @media (prefers-reduced-motion: reduce) {
+                .premium-title-shine {
+                    animation: none;
+                }
+                }
+            `}</style>
                 </div>
-            </div>
+            </motion.div>
+
+
+
+
+
+
+
+
+
+
 
             {/* ── Stats globales ────────────────────────────────────────────── */}
             <LoyaltyStatsBar stats={stats} />
@@ -227,6 +291,7 @@ export default function LoyaltySection() {
                     {([
                         { key: "profiles", label: "Profils clients", icon: <Star className="h-4 w-4" /> },
                         { key: "tiers", label: "Paliers & Avantages", icon: <Crown className="h-4 w-4" /> },
+                        { key: "config", label: "Valeur des Points", icon: <Settings className="h-4 w-4" /> },
                     ] as const).map(t => (
                         <button
                             key={t.key}
@@ -281,7 +346,7 @@ export default function LoyaltySection() {
 
             {/* ── Contenu ───────────────────────────────────────────────────── */}
             {loading ? (
-                <LoadingKalvin />
+                <LoadingKalvin message="Chargement des utilisateurs.." />
             ) : tab === "profiles" ? (
                 filteredProfiles.length === 0 ? (
                     <EmptyState
@@ -298,7 +363,7 @@ export default function LoyaltySection() {
                         viewMode={viewMode}
                     />
                 )
-            ) : (
+            ) : tab === "tiers" ? (
                 <div className="max-w-4xl">
                     <LoyaltyTiersPanel
                         tiers={tiers}
@@ -306,6 +371,12 @@ export default function LoyaltySection() {
                         onAdd={() => { setEditingTier(null); setTierFormOpen(true); }}
                         onEdit={(tier) => { setEditingTier(tier); setTierFormOpen(true); }}
                         onDelete={(tier) => setDeleteTierConfirm(tier)}
+                    />
+                </div>
+            ) : (
+                <div className="max-w-2xl">
+                    <LoyaltyPointValuePanel
+                        onToast={(type, message) => setToast({ show: true, type, message })}
                     />
                 </div>
             )}

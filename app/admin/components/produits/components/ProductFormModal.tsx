@@ -11,7 +11,7 @@ import { StepReview } from "./ProductFormSteps/StepReview";
 import type { ProductVariantAdmin } from "@/modeles/produits";
 import type { ProductFormErrors, ProductFormState, UploadedProductImage } from "../productsUtils";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Save, Star, Star, Stars, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, Star, Stars, X } from "lucide-react";
 
 const steps: Step[] = [
   { id: "general", label: "Général" },

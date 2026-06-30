@@ -33,11 +33,8 @@ export function LegacyFooter() {
 
     setSending(true);
     try {
-      const res = await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const { subscribeToNewsletter } = await import("@/fonctions_api/notifications.api");
+      const res = await subscribeToNewsletter({ email });
       if (res.ok) {
         setSubscribed(true);
       }
@@ -95,7 +92,7 @@ export function LegacyFooter() {
               <button
                 type="submit"
                 disabled={subscribed || sending}
-                className="inline-flex h-9 shrink-0 items-center gap-2 rounded-full bg-[#ef8219] px-4 text-xs font-black text-white hover:bg-[#d96f13] disabled:opacity-70"
+                className="inline-flex cursor-pointer h-9 shrink-0 items-center gap-2 rounded-full bg-[#ef8219] px-4 text-xs font-black text-white hover:bg-[#d96f13] disabled:opacity-70"
               >
                 {subscribed ? "Inscrit !" : sending ? "Envoi..." : "S'inscrire"}
               </button>
@@ -159,13 +156,13 @@ export function LegacyFooter() {
         </div>
 
         <div className="flex flex-col items-center justify-between gap-3 border-t border-white/10 py-4 text-xs text-white/45 sm:flex-row">
-          <p>&copy; 2026 Deal & Consulting. Tous droits reserves.</p>
+          <p>&copy; {new Date().getFullYear()} Deal & Consulting. Tous droits reserves.</p>
           <div className="flex items-center gap-3">
-            <Link href="/privacy" className="transition hover:text-white/75">
+            <Link href="/privacy" className="transition cursor-pointer hover:text-white/75">
               Confidentialite
             </Link>
             <span>·</span>
-            <Link href="/terms" className="transition hover:text-white/75">
+            <Link href="/terms" className="transition cursor-pointer hover:text-white/75">
               Conditions
             </Link>
           </div>

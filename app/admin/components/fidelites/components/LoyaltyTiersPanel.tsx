@@ -1,7 +1,7 @@
 // app/admin/components/fidelites/LoyaltyTiersPanel.tsx
 "use client";
 import { motion } from "framer-motion";
-import { Medal, Star, Crown, Gem, Star, ChevronRight } from "lucide-react";
+import { Medal, Star, Crown, Gem, ChevronRight } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { getTierConfig } from "@/modeles/fidelites";
 import type { Tier } from "@/modeles/fidelites";
