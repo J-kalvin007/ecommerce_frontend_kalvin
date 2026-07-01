@@ -28,8 +28,10 @@ export interface CartItem {
   price: string;
   /** Ancien prix barré */
   compareAtPrice: string | null;
-  /** URL de l'image principale */
+  /** URL de l'image (variante ou produit parent) */
   image: string | null;
+  /** URL de l'image du produit parent — fallback si l'image variante est indisponible */
+  productImage?: string | null;
   /** Quantité */
   quantity: number;
   /** Stock disponible (pour validation côté client) */

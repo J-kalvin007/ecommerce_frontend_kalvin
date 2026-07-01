@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file PromoCodeUseButton.tsx
  * @description Carte / bouton de code promo ultra-premium edition luxe.
  *
@@ -29,7 +29,7 @@ import { useCartStore } from "@/store/pannierStore";
 import { useApplyPromoCode } from "@/hooks/useApplyPromoCode";
 import type { PromoCodeList } from "@/modeles/promotions";
 
-/* ─── Types ───────────────────────────────────────────────────────────────── */
+/* --- Types ----------------------------------------------------------------- */
 
 type PromoCodeUseButtonProps = {
   promo: PromoCodeList;
@@ -40,7 +40,7 @@ type PromoCodeUseButtonProps = {
   layoutMode?: "grid" | "list";
 };
 
-/* ─── Utilitaires ─────────────────────────────────────────────────────────── */
+/* --- Utilitaires ----------------------------------------------------------- */
 
 /** Genere le label human-readable de la reduction */
 function promoLabel(promo: PromoCodeList): string {
@@ -57,7 +57,7 @@ const SPARKLE_POSITIONS = [
   { top: "65%", right: "12%" },
 ] as const;
 
-/* ─── Composant principal ─────────────────────────────────────────────────── */
+/* --- Composant principal --------------------------------------------------- */
 
 export function PromoCodeUseButton({
   promo,
@@ -67,20 +67,20 @@ export function PromoCodeUseButton({
   index = 0,
   layoutMode = "grid",
 }: PromoCodeUseButtonProps) {
-  /* ── Stores et hooks ── */
+  /* -- Stores et hooks -- */
   const { applyCode, applyingCode, activePromoCode } = useApplyPromoCode();
   const toggleDrawer = useCartStore((state) => state.toggleDrawer);
 
-  /* ── Etat local ── */
+  /* -- Etat local -- */
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [burst, setBurst] = useState(false);
 
-  /* ── Derivations ── */
+  /* -- Derivations -- */
   const isApplying = applyingCode === promo.code.toUpperCase();
   const isActive = activePromoCode === promo.code.toUpperCase();
   const label = promoLabel(promo);
 
-  /* ── Handler principal ── */
+  /* -- Handler principal -- */
   async function handleUse(): Promise<void> {
     if (isApplying) return;
 
@@ -105,7 +105,7 @@ export function PromoCodeUseButton({
 
   return (
     <div className={cn("flex h-full flex-col gap-2", className)}>
-      {/* ── Conteneur avec animation d'entree ── */}
+      {/* -- Conteneur avec animation d'entree -- */}
       <motion.div
         initial={{ opacity: 0, y: 28, scale: 0.94 }}
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -118,7 +118,7 @@ export function PromoCodeUseButton({
         }}
         className="flex-1 flex flex-col w-full"
       >
-        {/* ── Bouton principal : apparence ticket ── */}
+        {/* -- Bouton principal : apparence ticket -- */}
         <motion.button
           type="button"
           onClick={() => void handleUse()}
@@ -141,7 +141,7 @@ export function PromoCodeUseButton({
                 : "border-[#ef8219]/40 bg-gradient-to-br from-[#fff8f0] via-white to-[#fff3e6] hover:border-[#ef8219]/70"
           )}
         >
-          {/* ── Particules decoratives (Star) ── */}
+          {/* -- Particules decoratives (Star) -- */}
           {SPARKLE_POSITIONS.map((pos, i) => (
             <span
               key={i}
@@ -154,7 +154,7 @@ export function PromoCodeUseButton({
             />
           ))}
 
-          {/* ── Burst de confettis au succes ── */}
+          {/* -- Burst de confettis au succes -- */}
           <AnimatePresence>
             {burst && (
               <>
@@ -178,7 +178,7 @@ export function PromoCodeUseButton({
             )}
           </AnimatePresence>
 
-          {/* ── Contenu de la carte ── */}
+          {/* -- Contenu de la carte -- */}
           <div className={cn(
             "relative z-10 flex h-full gap-3 p-5",
             layoutMode === "grid" ? "flex-col" : "flex-col sm:flex-row sm:items-center w-full"
@@ -322,7 +322,7 @@ export function PromoCodeUseButton({
         </motion.button>
       </motion.div>
 
-      {/* ── Feedback ── */}
+      {/* -- Feedback -- */}
       <div className="h-4 w-full flex items-start justify-center">
         <AnimatePresence>
           {feedback && (

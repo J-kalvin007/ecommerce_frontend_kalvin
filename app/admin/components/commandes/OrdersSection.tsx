@@ -1,4 +1,4 @@
-
+﻿
 // app/admin/components/commandes/OrdersSection.tsx
 "use client";
 
@@ -22,7 +22,7 @@ import ConfirmDialog from "@/components/special/ConfirmDialog";
 import { OrderDetailModal } from "./components/OrderDetailModal";
 import { OrderCard } from "./components/Ordercard";
 
-// ─── KPI card ────────────────────────────────────────────────────────────────
+// --- KPI card ----------------------------------------------------------------
 
 interface KPICardProps {
   label: string;
@@ -76,7 +76,7 @@ function KPICard({ label, value, icon, accentClass, iconColorClass, active, onCl
   );
 }
 
-// ─── Section principale ───────────────────────────────────────────────────────
+// --- Section principale -------------------------------------------------------
 
 export default function OrdersSection() {
   const [orders, setOrders] = useState<OrderList[]>([]);
@@ -152,7 +152,7 @@ export default function OrdersSection() {
   }
 
   return (
-    <div className="space-y-8 px-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <>
       {/* Toast */}
       <Toast
         show={toast.show}
@@ -185,7 +185,8 @@ export default function OrdersSection() {
         isUpdating={!!updatingRef}
       />
 
-      {/* ── Header ── */}
+      <div className="space-y-8 px-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        {/* -- Header -- */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
 
@@ -193,7 +194,7 @@ export default function OrdersSection() {
 
 
 
-        {/* ── En-tête avec effet premium ── */}
+        {/* -- En-tête avec effet premium -- */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -269,7 +270,7 @@ export default function OrdersSection() {
         </button>
       </div>
 
-      {/* ── KPI cards ── */}
+      {/* -- KPI cards -- */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-5">
         <KPICard
           label="Toutes"
@@ -318,7 +319,7 @@ export default function OrdersSection() {
         />
       </div>
 
-      {/* ── Revenue banner ── */}
+      {/* -- Revenue banner -- */}
       <div className="relative overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-6">
         <div className="absolute -right-8 -top-8 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-primary/5 to-transparent" />
@@ -333,7 +334,7 @@ export default function OrdersSection() {
         </div>
       </div>
 
-      {/* ── Search & toolbar ── */}
+      {/* -- Search & toolbar -- */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         {/* Search */}
         <div className="relative flex-1">
@@ -384,7 +385,7 @@ export default function OrdersSection() {
         </div>
       </div>
 
-      {/* ── Date filters (collapsible) ── */}
+      {/* -- Date filters (collapsible) -- */}
       <AnimatePresence>
         {showFilters && (
           <motion.div
@@ -425,7 +426,7 @@ export default function OrdersSection() {
         )}
       </AnimatePresence>
 
-      {/* ── Status filter pills ── */}
+      {/* -- Status filter pills -- */}
       <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
         <button
           onClick={() => setStatusFilter("ALL")}
@@ -466,7 +467,7 @@ export default function OrdersSection() {
         })}
       </div>
 
-      {/* ── Orders list ── */}
+      {/* -- Orders list -- */}
       {loading ? (
         <LoadingKalvin />
       ) : filtered.length === 0 ? (
@@ -499,6 +500,7 @@ export default function OrdersSection() {
           </AnimatePresence>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }

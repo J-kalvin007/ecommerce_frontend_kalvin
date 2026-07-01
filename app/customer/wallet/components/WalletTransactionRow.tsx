@@ -1,6 +1,6 @@
-/**
+﻿/**
  * WalletTransactionRow.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Ligne unitaire d'une transaction dans l'historique du wallet.
  *
  * Affiche : icône typée, référence, date, montant signé (+/-),
@@ -32,7 +32,7 @@ import {
   WALLET_TRANSACTION_TYPE_LABELS,
 } from "@/modeles/wallets-paiements";
 
-/* ── Configuration des types de transactions ────────────────────────────── */
+/* -- Configuration des types de transactions ------------------------------ */
 
 const TRANSACTION_TYPE_CONFIG: Record<
   WalletTransactionType,
@@ -81,7 +81,7 @@ const TRANSACTION_TYPE_CONFIG: Record<
   },
 };
 
-/* ── Configuration des statuts de transactions ──────────────────────────── */
+/* -- Configuration des statuts de transactions ---------------------------- */
 
 const TRANSACTION_STATUS_CONFIG: Record<
   WalletTransactionStatus,
@@ -123,7 +123,7 @@ const TRANSACTION_STATUS_CONFIG: Record<
   },
 };
 
-/* ── Utilitaires ─────────────────────────────────────────────────────────── */
+/* -- Utilitaires ----------------------------------------------------------- */
 
 function formatAmount(amount: string): string {
   const num = parseFloat(amount || "0");
@@ -153,7 +153,7 @@ function truncateRef(ref: string, maxLength = 18): string {
   return ref.slice(0, 8) + "…" + ref.slice(-6);
 }
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface WalletTransactionRowProps {
   transaction: WalletTransaction;
   index: number;

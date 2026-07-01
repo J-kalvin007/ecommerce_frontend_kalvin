@@ -1,4 +1,4 @@
-// // app/admin/components/commandes/components/OrderDetailModal.tsx
+﻿// // app/admin/components/commandes/components/OrderDetailModal.tsx
 // "use client";
 
 // import { useEffect, useState } from "react";
@@ -436,7 +436,7 @@ interface OrderDetailModalProps {
     isUpdating?: boolean;
 }
 
-/* ── Statuts suivants autorisés ───────────────────────────────── */
+/* -- Statuts suivants autorisés --------------------------------- */
 const NEXT_STATUS_OPTIONS: Partial<Record<OrderStatus, OrderStatus[]>> = {
     pending_payment: ["paid", "cancelled"],
     paid: ["confirmed", "cancelled", "refunded"],
@@ -446,7 +446,7 @@ const NEXT_STATUS_OPTIONS: Partial<Record<OrderStatus, OrderStatus[]>> = {
     delivered: ["refunded"],
 };
 
-/* ── Icône de statut ──────────────────────────────────────────── */
+/* -- Icône de statut -------------------------------------------- */
 const STATUS_ICONS: Record<string, React.ReactNode> = {
     draft: <FileText className="h-4 w-4" />,
     pending_payment: <Clock className="h-4 w-4" />,
@@ -459,7 +459,7 @@ const STATUS_ICONS: Record<string, React.ReactNode> = {
     refunded: <RotateCcw className="h-4 w-4" />,
 };
 
-/* ── Pill de statut ───────────────────────────────────────────── */
+/* -- Pill de statut --------------------------------------------- */
 function StatusPill({ status, size = "md" }: { status: OrderStatus; size?: "sm" | "md" }) {
     const cfg = ORDER_STATUS_MAP[status];
     if (!cfg) return null;
@@ -475,7 +475,7 @@ function StatusPill({ status, size = "md" }: { status: OrderStatus; size?: "sm" 
     );
 }
 
-/* ── Section wrapper ──────────────────────────────────────────── */
+/* -- Section wrapper -------------------------------------------- */
 function Section({ children, className }: { children: React.ReactNode; className?: string }) {
     return (
         <div className={cn(
@@ -487,7 +487,7 @@ function Section({ children, className }: { children: React.ReactNode; className
     );
 }
 
-/* ── Section header ───────────────────────────────────────────── */
+/* -- Section header --------------------------------------------- */
 function SectionHeader({ icon, label }: { icon: React.ReactNode; label: string }) {
     return (
         <div className="flex items-center gap-2.5 border-b border-border/40 bg-white-alt/50 px-5 py-3.5">
@@ -497,7 +497,7 @@ function SectionHeader({ icon, label }: { icon: React.ReactNode; label: string }
     );
 }
 
-/* ── Article item ─────────────────────────────────────────────── */
+/* -- Article item ----------------------------------------------- */
 function ArticleItem({ item, index }: { item: OrderDetail["items"][0]; index: number }) {
     return (
         <motion.div
@@ -531,7 +531,7 @@ function ArticleItem({ item, index }: { item: OrderDetail["items"][0]; index: nu
     );
 }
 
-/* ── History entry ────────────────────────────────────────────── */
+/* -- History entry ---------------------------------------------- */
 function HistoryEntry({ entry, index, total }: { entry: OrderHistory; index: number; total: number }) {
     const isFirst = index === 0;
     return (
@@ -592,7 +592,7 @@ function HistoryEntry({ entry, index, total }: { entry: OrderHistory; index: num
     );
 }
 
-/* ── Main modal ───────────────────────────────────────────────── */
+/* -- Main modal ------------------------------------------------- */
 export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdating }: OrderDetailModalProps) {
     const [order, setOrder] = useState<OrderDetail | null>(null);
     const [history, setHistory] = useState<OrderHistory[]>([]);
@@ -641,7 +641,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
         <AnimatePresence>
             {reference && (
                 <>
-                    {/* ── Backdrop ── */}
+                    {/* -- Backdrop -- */}
                     <motion.div
                         key="backdrop"
                         initial={{ opacity: 0 }}
@@ -652,7 +652,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                         className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md"
                     />
 
-                    {/* ── Drawer panel ── */}
+                    {/* -- Drawer panel -- */}
                     <motion.aside
                         key="panel"
                         initial={{ opacity: 0, x: "100%" }}
@@ -661,7 +661,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                         transition={{ type: "spring", stiffness: 300, damping: 32, mass: 0.8 }}
                         className="fixed right-0 top-0 z-50 flex h-full w-full max-w-[520px] flex-col bg-white-elevated border-l border-border/40 shadow-[−32px_0_80px_rgba(0,0,0,0.4)]"
                     >
-                        {/* ── Header ── */}
+                        {/* -- Header -- */}
                         <header className="relative flex-none overflow-hidden">
                             {/* Ambient glow layer */}
                             <div className={cn(
@@ -711,7 +711,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                             </div>
                         </header>
 
-                        {/* ── Tabs ── */}
+                        {/* -- Tabs -- */}
                         <nav className="relative flex-none border-b border-border/40 bg-white-elevated px-6">
                             <div className="flex gap-1">
                                 {(["details", "history"] as const).map(t => (
@@ -739,7 +739,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                             </div>
                         </nav>
 
-                        {/* ── Body ── */}
+                        {/* -- Body -- */}
                         <div className="flex-1 overflow-y-auto">
                             {/* Loading state */}
                             {loading && (
@@ -765,7 +765,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                 </div>
                             )}
 
-                            {/* ── Details tab ── */}
+                            {/* -- Details tab -- */}
                             {!loading && order && tab === "details" && (
                                 <motion.div
                                     key="details"
@@ -774,7 +774,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                     transition={{ duration: 0.25 }}
                                     className="space-y-4 p-5"
                                 >
-                                    {/* ── Totaux ── */}
+                                    {/* -- Totaux -- */}
                                     <Section>
                                         <SectionHeader icon={<Receipt className="h-4 w-4" />} label="Récapitulatif financier" />
                                         <div className="p-5">
@@ -812,7 +812,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                         </div>
                                     </Section>
 
-                                    {/* ── Livraison ── */}
+                                    {/* -- Livraison -- */}
                                     <Section>
                                         <SectionHeader icon={<MapPin className="h-4 w-4" />} label="Adresse de livraison" />
                                         <div className="p-5 space-y-3">
@@ -827,7 +827,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                         </div>
                                     </Section>
 
-                                    {/* ── Dates ── */}
+                                    {/* -- Dates -- */}
                                     <div className="grid grid-cols-2 gap-3">
                                         <Section>
                                             <div className="p-4 space-y-1.5">
@@ -871,7 +871,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                         )}
                                     </div>
 
-                                    {/* ── Articles ── */}
+                                    {/* -- Articles -- */}
                                     <Section>
                                         <SectionHeader
                                             icon={<ShoppingBag className="h-4 w-4" />}
@@ -884,7 +884,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                         </div>
                                     </Section>
 
-                                    {/* ── Notes client ── */}
+                                    {/* -- Notes client -- */}
                                     {order.notes && (
                                         <Section>
                                             <SectionHeader icon={<MessageSquare className="h-4 w-4" />} label="Notes client" />
@@ -894,7 +894,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                         </Section>
                                     )}
 
-                                    {/* ── Changement de statut ── */}
+                                    {/* -- Changement de statut -- */}
                                     {nextOptions.length > 0 && (
                                         <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent overflow-hidden">
                                             {/* Header */}
@@ -988,7 +988,7 @@ export function OrderDetailModal({ reference, onClose, onStatusChange, isUpdatin
                                 </motion.div>
                             )}
 
-                            {/* ── History tab ── */}
+                            {/* -- History tab -- */}
                             {!loading && order && tab === "history" && (
                                 <motion.div
                                     key="history"

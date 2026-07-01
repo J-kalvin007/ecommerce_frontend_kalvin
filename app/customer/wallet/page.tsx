@@ -1,6 +1,6 @@
-/**
+﻿/**
  * page.tsx — Portefeuille Client
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Page principale de gestion du portefeuille (wallet) du client.
  * Intégrée dans le CustomerShell.
  *
@@ -49,27 +49,27 @@ import WalletActionModal, {
    Page Component
    ═══════════════════════════════════════════════════════════════════════════ */
 export default function CustomerWalletPage() {
-  /* ── État : Wallet ──────────────────────────────────────────────────── */
+  /* -- État : Wallet ---------------------------------------------------- */
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
   const [walletError, setWalletError] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  /* ── État : Transactions ────────────────────────────────────────────── */
+  /* -- État : Transactions ---------------------------------------------- */
   const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
 
-  /* ── État : Modale d'action ─────────────────────────────────────────── */
+  /* -- État : Modale d'action ------------------------------------------- */
   const [activeModal, setActiveModal] = useState<WalletActionMode | null>(null);
 
-  /* ── État : Toast de notification ──────────────────────────────────── */
+  /* -- État : Toast de notification ------------------------------------ */
   const [toast, setToast] = useState<{
     show: boolean;
     type: "success" | "error" | "info";
     message: string;
   }>({ show: false, type: "info", message: "" });
 
-  /* ── Helpers ─────────────────────────────────────────────────────────── */
+  /* -- Helpers ----------------------------------------------------------- */
   const showToast = useCallback(
     (type: "success" | "error" | "info", message: string) => {
       setToast({ show: true, type, message });
@@ -77,7 +77,7 @@ export default function CustomerWalletPage() {
     []
   );
 
-  /* ── Fetch : Solde du wallet ─────────────────────────────────────────── */
+  /* -- Fetch : Solde du wallet ------------------------------------------- */
   const fetchWallet = useCallback(async (silent = false) => {
     if (!silent) {
       setIsLoadingWallet(true);
@@ -101,7 +101,7 @@ export default function CustomerWalletPage() {
     setIsRefreshing(false);
   }, [showToast]);
 
-  /* ── Fetch : Historique des transactions ─────────────────────────────── */
+  /* -- Fetch : Historique des transactions ------------------------------- */
   const fetchTransactions = useCallback(async () => {
     setIsLoadingTransactions(true);
     const result = await getMyWalletHistory();
@@ -112,13 +112,13 @@ export default function CustomerWalletPage() {
     setIsLoadingTransactions(false);
   }, []);
 
-  /* ── Chargement initial en parallèle ────────────────────────────────── */
+  /* -- Chargement initial en parallèle ---------------------------------- */
   useEffect(() => {
     fetchWallet();
     fetchTransactions();
   }, [fetchWallet, fetchTransactions]);
 
-  /* ── Callback de succès d'action (refresh automatique) ──────────────── */
+  /* -- Callback de succès d'action (refresh automatique) ---------------- */
   const handleActionSuccess = useCallback(
     (message: string) => {
       showToast("success", message);
@@ -136,7 +136,7 @@ export default function CustomerWalletPage() {
     <CustomerShell activeSection="wallet">
       <div className="mx-auto max-w-8xl px-20 py-8 sm:px-6 lg:px-20 space-y-8">
 
-        {/* ── En-tête avec effet premium ── */}
+        {/* -- En-tête avec effet premium -- */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -214,13 +214,13 @@ export default function CustomerWalletPage() {
 
 
 
-        {/* ── État chargement global ── */}
+        {/* -- État chargement global -- */}
         {isLoadingWallet ? (
           <div className="flex justify-center py-20">
             <LoadingStyle label="Chargement de votre portefeuille…" size={16} />
           </div>
         ) : walletError ? (
-          /* ── État erreur ── */
+          /* -- État erreur -- */
           <ErrorState
             title="Impossible de charger le wallet"
             message={walletError}
@@ -228,7 +228,7 @@ export default function CustomerWalletPage() {
             onRetry={() => fetchWallet()}
           />
         ) : wallet ? (
-          /* ── Contenu principal ── */
+          /* -- Contenu principal -- */
           <AnimatePresence mode="wait">
             <motion.div
               key="wallet-content"
@@ -261,7 +261,7 @@ export default function CustomerWalletPage() {
         ) : null}
       </div>
 
-      {/* ── Modale d'action (dépôt / remboursement) ── */}
+      {/* -- Modale d'action (dépôt / remboursement) -- */}
       {activeModal && (
         <WalletActionModal
           isOpen={true}
@@ -272,7 +272,7 @@ export default function CustomerWalletPage() {
         />
       )}
 
-      {/* ── Toast de notification globale ── */}
+      {/* -- Toast de notification globale -- */}
       <Toast
         show={toast.show}
         type={toast.type}

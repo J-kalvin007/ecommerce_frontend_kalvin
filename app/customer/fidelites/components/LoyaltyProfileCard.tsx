@@ -1,6 +1,6 @@
-/**
+﻿/**
  * LoyaltyProfileCard.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Carte hero du profil de fidélité — pièce centrale de l'interface.
  *
  * Design inspiré des meilleures apps de fidélité (Starbucks Rewards, LVMH).
@@ -28,7 +28,7 @@ import {
 import type { LoyaltyProfile, Tier, PointValue } from "@/modeles/fidelites";
 import { getTierConfig } from "@/modeles/fidelites";
 
-/* ── Map des icônes de palier ────────────────────────────────────────────── */
+/* -- Map des icônes de palier ---------------------------------------------- */
 const TIER_ICONS: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
   Bronze: Medal,
   Silver: Star,
@@ -37,7 +37,7 @@ const TIER_ICONS: Record<string, React.ComponentType<{ className?: string; strok
   Diamond: Star,
 };
 
-/* ── Utilitaires ────────────────────────────────────────────────────────── */
+/* -- Utilitaires ---------------------------------------------------------- */
 
 function formatPoints(pts: number): string {
   return new Intl.NumberFormat("fr-FR").format(pts);
@@ -54,7 +54,7 @@ function formatAmount(amount: string): string {
   );
 }
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface LoyaltyProfileCardProps {
   profile: LoyaltyProfile;
   tiers: Tier[];
@@ -81,7 +81,7 @@ export default function LoyaltyProfileCard({
   const tierCfg = getTierConfig(profile.tier_name);
   const TierIcon = TIER_ICONS[profile.tier_name] ?? Award;
 
-  /* ── Calcul de la progression vers le palier suivant ─────────────────── */
+  /* -- Calcul de la progression vers le palier suivant ------------------- */
   const progressData = useMemo(() => {
     const sortedTiers = [...tiers].sort((a, b) => a.min_points - b.min_points);
     const currentIdx = sortedTiers.findIndex((t) => t.name === profile.tier_name);
@@ -102,7 +102,7 @@ export default function LoyaltyProfileCard({
 
   const isMaxTier = progressData.nextTier === null;
 
-  /* ── Calcul Valeur réelle ──────────────────────────────────────────────── */
+  /* -- Calcul Valeur réelle ------------------------------------------------ */
   const pointValueRatio =
     pointValueConfig && pointValueConfig.nombre_de_point > 0
       ? pointValueConfig.valeur_un_point_frcfa / pointValueConfig.nombre_de_point
@@ -122,7 +122,7 @@ export default function LoyaltyProfileCard({
           "0 32px 80px -16px rgba(31,77,63,0.5), 0 0 0 1px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.07)",
       }}
     >
-      {/* ── Glow de couleur du palier ── */}
+      {/* -- Glow de couleur du palier -- */}
       <motion.div
         animate={{ opacity: [0.4, 0.7, 0.4] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -133,7 +133,7 @@ export default function LoyaltyProfileCard({
         }}
       />
 
-      {/* ── Lignes décoratives (style carte de crédit) ── */}
+      {/* -- Lignes décoratives (style carte de crédit) -- */}
       <div
         className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 opacity-5"
         style={{
@@ -143,7 +143,7 @@ export default function LoyaltyProfileCard({
       />
 
       <div className="relative z-10 p-6 sm:p-8 lg:p-10">
-        {/* ── En-tête : Palier + Bouton refresh ── */}
+        {/* -- En-tête : Palier + Bouton refresh -- */}
         <div className="mb-8 flex items-start justify-between">
           <div className="flex items-center gap-3">
             {/* Badge palier avec icône */}
@@ -213,7 +213,7 @@ export default function LoyaltyProfileCard({
           </motion.button>
         </div>
 
-        {/* ── Points solde principal ── */}
+        {/* -- Points solde principal -- */}
         <div className="mb-8">
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/35">
             Points disponibles
@@ -266,7 +266,7 @@ export default function LoyaltyProfileCard({
           </div>
         </div>
 
-        {/* ── Barre de progression vers le palier suivant ── */}
+        {/* -- Barre de progression vers le palier suivant -- */}
         <div className="mb-8">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-[11px] font-semibold text-white/40">
@@ -306,7 +306,7 @@ export default function LoyaltyProfileCard({
           )}
         </div>
 
-        {/* ── Bouton d'action : Dépenser mes points ── */}
+        {/* -- Bouton d'action : Dépenser mes points -- */}
         <motion.button
           whileHover={{ scale: 1.02, y: -1 }}
           whileTap={{ scale: 0.97 }}

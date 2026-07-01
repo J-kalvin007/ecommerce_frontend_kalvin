@@ -40,7 +40,7 @@ export function LegacyFermeSolime() {
           </div>
 
           <h2 className="max-w-xl text-5xl font-black leading-[0.95] tracking-tight text-[#111111] sm:text-6xl lg:text-7xl">
-            FRESH<span className="text-[#4fad28]">&amp;</span>GREEN
+            FRESH<span className="text-[#0D2E1E]">&amp;</span>GREEN
           </h2>
 
           <p className="mt-6 max-w-xl text-sm font-medium leading-7 text-[#4f5d4b] sm:text-base">

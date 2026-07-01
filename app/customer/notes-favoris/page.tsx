@@ -1,6 +1,6 @@
-/**
+﻿/**
  * page.tsx — Favoris & Notes Client
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Page principale avec tabulation animée entre :
  *   - Onglet 1 « ❤️ Mes Favoris »  : grille des produits favoris
  *   - Onglet 2 « ⭐ Mes Notes »    : grille des produits notés
@@ -51,7 +51,7 @@ import { buildUserRatingsMap } from "@/modeles/notes-favoris";
 import FavoriteProductCard from "./components/FavoriteProductCard";
 import RatingProductCard from "./components/RatingProductCard";
 
-/* ── Types internes ─────────────────────────────────────────────────────── */
+/* -- Types internes ------------------------------------------------------- */
 type ActiveTab = "favorites" | "ratings";
 type StockFilter = "all" | "in_stock" | "out_of_stock";
 
@@ -59,31 +59,31 @@ type StockFilter = "all" | "in_stock" | "out_of_stock";
    Page Component
    ═══════════════════════════════════════════════════════════════════════════ */
 export default function CustomerNotesFavorisPage() {
-  /* ── État : Onglet actif ────────────────────────────────────────────── */
+  /* -- État : Onglet actif ---------------------------------------------- */
   const [activeTab, setActiveTab] = useState<ActiveTab>("favorites");
 
-  /* ── État : Vue ─────────────────────────────────────────────────────── */
+  /* -- État : Vue ------------------------------------------------------- */
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
-  /* ── État : Favoris ─────────────────────────────────────────────────── */
+  /* -- État : Favoris --------------------------------------------------- */
   const [favorites, setFavorites] = useState<FavoriteProduct[]>([]);
   const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
   const [favoritesError, setFavoritesError] = useState<string | null>(null);
 
-  /* ── État : Notes ───────────────────────────────────────────────────── */
+  /* -- État : Notes ----------------------------------------------------- */
   const [ratings, setRatings] = useState<MyRating[]>([]);
   const [isLoadingRatings, setIsLoadingRatings] = useState(true);
 
-  /* ── État : Filtres Favoris ──────────────────────────────────────────── */
+  /* -- État : Filtres Favoris -------------------------------------------- */
   const [favSearch, setFavSearch] = useState("");
   const [stockFilter, setStockFilter] = useState<StockFilter>("all");
 
-  /* ── État : Filtres Notes ────────────────────────────────────────────── */
+  /* -- État : Filtres Notes ---------------------------------------------- */
   const [ratingSearch, setRatingSearch] = useState("");
   const [ratingScoreFilter, setRatingScoreFilter] = useState<number | "all">("all");
   const [showAdvancedNotes, setShowAdvancedNotes] = useState(false);
 
-  /* ── État : Toast ───────────────────────────────────────────────────── */
+  /* -- État : Toast ----------------------------------------------------- */
   const [toast, setToast] = useState<{
     show: boolean;
     type: "success" | "error" | "info";
@@ -97,7 +97,7 @@ export default function CustomerNotesFavorisPage() {
     []
   );
 
-  /* ── Fetch : Favoris ─────────────────────────────────────────────────── */
+  /* -- Fetch : Favoris --------------------------------------------------- */
   const fetchFavorites = useCallback(async () => {
     setIsLoadingFavorites(true);
     setFavoritesError(null);
@@ -112,7 +112,7 @@ export default function CustomerNotesFavorisPage() {
     setIsLoadingFavorites(false);
   }, []);
 
-  /* ── Fetch : Notes ───────────────────────────────────────────────────── */
+  /* -- Fetch : Notes ----------------------------------------------------- */
   const fetchRatings = useCallback(async () => {
     setIsLoadingRatings(true);
     const result = await getMyRatings();
@@ -120,16 +120,16 @@ export default function CustomerNotesFavorisPage() {
     setIsLoadingRatings(false);
   }, []);
 
-  /* ── Chargement initial parallèle ────────────────────────────────────── */
+  /* -- Chargement initial parallèle -------------------------------------- */
   useEffect(() => {
     fetchFavorites();
     fetchRatings();
   }, [fetchFavorites, fetchRatings]);
 
-  /* ── Map O(1) des notes de l'utilisateur ───────────────────────────── */
+  /* -- Map O(1) des notes de l'utilisateur ----------------------------- */
   const userRatingsMap = useMemo(() => buildUserRatingsMap(ratings), [ratings]);
 
-  /* ── Favoris filtrés ─────────────────────────────────────────────────── */
+  /* -- Favoris filtrés --------------------------------------------------- */
   const filteredFavorites = useMemo(() => {
     return favorites.filter((p) => {
       if (stockFilter === "in_stock" && !p.is_in_stock) return false;
@@ -141,7 +141,7 @@ export default function CustomerNotesFavorisPage() {
     });
   }, [favorites, stockFilter, favSearch]);
 
-  /* ── Produits notés (jointure favoris × notes) ──────────────────────── */
+  /* -- Produits notés (jointure favoris × notes) ------------------------ */
   const ratedProducts = useMemo(() => {
     // On ne peut afficher que les produits dont on a l'objet complet (via favoris)
     // Pour les produits notés qui ne sont plus en favoris, on n'a pas les métadonnées.
@@ -157,7 +157,7 @@ export default function CustomerNotesFavorisPage() {
       });
   }, [favorites, userRatingsMap, ratingScoreFilter, ratingSearch]);
 
-  /* ── Action : Toggle Favori ──────────────────────────────────────────── */
+  /* -- Action : Toggle Favori -------------------------------------------- */
   const handleToggleFavorite = useCallback(
     async (productId: string) => {
       const result = await toggleFavorite(productId);
@@ -173,7 +173,7 @@ export default function CustomerNotesFavorisPage() {
     [showToast]
   );
 
-  /* ── Action : Noter un produit ───────────────────────────────────────── */
+  /* -- Action : Noter un produit ----------------------------------------- */
   const handleRate = useCallback(
     async (productId: string, score: number) => {
       const result = await rateProduct(productId, score);
@@ -195,7 +195,7 @@ export default function CustomerNotesFavorisPage() {
     [showToast]
   );
 
-  /* ── Action : Supprimer une note ─────────────────────────────────────── */
+  /* -- Action : Supprimer une note --------------------------------------- */
   const handleDeleteRating = useCallback(
     async (productId: string) => {
       const rating = ratings.find((r) => r.product_id === productId);
@@ -220,7 +220,7 @@ export default function CustomerNotesFavorisPage() {
     <CustomerShell activeSection="favorites">
       <div className="mx-auto max-w-8xl px-20 py-8 sm:px-6 lg:px-20 space-y-8">
 
-        {/* ── En-tête avec effet premium ── */}
+        {/* -- En-tête avec effet premium -- */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -281,7 +281,7 @@ export default function CustomerNotesFavorisPage() {
           </div>
         </motion.div>
 
-        {/* ── Tabulation ── */}
+        {/* -- Tabulation -- */}
         <div className="relative flex rounded-2xl border border-[#E8E3D8] bg-[#F7F5F0] p-1">
           {/* Indicateur glissant */}
           <motion.div
@@ -357,7 +357,7 @@ export default function CustomerNotesFavorisPage() {
             ════════════════════════════════════════════════════════════════ */}
         <AnimatePresence mode="wait">
 
-          {/* ── ONGLET FAVORIS ── */}
+          {/* -- ONGLET FAVORIS -- */}
           {activeTab === "favorites" && (
             <motion.div
               key="favorites"
@@ -476,7 +476,7 @@ export default function CustomerNotesFavorisPage() {
             </motion.div>
           )}
 
-          {/* ── ONGLET NOTES ── */}
+          {/* -- ONGLET NOTES -- */}
           {activeTab === "ratings" && (
             <motion.div
               key="ratings"
@@ -639,7 +639,7 @@ export default function CustomerNotesFavorisPage() {
         </AnimatePresence>
       </div>
 
-      {/* ── Toast global ── */}
+      {/* -- Toast global -- */}
       <Toast
         show={toast.show}
         type={toast.type}

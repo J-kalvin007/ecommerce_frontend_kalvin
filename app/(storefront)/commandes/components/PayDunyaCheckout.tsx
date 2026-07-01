@@ -1,10 +1,16 @@
-/**
+﻿/**
  * PayDunyaCheckout — Composant ultra-premium de paiement via PayDunya
  *
- * - UX de luxe avec zone de confiance et indicateurs de sécurité
- * - Animation de chargement progressive et shimmer au hover
- * - Gestion d'erreur élégante avec AnimatePresence
- * - Logique métier intacte (handlePayer, logs, console debug)
+ * Corrections apportées :
+ *  - Ouverture dans le MÊME onglet (window.location.href) au lieu de window.open
+ *  - Stockage de la référence commande dans Zustand (uiStore.paymentOrderRef)
+ *    avant la redirection, pour la récupérer sur la page de retour PayDunya
+ *  - Suppression du clearCart immédiat (le panier est nettoyé sur la page de succès)
+ *
+ * UX :
+ *  - Zone de confiance et indicateurs de sécurité
+ *  - Animation de chargement progressive et shimmer au hover
+ *  - Gestion d'erreur élégante avec AnimatePresence
  *
  * @module components/commandes/PayDunyaCheckout
  */
@@ -13,15 +19,25 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, AlertCircle, ExternalLink, ShieldCheck, Smartphone, Lock, Zap } from "lucide-react";
+import {
+  Loader2,
+  AlertCircle,
+  ShieldCheck,
+  Smartphone,
+  Lock,
+  Zap,
+  ArrowRight,
+} from "lucide-react";
 import { initiateDirectPayment } from "@/fonctions_api/wallets-paiements.api";
 import { useThemeStore } from "@/store/theme.store";
 import { formatCurrency } from "@/lib/utils";
-import { useCartStore } from "@/store/pannierStore";
+import { useUIStore } from "@/store/uiStore";
 
 interface PayDunyaCheckoutProps {
   orderId: string;
   amount: number;
+  /** Référence de la commande pour la stocker dans Zustand avant redirection */
+  orderReference?: string;
 }
 
 /** Indicateurs de confiance affichés sous le bouton */
@@ -31,30 +47,22 @@ const TRUST_BADGES = [
   { icon: Zap, label: "Confirmation instantanée" },
 ] as const;
 
-export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutProps) {
+export default function PayDunyaCheckout({
+  orderId,
+  amount,
+  orderReference,
+}: PayDunyaCheckoutProps) {
   const { resolvedTheme } = useThemeStore();
   const isDark = resolvedTheme === "dark";
 
-  // Accès au store panier pour le vider après paiement confirmé
-  const { clearCart } = useCartStore();
+  // Zustand — pour stocker la référence commande avant redirection
+  const setPaymentOrderRef = useUIStore((s) => s.setPaymentOrderRef);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handlePayer = async () => {
-    console.log("══════════════════════════════════════════════");
-    console.log("💳 DÉBUT DU PROCESSUS DE PAIEMENT");
-    console.log("══════════════════════════════════════════════");
-
-    console.log("📌 Etat actuel avant traitement :");
-    console.log("   • orderId :", orderId);
-    console.log("   • amount :", amount);
-    console.log("   • phone :", "+22962693544");
-
-    console.log("⏳ Activation du loader...");
     setLoading(true);
-
-    console.log("🧹 Suppression des anciennes erreurs...");
     setError(null);
 
     try {
@@ -64,76 +72,40 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
         phone_number: "+22962693544",
       };
 
-      console.log("════════════════════════════════════");
-      console.log("🚀 ENVOI DE LA REQUÊTE D'INITIATION");
-      console.log("════════════════════════════════════");
-      console.log("Payload envoyé :", payload);
-
       const res = await initiateDirectPayment(payload);
 
-      console.log("════════════════════════════════════");
-      console.log("📥 RÉPONSE REÇUE DE initiateDirectPayment()");
-      console.log("════════════════════════════════════");
-      console.log("Réponse complète :", res);
-
       if (res.ok) {
-        console.log("✅ Paiement initié avec succès.");
-        console.log("Informations retournées :");
-        console.log("   • order_id :", res.data.order_id);
-        console.log("   • success :", res.data.success);
-        console.log("   • token :", res.data.token);
-        console.log("   • payment_url :", res.data.payment_url);
-        console.log("   • Données complètes  :", res.data);
+        /**
+         * Stockage de la référence commande dans Zustand AVANT la redirection.
+         * PayDunya redirige l'utilisateur vers la page success/echec sans
+         * transmettre la référence en paramètre URL — on la retrouvera donc
+         * depuis le store persisté.
+         */
+        if (orderReference) {
+          setPaymentOrderRef(orderReference);
+        }
 
-        console.log("🌍 Redirection vers PayDunya...");
-        console.log("URL :", res.data.payment_url);
-
-        window.open(res.data.payment_url, "_blank", "noopener,noreferrer");
-
-        // ✅ Vidage du panier immédiat après initiation réussie du paiement PayDunya
-        clearCart();
-        console.log("🛒 Panier vidé après initiation du paiement PayDunya.");
-
-        console.log("➡️ Redirection demandée au navigateur.");
+        // Redirection dans le MÊME onglet (comportement natif, pas de popup bloquée)
+        window.location.href = res.data.payment_url;
       } else {
-        console.error("❌ L'API a retourné une erreur.");
-        console.error("Status :", res.error.status);
-        console.error("Message :", res.error.message);
-        console.error("Réponse brute :", res.error.raw);
-
         setError(
           res.error.message ||
-          "Erreur lors de l'initiation du paiement avec PayDunya."
+            "Erreur lors de l'initiation du paiement avec PayDunya."
         );
       }
     } catch (err) {
-      console.error("════════════════════════════════════");
-      console.error("💥 EXCEPTION CAPTURÉE");
-      console.error("════════════════════════════════════");
-      console.error("Erreur :", err);
-
-      if (err instanceof Error) {
-        console.error("erreur :", err);
-        console.error("Nom :", err.name);
-        console.error("Message :", err.message);
-        console.error("Stack :", err.stack);
-      }
-
       setError("Une erreur inattendue est survenue.");
     } finally {
-      console.log("⏹ Désactivation du loader...");
       setLoading(false);
-
-      console.log("════════════════════════════════════");
-      console.log("🏁 FIN DU PROCESSUS DE PAIEMENT");
-      console.log("════════════════════════════════════");
     }
   };
 
   // Tokens visuels
   const bg = isDark ? "rgba(10,12,10,0.95)" : "#ffffff";
   const border = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
-  const shadow = isDark ? "0 20px 60px -15px rgba(0,0,0,0.6)" : "0 20px 60px -15px rgba(0,0,0,0.06)";
+  const shadow = isDark
+    ? "0 20px 60px -15px rgba(0,0,0,0.6)"
+    : "0 20px 60px -15px rgba(0,0,0,0.06)";
   const text = isDark ? "rgba(255,255,255,0.95)" : "#111827";
   const textMuted = isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.45)";
   const divider = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
@@ -147,12 +119,16 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
       style={{ background: bg, border: `1px solid ${border}`, boxShadow: shadow }}
     >
       {/* Orbes décoratives */}
-      <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full blur-3xl opacity-10"
-           style={{ background: PAYDUNYA_BLUE }} />
-      <div className="pointer-events-none absolute -left-8 -bottom-8 h-32 w-32 rounded-full blur-3xl opacity-5"
-           style={{ background: PAYDUNYA_BLUE }} />
+      <div
+        className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full blur-3xl opacity-10"
+        style={{ background: PAYDUNYA_BLUE }}
+      />
+      <div
+        className="pointer-events-none absolute -left-8 -bottom-8 h-32 w-32 rounded-full blur-3xl opacity-5"
+        style={{ background: PAYDUNYA_BLUE }}
+      />
 
-      {/* ── En-tête ── */}
+      {/* -- En-tête -- */}
       <div
         className="relative z-10 flex items-center gap-4 border-b px-6 py-5"
         style={{ borderColor: divider }}
@@ -160,7 +136,9 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
         {/* Logo PayDunya stylisé */}
         <div
           className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-lg"
-          style={{ background: `linear-gradient(135deg, ${PAYDUNYA_BLUE} 0%, #0a4a75 100%)` }}
+          style={{
+            background: `linear-gradient(135deg, ${PAYDUNYA_BLUE} 0%, #0a4a75 100%)`,
+          }}
         >
           <Smartphone className="h-6 w-6 text-white" />
         </div>
@@ -175,42 +153,60 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
         </div>
 
         {/* Badge SSL */}
-        <div className="ml-auto flex items-center gap-1.5 rounded-full px-3 py-1.5"
-             style={{ background: isDark ? "rgba(15,118,181,0.12)" : "rgba(15,118,181,0.08)", border: `1px solid rgba(15,118,181,0.2)` }}>
+        <div
+          className="ml-auto flex items-center gap-1.5 rounded-full px-3 py-1.5"
+          style={{
+            background: isDark
+              ? "rgba(15,118,181,0.12)"
+              : "rgba(15,118,181,0.08)",
+            border: "1px solid rgba(15,118,181,0.2)",
+          }}
+        >
           <ShieldCheck className="h-3.5 w-3.5 text-[#0f76b5]" />
-          <span className="text-[11px] font-bold text-[#0f76b5] uppercase tracking-wider">SSL</span>
+          <span className="text-[11px] font-bold text-[#0f76b5] uppercase tracking-wider">
+            SSL
+          </span>
         </div>
       </div>
 
-      {/* ── Corps ── */}
-      <div className="relative z-10 px-6 py-6 space-y-6">
+      {/* -- Corps -- */}
+      <div className="relative z-10 space-y-6 px-6 py-6">
 
         {/* Montant récapitulatif */}
         <div
           className="flex items-center justify-between rounded-xl px-5 py-4"
           style={{
-            background: isDark ? "rgba(15,118,181,0.08)" : "rgba(15,118,181,0.05)",
-            border: `1px solid rgba(15,118,181,0.15)`,
+            background: isDark
+              ? "rgba(15,118,181,0.08)"
+              : "rgba(15,118,181,0.05)",
+            border: "1px solid rgba(15,118,181,0.15)",
           }}
         >
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: textMuted }}>
+            <p
+              className="text-[11px] font-semibold uppercase tracking-wider"
+              style={{ color: textMuted }}
+            >
               Montant à régler
             </p>
             <p className="mt-0.5 text-2xl font-black tracking-tight" style={{ color: PAYDUNYA_BLUE }}>
               {formatCurrency(String(amount), "FCFA")}
             </p>
           </div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl"
-               style={{ background: `rgba(15,118,181,0.12)` }}>
-            <ExternalLink className="h-5 w-5 text-[#0f76b5]" />
+          <div
+            className="flex h-12 w-12 items-center justify-center rounded-xl"
+            style={{ background: "rgba(15,118,181,0.12)" }}
+          >
+            <ArrowRight className="h-5 w-5 text-[#0f76b5]" />
           </div>
         </div>
 
         {/* Message d'information */}
         <p className="text-[13px] leading-relaxed" style={{ color: textMuted }}>
-          Cliquez sur le bouton ci-dessous pour être redirigé vers la plateforme sécurisée PayDunya.
-          Choisissez votre opérateur Mobile Money (MTN, Moov, Wave…) et confirmez le paiement.
+          Cliquez sur le bouton ci-dessous pour être redirigé vers la plateforme
+          sécurisée PayDunya. Choisissez votre opérateur Mobile Money (MTN, Moov,
+          Wave…) et confirmez le paiement. Vous serez automatiquement ramené ici
+          après le paiement.
         </p>
 
         {/* Erreur animée */}
@@ -223,8 +219,10 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
               transition={{ type: "spring", stiffness: 380, damping: 26 }}
               className="overflow-hidden"
             >
-              <div className="flex items-start gap-3 rounded-xl bg-red-500/10 px-4 py-3"
-                   style={{ border: "1px solid rgba(239,68,68,0.2)" }}>
+              <div
+                className="flex items-start gap-3 rounded-xl bg-red-500/10 px-4 py-3"
+                style={{ border: "1px solid rgba(239,68,68,0.2)" }}
+              >
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
                 <p className="text-sm font-semibold text-red-500">{error}</p>
               </div>
@@ -232,7 +230,7 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
           )}
         </AnimatePresence>
 
-        {/* ── Bouton principal ── */}
+        {/* -- Bouton principal -- */}
         <button
           onClick={handlePayer}
           disabled={loading || !orderId}
@@ -253,7 +251,7 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
               </>
             ) : (
               <>
-                <ExternalLink className="h-5 w-5" />
+                <Smartphone className="h-5 w-5" />
                 Payer avec PayDunya
               </>
             )}
@@ -265,7 +263,10 @@ export default function PayDunyaCheckout({ orderId, amount }: PayDunyaCheckoutPr
           {TRUST_BADGES.map(({ icon: Icon, label }) => (
             <div key={label} className="flex items-center gap-1.5">
               <Icon className="h-3.5 w-3.5 shrink-0" style={{ color: textMuted }} />
-              <span className="hidden text-[11px] font-medium sm:block" style={{ color: textMuted }}>
+              <span
+                className="hidden text-[11px] font-medium sm:block"
+                style={{ color: textMuted }}
+              >
                 {label}
               </span>
             </div>

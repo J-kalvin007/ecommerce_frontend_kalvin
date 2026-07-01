@@ -1,18 +1,18 @@
-/**
+﻿/**
  * auth-errors.ts
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Utilitaire centralisé de traduction des erreurs d'authentification.
  * Transforme les messages bruts de l'API (anglais, techniques) en messages
  * clairs, explicites et en français pour l'utilisateur final.
  *
  * Principe : aucun composant d'auth n'affiche jamais de message brut.
  * Chaque flux possède sa propre fonction dédiée.
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  */
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    Types internes
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 /** Représente le payload d'erreur brut retourné par l'API */
 type RawError = Record<string, unknown> | null | undefined;
@@ -34,9 +34,9 @@ function pick(raw: RawError, ...fields: string[]): string | undefined {
   return undefined;
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    Moteurs de détection — patterns communs à tous les flux
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 function isNetworkError(msg: string): boolean {
   return /network|fetch|failed to fetch|connexion|erreur réseau/i.test(msg);
@@ -66,9 +66,9 @@ function isNotVerified(msg: string): boolean {
   return /not verified|pas vérifié|not.*active.*verified|verify.*email/i.test(msg);
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    CONNEXION — LoginForm
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 /**
  * Traduit les erreurs du flux de connexion.
@@ -124,9 +124,9 @@ export function getLoginError(raw: RawError, status?: number): string {
   return "Connexion impossible. Vérifiez vos identifiants ou réessayez plus tard.";
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    INSCRIPTION — RegisterForm
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 export type RegisterFieldErrors = {
   name?: string;
@@ -154,7 +154,7 @@ export function getRegisterError(
     };
   }
 
-  // ── Erreurs par champ ────────────────────────────────────────────────────
+  // -- Erreurs par champ ----------------------------------------------------
   const emailRaw = first((raw as Record<string, unknown>).email) ?? "";
   const nameRaw =
     first((raw as Record<string, unknown>).name) ??
@@ -175,7 +175,7 @@ export function getRegisterError(
     fields.password = translatePasswordError(passwordRaw);
   }
 
-  // ── Message global ───────────────────────────────────────────────────────
+  // -- Message global -------------------------------------------------------
   const globalRaw =
     pick(raw, "detail", "non_field_errors") ??
     passwordRaw ??
@@ -241,9 +241,9 @@ function translateRegisterNameError(msg: string): string {
   return msg;
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    MOT DE PASSE — traduction commune (register + reset)
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 export function translatePasswordError(msg: string): string {
   const l = msg.toLowerCase();
@@ -265,9 +265,9 @@ export function translatePasswordError(msg: string): string {
   return msg;
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    MOT DE PASSE OUBLIÉ — ForgotPasswordClient
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 /**
  * Traduit les erreurs du flux "mot de passe oublié".
@@ -298,9 +298,9 @@ export function getForgotPasswordError(raw: RawError, status?: number): string {
   return "L'envoi de l'e-mail a échoué. Vérifiez l'adresse saisie et réessayez.";
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    RÉINITIALISATION MDP — ResetPasswordConfirmClient
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 /**
  * Traduit les erreurs du flux de confirmation de réinitialisation du mot de passe.
@@ -337,9 +337,9 @@ export function getResetPasswordError(raw: RawError, status?: number): string {
   return "Impossible de réinitialiser le mot de passe. Le lien a peut-être expiré — faites une nouvelle demande.";
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    VÉRIFICATION E-MAIL — VerifyEmailClient
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 /**
  * Traduit les erreurs du flux de vérification d'e-mail par code.

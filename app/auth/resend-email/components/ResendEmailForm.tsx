@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -18,9 +18,9 @@ import { resendVerificationEmail } from "@/fonctions_api/auth.api";
 import Toast from "@/components/special/Toast";
 import { logoImage } from "@/assets/images";
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    Animation variants
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 const stagger: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.08, delayChildren: 0.2 } },
@@ -122,6 +122,21 @@ export default function ResendEmailForm() {
     setIsLoading(false);
 
     if (result.ok) {
+      // Le backend renvoie HTTP 200 même si l'email est déjà vérifié
+      const responseDetail = (result.data as any)?.detail;
+      
+      if (responseDetail === "Cet email est déjà vérifié.") {
+        setToast({
+          show: true,
+          type: "info",
+          message: "Cet email est déjà vérifié. Vous pouvez vous connecter directement.",
+        });
+        setTimeout(() => {
+          router.push(`/auth/login?email=${encodeURIComponent(emailInput)}`);
+        }, 4000);
+        return;
+      }
+
       setToast({
         show: true,
         type: "success",
@@ -157,7 +172,7 @@ export default function ResendEmailForm() {
         >
           <div className="flex flex-col lg:flex-row h-full min-h-[540px]">
 
-            {/* ── LEFT PANEL ── */}
+            {/* -- LEFT PANEL -- */}
             <motion.div
               variants={leftIn}
               initial="hidden"
@@ -260,7 +275,7 @@ export default function ResendEmailForm() {
               </motion.div>
             </motion.div>
 
-            {/* ── RIGHT PANEL – FORM ── */}
+            {/* -- RIGHT PANEL – FORM -- */}
             <motion.div
               variants={rightIn}
               initial="hidden"

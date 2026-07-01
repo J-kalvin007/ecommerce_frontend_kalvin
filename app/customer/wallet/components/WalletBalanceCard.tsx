@@ -1,6 +1,6 @@
-/**
+﻿/**
  * WalletBalanceCard.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Carte principale du solde du wallet — pièce maîtresse de l'interface.
  *
  * Design ultra-premium inspiré des meilleures fintech mondiales (Revolut, N26).
@@ -24,7 +24,7 @@ import {
 import type { Wallet as WalletModel } from "@/modeles/wallets-paiements";
 import { WALLET_STATUS_LABELS } from "@/modeles/wallets-paiements";
 
-/* ── Utilitaires ────────────────────────────────────────────────────────── */
+/* -- Utilitaires ---------------------------------------------------------- */
 
 /**
  * Formate un montant numérique en devise FCFA avec séparateurs de milliers.
@@ -70,7 +70,7 @@ function getStatusConfig(status: WalletModel["status"]) {
   }
 }
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface WalletBalanceCardProps {
   wallet: WalletModel;
   isRefreshing: boolean;
@@ -109,7 +109,7 @@ export default function WalletBalanceCard({
           "0 32px 80px -16px rgba(31,77,63,0.55), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.08)",
       }}
     >
-      {/* ── Particules de fond animées ── */}
+      {/* -- Particules de fond animées -- */}
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
@@ -139,7 +139,7 @@ export default function WalletBalanceCard({
       />
 
       <div className="relative z-10 p-6 sm:p-8 lg:p-10">
-        {/* ── En-tête : identité + statut ── */}
+        {/* -- En-tête : identité + statut -- */}
         <div className="mb-8 flex items-start justify-between">
           <div className="flex items-center gap-3">
             {/* Logo wallet */}
@@ -205,7 +205,7 @@ export default function WalletBalanceCard({
           </div>
         </div>
 
-        {/* ── Affichage du solde principal ── */}
+        {/* -- Affichage du solde principal -- */}
         <div className="mb-8">
           <p className="mb-2 text-[14px] font-semibold uppercase tracking-[0.16em] text-white/35">
             Solde disponible
@@ -235,7 +235,7 @@ export default function WalletBalanceCard({
           </div>
         </div>
 
-        {/* ── Boutons d'action ── */}
+        {/* -- Boutons d'action -- */}
         <div className="flex gap-3">
           {/* Recharger */}
           <motion.button

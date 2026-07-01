@@ -1,4 +1,4 @@
-
+﻿
 
 'use client';
 
@@ -27,7 +27,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 }) => {
   const { outer, ring, inner, gap } = sizeMap[size];
 
-  // ── Minimal inline variant ──────────────────────────────────────
+  // -- Minimal inline variant --------------------------------------
   if (variant === 'default') {
     return (
       <div className={`flex flex-col items-center justify-center gap-3 ${className}`}>
@@ -75,7 +75,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     );
   }
 
-  // ── Luxury variant ──────────────────────────────────────────────
+  // -- Luxury variant ----------------------------------------------
   return (
     <div className={`flex flex-col items-center justify-center gap-4 ${className}`}>
       <div

@@ -1,6 +1,6 @@
-/**
+﻿/**
  * OrderDetailModal.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Modale de détail commande ultra-premium.
  *
  * Affiche toutes les informations d'une commande :
@@ -55,7 +55,7 @@ import LoadingStyle from "@/components/special/loadingStyle";
 import OrderStatusBadge from "./OrderStatusBadge";
 import type { OrderDetail, OrderHistory, OrderStatus } from "@/modeles/commandes";
 
-/* ── Utilitaires locaux ─────────────────────────────────────────────────── */
+/* -- Utilitaires locaux --------------------------------------------------- */
 
 function formatAmount(amount: string | number): string {
   const num = typeof amount === "string" ? parseFloat(amount) : amount;
@@ -84,7 +84,7 @@ function formatDate(dateStr: string | null): string {
 /** Statuts pour lesquels le client peut demander une annulation */
 const CANCELLABLE_STATUSES: OrderStatus[] = ["pending_payment", "confirmed", "processing"];
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface OrderDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -97,7 +97,7 @@ interface OrderDetailModalProps {
   onLoadHistory: () => void;
 }
 
-/* ── Sous-composant : ligne de prix ─────────────────────────────────────── */
+/* -- Sous-composant : ligne de prix --------------------------------------- */
 function PriceLine({
   label,
   value,
@@ -137,7 +137,7 @@ function PriceLine({
   );
 }
 
-/* ── Sous-composant : entrée d'historique ───────────────────────────────── */
+/* -- Sous-composant : entrée d'historique --------------------------------- */
 function HistoryEntry({ entry, index }: { entry: OrderHistory; index: number }) {
   return (
     <motion.li
@@ -198,14 +198,14 @@ export default function OrderDetailModal({
   onCancelOrder,
   onLoadHistory,
 }: OrderDetailModalProps) {
-  /* ── État local ─────────────────────────────────────────────────────── */
+  /* -- État local ------------------------------------------------------- */
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [toast, setToast] = useState<{ show: boolean; type: "success" | "error" | "info"; message: string }>({
     show: false, type: "info", message: "",
   });
 
-  /* ── Gestionnaires ──────────────────────────────────────────────────── */
+  /* -- Gestionnaires ---------------------------------------------------- */
   const handleCancelClick = useCallback(() => {
     setShowCancelConfirm(true);
   }, []);
@@ -271,14 +271,14 @@ export default function OrderDetailModal({
           {/* ══ Corps scrollable ════════════════════════════════════════ */}
           <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
 
-            {/* ── Chargement ── */}
+            {/* -- Chargement -- */}
             {isLoadingOrder && (
               <div className="flex justify-center py-10">
                 <LoadingStyle label="Chargement de la commande…" size={10} />
               </div>
             )}
 
-            {/* ── Contenu ── */}
+            {/* -- Contenu -- */}
             {!isLoadingOrder && order && (
               <>
                 {/* Section articles */}

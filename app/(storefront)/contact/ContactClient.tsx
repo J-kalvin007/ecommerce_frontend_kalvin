@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ════════════════════════════════════════════════════════════════════════════
  * @file        ContactClient.tsx
  * @description Page de contact ultra-premium — formulaire, FAQ accordéon,
@@ -42,9 +42,9 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §1 — DONNÉES STATIQUES (identiques à l'original)
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 const CONTACT_METHODS = [
   {
@@ -96,11 +96,11 @@ const FAQ = [
   },
 ] as const;
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §2 — CONSTANTES D'ANIMATION
 //      Physique spring unifiée — cohérence perceptuelle avec le reste de
 //      l'application (mêmes courbes que PurchaseModal / FavorisClient).
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 /** Réponse snap — interactions tactiles immédiates (boutons, toggles) */
 const SPRING_SNAPPY = {
@@ -124,19 +124,19 @@ const EASE_OUT_CUBIC: [number, number, number, number] = [0.16, 1, 0.3, 1];
 /** Limite de caractères affichée comme repère doux sur le textarea (purement visuel) */
 const MESSAGE_SOFT_LIMIT = 500;
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §3 — SOUS-COMPOSANT : variantes de section réutilisables
 //      Centralise l'orchestration d'entrée pour chaque grand bloc de la page.
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 const fadeUpVariants = {
   hidden: { opacity: 0, y: 22 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: EASE_OUT_CUBIC } },
 } as const;
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §4 — COMPOSANT PRINCIPAL : ContactClient
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 export default function ContactClient() {
   /* --- État (identique à l'original) ---------------------------------------- */
@@ -253,7 +253,7 @@ export default function ContactClient() {
         ══════════════════════════════════════════════════════════════════ */}
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
 
-          {/* ── Colonne formulaire ────────────────────────────────────── */}
+          {/* -- Colonne formulaire -------------------------------------- */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -269,7 +269,7 @@ export default function ContactClient() {
 
             <AnimatePresence mode="wait">
               {isSent ? (
-                /* ── État "message envoyé" ───────────────────────────── */
+                /* -- État "message envoyé" ----------------------------- */
                 <motion.div
                   key="sent"
                   initial={{ opacity: 0, scale: 0.95, y: 8 }}
@@ -330,7 +330,7 @@ export default function ContactClient() {
                   </motion.button>
                 </motion.div>
               ) : (
-                /* ── Formulaire actif ────────────────────────────────── */
+                /* -- Formulaire actif ---------------------------------- */
                 <motion.form
                   key="form"
                   initial={{ opacity: 0 }}
@@ -514,7 +514,7 @@ export default function ContactClient() {
             </AnimatePresence>
           </motion.div>
 
-          {/* ── Colonne FAQ ──────────────────────────────────────────── */}
+          {/* -- Colonne FAQ -------------------------------------------- */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -666,11 +666,11 @@ export default function ContactClient() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §5 — SOUS-COMPOSANT PUR : FieldFocusGlow
 //      Halo doux sous un champ de formulaire lorsqu'il a le focus. Purement
 //      décoratif, ne capte aucun événement, n'interfère pas avec la saisie.
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 function FieldFocusGlow({ active }: { active: boolean }) {
   return (

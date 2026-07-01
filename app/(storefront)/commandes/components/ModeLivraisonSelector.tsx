@@ -1,4 +1,4 @@
-// /**
+﻿// /**
 //  * ModeLivraisonSelector — Sélecteur de mode de livraison premium
 //  *
 //  * - Standard actif et sélectionnable
@@ -17,9 +17,9 @@
 // import { useThemeStore } from "@/store/theme.store";
 // import { formatCurrency } from "@/lib/utils";
 
-// /* ─────────────────────────────────────────────────────────────────────────────
+// /* -----------------------------------------------------------------------------
 //    Données des options
-//    ─────────────────────────────────────────────────────────────────────────── */
+//    --------------------------------------------------------------------------- */
 
 // export const OPTIONS_LIVRAISON = [
 //   {
@@ -53,9 +53,9 @@
 
 // export type OptionLivraisonId = (typeof OPTIONS_LIVRAISON)[number]["id"];
 
-// /* ─────────────────────────────────────────────────────────────────────────────
+// /* -----------------------------------------------------------------------------
 //    Props
-//    ─────────────────────────────────────────────────────────────────────────── */
+//    --------------------------------------------------------------------------- */
 
 // interface ModeLivraisonSelectorProps {
 //   value: OptionLivraisonId;
@@ -63,9 +63,9 @@
 //   dynamicStandardPrice?: number | null;
 // }
 
-// /* ─────────────────────────────────────────────────────────────────────────────
+// /* -----------------------------------------------------------------------------
 //    Composant
-//    ─────────────────────────────────────────────────────────────────────────── */
+//    --------------------------------------------------------------------------- */
 
 // export default memo(function ModeLivraisonSelector({ value, onChange, dynamicStandardPrice }: ModeLivraisonSelectorProps) {
 //   const { resolvedTheme } = useThemeStore();

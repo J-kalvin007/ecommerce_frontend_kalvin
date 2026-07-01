@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import * as React from 'react';
 import { AlertTriangle, Info, CheckCircle, HelpCircle, Trash2 } from 'lucide-react';
@@ -11,7 +11,7 @@ import {
 } from '@/components/special/Dialog';
 import LoadingKalvin from '@/components/special/loadingKalvin';
 
-// ─── Types ──────────────────────────────────────────────────────────────────
+// --- Types ------------------------------------------------------------------
 
 export interface ConfirmModalProps {
     isOpen: boolean;
@@ -26,7 +26,7 @@ export interface ConfirmModalProps {
     children?: React.ReactNode;
 }
 
-// ─── Type config ─────────────────────────────────────────────────────────────
+// --- Type config -------------------------------------------------------------
 
 const typeConfigs = {
     warning: {
@@ -81,7 +81,7 @@ const typeConfigs = {
     },
 };
 
-// ─── Component ───────────────────────────────────────────────────────────────
+// --- Component ---------------------------------------------------------------
 
 export default function ConfirmModal({
     isOpen,

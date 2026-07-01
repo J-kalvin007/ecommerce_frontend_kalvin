@@ -1,16 +1,16 @@
-/**
+﻿/**
  * CustomerShell.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Interface shell complète pour l'espace client premium de l'Atelier du Terroir.
  *
  * Architecture :
- *   ┌─────────────────────────────────────────────────────────────┐
+ *   ┌-------------------------------------------------------------┐
  *   │  Topbar (sticky, glassmorphism, 72px)                       │
- *   ├──────────────────────┬──────────────────────────────────────┤
+ *   ├----------------------┬--------------------------------------┤
  *   │  Sidebar             │  Main content (children)             │
  *   │  (collapsible,       │                                      │
  *   │   268px → 78px)      │                                      │
- *   └──────────────────────┴──────────────────────────────────────┘
+ *   └----------------------┴--------------------------------------┘
  *
  * Fonctionnalités :
  *   - Sidebar desktop collapsible avec animation spring
@@ -61,9 +61,9 @@ import LogoutDialog from "@/components/special/LogoutDialog";
 import ProfileModal from "@/components/layout/ProfileModal";
 import { getToken } from "@/lib/axios";
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    Constantes visuelles — palette Atelier du Terroir
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 const LOGO_PATH = "/assets/images/LOGO.png";
 
@@ -71,9 +71,9 @@ const LOGO_PATH = "/assets/images/LOGO.png";
 const SIDEBAR_BG = "linear-gradient(160deg, #0D2318 0%, #102A1E 45%, #0F2218 100%)";
 const SIDEBAR_ACTIVE = "linear-gradient(135deg, #C9963A 0%, #E8B450 100%)";
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    Navigation client
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 interface NavItem {
   id: string;
@@ -138,9 +138,9 @@ const NAV_ITEMS: NavItem[] = [
   },
 ];
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    Props
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 interface CustomerShellProps {
   children: React.ReactNode;
@@ -148,9 +148,9 @@ interface CustomerShellProps {
   activeSection?: string;
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    Bouton de navigation sidebar
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 function SidebarNavButton({
   item,
@@ -231,9 +231,9 @@ function SidebarNavButton({
   );
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    Composant CustomerShell
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 export default function CustomerShell({ children, activeSection = "dashboard" }: CustomerShellProps) {
   const router = useRouter();
@@ -315,9 +315,9 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
     item.href === pathname || pathname.startsWith(item.href.split("?")[0])
   )?.id ?? activeSection;
 
-  /* ─────────────────────────────────────────────────────────────────────────
+  /* -------------------------------------------------------------------------
      RENDU
-  ───────────────────────────────────────────────────────────────────────── */
+  ------------------------------------------------------------------------- */
 
   return (
     <>
@@ -329,7 +329,7 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
         <header className="sticky top-0 z-40 border-b border-[#E8E3D8] bg-white/88 shadow-[0_1px_0_0_rgba(15,23,42,0.04),0_8px_28px_-18px_rgba(15,23,42,0.14)] backdrop-blur-2xl dark:border-white/8 dark:bg-[#0E0E0E]/88">
           <div className="flex h-[68px] items-center justify-between px-4 sm:px-6 lg:px-8">
 
-            {/* ── Gauche : hamburger + logo + retour accueil ── */}
+            {/* -- Gauche : hamburger + logo + retour accueil -- */}
             <div className="flex items-center gap-3">
 
               {/* Bouton menu mobile */}
@@ -368,7 +368,7 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
               </Link>
             </div>
 
-            {/* ── Droite : thème + notifications + profil ── */}
+            {/* -- Droite : thème + notifications + profil -- */}
             <div className="flex items-center gap-2">
 
               {/* Bouton retour accueil (icône seule) */}

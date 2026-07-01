@@ -1,4 +1,4 @@
-
+﻿
 
 
 
@@ -15,11 +15,11 @@
  *  - Glassmorphism : backdrop-blur + border rgba identiques aux flèches nav
  *
  * Architecture :
- *  ┌─ HomePromotionsSection   (orchestrateur : fetch, état, rendu)
- *  │   ├─ SectionHeader       (eyebrow + titre + CTA "Toutes les offres")
- *  │   ├─ LoadingSkeleton     (squelette forest pulsé, pas de gris générique)
- *  │   ├─ PromoBanner         (bannière immersive avec beam animé)
- *  │   └─ PromoProductsCarousel (déjà redesigné)
+ *  ┌- HomePromotionsSection   (orchestrateur : fetch, état, rendu)
+ *  │   ├- SectionHeader       (eyebrow + titre + CTA "Toutes les offres")
+ *  │   ├- LoadingSkeleton     (squelette forest pulsé, pas de gris générique)
+ *  │   ├- PromoBanner         (bannière immersive avec beam animé)
+ *  │   └- PromoProductsCarousel (déjà redesigné)
  *
  * Patterns :
  *  - Promise.allSettled : resilience si une API échoue
@@ -44,7 +44,7 @@ import {
 import type { Banner, Soldes } from "@/modeles/promotions";
 import { mediaUrl } from "@/lib/mediaUrl";
 
-/* ─── Types publics ───────────────────────────────────────────────────────── */
+/* --- Types publics --------------------------------------------------------- */
 
 /**
  * Shape normalisée d'un produit en promotion — utilisée par PromoOfferCard
@@ -63,7 +63,7 @@ export interface PromoProductCard {
   rating: number;
 }
 
-/* ─── Constantes & keyframes ──────────────────────────────────────────────── */
+/* --- Constantes & keyframes ------------------------------------------------ */
 
 /**
  * Keyframe `shimmerBeam` : même famille que shimmerSweep des cartes produits.
@@ -86,7 +86,7 @@ const BANNER_KEYFRAMES = `
   }
 `;
 
-/* ─── Variants Framer Motion ──────────────────────────────────────────────── */
+/* --- Variants Framer Motion ------------------------------------------------ */
 
 /** Conteneur : stagger d'entrée orchestré de haut en bas */
 const containerVariants: Variants = {
@@ -113,7 +113,7 @@ const itemVariants: Variants = {
   },
 };
 
-/* ─── Mapper Soldes → PromoProductCard ────────────────────────────────────── */
+/* --- Mapper Soldes → PromoProductCard -------------------------------------- */
 
 /**
  * Transforme un objet `Soldes` (API) en `PromoProductCard` (UI).
@@ -189,38 +189,62 @@ function SectionHeader() {
       className="mb-10 flex flex-col gap-5 sm:mb-12 sm:flex-row sm:items-end sm:justify-between"
     >
       {/* Bloc texte */}
-      <div className="max-w-2xl">
-        {/* Eyebrow badge */}
-        <div
-          className="mb-3.5 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.2em]"
-          style={{
-            // background: "rgba(232,113,26,0.1)",
-            border: "1px solid rgba(232,113,26,0.22)",
-            color: "#E8711A",
-            backdropFilter: "blur(8px)",
-            animation: "badgePulse 3s ease-in-out infinite",
-          }}
-        >
-          <Zap className="h-3 w-3 fill-current" aria-hidden="true" />
-          Promotions &amp; partenaires
-        </div>
+      <div className="max-w-5xl">
 
-        {/* Titre principal */}
-        <h2
-          className="text-3xl font-semibold tracking-tight sm:text-4xl"
-          style={{ color: "#0D2E1E", letterSpacing: "-0.02em" }}
-        >
-          Offres du moment
-        </h2>
 
-        {/* Description */}
-        <p
-          className="mt-2 max-w-lg text-sm leading-7 sm:text-base"
-          style={{ color: "rgba(13,46,30,0.55)" }}
+
+
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-16 text-center"
         >
-          Des produits du terroir en vente flash, à prix réduits pour une
-          durée limitée.
-        </p>
+          {/* Eyebrow avec ligne dorée */}
+          <div className="mx-auto mb-5 flex items-center justify-center gap-3">
+            <span className="h-px w-8 bg-gradient-to-r from-transparent to-[#c9a96e]" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#c9a96e]">
+              Promotions &amp; partenaires
+            </span>
+            <span className="h-px w-8 bg-gradient-to-l from-transparent to-[#c9a96e]" />
+          </div>
+
+          <h2
+            id="features-heading"
+            className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl"
+          >
+            Offres du moment{" "}
+            <span className="relative inline-block">
+              <span className="text-[#c9a96e]">exceptionnelles</span>
+              {/* Soulignement doré dessiné */}
+              <motion.span
+                className="absolute -bottom-1 left-0 h-[2px] rounded-full"
+                style={{ background: "linear-gradient(to right, #c9a96e, #f5d98b)" }}
+                initial={{ width: "0%" }}
+                whileInView={{ width: "100%" }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                aria-hidden
+              />
+            </span>
+          </h2>
+
+          <p className="mx-auto mt-5 max-w-lg text-[15px] leading-relaxed text-gray-500">
+            Des produits du terroir en soldes, à prix réduits pour une
+            durée limitée.
+          </p>
+        </motion.div>
+
+
+
+
+
+
+
+
+
       </div>
 
       {/* CTA "Toutes les offres" */}
@@ -265,7 +289,7 @@ function SectionHeader() {
    Gestion des deux modes : avec image (overlay) / sans image (couleur).
 ═══════════════════════════════════════════════════════════════════════════ */
 function PromoBanner({ banner }: { banner: Banner }) {
-  /* ── Contenu interne partagé (avec ou sans lien) ── */
+  /* -- Contenu interne partagé (avec ou sans lien) -- */
   const content = (
     <div
       className="group relative overflow-hidden rounded-[1.4rem]"
@@ -277,7 +301,7 @@ function PromoBanner({ banner }: { banner: Banner }) {
           "0 20px 60px rgba(13,46,30,0.2), 0 4px 16px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.05)",
       }}
     >
-      {/* ── Image de fond ── */}
+      {/* -- Image de fond -- */}
       {banner.image_url ? (
         <div className="relative h-48 sm:h-56">
           <Image
@@ -299,7 +323,7 @@ function PromoBanner({ banner }: { banner: Banner }) {
         </div>
       ) : null}
 
-      {/* ── Beam lumineux animé (signature) ── */}
+      {/* -- Beam lumineux animé (signature) -- */}
       <div
         className="pointer-events-none absolute inset-0 overflow-hidden rounded-[1.4rem]"
         aria-hidden="true"
@@ -315,7 +339,7 @@ function PromoBanner({ banner }: { banner: Banner }) {
         />
       </div>
 
-      {/* ── Halo de couleur jade en bas à droite ── */}
+      {/* -- Halo de couleur jade en bas à droite -- */}
       <div
         className="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 rounded-full opacity-[0.15] blur-3xl"
         style={{
@@ -325,7 +349,7 @@ function PromoBanner({ banner }: { banner: Banner }) {
         aria-hidden="true"
       />
 
-      {/* ── Contenu textuel ── */}
+      {/* -- Contenu textuel -- */}
       <div
         className={
           banner.image_url
@@ -374,7 +398,7 @@ function PromoBanner({ banner }: { banner: Banner }) {
         </div>
       </div>
 
-      {/* ── Border gradient au hover (via pseudo-overlay) ── */}
+      {/* -- Border gradient au hover (via pseudo-overlay) -- */}
       <div
         className="pointer-events-none absolute inset-0 rounded-[1.4rem] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{
@@ -386,7 +410,7 @@ function PromoBanner({ banner }: { banner: Banner }) {
     </div>
   );
 
-  /* ── Wrapper conditionnel : lien ou div ── */
+  /* -- Wrapper conditionnel : lien ou div -- */
   if (banner.cta_url) {
     return (
       <Link
@@ -449,7 +473,7 @@ export default function HomePromotionsSection() {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(true);
 
-  /* ── Fetch données en parallèle avec gestion d'erreur individuelle ── */
+  /* -- Fetch données en parallèle avec gestion d'erreur individuelle -- */
   useEffect(() => {
     let active = true;
 
@@ -485,7 +509,7 @@ export default function HomePromotionsSection() {
     };
   }, []);
 
-  /* ── Masque la section si rien à afficher (après chargement) ── */
+  /* -- Masque la section si rien à afficher (après chargement) -- */
   const hasContent = promoProducts.length > 0 || banners.length > 0;
   if (!loading && !hasContent) return null;
 
@@ -498,7 +522,7 @@ export default function HomePromotionsSection() {
       {/* Injection unique des keyframes */}
       <style dangerouslySetInnerHTML={{ __html: BANNER_KEYFRAMES }} />
 
-      {/* ── Halos d'ambiance (cohérents avec PromoOfferCard) ── */}
+      {/* -- Halos d'ambiance (cohérents avec PromoOfferCard) -- */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         {/* Halo ember gauche */}
         <div
@@ -523,7 +547,7 @@ export default function HomePromotionsSection() {
         />
       </div>
 
-      {/* ── Conteneur principal ── */}
+      {/* -- Conteneur principal -- */}
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
           variants={containerVariants}
@@ -531,10 +555,10 @@ export default function HomePromotionsSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
         >
-          {/* ── En-tête de section ── */}
+          {/* -- En-tête de section -- */}
           <SectionHeader />
 
-          {/* ── État de chargement ── */}
+          {/* -- État de chargement -- */}
           {loading ? (
             <motion.div variants={itemVariants} initial="hidden" animate="visible">
               <LoadingSkeleton />
@@ -546,7 +570,7 @@ export default function HomePromotionsSection() {
               initial="hidden"
               animate="visible"
             >
-              {/* ── Grille de bannières (max 2) ── */}
+              {/* -- Grille de bannières (max 2) -- */}
               {banners.length > 0 && (
                 <motion.div
                   variants={itemVariants}
@@ -558,7 +582,7 @@ export default function HomePromotionsSection() {
                 </motion.div>
               )}
 
-              {/* ── Carousel produits en promotion ── */}
+              {/* -- Carousel produits en promotion -- */}
               {promoProducts.length > 0 && (
                 <motion.div variants={itemVariants}>
                   <ProduitsEnPromoHeader />

@@ -1,4 +1,4 @@
-
+﻿
 // // components/admin/clients/ClientCard.tsx
 // "use client";
 // import Image from "next/image";
@@ -185,13 +185,13 @@ import { cn } from "@/lib/utils";
 import type { User } from "@/modeles/user";
 import { mediaUrl } from "@/lib/mediaUrl";
 
-// ─── Role config ─────────────────────────────────────────────────────────────
+// --- Role config -------------------------------------------------------------
 const ROLE_CONFIG: Record<string, { label: string; icon: React.ElementType }> = {
   platform_admin: { label: "Admin", icon: Crown },
   customer: { label: "Client", icon: UserIcon },
 };
 
-// ─── Animated status ring (SVG arc) ─────────────────────────────────────────
+// --- Animated status ring (SVG arc) -----------------------------------------
 function StatusRing({
   active,
   size = 64,
@@ -253,7 +253,7 @@ function StatusRing({
   );
 }
 
-// ─── Props ────────────────────────────────────────────────────────────────────
+// --- Props --------------------------------------------------------------------
 interface ClientCardProps {
   user: User;
   onViewDetail: () => void;
@@ -298,7 +298,7 @@ export function ClientCard({ user, onViewDetail, onToggleActive }: ClientCardPro
         transition: "box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1)",
       }}
     >
-      {/* ── Top accent bar (thin, primary color, slides in on hover) ── */}
+      {/* -- Top accent bar (thin, primary color, slides in on hover) -- */}
       <motion.div
         animate={{ scaleX: hovered ? 1 : 0 }}
         initial={{ scaleX: 0 }}
@@ -307,7 +307,7 @@ export function ClientCard({ user, onViewDetail, onToggleActive }: ClientCardPro
         className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary via-primary/80 to-transparent pointer-events-none z-10"
       />
 
-      {/* ── Header section ── */}
+      {/* -- Header section -- */}
       <div className="relative flex flex-col items-center pt-7 pb-4 px-5">
         {/* Subtle radial bg behind avatar */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 h-28 w-28 rounded-full bg-primary/[0.04] blur-2xl pointer-events-none" />
@@ -369,10 +369,10 @@ export function ClientCard({ user, onViewDetail, onToggleActive }: ClientCardPro
         </p>
       </div>
 
-      {/* ── Divider ── */}
+      {/* -- Divider -- */}
       <div className="mx-5 h-px bg-border/40" />
 
-      {/* ── Info section ── */}
+      {/* -- Info section -- */}
       <div className="flex flex-col gap-2.5 px-5 py-4">
         {/* Role + Verification badges row */}
         <div className="flex items-center gap-2 flex-wrap">
@@ -416,7 +416,7 @@ export function ClientCard({ user, onViewDetail, onToggleActive }: ClientCardPro
         </div>
       </div>
 
-      {/* ── Footer: status + actions ── */}
+      {/* -- Footer: status + actions -- */}
       <div className="flex items-center justify-between gap-2 px-5 pb-4 pt-0 mt-auto">
         {/* Active status pill */}
         <div

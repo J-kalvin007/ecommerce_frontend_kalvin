@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PointsFideliteCard — Carte de fidélité ultra-premium pour checkout
  *
  * - Affiche le solde, le tier, et la valeur de conversion des points
@@ -89,8 +89,8 @@ export default function PointsFideliteCard({
           : shadow,
       }}
     >
-      {/* ── Shimmer décoratif animé en arrière-plan ── */}
-      <motion.div
+      {/* -- Shimmer décoratif animé en arrière-plan -- */}
+      {/* <motion.div
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
         animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
@@ -98,15 +98,15 @@ export default function PointsFideliteCard({
           background: `linear-gradient(120deg, transparent 0%, ${tierConfig.color} 40%, transparent 80%)`,
           backgroundSize: "200% 200%",
         }}
-      />
+      /> */}
 
-      {/* ── Orbe décorative coin supérieur droit ── */}
-      <div
+      {/* -- Orbe décorative coin supérieur droit -- */}
+      {/* <div
         className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl opacity-20"
         style={{ background: tierConfig.color }}
-      />
+      /> */}
 
-      {/* ── Contenu principal ── */}
+      {/* -- Contenu principal -- */}
       <div className="relative z-10 p-5 sm:p-6">
 
         {/* En-tête : badge tier + solde */}
@@ -205,7 +205,7 @@ export default function PointsFideliteCard({
           </button>
         </div>
 
-        {/* ── Section détail de la réduction (visible uniquement si appliqué) ── */}
+        {/* -- Section détail de la réduction (visible uniquement si appliqué) -- */}
         <AnimatePresence>
           {isApplique && (
             <motion.div

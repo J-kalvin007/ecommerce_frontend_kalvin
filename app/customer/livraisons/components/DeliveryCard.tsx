@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { Package, Truck, Calendar, MapPin, ClipboardList, Clock } from "lucide-react";
@@ -37,7 +37,7 @@ export default function DeliveryCard({ delivery, index }: DeliveryCardProps) {
       transition={{ delay: index * 0.05, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="group relative overflow-hidden rounded-3xl border border-[#E8E3D8] bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-[#D0CCC4] cursor-pointer"
     >
-      {/* ── Status Header ── */}
+      {/* -- Status Header -- */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div
@@ -61,7 +61,7 @@ export default function DeliveryCard({ delivery, index }: DeliveryCardProps) {
         </div>
       </div>
 
-      {/* ── Tracking Info ── */}
+      {/* -- Tracking Info -- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 rounded-2xl bg-[#F7F5F0] p-4 border border-[#E8E3D8]">
         <div className="flex items-start gap-2.5">
           <ClipboardList className="h-4 w-4 text-[#8A9080] mt-0.5" />
@@ -93,7 +93,7 @@ export default function DeliveryCard({ delivery, index }: DeliveryCardProps) {
         </div>
       </div>
 
-      {/* ── Timeline ── */}
+      {/* -- Timeline -- */}
       <div className="mt-4 border-t border-[#E8E3D8] pt-4">
          <DeliveryTimeline currentStatus={delivery.status} />
       </div>

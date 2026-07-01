@@ -1,6 +1,6 @@
-/**
+﻿/**
  * OrdersFilter.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Barre de filtre premium pour la liste des commandes.
  *
  * Permet au client de filtrer ses commandes par statut via des pills animées.
@@ -15,10 +15,10 @@ import { motion } from "framer-motion";
 import type { OrderStatus } from "@/modeles/commandes";
 import type { OrderList } from "@/modeles/commandes";
 
-/* ── Types ──────────────────────────────────────────────────────────────── */
+/* -- Types ---------------------------------------------------------------- */
 export type FilterStatus = OrderStatus | "all";
 
-/* ── Configuration des filtres ──────────────────────────────────────────── */
+/* -- Configuration des filtres -------------------------------------------- */
 const FILTER_OPTIONS: { value: FilterStatus; label: string }[] = [
   { value: "all", label: "Toutes" },
   { value: "pending_payment", label: "En attente" },
@@ -30,7 +30,7 @@ const FILTER_OPTIONS: { value: FilterStatus; label: string }[] = [
   { value: "cancelled", label: "Annulées" },
 ];
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface OrdersFilterProps {
   activeFilter: FilterStatus;
   onFilterChange: (filter: FilterStatus) => void;
@@ -48,7 +48,7 @@ export default function OrdersFilter({
   onFilterChange,
   orders,
 }: OrdersFilterProps) {
-  /* ── Calcul des comptes par statut ──────────────────────────────────── */
+  /* -- Calcul des comptes par statut ------------------------------------ */
   const getCount = (filter: FilterStatus): number => {
     if (filter === "all") return orders.length;
     return orders.filter((o) => o.status === filter).length;

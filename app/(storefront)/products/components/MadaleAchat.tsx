@@ -1,4 +1,4 @@
-
+﻿
 
 /**
  * ════════════════════════════════════════════════════════════════════════════
@@ -52,11 +52,11 @@ function formatWeight(grams: number | null | undefined): string {
     return `${grams} g`;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §0 — TYPES (à adapter selon votre fichier de types global)
 //      Ces interfaces documentent la forme attendue des données.
 //      Si elles existent déjà dans votre projet, supprimez ce bloc.
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 interface ProductVariant {
     id: string;
@@ -94,11 +94,11 @@ interface PurchaseModalProps {
     ) => void;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §1 — CONSTANTES D'ANIMATION
 //      Physique spring unifiée pour une cohérence perceptuelle maximale.
 //      Ne pas modifier sans tester sur des appareils lents (reduce-motion).
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 /** Réponse snap — interactions tactiles immédiates (boutons, selections, toggles) */
 const SPRING_SNAPPY = {
@@ -119,10 +119,10 @@ const SPRING_SMOOTH = {
 /** Courbe ease-out cubic-bezier — sentiment de fluidité organique */
 const EASE_OUT_CUBIC: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §2 — VARIANTES D'ANIMATION FRAMER MOTION
 //      Centralisées hors du JSX pour lisibilité et réutilisabilité.
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 /** Backdrop — fondu simple, opacité uniquement */
 const backdropVariants = {
@@ -167,13 +167,13 @@ const dropdownVariants = {
     exit: { opacity: 0, y: -4, scaleY: 0.94, transition: { duration: 0.15 } },
 } as const;
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §3 — SOUS-COMPOSANTS PURS
 //      Aucune dépendance aux closures du parent — facilement testables et
 //      réutilisables dans d'autres contextes de l'application.
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
-// ── §3.1 PriceDeltaBadge ─────────────────────────────────────────────────────
+// -- §3.1 PriceDeltaBadge -----------------------------------------------------
 /**
  * Affiche la différence de prix d'une variante par rapport au produit de base.
  *
@@ -194,21 +194,21 @@ function PriceDeltaBadge({ delta }: { delta: number }) {
             initial={{ opacity: 0, scale: 0.65 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={SPRING_SNAPPY}
-            className={`inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[9px] font-extrabold tabular-nums leading-none ${isSaving
+            className={`inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums leading-none transition-colors ${isSaving
                 ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/70"
-                : "bg-amber-50  text-amber-700  ring-1 ring-amber-200/70"
+                : "bg-[#f9f6f1] text-[#8a9086] ring-1 ring-border/50"
                 }`}
         >
             {isSaving
                 ? <ArrowDown className="h-2.5 w-2.5 shrink-0" />
-                : <ArrowUp className="h-2.5 w-2.5 shrink-0" />
+                : <Plus className="h-2.5 w-2.5 shrink-0 opacity-50" />
             }
             {formatCurrency(Math.abs(delta), "FCFA")}
         </motion.span>
     );
 }
 
-// ── §3.2 WeightDeltaBadge ────────────────────────────────────────────────────
+// -- §3.2 WeightDeltaBadge ----------------------------------------------------
 /**
  * Affiche la différence de poids d'une variante par rapport au produit de base.
  *
@@ -231,7 +231,7 @@ function WeightDeltaBadge({ delta }: { delta: number | null }) {
             initial={{ opacity: 0, scale: 0.65 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.04, ...SPRING_SNAPPY }}
-            className={`inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[9px] font-extrabold tabular-nums leading-none ${isHeavier
+            className={`inline-flex items-center gap-0.5 rounded-lg px-2 py-1 text-[11px] font-bold tabular-nums leading-none ${isHeavier
                 ? "bg-sky-50 text-sky-700 ring-1 ring-sky-200/70"
                 : "bg-orange-50 text-orange-700 ring-1 ring-orange-200/70"
                 }`}
@@ -245,7 +245,7 @@ function WeightDeltaBadge({ delta }: { delta: number | null }) {
     );
 }
 
-// ── §3.3 WeightChip ──────────────────────────────────────────────────────────
+// -- §3.3 WeightChip ----------------------------------------------------------
 /**
  * Chip de poids du produit/variante.
  * Couleur adaptée selon l'état de sélection de la variante parente.
@@ -261,18 +261,18 @@ function WeightChip({
 
     return (
         <span
-            className={`inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide transition-colors duration-200 ${isSelected
-                ? "bg-[#1f4d3f]/10 text-[#1f4d3f]"
-                : "bg-[#f3ede2] text-[#8b5e34]"
+            className={`inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1 text-[13px] font-black uppercase tracking-wider transition-all duration-200 ${isSelected
+                ? "bg-[#1f4d3f] text-white shadow-md shadow-[#1f4d3f]/20 ring-1 ring-[#1f4d3f]/50"
+                : "bg-[#f3ede2] text-[#8b5e34] border border-[#e8dfcf]"
                 }`}
         >
-            <Weight className="h-3 w-3 shrink-0" />
+            <Weight className="h-3.5 w-3.5 opacity-90" />
             {formatWeight(weight)}
         </span>
     );
 }
 
-// ── §3.4 StockIndicator ──────────────────────────────────────────────────────
+// -- §3.4 StockIndicator ------------------------------------------------------
 /**
  * Indicateur de stock combinant une jauge visuelle animée et un label textuel.
  *
@@ -315,9 +315,9 @@ function StockIndicator({ stock, max = 20 }: { stock: number; max?: number }) {
     );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §4 — COMPOSANT PRINCIPAL : PurchaseModal
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 function PurchaseModal({
     product,
@@ -327,7 +327,7 @@ function PurchaseModal({
     onConfirm,
 }: PurchaseModalProps) {
 
-    // ── §4.1 Variantes actives ────────────────────────────────────────────────
+    // -- §4.1 Variantes actives ------------------------------------------------
     // Identique à l'original — filtre les variantes inactives une seule fois.
     const activeVariants = useMemo(
         () => (product.variants ?? []).filter((v) => v.is_active),
@@ -335,21 +335,21 @@ function PurchaseModal({
     );
     const hasVariants = activeVariants.length > 0;
 
-    // ── §4.2 État local (structure et noms identiques à l'original) ──────────
+    // -- §4.2 État local (structure et noms identiques à l'original) ----------
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
         hasVariants ? activeVariants[0] : null
     );
     const [quantity, setQuantity] = useState(1);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    // ── §4.3 Valeurs calculées (identiques à l'original) ─────────────────────
+    // -- §4.3 Valeurs calculées (identiques à l'original) ---------------------
     const currentPrice = selectedVariant?.price ?? (flashSale?.sale_price ?? product.price);
     const currentWeight = selectedVariant?.weight_grams ?? product.weight_grams;
     const currentStock = selectedVariant ? selectedVariant.stock : product.stock;
     const isOutOfStock = currentStock === 0;
     const totalPrice = parseFloat(currentPrice) * quantity;
 
-    // ── §4.4 Nouvelles valeurs — différentiels variante / produit de base ─────
+    // -- §4.4 Nouvelles valeurs — différentiels variante / produit de base -----
 
     /**
      * Prix de référence du produit principal pour le calcul des deltas.
@@ -400,7 +400,7 @@ function PurchaseModal({
         }).id;
     }, [activeVariants]);
 
-    // ── §4.5 Handlers ─────────────────────────────────────────────────────────
+    // -- §4.5 Handlers ---------------------------------------------------------
 
     /**
      * Handler de confirmation — signature IDENTIQUE à l'original.
@@ -430,9 +430,9 @@ function PurchaseModal({
 
 
 
-    // ─────────────────────────────────────────────────────────────────────────
+    // -------------------------------------------------------------------------
     // §4.6 RENDU
-    // ─────────────────────────────────────────────────────────────────────────
+    // -------------------------------------------------------------------------
     return (
         <AnimatePresence mode="wait">
 
@@ -482,7 +482,7 @@ function PurchaseModal({
                         <div className="h-1 w-9 rounded-full bg-[#c9bfaf]" />
                     </div> */}
 
-                    {/* ── Bouton de fermeture ───────────────────────────────────── */}
+                    {/* -- Bouton de fermeture ------------------------------------- */}
                     <motion.button
                         type="button"
                         onClick={onClose}
@@ -553,7 +553,7 @@ function PurchaseModal({
           ════════════════════════════════════════════════════════════ */}
                     <div className="overflow-y-auto overscroll-contain space-y-5 px-5 py-4 sm:px-6 sm:py-5 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[#ddd5c5]">
 
-                        {/* ──────────────────────────────────────────────────────────
+                        {/* ----------------------------------------------------------
                 SÉLECTEUR DE VARIANTES
                 Chaque option affiche explicitement :
                   1. Le poids de la variante (WeightChip)
@@ -561,7 +561,7 @@ function PurchaseModal({
                   3. Le prix de la variante
                   4. La différence de prix vs produit de base (PriceDeltaBadge)
                   5. Le badge "Meilleure valeur" si applicable
-            ────────────────────────────────────────────────────────── */}
+            ---------------------------------------------------------- */}
                         {hasVariants && (
                             <motion.div variants={sectionVariants}>
 
@@ -575,8 +575,9 @@ function PurchaseModal({
                                     </span>
                                 </div>
 
-                                {/* ── Mode dropdown (> 4 variantes) ─────────────────── */}
+                                {/* -- Mode dropdown (> 4 variantes) ------------------- */}
                                 {activeVariants.length > 2 ? (
+
                                     <div className="relative">
                                         <motion.button
                                             type="button"
@@ -604,7 +605,9 @@ function PurchaseModal({
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             ) : (
+
                                                 <span className="text-sm text-[#a09585]">Sélectionner une variante…</span>
                                             )}
                                             <motion.div
@@ -649,10 +652,10 @@ function PurchaseModal({
                                                                         : "hover:bg-[#f6f1e8] active:bg-[#f0e8dc]"
                                                                     }`}
                                                             >
-                                                                <div className="min-w-0 flex-1">
-                                                                    {/* Nom + badge top valeur */}
+                                                                <div className="min-w-0 flex-1 flex flex-col gap-1.5">
+                                                                    {/* Ligne 1 : Nom + badge top valeur */}
                                                                     <div className="flex items-center gap-2">
-                                                                        <p className={`truncate text-sm font-bold ${isSelected ? "text-[#1f4d3f]" : "text-[#1f241c]"}`}>
+                                                                        <p className={`truncate text-lg font-black tracking-tight ${isSelected ? "text-[#1f4d3f]" : "text-[#1f241c]"}`}>
                                                                             {variant.name}
                                                                         </p>
                                                                         {isBestValue && (
@@ -661,13 +664,21 @@ function PurchaseModal({
                                                                             </span>
                                                                         )}
                                                                     </div>
-                                                                    {/* Ligne de métadonnées complète */}
-                                                                    <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                                                                        {variant.weight_grams && (
-                                                                            <WeightChip weight={variant.weight_grams} isSelected={isSelected} />
+
+                                                                    {/* Ligne 2 : Poids */}
+                                                                    <div className="flex flex-wrap items-center gap-1.5">
+                                                                        {variant.weight_grams != null && (
+                                                                            <>
+                                                                                <WeightChip weight={variant.weight_grams} isSelected={isSelected} />
+                                                                                <WeightDeltaBadge delta={weightDelta} />
+                                                                            </>
                                                                         )}
-                                                                        <WeightDeltaBadge delta={weightDelta} />
-                                                                        <span className={`text-[13px] font-black ${isSelected ? "text-[#1f4d3f]" : "text-[#1a3530]"}`}>
+                                                                    </div>
+
+                                                                    {/* Ligne 3 : Prix */}
+                                                                    <div className="mt-1 flex flex-wrap items-center gap-2">
+                                                                        <span className={`text-[10px] uppercase tracking-wider font-bold ${isSelected ? "text-[#1f4d3f]/60" : "text-[#8a9086]"}`}>Prix</span>
+                                                                        <span className={`text-sm font-bold tracking-tight ${isSelected ? "text-[#1f4d3f]" : "text-[#1a3530]"}`}>
                                                                             {formatCurrency(variant.price, "FCFA")}
                                                                         </span>
                                                                         <PriceDeltaBadge delta={priceDelta} />
@@ -699,7 +710,8 @@ function PurchaseModal({
                                     </div>
 
                                 ) : (
-                                    /* ── Mode grille (≤ 4 variantes) ─────────────────── */
+
+                                    /* -- Mode grille (≤ 4 variantes) ------------------- */
                                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                         {activeVariants.map((variant, i) => {
                                             const isSelected = selectedVariant?.id === variant.id;
@@ -735,7 +747,7 @@ function PurchaseModal({
                                                     ].join(" ")}
                                                 >
 
-                                                    {/* ── Badge "Meilleure valeur" (centré en haut) */}
+                                                    {/* -- Badge "Meilleure valeur" (centré en haut) */}
                                                     {isBestValue && (
                                                         <motion.div
                                                             initial={{ opacity: 0, y: -4 }}
@@ -749,7 +761,7 @@ function PurchaseModal({
                                                         </motion.div>
                                                     )}
 
-                                                    {/* ── Check de sélection (coin supérieur droit) */}
+                                                    {/* -- Check de sélection (coin supérieur droit) */}
                                                     <AnimatePresence>
                                                         {isSelected && (
                                                             <motion.div
@@ -764,41 +776,46 @@ function PurchaseModal({
                                                         )}
                                                     </AnimatePresence>
 
-                                                    {/* ── Nom de la variante ──────────────────── */}
-                                                    <p
-                                                        className={[
-                                                            "pr-8 text-sm font-black leading-snug tracking-[-0.01em]",
-                                                            isBestValue ? "mt-3" : "",
-                                                            isSelected ? "text-[#1f4d3f]" : "text-[#1f241c]",
-                                                        ].join(" ")}
-                                                    >
-                                                        {variant.name}
-                                                    </p>
+                                                    {/* -- Nom de la variante et Poids -------------------- */}
+                                                    <div className="flex flex-col gap-2.5 mb-2">
+                                                        <p
+                                                            className={[
+                                                                "text-xl sm:text-2xl font-black leading-tight tracking-tight",
+                                                                isBestValue ? "mt-3" : "",
+                                                                isSelected ? "text-[#1f4d3f]" : "text-[#1f241c]",
+                                                            ].join(" ")}
+                                                        >
+                                                            {variant.name}
+                                                        </p>
 
-                                                    {/* ── Séparateur interne ────────────────────── */}
-                                                    <div className={`my-2.5 h-px ${isSelected ? "bg-[#1f4d3f]/12" : "bg-[#ede5d8]"}`} />
+                                                        {variant.weight_grams != null && (
+                                                            <div className="flex flex-wrap items-center gap-2">
+                                                                {/* Poids absolu de la variante */}
+                                                                <WeightChip weight={variant.weight_grams} isSelected={isSelected} />
+                                                                {/* Différence de poids vs produit principal */}
+                                                                <WeightDeltaBadge delta={weightDelta} />
+                                                            </div>
+                                                        )}
+                                                    </div>
 
-                                                    {/* ── Bloc poids : poids réel + delta vs base ─── */}
-                                                    {variant.weight_grams != null && (
-                                                        <div className="flex flex-wrap items-center gap-1.5">
-                                                            {/* Poids absolu de la variante */}
-                                                            <WeightChip weight={variant.weight_grams} isSelected={isSelected} />
-                                                            {/* Différence de poids vs produit principal */}
-                                                            <WeightDeltaBadge delta={weightDelta} />
+                                                    <div className="flex-1" />
+
+                                                    {/* -- Séparateur interne ---------------------- */}
+                                                    <div className={`my-3 h-px w-full transition-colors ${isSelected ? "bg-[#1f4d3f]/15" : "bg-border/40"}`} />
+
+                                                    {/* -- Bloc prix --- */}
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className={`text-[11px] uppercase tracking-wider font-bold ${isSelected ? "text-[#1f4d3f]/60" : "text-[#8a9086]"}`}>Prix</span>
+                                                            <span className={`text-lg font-black tracking-tight ${isSelected ? "text-[#1f4d3f]" : "text-[#1a3530]"}`}>
+                                                                {formatCurrency(variant.price, "FCFA")}
+                                                            </span>
                                                         </div>
-                                                    )}
-
-                                                    {/* ── Bloc prix : prix réel + delta vs base ─── */}
-                                                    <div className="mt-2 flex flex-wrap items-baseline gap-2">
-                                                        {/* Prix absolu de la variante */}
-                                                        <span className={`text-[1.375rem] font-black tracking-[-0.03em] ${isSelected ? "text-[#1f4d3f]" : "text-[#1a3530]"}`}>
-                                                            {formatCurrency(variant.price, "FCFA")}
-                                                        </span>
                                                         {/* Différence de prix vs produit principal */}
                                                         <PriceDeltaBadge delta={priceDelta} />
                                                     </div>
 
-                                                    {/* ── Mention de rupture ──────────────────── */}
+                                                    {/* -- Mention de rupture -------------------- */}
                                                     {isOOS && (
                                                         <div className="mt-2.5 flex items-center gap-1">
                                                             <X className="h-3 w-3 shrink-0 text-red-500" />
@@ -806,7 +823,7 @@ function PurchaseModal({
                                                         </div>
                                                     )}
 
-                                                    {/* ── Fond de sélection animé (layoutId) ────── */}
+                                                    {/* -- Fond de sélection animé (layoutId) ------ */}
                                                     {isSelected && (
                                                         <motion.div
                                                             layoutId="variant-card-selected-glow"
@@ -822,12 +839,12 @@ function PurchaseModal({
                             </motion.div>
                         )}
 
-                        {/* ──────────────────────────────────────────────────────────
+                        {/* ----------------------------------------------------------
                 AFFICHAGE DU PRIX ACTIF
                 Le prix unitaire s'anime à chaque changement de variante
                 via la key prop (react key === identity === remount).
                 Le total apparaît/disparaît en slide selon la quantité.
-            ────────────────────────────────────────────────────────── */}
+            ---------------------------------------------------------- */}
                         <motion.div variants={sectionVariants}>
                             <div className="relative overflow-hidden rounded-2xl border border-[#ddd5c5] bg-gradient-to-br from-[#faf6ef] via-[#f5efe2] to-[#eee5d3] px-5 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_2px_8px_rgba(0,0,0,0.04)]">
 
@@ -907,11 +924,11 @@ function PurchaseModal({
                             </div>
                         </motion.div>
 
-                        {/* ──────────────────────────────────────────────────────────
+                        {/* ----------------------------------------------------------
                 SÉLECTEUR DE QUANTITÉ
                 Stepper pill avec boutons circulaires, valeur animée,
                 et jauge de stock contextualisée.
-            ────────────────────────────────────────────────────────── */}
+            ---------------------------------------------------------- */}
                         <motion.div variants={sectionVariants}>
                             <p className="mb-3 text-[10px] font-black uppercase tracking-[0.2em] text-[#5d6b58]">
                                 Quantité

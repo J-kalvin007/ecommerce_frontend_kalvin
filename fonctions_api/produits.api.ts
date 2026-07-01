@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Products API Service — Repository Pattern pour les produits, images et variantes
  *
  * Endpoints couverts :
@@ -38,7 +38,7 @@ import type {
 
 
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// --- Helpers ------------------------------------------------------------------
 
 /**
  * Normalise les erreurs Axios en `ApiError` structurée.

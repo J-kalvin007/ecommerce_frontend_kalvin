@@ -1,7 +1,7 @@
 // app/admin/components/promotions/components/FlashSaleCard.tsx
 "use client";
 import { motion } from "framer-motion";
-import { Zap, Edit3, Trash2, Clock, Eye } from "lucide-react";
+import { Zap, Edit3, Trash2, Clock, Eye, Edit } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import type { AdminSoldes } from "@/modeles/promotions";
 
@@ -39,7 +39,7 @@ export function FlashSaleCard({ sale, onEdit, onDelete, onView, viewMode = "grid
                 className="group flex cursor-pointer items-center gap-4 rounded-xl border border-border bg-surface-elevated px-4 py-3 shadow-sm transition-all hover:border-amber-500/30 hover:shadow-md hover:bg-surface-alt/50"
             >
                 {/* Image / Icon */}
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 overflow-hidden relative">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 overflow-hidden relative">
                     {imageSrc ? (
                         <img src={imageSrc} alt={sale.product.name} className="h-full w-full object-cover" />
                     ) : (
@@ -49,17 +49,17 @@ export function FlashSaleCard({ sale, onEdit, onDelete, onView, viewMode = "grid
 
                 {/* Produit */}
                 <div className="flex min-w-0 flex-1 flex-col">
-                    <code className="truncate font-mono text-xs text-muted-foreground">
+                    <code className="truncate font-mono text-[14px] text-muted-foreground">
                         {sale.product.name.slice(0, 16)}…
                     </code>
                     {sale.variant && (
-                        <span className="text-[10px] text-muted-foreground/60">Variante: {sale.variant.name?.slice(0, 8)}…</span>
+                        <span className="text-[14px] text-muted-foreground/60">Variante: {sale.variant.name?.slice(0, 8)}…</span>
                     )}
                 </div>
 
                 {/* Discount badge */}
                 {discount !== null && discount > 0 && (
-                    <span className="shrink-0 rounded-lg bg-amber-500 px-2 py-0.5 text-xs font-black text-white shadow-sm">
+                    <span className="shrink-0 rounded-lg bg-amber-500 px-2 py-0.5 text-[14px] font-black text-white shadow-sm">
                         -{discount}%
                     </span>
                 )}
@@ -68,38 +68,43 @@ export function FlashSaleCard({ sale, onEdit, onDelete, onView, viewMode = "grid
                 <div className="shrink-0 text-right">
                     <p className="text-base font-extrabold text-amber-400">{formatCurrency(parseFloat(sale.sale_price || "0"), "FCFA")}</p>
                     {sale.original_price && (
-                        <p className="text-[10px] line-through text-muted-foreground">{formatCurrency(parseFloat(sale.original_price), "FCFA")}</p>
+                        <p className="text-[14px] line-through text-muted-foreground">{formatCurrency(parseFloat(sale.original_price), "FCFA")}</p>
                     )}
                 </div>
 
                 {/* Date fin */}
-                <div className="hidden md:flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+                <div className="hidden md:flex shrink-0 items-center gap-1 text-[14px] text-muted-foreground">
                     <Clock className="h-3.5 w-3.5" />
                     {new Date(sale.ends_at).toLocaleDateString("fr-FR")}
                 </div>
 
                 {/* Stock */}
                 {sale.quota_stock_limit && (
-                    <p className="hidden lg:block shrink-0 text-xs text-muted-foreground">
+                    <p className="hidden lg:block shrink-0 text-[14px] text-muted-foreground">
                         {sale.product_sold_count}/{sale.quota_stock_limit}
                     </p>
                 )}
 
                 {/* Statut */}
-                <span className={cn("shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-bold", statusCls)}>
+                <span className={cn("shrink-0 rounded-full border px-2 py-0.5 text-[14px] font-bold", statusCls)}>
                     {isActive ? "En cours" : "Terminée"}
                 </span>
 
                 {/* Actions */}
-                <div className="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100" onClick={e => e.stopPropagation()}>
-                    <button onClick={e => { e.stopPropagation(); onEdit(); }} className="rounded-lg p-1.5 text-muted-foreground hover:bg-amber-500/10 hover:text-amber-400 transition-colors">
-                        <Edit3 className="h-3.5 w-3.5" />
+                <div className="flex shrink-0 items-center gap-1 " onClick={e => e.stopPropagation()}>
+
+                    <button onClick={e => { e.stopPropagation(); onEdit(); }} className="rounded-lg p-1.5 cursor-pointer text-muted-foreground hover:bg-amber-500/10 hover:text-amber-400 transition-colors">
+                        <Edit className="h-4 w-4" />
                     </button>
-                    <button onClick={e => { e.stopPropagation(); onDelete(); }} className="rounded-lg p-1.5 text-muted-foreground hover:bg-red-500/10 hover:text-red-400 transition-colors">
-                        <Trash2 className="h-3.5 w-3.5" />
+
+                    <button onClick={e => { e.stopPropagation(); onDelete(); }} className="rounded-lg p-1.5 cursor-pointer text-muted-foreground hover:bg-red-500/10 hover:text-red-400 transition-colors">
+                        <Trash2 className="h-4 w-4" />
                     </button>
+
                 </div>
+
             </motion.div>
+
         );
     }
 

@@ -1,4 +1,4 @@
-
+﻿
 
 'use client';
 
@@ -60,7 +60,7 @@ const LoadingStyle = ({ label, size = 15, fullScreen = false }: LoadingStyleProp
                     backdropFilter: 'blur(20px)',
                 }}
             >
-                {/* ── Ambient orbs ────────────────────────────────────────────────── */}
+                {/* -- Ambient orbs -------------------------------------------------- */}
                 <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
                     <motion.div
                         animate={{ scale: [1, 1.18, 1], opacity: [0.12, 0.2, 0.12] }}
@@ -93,7 +93,7 @@ const LoadingStyle = ({ label, size = 15, fullScreen = false }: LoadingStyleProp
                     backgroundSize: '128px',
                 }} />
 
-                {/* ── Spinner ring wrapping Lottie ─────────────────────────────────── */}
+                {/* -- Spinner ring wrapping Lottie ----------------------------------- */}
                 <motion.div
                     style={{ position: 'relative', marginBottom: label ? 28 : 0, zIndex: 2 }}
                 >
@@ -150,7 +150,7 @@ const LoadingStyle = ({ label, size = 15, fullScreen = false }: LoadingStyleProp
                     </div>
                 </motion.div>
 
-                {/* ── Label ────────────────────────────────────────────────────────── */}
+                {/* -- Label ---------------------------------------------------------- */}
                 {label && (
                     <motion.div
                         initial={{ opacity: 0, y: 14 }}

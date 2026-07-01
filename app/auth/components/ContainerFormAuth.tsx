@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -14,10 +14,10 @@ import {
   tomateCardImage,
 } from "@/assets/images";
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    Floating leaves — positioned at screen margins so they're
    always visible alongside the centered form card.
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 const FLOATING_LEAVES = [
   { className: "left-[1.5%] top-[9%]   h-10 w-10", rotate: -22, delay: 0.10, duration: 5.4 },
   { className: "left-[5%]  bottom-[20%] h-12 w-12", rotate:  24, delay: 0.45, duration: 6.1 },
@@ -29,10 +29,10 @@ const FLOATING_LEAVES = [
   { className: "right-[8%]  top-[5%]   h-7  w-7",  rotate: -10, delay: 1.30, duration: 5.9 },
 ] as const;
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    Floating produce — anchored near screen edges to stay visible
    at all breakpoints regardless of the card's max-width.
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 const FLOATING_PRODUCE = [
   {
     src: authVegetablesImage,
@@ -66,9 +66,9 @@ const FLOATING_PRODUCE = [
   },
 ] as const;
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    ContainerFormAuth
-   ─────────────────────────────────────────────────────────────────
+   -----------------------------------------------------------------
    A full-screen atmosphere wrapper for every auth page.
    Accepts any self-contained auth form as `children` and layers:
 
@@ -80,7 +80,7 @@ const FLOATING_PRODUCE = [
    Layers 2 and 3 sit above the form so that the decorations are
    always visible across the full viewport — including over the
    form card — at very low opacity so they never obscure content.
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 type ContainerFormAuthProps = {
   children: ReactNode;
 };
@@ -89,7 +89,7 @@ export function ContainerFormAuth({ children }: ContainerFormAuthProps) {
   return (
     <div className="relative min-h-screen overflow-hidden">
 
-      {/* ── Layer 0 — Static background ────────────────────────── */}
+      {/* -- Layer 0 — Static background -------------------------- */}
       <div className="pointer-events-none absolute inset-0 z-0">
         {/* Hero texture */}
         <Image
@@ -116,10 +116,10 @@ export function ContainerFormAuth({ children }: ContainerFormAuthProps) {
         <div className="absolute -bottom-16 left-[38%] h-64 w-64 rounded-full bg-[#c9963a]/14 blur-3xl" />
       </div>
 
-      {/* ── Layer 1 — Page content ─────────────────────────────── */}
+      {/* -- Layer 1 — Page content ------------------------------- */}
       <div className="relative z-10">{children}</div>
 
-      {/* ── Layer 2 — Floating produce (atmospheric, edges) ─────── */}
+      {/* -- Layer 2 — Floating produce (atmospheric, edges) ------- */}
       <div className="pointer-events-none absolute inset-0 z-20">
         {FLOATING_PRODUCE.map((item) => (
           <motion.div
@@ -153,7 +153,7 @@ export function ContainerFormAuth({ children }: ContainerFormAuthProps) {
         ))}
       </div>
 
-      {/* ── Layer 3 — Floating leaves (margin atmosphere) ───────── */}
+      {/* -- Layer 3 — Floating leaves (margin atmosphere) --------- */}
       <div className="pointer-events-none absolute inset-0 z-30">
         {FLOATING_LEAVES.map((leaf) => (
           <motion.div

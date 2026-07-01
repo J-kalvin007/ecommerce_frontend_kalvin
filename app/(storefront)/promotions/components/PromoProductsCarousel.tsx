@@ -1,4 +1,4 @@
-
+﻿
 
 
 
@@ -7,14 +7,14 @@
  * @description Carrousel promotionnel ultra-premium — édition luxe.
  *
  * Architecture :
- *  ┌─ PromoProductsCarousel  (orchestrateur état + rendu adaptatif)
- *  │   ├─ MobileCarousel      (scroll-snap natif, une carte centrée)
- *  │   ├─ DesktopCoverflow    (coverflow Framer Motion, swipe souris)
- *  │   └─ PaginationDots      (dots animés communs mobile + desktop)
+ *  ┌- PromoProductsCarousel  (orchestrateur état + rendu adaptatif)
+ *  │   ├- MobileCarousel      (scroll-snap natif, une carte centrée)
+ *  │   ├- DesktopCoverflow    (coverflow Framer Motion, swipe souris)
+ *  │   └- PaginationDots      (dots animés communs mobile + desktop)
  *  │
- *  └─ Hooks internes
- *      ├─ useIsMobile         (breakpoint 640px, ResizeObserver)
- *      └─ useAutoPlay         (rotation automatique avec pause au survol)
+ *  └- Hooks internes
+ *      ├- useIsMobile         (breakpoint 640px, ResizeObserver)
+ *      └- useAutoPlay         (rotation automatique avec pause au survol)
  *
  * Design tokens :
  *  --forest-deep   : #0D2E1E   (fond principal)
@@ -53,7 +53,7 @@ import { PromoOfferCard } from "./CardProduitSolde";
 import { PromoProductCard } from "./PromotionsPage";
 import { cn } from "@/lib/utils";
 
-/* ─── Constantes de configuration ────────────────────────────────────────── */
+/* --- Constantes de configuration ------------------------------------------ */
 
 /** Seuil en pixels pour détecter un swipe intentionnel */
 const SWIPE_THRESHOLD = 60;
@@ -64,7 +64,7 @@ const AUTOPLAY_DELAY = 4200;
 /** Durée de la transition entre les layouts mobile/desktop (ms) */
 const LAYOUT_TRANSITION_MS = 250;
 
-/* ─── Types ───────────────────────────────────────────────────────────────── */
+/* --- Types ----------------------------------------------------------------- */
 
 type PromoProductsCarouselProps = {
   items: PromoProductCard[];
@@ -370,7 +370,7 @@ function DesktopCoverflow({
       aria-live="polite"
       aria-atomic="false"
     >
-      {/* ── Flèches de navigation ── */}
+      {/* -- Flèches de navigation -- */}
       {count > 1 && (
         <>
 
@@ -389,7 +389,7 @@ function DesktopCoverflow({
         </>
       )}
 
-      {/* ── Piste des slides ── */}
+      {/* -- Piste des slides -- */}
       <motion.div
         drag={count > 1 ? "x" : false}
         dragConstraints={{ left: 0, right: 0 }}
@@ -486,7 +486,7 @@ export function PromoProductsCarousel({
       onFocusCapture={pause}
       onBlurCapture={resume}
     >
-      {/* ── Rendu conditionnel Mobile / Desktop ── */}
+      {/* -- Rendu conditionnel Mobile / Desktop -- */}
       <AnimatePresence mode="wait" initial={false}>
         {isMobile ? (
           <motion.div
@@ -519,7 +519,7 @@ export function PromoProductsCarousel({
         )}
       </AnimatePresence>
 
-      {/* ── Dots de pagination (communs mobile + desktop) ── */}
+      {/* -- Dots de pagination (communs mobile + desktop) -- */}
       {count > 1 && (
         <PaginationDots items={items} activeIndex={activeIndex} goTo={goTo} />
       )}

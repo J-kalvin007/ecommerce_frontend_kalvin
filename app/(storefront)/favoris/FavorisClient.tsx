@@ -1,4 +1,4 @@
-
+﻿
 
 
 
@@ -62,11 +62,11 @@ import {
 } from "@/modeles/notes-favoris";
 import ConfirmDialog from "@/components/special/ConfirmDialog";
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §1 — CONSTANTES D'ANIMATION
 //      Physique spring unifiée — cohérence perceptuelle entre tous les
 //      sous-composants de la page (mêmes courbes que PurchaseModal).
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 /** Réponse snap — interactions tactiles immédiates (boutons, toggles) */
 const SPRING_SNAPPY = {
@@ -87,11 +87,11 @@ const SPRING_SMOOTH = {
 /** Courbe ease-out cubic-bezier — sentiment de fluidité organique */
 const EASE_OUT_CUBIC: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §2 — SOUS-COMPOSANT : StarRating
 //      Étoiles de notation avec remplissage séquentiel animé au montage —
 //      chaque étoile "pop" avec un délai progressif pour un effet de cascade.
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 function StarRating({ score }: { score: number | null }) {
   return (
@@ -127,11 +127,11 @@ function StarRating({ score }: { score: number | null }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §3 — SOUS-COMPOSANT : FavorisSkeleton
 //      Squelette de chargement avec effet shimmer (balayage lumineux) plutôt
 //      qu'un simple pulse — sensation de chargement actif et premium.
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 function FavorisSkeleton() {
   return (
@@ -172,9 +172,9 @@ function FavorisSkeleton() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 // §4 — COMPOSANT PRINCIPAL : FavorisClient
-// ─────────────────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------------------
 
 export default function FavorisClient() {
   /* --- État (identique à l'original) --------------------------------------- */

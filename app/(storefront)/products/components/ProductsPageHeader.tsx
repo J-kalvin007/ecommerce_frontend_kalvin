@@ -1,4 +1,4 @@
-
+﻿
 
 
 "use client";
@@ -23,19 +23,19 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronRight, Package, Tags } from "lucide-react";
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    TYPES — conservation de l'interface d'origine
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 type ProductsPageHeaderProps = {
   productCount: number;
   categoryCount: number;
 };
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    HOOK INTERNE : useCountUp
    Anime un entier de 0 jusqu'à `target` en `duration` ms.
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 function useCountUp(target: number, duration = 900): number {
   const [current, setCurrent] = useState(0);
@@ -66,10 +66,10 @@ function useCountUp(target: number, duration = 900): number {
   return current;
 }
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    SOUS-COMPOSANT : StatBadge — conservation du nom d'origine
    Enrichi avec CountUp, ring subtil et animation d'entrée
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 function StatBadge({
   icon: Icon,
@@ -120,9 +120,9 @@ function StatBadge({
   );
 }
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    COMPOSANT PRINCIPAL — conservation du nom d'origine
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 export function ProductsPageHeader({ productCount, categoryCount }: ProductsPageHeaderProps) {
   const prefersReducedMotion = useReducedMotion();
@@ -200,7 +200,7 @@ export function ProductsPageHeader({ productCount, categoryCount }: ProductsPage
 
 
 
-      {/* ── Fond ambiant multi-radial ── */}
+      {/* -- Fond ambiant multi-radial -- */}
       {/* <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -213,7 +213,7 @@ export function ProductsPageHeader({ productCount, categoryCount }: ProductsPage
         aria-hidden
       /> */}
 
-      {/* ── Shimmer diagonale très subtil ── */}
+      {/* -- Shimmer diagonale très subtil -- */}
       {!prefersReducedMotion && (
         <motion.div
           className="pointer-events-none absolute -inset-y-4 w-[200px] -skew-x-12"
@@ -229,7 +229,7 @@ export function ProductsPageHeader({ productCount, categoryCount }: ProductsPage
 
       <div className="relative mx-auto max-w-[var(--content-max-width)] px-[var(--spacing-page-x)] py-9 md:py-10">
 
-        {/* ── Breadcrumb ── */}
+        {/* -- Breadcrumb -- */}
         <motion.nav
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -247,7 +247,7 @@ export function ProductsPageHeader({ productCount, categoryCount }: ProductsPage
           <span className="font-medium text-white/88">Boutique</span>
         </motion.nav>
 
-        {/* ── Hero body ── */}
+        {/* -- Hero body -- */}
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
 
           {/* Titre + description */}
@@ -292,7 +292,7 @@ export function ProductsPageHeader({ productCount, categoryCount }: ProductsPage
         </div>
       </div>
 
-      {/* ── Ligne dorée qui se dessine ── */}
+      {/* -- Ligne dorée qui se dessine -- */}
       <div className="relative h-0.5 overflow-hidden">
         <div className="absolute inset-0 bg-primary/20" />
         <motion.div

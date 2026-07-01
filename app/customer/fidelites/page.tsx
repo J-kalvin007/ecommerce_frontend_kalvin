@@ -1,8 +1,8 @@
-
+﻿
 
 /**
  * page.tsx — Programme de Fidélité Client
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Page principale de gestion du programme de fidélité du client.
  * Intégrée dans le CustomerShell.
  *
@@ -48,34 +48,34 @@ import RedeemPointsModal from "./components/RedeemPointsModal";
    Page Component
    ═══════════════════════════════════════════════════════════════════════════ */
 export default function CustomerFidelitesPage() {
-  /* ── État : Profil de fidélité ──────────────────────────────────────── */
+  /* -- État : Profil de fidélité ---------------------------------------- */
   const [profile, setProfile] = useState<LoyaltyProfile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [profileError, setProfileError] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  /* ── État : Paliers ─────────────────────────────────────────────────── */
+  /* -- État : Paliers --------------------------------------------------- */
   const [tiers, setTiers] = useState<Tier[]>([]);
   const [isLoadingTiers, setIsLoadingTiers] = useState(true);
 
-  /* ── État : Historique ──────────────────────────────────────────────── */
+  /* -- État : Historique ------------------------------------------------ */
   const [events, setEvents] = useState<LoyaltyEvent[]>([]);
   const [isLoadingEvents, setIsLoadingEvents] = useState(true);
 
-  /* ── État : Valeur de points ────────────────────────────────────────── */
+  /* -- État : Valeur de points ------------------------------------------ */
   const [pointValueConfig, setPointValueConfig] = useState<PointValue | null>(null);
 
-  /* ── État : Modale de dépense ───────────────────────────────────────── */
+  /* -- État : Modale de dépense ----------------------------------------- */
   const [showRedeemModal, setShowRedeemModal] = useState(false);
 
-  /* ── État : Toast de notification ──────────────────────────────────── */
+  /* -- État : Toast de notification ------------------------------------ */
   const [toast, setToast] = useState<{
     show: boolean;
     type: "success" | "error" | "info";
     message: string;
   }>({ show: false, type: "info", message: "" });
 
-  /* ── Helper toast ─────────────────────────────────────────────────── */
+  /* -- Helper toast --------------------------------------------------- */
   const showToast = useCallback(
     (type: "success" | "error" | "info", message: string) => {
       setToast({ show: true, type, message });
@@ -83,7 +83,7 @@ export default function CustomerFidelitesPage() {
     []
   );
 
-  /* ── Fetch : Profil de fidélité ──────────────────────────────────── */
+  /* -- Fetch : Profil de fidélité ------------------------------------ */
   const fetchProfile = useCallback(
     async (silent = false) => {
       if (!silent) {
@@ -110,7 +110,7 @@ export default function CustomerFidelitesPage() {
     [showToast]
   );
 
-  /* ── Fetch : Paliers ─────────────────────────────────────────────── */
+  /* -- Fetch : Paliers ----------------------------------------------- */
   const fetchTiers = useCallback(async () => {
     setIsLoadingTiers(true);
     const result = await getLoyaltyTiers();
@@ -118,7 +118,7 @@ export default function CustomerFidelitesPage() {
     setIsLoadingTiers(false);
   }, []);
 
-  /* ── Fetch : Historique ──────────────────────────────────────────── */
+  /* -- Fetch : Historique -------------------------------------------- */
   const fetchHistory = useCallback(async () => {
     setIsLoadingEvents(true);
     const result = await getLoyaltyHistory();
@@ -126,13 +126,13 @@ export default function CustomerFidelitesPage() {
     setIsLoadingEvents(false);
   }, []);
 
-  /* ── Fetch : Valeur de points ────────────────────────────────────── */
+  /* -- Fetch : Valeur de points -------------------------------------- */
   const fetchPointValue = useCallback(async () => {
     const result = await getPointValue();
     if (result.ok) setPointValueConfig(result.data);
   }, []);
 
-  /* ── Chargement initial en parallèle ────────────────────────────── */
+  /* -- Chargement initial en parallèle ------------------------------ */
   useEffect(() => {
     fetchProfile();
     fetchTiers();
@@ -140,7 +140,7 @@ export default function CustomerFidelitesPage() {
     fetchPointValue();
   }, [fetchProfile, fetchTiers, fetchHistory, fetchPointValue]);
 
-  /* ── Callback de succès après dépense de points ─────────────────── */
+  /* -- Callback de succès après dépense de points ------------------- */
   const handleRedeemSuccess = useCallback(
     (message: string) => {
       showToast("success", message);
@@ -158,7 +158,7 @@ export default function CustomerFidelitesPage() {
     <CustomerShell activeSection="loyalty">
       <div className="mx-auto max-w-8xl px-20 py-8 sm:px-6 lg:px-20 space-y-10">
 
-        {/* ── En-tête avec effet premium ── */}
+        {/* -- En-tête avec effet premium -- */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -222,13 +222,13 @@ export default function CustomerFidelitesPage() {
 
 
 
-        {/* ── État chargement global ── */}
+        {/* -- État chargement global -- */}
         {isLoadingProfile ? (
           <div className="flex justify-center py-20">
             <LoadingStyle label="Chargement de votre profil fidélité…" size={16} />
           </div>
         ) : profileError ? (
-          /* ── État erreur ── */
+          /* -- État erreur -- */
           <ErrorState
             title="Impossible de charger le profil"
             message={profileError}
@@ -236,7 +236,7 @@ export default function CustomerFidelitesPage() {
             onRetry={() => fetchProfile()}
           />
         ) : profile ? (
-          /* ── Contenu principal ── */
+          /* -- Contenu principal -- */
           <AnimatePresence mode="wait">
             <motion.div
               key="fidelite-content"
@@ -274,7 +274,7 @@ export default function CustomerFidelitesPage() {
         ) : null}
       </div>
 
-      {/* ── Modale de dépense de points ── */}
+      {/* -- Modale de dépense de points -- */}
       {profile && (
         <RedeemPointsModal
           isOpen={showRedeemModal}
@@ -285,7 +285,7 @@ export default function CustomerFidelitesPage() {
         />
       )}
 
-      {/* ── Toast de notification ── */}
+      {/* -- Toast de notification -- */}
       <Toast
         show={toast.show}
         type={toast.type}

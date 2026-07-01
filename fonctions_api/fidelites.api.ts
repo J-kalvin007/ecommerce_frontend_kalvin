@@ -1,4 +1,4 @@
-// fonctions_api/fidelites.api.ts
+﻿// fonctions_api/fidelites.api.ts
 // Service Layer complet pour le module de fidélité — pattern Result<T>
 
 import { apiPrivate } from "@/lib/axios";
@@ -13,9 +13,12 @@ import type {
     RedeemPointsPayload,
     RedeemPointsResponse,
     PointValue,
+    PointValuePayload,
+    LoyaltyRewardRule,
+    LoyaltyRewardRulePayload,
 } from "@/modeles/fidelites";
 
-// ─── Gestion centralisée des erreurs ─────────────────────────────────────────
+// --- Gestion centralisée des erreurs -----------------------------------------
 
 const handleApiError = (error: unknown): Result<never> => {
     if (error instanceof AxiosError) {
@@ -43,7 +46,7 @@ const extractList = <T>(data: unknown): T[] => {
     return [];
 };
 
-// ─── ADMIN — Profils de fidélité ──────────────────────────────────────────────
+// --- ADMIN — Profils de fidélité ----------------------------------------------
 
 /**
  * Récupère la liste complète de tous les profils de fidélité.
@@ -133,7 +136,7 @@ export const adjustAdminLoyaltyPoints = async (
     } catch (e) { return handleApiError(e); }
 };
 
-// ─── ADMIN — Paliers de fidélité ──────────────────────────────────────────────
+// --- ADMIN — Paliers de fidélité ----------------------------------------------
 
 /**
  * Crée un palier de fidélité.
@@ -168,7 +171,75 @@ export const deleteAdminLoyaltyTier = async (id: string): Promise<Result<void>> 
     } catch (e) { return handleApiError(e); }
 };
 
-// ─── PUBLICS / CLIENT ─────────────────────────────────────────────────────────
+// --- ADMIN — Valeurs des points (PointValue) ----------------------------------
+
+/** Liste toutes les valeurs de point (historique compris). */
+export const getAdminPointValues = async (): Promise<Result<PointValue[]>> => {
+    try {
+        const res = await apiPrivate.get("/api/v1/fidelites/admin/point-values/");
+        return { ok: true, data: extractList<PointValue>(res.data) };
+    } catch (e) { return handleApiError(e); }
+};
+
+/** Crée une nouvelle valeur de point. */
+export const createAdminPointValue = async (payload: PointValuePayload): Promise<Result<PointValue>> => {
+    try {
+        const res = await apiPrivate.post<PointValue>("/api/v1/fidelites/admin/point-values/", payload);
+        return { ok: true, data: res.data };
+    } catch (e) { return handleApiError(e); }
+};
+
+/** Met à jour une valeur de point existante (PATCH). */
+export const updateAdminPointValue = async (id: string, payload: Partial<PointValuePayload>): Promise<Result<PointValue>> => {
+    try {
+        const res = await apiPrivate.patch<PointValue>(`/api/v1/fidelites/admin/point-values/${id}/`, payload);
+        return { ok: true, data: res.data };
+    } catch (e) { return handleApiError(e); }
+};
+
+/** Supprime une valeur de point. */
+export const deleteAdminPointValue = async (id: string): Promise<Result<void>> => {
+    try {
+        await apiPrivate.delete(`/api/v1/fidelites/admin/point-values/${id}/`);
+        return { ok: true, data: undefined };
+    } catch (e) { return handleApiError(e); }
+};
+
+// --- ADMIN — Règles de Récompense (LoyaltyRewardRule) -------------------------
+
+/** Liste toutes les règles de récompenses (bénéfices). */
+export const getAdminRewardRules = async (): Promise<Result<LoyaltyRewardRule[]>> => {
+    try {
+        const res = await apiPrivate.get("/api/v1/fidelites/admin/reward-rules/");
+        return { ok: true, data: extractList<LoyaltyRewardRule>(res.data) };
+    } catch (e) { return handleApiError(e); }
+};
+
+/** Crée une nouvelle règle de récompense. */
+export const createAdminRewardRule = async (payload: LoyaltyRewardRulePayload): Promise<Result<LoyaltyRewardRule>> => {
+    try {
+        const res = await apiPrivate.post<LoyaltyRewardRule>("/api/v1/fidelites/admin/reward-rules/", payload);
+        return { ok: true, data: res.data };
+    } catch (e) { return handleApiError(e); }
+};
+
+/** Met à jour une règle de récompense (PATCH). */
+export const updateAdminRewardRule = async (id: string, payload: Partial<LoyaltyRewardRulePayload>): Promise<Result<LoyaltyRewardRule>> => {
+    try {
+        const res = await apiPrivate.patch<LoyaltyRewardRule>(`/api/v1/fidelites/admin/reward-rules/${id}/`, payload);
+        return { ok: true, data: res.data };
+    } catch (e) { return handleApiError(e); }
+};
+
+/** Supprime une règle de récompense. */
+export const deleteAdminRewardRule = async (id: string): Promise<Result<void>> => {
+    try {
+        await apiPrivate.delete(`/api/v1/fidelites/admin/reward-rules/${id}/`);
+        return { ok: true, data: undefined };
+    } catch (e) { return handleApiError(e); }
+};
+
+// --- PUBLICS / CLIENT ---------------------------------------------------------
 
 /**
  * Liste tous les paliers de fidélité disponibles.

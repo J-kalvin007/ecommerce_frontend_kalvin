@@ -1,6 +1,6 @@
-/**
+﻿/**
  * RedeemPointsModal.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Modale pour dépenser des points de fidélité sur une commande.
  *
  * Permet à l'utilisateur de :
@@ -28,7 +28,7 @@ import {
 import { redeemLoyaltyPoints } from "@/fonctions_api/fidelites.api";
 import type { LoyaltyProfile, PointValue } from "@/modeles/fidelites";
 
-/* ── Utilitaires ────────────────────────────────────────────────────────── */
+/* -- Utilitaires ---------------------------------------------------------- */
 
 function formatPoints(pts: number): string {
   return new Intl.NumberFormat("fr-FR").format(pts);
@@ -45,7 +45,7 @@ function formatAmount(amount: string): string {
   );
 }
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface RedeemPointsModalProps {
   isOpen: boolean;
   profile: LoyaltyProfile;
@@ -67,20 +67,20 @@ export default function RedeemPointsModal({
   onClose,
   onSuccess,
 }: RedeemPointsModalProps) {
-  /* ── État du formulaire ──────────────────────────────────────────────── */
+  /* -- État du formulaire ------------------------------------------------ */
   const [orderId, setOrderId] = useState("");
   const [pointsToSpend, setPointsToSpend] = useState("");
 
-  /* ── État de la soumission ───────────────────────────────────────────── */
+  /* -- État de la soumission --------------------------------------------- */
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  /* ── Points disponibles ──────────────────────────────────────────────── */
+  /* -- Points disponibles ------------------------------------------------ */
   const maxPoints = profile.points_balance;
   const parsedPoints = parseInt(pointsToSpend || "0", 10);
   const isValidPoints = parsedPoints > 0 && parsedPoints <= maxPoints;
 
-  /* ── Estimation de la réduction (valeur du point + bonus grade) ─────── */
+  /* -- Estimation de la réduction (valeur du point + bonus grade) ------- */
   const estimatedDiscount = useMemo(() => {
     if (!isValidPoints) return null;
     const ratio = pointValueConfig && pointValueConfig.nombre_de_point > 0 
@@ -92,7 +92,7 @@ export default function RedeemPointsModal({
     return formatAmount(String(discount));
   }, [parsedPoints, isValidPoints, profile.tier.discount_percent, pointValueConfig]);
 
-  /* ── Réinitialisation à l'ouverture ─────────────────────────────────── */
+  /* -- Réinitialisation à l'ouverture ----------------------------------- */
   useEffect(() => {
     if (isOpen) {
       setOrderId("");
@@ -102,7 +102,7 @@ export default function RedeemPointsModal({
     }
   }, [isOpen]);
 
-  /* ── Escape pour fermer ──────────────────────────────────────────────── */
+  /* -- Escape pour fermer ------------------------------------------------ */
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && !isSubmitting) onClose();
@@ -111,7 +111,7 @@ export default function RedeemPointsModal({
     return () => document.removeEventListener("keydown", handleKey);
   }, [isOpen, isSubmitting, onClose]);
 
-  /* ── Saisie rapide (% du solde) ──────────────────────────────────────── */
+  /* -- Saisie rapide (% du solde) ---------------------------------------- */
   const setQuickAmount = useCallback(
     (fraction: number) => {
       const pts = Math.floor(maxPoints * fraction);
@@ -120,7 +120,7 @@ export default function RedeemPointsModal({
     [maxPoints]
   );
 
-  /* ── Soumission ──────────────────────────────────────────────────────── */
+  /* -- Soumission -------------------------------------------------------- */
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();

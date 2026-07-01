@@ -1,4 +1,4 @@
-/**
+﻿/**
  * User Models — Interfaces TypeScript strictement synchronisées avec le backend Django DRF
  *
  * Source de vérité absolue : schéma OpenAPI du backend "Atelier du Terroir".
@@ -10,7 +10,7 @@
 
 
 
-// ─── Enums ────────────────────────────────────────────────────────────────────
+// --- Enums --------------------------------------------------------------------
 
 /** Rôles possibles pour un utilisateur — union type exhaustive */
 export type UserRole = 'platform_admin' | 'customer';
@@ -18,7 +18,7 @@ export type UserRole = 'platform_admin' | 'customer';
 
 
 
-// ─── Entité principale ────────────────────────────────────────────────────────
+// --- Entité principale --------------------------------------------------------
 
 
 /**
@@ -40,6 +40,8 @@ export interface User {
   profile_image: string | null;
   /** Compte actif */
   is_active: boolean;
+
+  created_at: string | null;
   /** Email vérifié */
   is_verified: boolean;
 }
@@ -49,7 +51,7 @@ export interface User {
 
 
 
-// ─── Authentification ─────────────────────────────────────────────────────────
+// --- Authentification ---------------------------------------------------------
 
 
 
@@ -90,7 +92,7 @@ export interface LoginResponse {
 
 
 
-// ─── Inscription ──────────────────────────────────────────────────────────────
+// --- Inscription --------------------------------------------------------------
 
 
 
@@ -126,7 +128,7 @@ export interface RegisterResponse {
 
 
 
-// ─── Vérification email ───────────────────────────────────────────────────────
+// --- Vérification email -------------------------------------------------------
 
 
 
@@ -162,7 +164,7 @@ export interface ResendEmailResponse {
 
 
 
-// ─── Réinitialisation du mot de passe ────────────────────────────────────────
+// --- Réinitialisation du mot de passe ----------------------------------------
 
 
 /** Payload pour POST /api/auth/password/reset/ */
@@ -202,7 +204,7 @@ export interface PasswordResetConfirmResponse {
 
 
 
-// ─── Changement de mot de passe ───────────────────────────────────────────────
+// --- Changement de mot de passe -----------------------------------------------
 
 /** Payload pour POST /api/auth/password/change/ (utilisateur connecté) */
 export interface PasswordChangeRequest {
@@ -221,7 +223,7 @@ export interface PasswordChangeResponse {
 
 
 
-// ─── Mise à jour du profil ────────────────────────────────────────────────────
+// --- Mise à jour du profil ----------------------------------------------------
 
 /**
  * Payload pour PUT /api/users/{id}/ et PATCH /api/users/{id}/
@@ -237,7 +239,7 @@ export type UpdateUserRequest = Partial<
 
 
 
-// ─── Gestion d'erreurs API ────────────────────────────────────────────────────
+// --- Gestion d'erreurs API ----------------------------------------------------
 
 
 /**

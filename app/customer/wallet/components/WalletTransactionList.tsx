@@ -1,6 +1,6 @@
-/**
+﻿/**
  * WalletTransactionList.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Liste complète des transactions du wallet avec filtrage, recherche et
  * basculement grille/liste.
  *
@@ -40,7 +40,7 @@ import type { WalletTransaction } from "@/modeles/wallets-paiements";
 import WalletTransactionRow from "./WalletTransactionRow";
 import LoadingKalvin from "@/components/special/loadingKalvin";
 
-/* ── Types internes ─────────────────────────────────────────────────────── */
+/* -- Types internes ------------------------------------------------------- */
 
 type FilterType =
   | "all"
@@ -58,7 +58,7 @@ type SortBy =
   | "amount_desc"
   | "amount_asc";
 
-/* ── Configuration des filtres de type ─────────────────────────────────── */
+/* -- Configuration des filtres de type ----------------------------------- */
 
 const TYPE_FILTERS: Array<{
   value: FilterType;
@@ -84,7 +84,7 @@ const TYPE_FILTERS: Array<{
     },
   ];
 
-/* ── Configuration des filtres de statut ───────────────────────────────── */
+/* -- Configuration des filtres de statut --------------------------------- */
 
 const STATUS_FILTERS: Array<{
   value: FilterStatus;
@@ -99,10 +99,10 @@ const STATUS_FILTERS: Array<{
     { value: "cancelled", label: "Annulés", icon: XCircle, color: "#94a3b8" },
   ];
 
-/* ── Constante de pagination ─────────────────────────────────────────────── */
+/* -- Constante de pagination ----------------------------------------------- */
 const PAGE_SIZE = 10;
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface WalletTransactionListProps {
   transactions: WalletTransaction[];
   isLoading: boolean;
@@ -118,7 +118,7 @@ export default function WalletTransactionList({
   transactions,
   isLoading,
 }: WalletTransactionListProps) {
-  /* ── État des filtres ────────────────────────────────────────────────── */
+  /* -- État des filtres -------------------------------------------------- */
   const [filterType, setFilterType] = useState<FilterType>("all");
   const [filterStatus, setFilterStatus] = useState<FilterStatus>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -126,7 +126,7 @@ export default function WalletTransactionList({
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  /* ── Filtrage + tri mémoïsés ─────────────────────────────────────────── */
+  /* -- Filtrage + tri mémoïsés ------------------------------------------- */
   const filteredTransactions = useMemo(() => {
     let result = transactions.filter((t) => {
       if (filterType !== "all" && t.transaction_type !== filterType) return false;
@@ -153,7 +153,7 @@ export default function WalletTransactionList({
     return result;
   }, [transactions, filterType, filterStatus, searchQuery, sortBy]);
 
-  /* ── Transactions visibles (pagination progressive) ─────────────────── */
+  /* -- Transactions visibles (pagination progressive) ------------------- */
   const visibleTransactions = useMemo(
     () => filteredTransactions.slice(0, visibleCount),
     [filteredTransactions, visibleCount]
@@ -161,7 +161,7 @@ export default function WalletTransactionList({
 
   const hasMore = visibleCount < filteredTransactions.length;
 
-  /* ── Réinitialisation des filtres ────────────────────────────────────── */
+  /* -- Réinitialisation des filtres -------------------------------------- */
   const handleResetFilters = useCallback(() => {
     setFilterType("all");
     setFilterStatus("all");
@@ -169,14 +169,14 @@ export default function WalletTransactionList({
     setSortBy("date_desc");
   }, []);
 
-  /* ── Chargement suivant ──────────────────────────────────────────────── */
+  /* -- Chargement suivant ------------------------------------------------ */
   const handleLoadMore = useCallback(() => {
     setVisibleCount((prev) => prev + PAGE_SIZE);
   }, []);
 
   return (
     <section aria-label="Historique de vos transactions">
-      {/* ── Titre de section ── */}
+      {/* -- Titre de section -- */}
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h2 className="text-[22px] md:text-[24px] xl:text-[26px] font-black tracking-tight text-[#1f241c]">
@@ -190,7 +190,7 @@ export default function WalletTransactionList({
         </div>
       </div>
 
-      {/* ── Barre de contrôles ── */}
+      {/* -- Barre de contrôles -- */}
       <div className="sticky top-[72px] z-10 -mx-4 mb-4 border-b border-[#E8E3D8] bg-white/90 px-4 py-3 backdrop-blur-xl sm:mx-0 sm:rounded-2xl sm:border sm:px-4 sm:py-3 sm:backdrop-blur-none">
         {/* Rangée 1 : Filtres de type (chips scrollables) + Recherche + Filtres avancés */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -256,7 +256,7 @@ export default function WalletTransactionList({
           </div>
         </div>
 
-        {/* ── Section filtres avancés collapsible ── */}
+        {/* -- Section filtres avancés collapsible -- */}
         <AnimatePresence>
           {showAdvanced && (
             <motion.div
@@ -355,7 +355,7 @@ export default function WalletTransactionList({
         </AnimatePresence>
       </div>
 
-      {/* ── Liste des transactions ── */}
+      {/* -- Liste des transactions -- */}
       <div className="rounded-2xl border border-[#E8E3D8] bg-white overflow-hidden">
         <AnimatePresence mode="popLayout">
           {isLoading ? (

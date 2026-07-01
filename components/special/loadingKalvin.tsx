@@ -1,4 +1,4 @@
-
+﻿
 
 
 'use client';
@@ -83,7 +83,7 @@ const LoadingKalvin = ({
                     width: '100%',
                 }}
             >
-                {/* ── Spinner ────────────────────────────────────────────────────────── */}
+                {/* -- Spinner ---------------------------------------------------------- */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -138,7 +138,7 @@ const LoadingKalvin = ({
                     </div>
                 </motion.div>
 
-                {/* ── Label ─────────────────────────────────────────────────────────── */}
+                {/* -- Label ----------------------------------------------------------- */}
                 {block && message && (
                     <motion.div
                         initial={{ opacity: 0, y: 8 }}

@@ -1,4 +1,4 @@
-
+﻿
 
 
 
@@ -538,13 +538,13 @@
  *  Produit une sensation de "profondeur de champ" photo — inédit en template.
  *
  * Architecture :
- *  ┌─ AgriShowcaseSection     (section principale, layout hero)
- *  │   ├─ HeroTextBlock       (eyebrow + titre + description + CTA)
- *  │   ├─ ProductShowcase     (conteneur blob + carousel)
- *  │   │   └─ VerticalImageCarousel  (lens effect, rAF scroll, bannières API)
- *  │   └─ PillarsJourney      (chemin SVG animé + 3 piliers narratifs)
- *  │       ├─ PathMarker      (marqueur numéroté avec glow jade)
- *  │       └─ PillarCopy      (texte pilier, citation ou standard)
+ *  ┌- AgriShowcaseSection     (section principale, layout hero)
+ *  │   ├- HeroTextBlock       (eyebrow + titre + description + CTA)
+ *  │   ├- ProductShowcase     (conteneur blob + carousel)
+ *  │   │   └- VerticalImageCarousel  (lens effect, rAF scroll, bannières API)
+ *  │   └- PillarsJourney      (chemin SVG animé + 3 piliers narratifs)
+ *  │       ├- PathMarker      (marqueur numéroté avec glow jade)
+ *  │       └- PillarCopy      (texte pilier, citation ou standard)
  *
  * Patterns :
  *  - rAF loop pour le scroll infini : will-change:transform, translate3d GPU
@@ -575,7 +575,7 @@ import type { Banner } from "@/modeles/bannieres";
 import { getActiveRecommendations } from "@/fonctions_api/bannieres.api";
 import { mediaUrl } from "@/lib/mediaUrl";
 
-/* ─── Constantes de configuration ────────────────────────────────────────── */
+/* --- Constantes de configuration ------------------------------------------ */
 
 /** Hauteur d'une slide en pixels */
 const SLIDE_HEIGHT = 224;
@@ -586,7 +586,7 @@ const SLIDE_GAP = 14;
 /** Vitesse du scroll automatique (px/frame) */
 const SCROLL_SPEED = 0.42;
 
-/* ─── Keyframes globaux ───────────────────────────────────────────────────── */
+/* --- Keyframes globaux ----------------------------------------------------- */
 
 /**
  * shimmerBeam : cohérent avec PromoOfferCard & PubSection.
@@ -626,7 +626,7 @@ const GLOBAL_KEYFRAMES = `
   }
 `;
 
-/* ─── Données statiques ───────────────────────────────────────────────────── */
+/* --- Données statiques ----------------------------------------------------- */
 
 /**
  * Slides de fallback — utilisées uniquement si l'API ne retourne rien.
@@ -676,7 +676,7 @@ const JOURNEY_STOPS = [
 /** Positions mobile des piliers (colonne verticale) */
 const MOBILE_STOPS = [{ y: "8%" }, { y: "46%" }, { y: "84%" }] as const;
 
-/* ─── Variants Framer Motion ──────────────────────────────────────────────── */
+/* --- Variants Framer Motion ------------------------------------------------ */
 
 const containerVariants = {
   hidden: {},
@@ -874,7 +874,7 @@ function PillarsJourney() {
 
       <CurvedJourneyPath className="pointer-events-none absolute inset-0 h-full w-full" />
 
-      {/* ── Version mobile : colonne verticale ── */}
+      {/* -- Version mobile : colonne verticale -- */}
       <ul className="relative min-h-[420px] md:hidden" role="list">
         {PILLARS.map((pillar, index) => (
           <motion.li
@@ -896,7 +896,7 @@ function PillarsJourney() {
         ))}
       </ul>
 
-      {/* ── Version desktop : positionnement absolu sur le chemin ── */}
+      {/* -- Version desktop : positionnement absolu sur le chemin -- */}
       <div className="relative hidden min-h-[500px] md:block">
         {PILLARS.map((pillar, index) => {
           const stop = JOURNEY_STOPS[index];
@@ -943,7 +943,7 @@ function PillarsJourney() {
         })}
       </div>
 
-      {/* ── Feuilles flottantes (trajectoire Bézier custom) ── */}
+      {/* -- Feuilles flottantes (trajectoire Bézier custom) -- */}
       <div
         className="pointer-events-none absolute right-[8%] top-[38%] hidden md:block"
         style={{
@@ -984,7 +984,7 @@ function VerticalImageCarousel() {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(true);
 
-  /* ── Fetch bannières carousel ── */
+  /* -- Fetch bannières carousel -- */
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -1002,13 +1002,13 @@ function VerticalImageCarousel() {
     return () => { cancelled = true; };
   }, []);
 
-  /* ── Items finaux : bannières API ou slides statiques ── */
+  /* -- Items finaux : bannières API ou slides statiques -- */
   const items: (Banner | (typeof STATIC_SLIDES)[0])[] =
     banners.length > 0 ? banners : STATIC_SLIDES;
 
   const totalHeight = (SLIDE_HEIGHT + SLIDE_GAP) * items.length;
 
-  /* ── Loop rAF : GPU-friendly via translate3d ── */
+  /* -- Loop rAF : GPU-friendly via translate3d -- */
   useEffect(() => {
     const tick = () => {
       if (!paused.current && trackRef.current) {
@@ -1024,10 +1024,10 @@ function VerticalImageCarousel() {
     };
   }, [totalHeight]);
 
-  /* ── Les items sont dupliqués pour le loop infini ── */
+  /* -- Les items sont dupliqués pour le loop infini -- */
   const loopItems = [...items, ...items];
 
-  /* ── État de chargement : spinner forest cohérent ── */
+  /* -- État de chargement : spinner forest cohérent -- */
   if (loading) {
     return (
       <div
@@ -1065,7 +1065,7 @@ function VerticalImageCarousel() {
       aria-label="Carrousel des produits et bannières"
       role="region"
     >
-      {/* ── Masques de fondu haut / bas (dégradé forest) ── */}
+      {/* -- Masques de fondu haut / bas (dégradé forest) -- */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 z-10 h-16"
         style={{
@@ -1083,7 +1083,7 @@ function VerticalImageCarousel() {
         aria-hidden="true"
       />
 
-      {/* ── Anneau de focus jade au centre (signature lentille) ── */}
+      {/* -- Anneau de focus jade au centre (signature lentille) -- */}
       <div
         className="pointer-events-none absolute inset-x-0 z-20"
         style={{
@@ -1098,14 +1098,14 @@ function VerticalImageCarousel() {
         aria-hidden="true"
       />
 
-      {/* ── Piste des slides ── */}
+      {/* -- Piste des slides -- */}
       <div
         ref={trackRef}
         className="flex flex-col will-change-transform"
         style={{ gap: `${SLIDE_GAP}px`, padding: "8px 6px" }}
       >
         {loopItems.map((item, index) => {
-          /* ─ Slide bannière dynamique ─ */
+          /* - Slide bannière dynamique - */
           if ("image_url" in item) {
             const banner = item as Banner;
             return (
@@ -1182,7 +1182,7 @@ function VerticalImageCarousel() {
             );
           }
 
-          /* ─ Slide statique fallback ─ */
+          /* - Slide statique fallback - */
           const slide = item as (typeof STATIC_SLIDES)[0];
           return (
             <div
@@ -1380,11 +1380,11 @@ export default function AgriShowcaseSection() {
       {/* Injection des keyframes globaux */}
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_KEYFRAMES }} />
 
-      {/* ── Blobs d'ambiance de fond — forest/jade discrets ── */}
+      {/* -- Blobs d'ambiance de fond — forest/jade discrets -- */}
       <OrganicBlob className="pointer-events-none absolute -left-24 top-0 h-64 w-64 text-primary-light/50" />
       <OrganicBlob className="pointer-events-none absolute -right-20 bottom-0 h-56 w-56 text-surface-alt/80" />
 
-      {/* ── Halos d'ambiance cohérents avec PubSection ── */}
+      {/* -- Halos d'ambiance cohérents avec PubSection -- */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <div
           className="absolute left-[3%] top-[15%] h-48 w-48 rounded-full blur-3xl"
@@ -1403,7 +1403,7 @@ export default function AgriShowcaseSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
         >
-          {/* ── Layout hero 2 colonnes ── */}
+          {/* -- Layout hero 2 colonnes -- */}
           <div className="grid items-center gap-10 overflow-visible lg:grid-cols-2 lg:gap-14">
             {/* Colonne gauche : texte */}
             <HeroTextBlock />
@@ -1417,7 +1417,7 @@ export default function AgriShowcaseSection() {
             </motion.div>
           </div>
 
-          {/* ── Journey path des 3 piliers ── */}
+          {/* -- Journey path des 3 piliers -- */}
           <PillarsJourney />
         </motion.div>
       </div>

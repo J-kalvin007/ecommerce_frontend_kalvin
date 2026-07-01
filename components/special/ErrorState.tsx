@@ -1,4 +1,4 @@
-
+﻿
 
 "use client";
 
@@ -142,7 +142,7 @@ export default function ErrorState({
                     backgroundSize: '128px',
                 }} /> */}
 
-                {/* ── Lottie + code badge ──────────────────────────────────────────── */}
+                {/* -- Lottie + code badge -------------------------------------------- */}
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -176,7 +176,7 @@ export default function ErrorState({
                     </div>
                 </motion.div>
 
-                {/* ── Title ────────────────────────────────────────────────────────── */}
+                {/* -- Title ---------------------------------------------------------- */}
                 <motion.h3
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -196,7 +196,7 @@ export default function ErrorState({
                     {title}
                 </motion.h3>
 
-                {/* ── Message ───────────────────────────────────────────────────────── */}
+                {/* -- Message --------------------------------------------------------- */}
                 <motion.p
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -215,7 +215,7 @@ export default function ErrorState({
                     {message}
                 </motion.p>
 
-                {/* ── CTA ───────────────────────────────────────────────────────────── */}
+                {/* -- CTA ------------------------------------------------------------- */}
                 {onRetry && (
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}

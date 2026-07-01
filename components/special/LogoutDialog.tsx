@@ -1,6 +1,6 @@
-/**
+﻿/**
  * LogoutDialog.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Modale de déconnexion ultra-premium.
  * Design : flat, sombre, luxueux — palette identique au thème global de l'app :
  *   • Fond carte   → dégradé vert forêt profond (#16332b → #1f4d3f)
@@ -15,7 +15,7 @@
  * Notifications :
  *   • Succès → Toast vert  « Déconnexion réussie »  (auto-fermeture 3 s)
  *   • Erreur → Toast rouge « Échec de la déconnexion » (fermeture manuelle)
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  */
 
 import { useEffect, useState, useCallback } from 'react';
@@ -25,9 +25,9 @@ import exitAnimation from '@/public/assets/lottis/logout.json';
 import { LogOut, Shield, X } from 'lucide-react';
 import Toast from '@/components/special/Toast';
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    Tokens de couleur — identiques au panneau gauche de la page login
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 /** Vert forêt — même gradient que le panneau login gauche */
 const FOREST_DARK = '#16332b';
@@ -41,9 +41,9 @@ const CHAMPAGNE = '#d8c4ab';
 const GOLD = '#C9963A';
 const GOLD_LIGHT = '#e0b46a';
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    Orbe ambiante flottante
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 function FloatingOrb({
   delay, x, color, size,
@@ -66,9 +66,9 @@ function FloatingOrb({
   );
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    Props (interface publique — inchangée)
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 interface LogoutDialogProps {
   isOpen: boolean;
@@ -77,9 +77,9 @@ interface LogoutDialogProps {
   onCancel: () => void;
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    Variants Framer Motion
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 const backdropVariants = {
   hidden: { opacity: 0 },
@@ -107,9 +107,9 @@ const stagger = {
   }),
 };
 
-/* ──────────────────────────────────────────────────────────────────────────
+/* --------------------------------------------------------------------------
    Composant principal
-────────────────────────────────────────────────────────────────────────── */
+-------------------------------------------------------------------------- */
 
 export default function LogoutDialog({
   isOpen,
@@ -178,7 +178,7 @@ export default function LogoutDialog({
           aria-describedby="logout-desc"
         >
 
-          {/* ── Backdrop — halo vert forêt sur noir profond, comme le bg login ── */}
+          {/* -- Backdrop — halo vert forêt sur noir profond, comme le bg login -- */}
           <motion.div
             variants={backdropVariants}
             initial="hidden"
@@ -194,7 +194,7 @@ export default function LogoutDialog({
             onClick={isLoading ? undefined : onCancel}
           />
 
-          {/* ── Carte principale — même teinte que le panneau gauche login ── */}
+          {/* -- Carte principale — même teinte que le panneau gauche login -- */}
           <motion.div
             variants={cardVariants}
             initial="hidden"
@@ -212,7 +212,7 @@ export default function LogoutDialog({
             }}
           >
 
-            {/* ─── Liseré supérieur vert → champagne → or ─── */}
+            {/* --- Liseré supérieur vert → champagne → or --- */}
             {/* <div
               aria-hidden
               className="pointer-events-none absolute inset-x-0 top-0 z-10"
@@ -223,7 +223,7 @@ export default function LogoutDialog({
               }}
             /> */}
 
-            {/* ─── Lueur ambiante champagne derrière l'animation ─── */}
+            {/* --- Lueur ambiante champagne derrière l'animation --- */}
             {/* <div
               aria-hidden
               className="pointer-events-none absolute left-1/2 top-8 -translate-x-1/2"
@@ -237,7 +237,7 @@ export default function LogoutDialog({
               }}
             /> */}
 
-            {/* ─── Particules flottantes vert & champagne ─── */}
+            {/* --- Particules flottantes vert & champagne --- */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2rem]">
               {[
                 { delay: 0.0, x: '20%', color: 'rgba(31,77,63,0.9)', size: 4 },
@@ -250,7 +250,7 @@ export default function LogoutDialog({
               ))}
             </div>
 
-            {/* ── Contenu ── */}
+            {/* -- Contenu -- */}
             <div className="relative z-10 flex flex-col items-center px-8 pb-8 pt-8 text-center">
 
               {/* Bouton fermer */}
@@ -429,7 +429,7 @@ export default function LogoutDialog({
       )}
     </AnimatePresence>
 
-    {/* ── Toast de feedback déconnexion ── */}
+    {/* -- Toast de feedback déconnexion -- */}
     <Toast
       show={toast.show}
       type={toast.type}

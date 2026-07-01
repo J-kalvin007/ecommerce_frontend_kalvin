@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -59,20 +59,51 @@ export default function TestimonialsSection() {
   return (
     <section className="bg-surface/30 py-16 lg:py-24">
       <div className="mx-auto max-w-[var(--content-max-width)] px-[var(--spacing-page-x)]">
+
+
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-16 text-center"
         >
-          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">
-            Temoignages
-          </p>
-          <h2 className="font-display text-3xl font-bold lg:text-4xl">
-            Ce Que Disent Nos Clients
+          {/* Eyebrow avec ligne dorée */}
+          <div className="mx-auto mb-5 flex items-center justify-center gap-3">
+            <span className="h-px w-8 bg-gradient-to-r from-transparent to-[#c9a96e]" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#c9a96e]">
+              Temoignages
+            </span>
+            <span className="h-px w-8 bg-gradient-to-l from-transparent to-[#c9a96e]" />
+          </div>
+
+          <h2
+            id="features-heading"
+            className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl"
+          >
+            Ce Que Disent Nos {" "}
+            <span className="relative inline-block">
+              <span className="text-[#c9a96e]">Clients</span>
+              {/* Soulignement doré dessiné */}
+              <motion.span
+                className="absolute -bottom-1 left-0 h-[2px] rounded-full"
+                style={{ background: "linear-gradient(to right, #c9a96e, #f5d98b)" }}
+                initial={{ width: "0%" }}
+                whileInView={{ width: "100%" }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                aria-hidden
+              />
+            </span>
           </h2>
+
+
         </motion.div>
+
+
+
+
+
 
         <div className="relative mx-auto max-w-3xl">
           <AnimatePresence mode="wait">
@@ -239,9 +270,9 @@ export default function TestimonialsSection() {
 // import { ChevronLeft, ChevronRight } from "lucide-react";
 // import { cn } from "@/lib/utils";
 
-// /* ─────────────────────────────────────────────────────────────
+// /* -------------------------------------------------------------
 //    DONNÉES — structure d'origine conservée, enrichie de subtilTitle
-//    ───────────────────────────────────────────────────────────── */
+//    ------------------------------------------------------------- */
 // const TESTIMONIALS = [
 //   {
 //     id: 1,
@@ -285,9 +316,9 @@ export default function TestimonialsSection() {
 //   },
 // ] as const;
 
-// /* ─────────────────────────────────────────────────────────────
+// /* -------------------------------------------------------------
 //    CONFIGURATION DES TIERS — couleurs, gradients et libellés
-//    ───────────────────────────────────────────────────────────── */
+//    ------------------------------------------------------------- */
 // const TIER_CONFIG = {
 //   PLATINUM: {
 //     gradient: "linear-gradient(135deg, #e8e8e8 0%, #a8a8a8 50%, #d4d4d4 100%)",
@@ -315,9 +346,9 @@ export default function TestimonialsSection() {
 //   },
 // } as const;
 
-// /* ─────────────────────────────────────────────────────────────
+// /* -------------------------------------------------------------
 //    VARIANTS FRAMER-MOTION — orchestration précise
-//    ───────────────────────────────────────────────────────────── */
+//    ------------------------------------------------------------- */
 // const SLIDE_VARIANTS: Variants = {
 //   enter: (dir: number) => ({
 //     opacity: 0,
@@ -347,9 +378,9 @@ export default function TestimonialsSection() {
 //   }),
 // };
 
-// /* ─────────────────────────────────────────────────────────────
+// /* -------------------------------------------------------------
 //    SOUS-COMPOSANT : StarRating — étoiles avec fill animé
-//    ───────────────────────────────────────────────────────────── */
+//    ------------------------------------------------------------- */
 // function StarRating({ rating }: { rating: number }) {
 //   return (
 //     <div className="flex items-center gap-1" role="img" aria-label={`Note : ${rating} sur 5`}>
@@ -374,9 +405,9 @@ export default function TestimonialsSection() {
 //   );
 // }
 
-// /* ─────────────────────────────────────────────────────────────
+// /* -------------------------------------------------------------
 //    SOUS-COMPOSANT : TierBadge — badge avec halo pulsé
-//    ───────────────────────────────────────────────────────────── */
+//    ------------------------------------------------------------- */
 // function TierBadge({ tier }: { tier: keyof typeof TIER_CONFIG }) {
 //   const cfg = TIER_CONFIG[tier];
 //   return (
@@ -401,9 +432,9 @@ export default function TestimonialsSection() {
 //   );
 // }
 
-// /* ─────────────────────────────────────────────────────────────
+// /* -------------------------------------------------------------
 //    SOUS-COMPOSANT : AvatarCircle — initiales avec ring tier
-//    ───────────────────────────────────────────────────────────── */
+//    ------------------------------------------------------------- */
 // function AvatarCircle({
 //   avatar,
 //   tier,
@@ -435,9 +466,9 @@ export default function TestimonialsSection() {
 //   );
 // }
 
-// /* ─────────────────────────────────────────────────────────────
+// /* -------------------------------------------------------------
 //    SOUS-COMPOSANT : ProgressDots — indicateur de slide actif
-//    ───────────────────────────────────────────────────────────── */
+//    ------------------------------------------------------------- */
 // function ProgressDots({
 //   total,
 //   active,
@@ -473,9 +504,9 @@ export default function TestimonialsSection() {
 //   );
 // }
 
-// /* ─────────────────────────────────────────────────────────────
+// /* -------------------------------------------------------------
 //    COMPOSANT PRINCIPAL
-//    ───────────────────────────────────────────────────────────── */
+//    ------------------------------------------------------------- */
 // export default function TestimonialsSection() {
 //   const [activeIndex, setActiveIndex] = useState(0);
 //   const [direction, setDirection] = useState(1);
@@ -524,7 +555,7 @@ export default function TestimonialsSection() {
 //       className="relative overflow-hidden bg-surface/30 py-20 lg:py-32"
 //       aria-labelledby="testimonials-heading"
 //     >
-//       {/* ── Grain de texture subtil ── */}
+//       {/* -- Grain de texture subtil -- */}
 //       <div
 //         className="pointer-events-none absolute inset-0 opacity-[0.02]"
 //         style={{
@@ -534,7 +565,7 @@ export default function TestimonialsSection() {
 //         aria-hidden
 //       />
 
-//       {/* ── Halo doré ambiant centré ── */}
+//       {/* -- Halo doré ambiant centré -- */}
 //       <div
 //         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full opacity-[0.03]"
 //         style={{ background: "radial-gradient(circle, #c9a96e 0%, transparent 70%)" }}
@@ -543,7 +574,7 @@ export default function TestimonialsSection() {
 
 //       <div className="relative mx-auto max-w-[var(--content-max-width,1200px)] px-[var(--spacing-page-x,1.5rem)]">
 
-//         {/* ── En-tête ── */}
+//         {/* -- En-tête -- */}
 //         <motion.div
 //           initial={{ opacity: 0, y: 24 }}
 //           whileInView={{ opacity: 1, y: 0 }}
@@ -569,7 +600,7 @@ export default function TestimonialsSection() {
 //           </h2>
 //         </motion.div>
 
-//         {/* ── Carousel principal ── */}
+//         {/* -- Carousel principal -- */}
 //         <div className="relative mx-auto max-w-3xl">
 
 //           {/* Carte témoignage */}
@@ -656,7 +687,7 @@ export default function TestimonialsSection() {
 //             </AnimatePresence>
 //           </div>
 
-//           {/* ── Contrôles de navigation ── */}
+//           {/* -- Contrôles de navigation -- */}
 //           <div className="mt-8 flex items-center justify-between">
 
 //             {/* Bouton précédent */}

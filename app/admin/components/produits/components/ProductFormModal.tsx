@@ -1,4 +1,4 @@
-
+﻿
 // components/admin/produits/ProductFormModal.tsx
 "use client";
 import { useState, useEffect } from "react";
@@ -50,7 +50,7 @@ export function ProductFormModal({
   const [selectedCatId, setSelectedCatId] = useState(selectedCategoryId);
   const [variants, setVariants] = useState(existingVariants);
 
-  // ─── Fix critique : re-synchroniser le state quand la modale s'ouvre ─────────
+  // --- Fix critique : re-synchroniser le state quand la modale s'ouvre ---------
   useEffect(() => {
     if (open) {
       setForm(initialForm);

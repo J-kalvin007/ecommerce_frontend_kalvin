@@ -41,9 +41,9 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { getMyOrderByReference, getOrderHistory } from "@/fonctions_api/commandes.api";
 import type { OrderDetail, OrderHistory, OrderStatus } from "@/modeles/commandes";
 
-/* ─────────────────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------------------
    Configuration des statuts
-   ─────────────────────────────────────────────────────────────────────────── */
+   --------------------------------------------------------------------------- */
 
 const STATUS_CONFIG: Record<
   OrderStatus,
@@ -149,9 +149,9 @@ const JOURNEY_STEPS: OrderStatus[] = [
   "delivered",
 ];
 
-/* ─────────────────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------------------
    Animation variants
-   ─────────────────────────────────────────────────────────────────────────── */
+   --------------------------------------------------------------------------- */
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -171,9 +171,9 @@ const scaleIn: Variants = {
   },
 };
 
-/* ─────────────────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------------------
    Composant principal
-   ─────────────────────────────────────────────────────────────────────────── */
+   --------------------------------------------------------------------------- */
 
 export default function OrderDetailClient({ reference }: { reference: string }) {
   const { resolvedTheme } = useThemeStore();
@@ -218,7 +218,7 @@ export default function OrderDetailClient({ reference }: { reference: string }) 
     setTimeout(() => setCopied(false), 2000);
   };
 
-  /* ── Loading ── */
+  /* -- Loading -- */
   if (loading) {
     return (
       <div
@@ -250,7 +250,7 @@ export default function OrderDetailClient({ reference }: { reference: string }) 
     );
   }
 
-  /* ── Error ── */
+  /* -- Error -- */
   if (error || !order) {
     return (
       <div
@@ -302,7 +302,7 @@ export default function OrderDetailClient({ reference }: { reference: string }) 
 
   return (
     <div className="min-h-screen pb-24" style={{ background: bg }}>
-      {/* ── Hero Header ── */}
+      {/* -- Hero Header -- */}
       <div
         className="relative overflow-hidden"
         style={{
@@ -436,7 +436,7 @@ export default function OrderDetailClient({ reference }: { reference: string }) 
         </div>
       </div>
 
-      {/* ── Main Content ── */}
+      {/* -- Main Content -- */}
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           {/* ══ Left Column ══ */}
@@ -789,9 +789,9 @@ export default function OrderDetailClient({ reference }: { reference: string }) 
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------------------
    Sous-composant : SectionCard
-   ─────────────────────────────────────────────────────────────────────────── */
+   --------------------------------------------------------------------------- */
 
 function SectionCard({
   title,
@@ -845,9 +845,9 @@ function SectionCard({
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------------------
    Sous-composant : OrderJourney (stepper horizontal)
-   ─────────────────────────────────────────────────────────────────────────── */
+   --------------------------------------------------------------------------- */
 
 function OrderJourney({
   steps,
@@ -938,9 +938,9 @@ function OrderJourney({
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------------------
    Sous-composant : FinancialRow
-   ─────────────────────────────────────────────────────────────────────────── */
+   --------------------------------------------------------------------------- */
 
 function FinancialRow({
   label,
@@ -977,9 +977,9 @@ function FinancialRow({
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------------------
    Sous-composant : InfoRow
-   ─────────────────────────────────────────────────────────────────────────── */
+   --------------------------------------------------------------------------- */
 
 function InfoRow({
   icon,

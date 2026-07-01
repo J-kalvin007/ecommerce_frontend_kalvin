@@ -1,4 +1,4 @@
-
+﻿
 
 
 // app/admin/components/CategoriesSection.tsx
@@ -177,7 +177,7 @@ export default function CategoriesSection() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
 
-        {/* ── En-tête avec effet premium ── */}
+        {/* -- En-tête avec effet premium -- */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}

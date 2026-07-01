@@ -1,4 +1,4 @@
-
+﻿
 
 
 /**
@@ -17,12 +17,12 @@
  *  données réelles (tri par order_count desc) — pas purement décoratif.
  *
  * Architecture :
- *  ┌─ HomeTrendingProducts     (orchestrateur : fetch, état, modal)
- *  │   ├─ TrendingProductSkeleton  (squelette champagne pulsé avec stagger)
- *  │   ├─ SectionHeader            (eyebrow + titre + CTA)
- *  │   ├─ TrendingProductCard      (carte produit avec rank indicator)
- *  │   ├─ EmptyState               (état vide avec CTA direction)
- *  │   └─ ProductDetailModal       (modal glassmorphism profond)
+ *  ┌- HomeTrendingProducts     (orchestrateur : fetch, état, modal)
+ *  │   ├- TrendingProductSkeleton  (squelette champagne pulsé avec stagger)
+ *  │   ├- SectionHeader            (eyebrow + titre + CTA)
+ *  │   ├- TrendingProductCard      (carte produit avec rank indicator)
+ *  │   ├- EmptyState               (état vide avec CTA direction)
+ *  │   └- ProductDetailModal       (modal glassmorphism profond)
  *
  * Patterns :
  *  - IIFE async dans useEffect avec cleanup flag
@@ -46,6 +46,7 @@ import {
   Star,
   X,
   Scale,
+  Weight,
   Package,
   Leaf,
   Tag,
@@ -58,7 +59,7 @@ import { getPublicProducts, getPublicProductById } from "@/fonctions_api/produit
 import type { ProductList, ProductDetail } from "@/modeles/produits";
 import { mediaUrl } from "@/lib/mediaUrl";
 
-/* ─── Keyframes globaux ───────────────────────────────────────────────────── */
+/* --- Keyframes globaux ----------------------------------------------------- */
 
 /**
  * shimmerBeam   : cohérent avec PromoOfferCard / AgriShowcaseSection
@@ -86,7 +87,7 @@ const GLOBAL_KEYFRAMES = `
   }
 `;
 
-/* ─── Variants Framer Motion ──────────────────────────────────────────────── */
+/* --- Variants Framer Motion ------------------------------------------------ */
 
 const containerVariants: Variants = {
   hidden: {},
@@ -106,7 +107,7 @@ const itemVariants: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
-/* ─── Utilitaires ─────────────────────────────────────────────────────────── */
+/* --- Utilitaires ----------------------------------------------------------- */
 
 /**
  * Convertit un grammage en chaîne lisible ("1.5 kg", "250 g").
@@ -129,7 +130,7 @@ function getPrimaryImageUrl(product: ProductList): string | null {
   return (img as unknown as Record<string, unknown>).image as string ?? null;
 }
 
-/* ─── Labels de rang ──────────────────────────────────────────────────────── */
+/* --- Labels de rang -------------------------------------------------------- */
 
 /** Étiquettes de rang avec leur couleur d'accent spécifique */
 const RANK_CONFIG = [
@@ -349,7 +350,7 @@ function TrendingProductCard({
         transition: { type: "spring", stiffness: 300, damping: 22 },
       }}
     >
-      {/* ── Zone image ── */}
+      {/* -- Zone image -- */}
       <div
         className="relative aspect-square overflow-hidden"
         style={{ background: "linear-gradient(145deg, #F5EEE3, #EDE5D8)" }}
@@ -388,7 +389,7 @@ function TrendingProductCard({
         <StockBadge inStock={!isOutOfStock} />
       </div>
 
-      {/* ── Zone texte ── */}
+      {/* -- Zone texte -- */}
       <div className="p-4">
         {/* Catégorie */}
         {product.category_name && (
@@ -478,7 +479,7 @@ function SectionHeader() {
       variants={itemVariants}
       className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-end sm:justify-between"
     >
-      <div className="max-w-xl">
+      <div className="max-w-5xl">
         {/* Eyebrow badge */}
         {/* <div
           className="mb-3.5 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.2em]"
@@ -504,71 +505,55 @@ function SectionHeader() {
 
 
 
-        {/* Titre — Section "Les plus demandés" */}
-        <div className="relative inline-block group">
-          {/* Kicker discret en lettres espacées doré, signature premium */}
-          <span
-            className="block text-[11px] font-semibold uppercase tracking-[0.35em] mb-2"
-            style={{ color: "#B8924A", opacity: 0.85 }}
-          >
-            Sélection exclusive
-          </span>
+
+
+
+
+
+
+
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-16 text-center"
+        >
+          {/* Eyebrow avec ligne dorée */}
+          <div className="mx-auto mb-5 flex items-center justify-center gap-3">
+            <span className="h-px w-8 bg-gradient-to-r from-transparent to-[#c9a96e]" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#c9a96e]">
+              Sélection exclusive
+            </span>
+            <span className="h-px w-8 bg-gradient-to-l from-transparent to-[#c9a96e]" />
+          </div>
 
           <h2
-            className="relative text-2xl font-black tracking-tight sm:text-3xl lg:text-4xl premium-title-shine"
-            style={{
-              color: "#0D2E1E",
-              letterSpacing: "-0.025em",
-              // Dégradé animé sur le texte (vert profond -> vert sauge -> vert profond)
-              backgroundImage:
-                "linear-gradient(110deg, #0D2E1E 0%, #1F4D34 45%, #0D2E1E 90%)",
-              backgroundSize: "220% auto",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            id="features-heading"
+            className="text-3xl font-bold tracking-tight text-[#0D2E1E] sm:text-4xl lg:text-5xl"
           >
-            Les plus demandés
-
-            {/* Soulignement doré qui se révèle au survol, transition fluide */}
-            <span
-              aria-hidden="true"
-              className="absolute left-0 -bottom-1.5 h-[2.5px] w-0 rounded-full transition-all duration-700 ease-out group-hover:w-full"
-              style={{
-                background:
-                  "linear-gradient(90deg, #B8924A 0%, #E8D5A8 50%, #B8924A 100%)",
-              }}
-            />
+            Les plus demandés,{" "}
+            <span className="relative inline-block">
+              <span className="text-[#c9a96e]">Nos meilleures ventes</span>
+              {/* Soulignement doré dessiné */}
+              <motion.span
+                className="absolute -bottom-1 left-0 h-[2px] rounded-full"
+                style={{ background: "linear-gradient(to right, #c9a96e, #f5d98b)" }}
+                initial={{ width: "0%" }}
+                whileInView={{ width: "100%" }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                aria-hidden
+              />
+            </span>
           </h2>
 
-          {/* Animations scoppées, avec respect du prefers-reduced-motion */}
-          <style>{`
-            @keyframes premium-title-shine-anim {
-              0%, 100% { background-position: 0% center; }
-              50% { background-position: 100% center; }
-            }
-            .premium-title-shine {
-              animation: premium-title-shine-anim 6s ease-in-out infinite;
-            }
-            @media (prefers-reduced-motion: reduce) {
-              .premium-title-shine {
-                animation: none;
-              }
-            }
-          `}</style>
 
-        </div>
+        </motion.div>
 
 
 
-
-        {/* Description */}
-        <p
-          className="mt-2 text-sm leading-[1.75]"
-          style={{ color: "rgba(13,46,30,0.55)" }}
-        >
-          Une sélection rigoureuse de produits qui ont conquis notre communauté.
-        </p>
       </div>
 
       {/* CTA "Voir tout" */}
@@ -681,7 +666,7 @@ function ProductDetailModal({
       aria-modal="true"
       aria-labelledby={titleId}
     >
-      {/* ── Overlay glassmorphism forest profond ── */}
+      {/* -- Overlay glassmorphism forest profond -- */}
       <div
         className="absolute inset-0"
         style={{
@@ -691,7 +676,7 @@ function ProductDetailModal({
         }}
       />
 
-      {/* ── Panneau modal ── */}
+      {/* -- Panneau modal -- */}
       <motion.div
         className="relative z-10 flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl"
         style={{
@@ -706,7 +691,7 @@ function ProductDetailModal({
         transition={{ type: "spring", stiffness: 280, damping: 26 }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* ── Bouton fermer ── */}
+        {/* -- Bouton fermer -- */}
         <motion.button
           onClick={onClose}
           aria-label="Fermer le détail produit"
@@ -723,7 +708,7 @@ function ProductDetailModal({
         </motion.button>
 
         <div className="flex flex-col overflow-y-auto md:flex-row">
-          {/* ── Colonne image ── */}
+          {/* -- Colonne image -- */}
           <div
             className="relative w-full overflow-hidden md:w-1/2"
             style={{ background: "linear-gradient(145deg, #F0E8D8, #E8DFC8)" }}
@@ -792,7 +777,7 @@ function ProductDetailModal({
             )}
           </div>
 
-          {/* ── Colonne détails ── */}
+          {/* -- Colonne détails -- */}
           <div className="flex flex-col p-6 sm:p-7 md:w-1/2">
             {/* Catégorie */}
             {product.category?.name && (
@@ -954,17 +939,18 @@ function ProductDetailModal({
                   {product.variants.map((variant) => (
                     <span
                       key={variant.id}
-                      className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold"
+                      className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black uppercase tracking-wider shadow-sm transition-all hover:-translate-y-0.5"
                       style={{
                         background: "rgba(13,46,30,0.06)",
-                        border: "1px solid rgba(13,46,30,0.1)",
-                        color: "#1B3D2F",
+                        border: "1px solid rgba(13,46,30,0.15)",
+                        color: "#1f241c",
                       }}
                     >
                       {variant.name}
-                      {variant.weight_grams && (
-                        <span style={{ color: "rgba(13,46,30,0.4)" }}>
-                          ({formatWeight(variant.weight_grams)})
+                      {variant.weight_grams != null && (
+                        <span className="flex items-center gap-1 rounded-md bg-white/70 px-1.5 py-0.5 text-[10px] font-bold text-[#1f4d3f] shadow-sm">
+                          <Weight className="h-3 w-3 opacity-90" />
+                          {formatWeight(variant.weight_grams)}
                         </span>
                       )}
                     </span>
@@ -1018,12 +1004,12 @@ export default function HomeTrendingProducts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  /* ── État du modal ── */
+  /* -- État du modal -- */
   const [modalProduct, setModalProduct] = useState<ProductDetail | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
   const [modalError, setModalError] = useState<string | null>(null);
 
-  /* ── Fetch produits top ── */
+  /* -- Fetch produits top -- */
   useEffect(() => {
     let active = true;
     setLoading(true);
@@ -1068,7 +1054,7 @@ export default function HomeTrendingProducts() {
     return () => { active = false; };
   }, []);
 
-  /* ── Ouverture du modal (fetch détail à la demande) ── */
+  /* -- Ouverture du modal (fetch détail à la demande) -- */
   const openModal = useCallback(async (productId: string) => {
     setModalLoading(true);
     setModalError(null);
@@ -1086,7 +1072,7 @@ export default function HomeTrendingProducts() {
     }
   }, []);
 
-  /* ── Fermeture du modal ── */
+  /* -- Fermeture du modal -- */
   const closeModal = useCallback(() => {
     setModalProduct(null);
     setModalError(null);
@@ -1100,7 +1086,7 @@ export default function HomeTrendingProducts() {
       {/* Injection keyframes */}
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_KEYFRAMES }} />
 
-      {/* ── Halos d'ambiance (cohérents avec tout le design system) ── */}
+      {/* -- Halos d'ambiance (cohérents avec tout le design system) -- */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <div
           className="absolute left-[8%] top-8 h-36 w-36 rounded-full blur-3xl"
@@ -1119,10 +1105,10 @@ export default function HomeTrendingProducts() {
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
         >
-          {/* ── En-tête ── */}
+          {/* -- En-tête -- */}
           <SectionHeader />
 
-          {/* ── Message d'erreur API ── */}
+          {/* -- Message d'erreur API -- */}
           {error && (
             <motion.div
               variants={itemVariants}
@@ -1139,7 +1125,7 @@ export default function HomeTrendingProducts() {
             </motion.div>
           )}
 
-          {/* ── Grille produits ── */}
+          {/* -- Grille produits -- */}
           <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
             {loading
               ? Array.from({ length: 4 }).map((_, i) => (
@@ -1155,14 +1141,14 @@ export default function HomeTrendingProducts() {
               ))}
           </div>
 
-          {/* ── État vide ── */}
+          {/* -- État vide -- */}
           {!loading && products.length === 0 && !error && (
             <motion.div variants={itemVariants}>
               <EmptyState />
             </motion.div>
           )}
 
-          {/* ── Lien secondaire "Explorer la collection" ── */}
+          {/* -- Lien secondaire "Explorer la collection" -- */}
           {!loading && products.length > 0 && (
             <motion.div variants={itemVariants} className="mt-8 text-center">
               <Link
@@ -1187,7 +1173,7 @@ export default function HomeTrendingProducts() {
         </motion.div>
       </div>
 
-      {/* ── Modal AnimatePresence ── */}
+      {/* -- Modal AnimatePresence -- */}
       <AnimatePresence>
         {/* Spinner de chargement modal */}
         {modalLoading && !modalProduct && (

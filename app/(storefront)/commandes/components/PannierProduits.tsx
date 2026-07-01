@@ -5,7 +5,7 @@
 
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,6 +19,8 @@ export default function CartDrawer() {
   const { items, isDrawerOpen, toggleDrawer, updateQuantity, removeItem, getTotal, getItemCount, clearCart } = useCartStore();
   const itemCount = getItemCount();
   const total = getTotal();
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
 
   // Bloquer le scroll du body quand le drawer est ouvert
   useEffect(() => {
@@ -148,31 +150,47 @@ export default function CartDrawer() {
                       >
                         {/* Image */}
                         <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[#f3ede2]">
-                          {item.image ? (
-                            <Image 
-                              src={mediaUrl(item.image) || "/placeholder.png"} 
-                              alt={item.name} 
-                              fill 
-                              className="object-cover transition-transform duration-500 group-hover:scale-105" 
-                              sizes="96px" 
-                              unoptimized // INDISPENSABLE POUR EVITER LES ERREURS NEXT.JS EN DEV ET IP LOCALES
-                            />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center">
-                              <ShoppingBag className="h-6 w-6 text-[#8a9086]/30" />
-                            </div>
-                          )}
+                          {(() => {
+                            const key = `${item.productId}-${item.variantId ?? 'null'}`;
+                            const imgPrimary = item.image || item.productImage;
+                            const imgFallback = failedImages.has(key) ? item.productImage : null;
+                            const imgSrc = failedImages.has(key) ? imgFallback : imgPrimary;
+                            return imgSrc ? (
+                              <Image
+                                src={mediaUrl(imgSrc) || "/placeholder.png"}
+                                alt={item.name}
+                                fill
+                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                sizes="96px"
+                                unoptimized
+                                onError={() => setFailedImages((prev) => new Set(prev).add(key))}
+                              />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center">
+                                <ShoppingBag className="h-6 w-6 text-[#8a9086]/30" />
+                              </div>
+                            );
+                          })()}
                         </div>
                         {/* Info */}
                         <div className="flex flex-1 flex-col justify-between py-1">
                           <div className="flex justify-between items-start gap-2">
-                            <Link
-                              href={`/products/${item.slug}`}
-                              onClick={() => { useUIStore.getState().setActiveProductId(item.productId); toggleDrawer(false); }}
-                              className="text-sm font-bold leading-tight text-[#1f241c] hover:text-[#1f4d3f] line-clamp-2 transition-colors"
-                            >
-                              {item.name}
-                            </Link>
+                            <div className="min-w-0 flex-1">
+                              <Link
+                                href={`/products/${item.slug}`}
+                                onClick={() => { useUIStore.getState().setActiveProductId(item.productId); toggleDrawer(false); }}
+                                className="text-sm font-bold leading-tight text-[#1f241c] hover:text-[#1f4d3f] transition-colors line-clamp-2 block"
+                              >
+                                {/* Nom produit = partie avant le " — " */}
+                                {item.name.split(" — ")[0]}
+                              </Link>
+                              {/* Variante = partie après le " — " si différente */}
+                              {item.name.includes(" — ") && (
+                                <span className="mt-1 inline-block rounded-md bg-[#f3ede2] px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#8b5e34]">
+                                  {item.name.split(" — ").slice(1).join(" — ")}
+                                </span>
+                              )}
+                            </div>
                             {/* Remove button moved top right */}
                             <motion.button
                               whileHover={{ scale: 1.1, backgroundColor: "#fee2e2" }}

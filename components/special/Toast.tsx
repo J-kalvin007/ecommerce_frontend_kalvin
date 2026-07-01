@@ -1,4 +1,4 @@
-
+﻿
 
 
 
@@ -60,7 +60,7 @@ const Toast: React.FC<ToastProps> = ({
     }
   }, [show, duration, onClose]);
 
-  // ── Design tokens per type ──────────────────────────────────────
+  // -- Design tokens per type --------------------------------------
   const config = {
     success: {
       // Background & border
@@ -309,7 +309,7 @@ export default Toast;
 //     }
 //   }, [show, duration, onClose]);
 
-//   // ── Design tokens per type ──────────────────────────────────────
+//   // -- Design tokens per type --------------------------------------
 //   const config = {
 //     success: {
 //       // Background & border

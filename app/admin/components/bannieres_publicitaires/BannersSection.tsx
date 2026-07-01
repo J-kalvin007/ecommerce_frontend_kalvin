@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState, useEffect } from "react";
 import { Plus, LayoutGrid, LayoutList, MonitorPlay, AlertTriangle, Layers, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -161,7 +161,7 @@ export default function BannersSection() {
 
 
 
-                    {/* ── En-tête avec effet premium ── */}
+                    {/* -- En-tête avec effet premium -- */}
                     <motion.div
                         initial={{ opacity: 0, y: -12 }}
                         animate={{ opacity: 1, y: 0 }}

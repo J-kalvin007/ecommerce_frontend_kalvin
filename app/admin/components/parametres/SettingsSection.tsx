@@ -1,4 +1,4 @@
-/**
+﻿/**
  * SettingsSection — Configuration globale de la plateforme
  * @module app/admin/components/SettingsSection
  */
@@ -20,7 +20,7 @@ export default function SettingsSection() {
 
 
 
-      {/* ── En-tête avec effet premium ── */}
+      {/* -- En-tête avec effet premium -- */}
       <motion.div
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}

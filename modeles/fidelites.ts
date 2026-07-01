@@ -1,7 +1,7 @@
-// modeles/fidelites.ts
+﻿// modeles/fidelites.ts
 // Source de vérité pour tous les types du module de fidélité "Atelier du Terroir"
 
-// ─── Enum des raisons d'événements de points ─────────────────────────────────
+// --- Enum des raisons d'événements de points ---------------------------------
 
 export type LoyaltyEventReason =
     | "purchase"
@@ -42,7 +42,7 @@ export const LOYALTY_EVENT_CONFIG: Record<LoyaltyEventReason, {
     order_discount: { color: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/20", icon: "Percent" },
 };
 
-// ─── Configuration visuelle des paliers ──────────────────────────────────────
+// --- Configuration visuelle des paliers --------------------------------------
 
 export const TIER_CONFIG: Record<string, {
     color: string;
@@ -110,7 +110,7 @@ export const TIER_CONFIG: Record<string, {
 export const getTierConfig = (tierName: string) =>
     TIER_CONFIG[tierName] ?? TIER_CONFIG["Bronze"];
 
-// ─── Interfaces Backend ───────────────────────────────────────────────────────
+// --- Interfaces Backend -------------------------------------------------------
 
 /** Palier de fidélité (readOnly depuis le backend) */
 export interface Tier {
@@ -187,7 +187,7 @@ export interface RedeemPointsResponse {
     readonly order_total_after: string;
 }
 
-// ─── Types utilitaires Frontend ───────────────────────────────────────────────
+// --- Types utilitaires Frontend -----------------------------------------------
 
 /** Agrégats calculés côté frontend à partir de la liste des profils */
 export interface LoyaltyStats {
@@ -229,4 +229,30 @@ export interface PointValue {
     readonly duree_validite: number;
     readonly is_active: boolean;
     readonly updated_at: string;
+}
+
+/** Payload de configuration de la valeur des points (admin) */
+export interface PointValuePayload {
+    valeur_un_point_frcfa: number;
+    nombre_de_point: number;
+    duree_validite: number;
+    is_active?: boolean;
+}
+
+/** Règle de récompense / Bénéfice (backend) */
+export interface LoyaltyRewardRule {
+    readonly id: string;
+    readonly name: string;
+    readonly description: string;
+    readonly cost_in_points: number;
+    readonly is_active: boolean;
+    readonly created_at: string;
+}
+
+/** Payload de création/modification de règle de récompense (admin) */
+export interface LoyaltyRewardRulePayload {
+    name: string;
+    description: string;
+    cost_in_points: number;
+    is_active?: boolean;
 }

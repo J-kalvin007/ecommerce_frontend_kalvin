@@ -1,4 +1,4 @@
-
+﻿
 
 
 // components/admin/produits/ProductCard.tsx
@@ -78,7 +78,7 @@ export function ProductCard({ product, onClick, onEdit, onDelete, onAddVariant }
           transition: "box-shadow 0.4s ease",
         }}
       >
-        {/* ── LEFT: Image panel ── */}
+        {/* -- LEFT: Image panel -- */}
         <div className="relative w-[38%] shrink-0 overflow-hidden">
           {/* Background */}
           <div className="absolute inset-0 bg-slate-50 dark:bg-slate-800" />
@@ -145,7 +145,7 @@ export function ProductCard({ product, onClick, onEdit, onDelete, onAddVariant }
           </AnimatePresence>
         </div>
 
-        {/* ── VERTICAL DIVIDER — luxury accent ── */}
+        {/* -- VERTICAL DIVIDER — luxury accent -- */}
         <div className="relative w-px shrink-0 self-stretch overflow-hidden">
           <div className="absolute inset-0 bg-border/30" />
           <motion.div
@@ -157,7 +157,7 @@ export function ProductCard({ product, onClick, onEdit, onDelete, onAddVariant }
           />
         </div>
 
-        {/* ── RIGHT: Content panel ── */}
+        {/* -- RIGHT: Content panel -- */}
         <div className="flex flex-col flex-1 min-w-0 p-4 gap-3">
 
           {/* Top row: Name + variants badge */}

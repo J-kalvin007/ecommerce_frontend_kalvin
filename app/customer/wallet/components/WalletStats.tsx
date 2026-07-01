@@ -1,6 +1,6 @@
-/**
+﻿/**
  * WalletStats.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Grille de KPIs dérivés de l'historique des transactions wallet.
  *
  * Calcule côté client :
@@ -19,7 +19,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, ArrowDownLeft, RefreshCcw, CalendarDays } from "lucide-react";
 import type { WalletTransaction } from "@/modeles/wallets-paiements";
 
-/* ── Utilitaires ────────────────────────────────────────────────────────── */
+/* -- Utilitaires ---------------------------------------------------------- */
 
 function formatAmount(amount: number): string {
   if (amount === 0) return "—";
@@ -31,7 +31,7 @@ function formatAmount(amount: number): string {
   );
 }
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface WalletStatsProps {
   transactions: WalletTransaction[];
 }
@@ -43,7 +43,7 @@ interface WalletStatsProps {
  * des transactions du wallet. Chaque carte est animée en stagger.
  */
 export default function WalletStats({ transactions }: WalletStatsProps) {
-  /* ── Calculs mémoïsés des KPIs ─────────────────────────────────────── */
+  /* -- Calculs mémoïsés des KPIs --------------------------------------- */
   const stats = useMemo(() => {
     const successful = transactions.filter((t) => t.status === "success");
 

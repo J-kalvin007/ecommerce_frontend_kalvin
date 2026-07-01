@@ -62,9 +62,6 @@ import { OrderDetail } from "@/modeles/commandes";
 import { Wallet } from "@/modeles/wallets-paiements";
 import { LoyaltyProfile, PointValue } from "@/modeles/fidelites";
 
-// Utilitaires de facturation
-import { generateInvoicePDFBase64, InvoiceData } from "@/lib/invoice_pdf_generator";
-
 // Composants nouvellement créés
 import PaysSelector from "./PaysSelector";
 import LocalisationCarte from "./LocalisationCarte";
@@ -77,6 +74,8 @@ import PayDunyaCheckout from "./PayDunyaCheckout";
 import CodePromoInput, { CodePromoApplique } from "./CodePromoInput";
 import PhoneInputWithCountry from "@/components/special/PhoneInputWithCountry";
 import Toast from "@/components/special/Toast";
+import ConfirmPaiementModal from "@/components/special/confirmPaiement";
+import { useUIStore } from "@/store/uiStore";
 
 /* ------------------------------------------------------------------ */
 /*  Types & constantes                                                  */
@@ -199,6 +198,11 @@ export default function CommandesClient() {
   const [resultModalOpen, setResultModalOpen] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<"success" | "error" | null>(null);
   const [paymentMessage, setPaymentMessage] = useState("");
+  /** Contrôle la modale de confirmation de paiement wallet */
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  // Actions Zustand pour le parcours de paiement
+  const setPaymentOrderRef = useUIStore((s) => s.setPaymentOrderRef);
 
   // État des frais de livraison dynamiques
   const [fraisLivraisonAdmin, setFraisLivraisonAdmin] = useState<{ prix_livraison: number, coordonnee_admin: { lat: number, lng: number } } | null>(null);
@@ -319,6 +323,8 @@ export default function CommandesClient() {
   const handlePayWithWallet = async () => {
     if (!order) return;
     setIsProcessing(true);
+    // Fermer la modale de confirmation pendant le traitement
+    setConfirmModalOpen(false);
 
     try {
       // Si des points de fidélité sont appliqués, les déduire d'abord
@@ -332,64 +338,24 @@ export default function CommandesClient() {
       const res = await payWithWallet({ order_id: order.id });
 
       if (res.ok) {
-        setPaymentStatus("success");
-        setPaymentMessage("Votre paiement a été effectué avec succès. Votre facture vous sera envoyée par email.");
-        setResultModalOpen(true);
-
-        // Envoi de la facture en arrière-plan (Snapshot des données du panier avant le clearCart)
-        const orderRef = order.reference || "REF-INCONNU";
-        const snapshotItems = [...items];
-        const snapshotSubtotal = subtotal;
-
-        const invoiceData: InvoiceData = {
-          reference: orderRef,
-          date: new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date()),
-          customer: {
-            firstName: address.firstName,
-            lastName: address.lastName,
-            email: address.email,
-            phone: address.phone,
-            address: address.address,
-            city: address.city,
-            country: address.country,
-          },
-          items: snapshotItems.map(item => ({
-            name: item.name,
-            quantity: item.quantity,
-            unitPrice: parseFloat(item.price),
-            total: parseFloat(item.price) * item.quantity
-          })),
-          subtotal: snapshotSubtotal,
-          shipping: shippingCost,
-          discount: remisePromo,
-          loyaltyDiscount: remiseFideliteFCFA,
-          total: total
-        };
-
-        generateInvoicePDFBase64(invoiceData).then(pdfBase64 => {
-          fetch('/api/orders/send-invoice', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: address.email,
-              name: `${address.firstName} ${address.lastName}`,
-              orderReference: orderRef,
-              pdfBase64
-            })
-          }).catch(err => console.error("Erreur API Facture", err));
-        }).catch(err => console.error("Erreur Génération PDF", err));
-
+        /**
+         * Succès : on nettoie le panier et on redirige vers la page de succès
+         * dédiée avec la référence de commande. La facture est désormais
+         * envoyée par email via le service SMTP Django (signal post-save).
+         */
         clearCart();
-        setStep(4);
+        router.push(`/paiement/commande/success?ref=${encodeURIComponent(order.reference || "")}`);
       } else {
-        setPaymentStatus("error");
-        setPaymentMessage(res.error?.message || "Solde insuffisant ou erreur de paiement.");
-        setResultModalOpen(true);
+        /**
+         * Échec : on redirige vers la page d'échec dédiée. Le panier est
+         * conservé grâce à Zustand (pannierStore) pour que l'utilisateur
+         * puisse reprendre sans ressaisir ses informations.
+         */
+        router.push("/paiement/commande/echec");
       }
     } catch (err) {
-      setPaymentStatus("error");
-      setPaymentMessage("Une erreur inattendue est survenue.");
-      setResultModalOpen(true);
+      // En cas d'exception réseau, même comportement : page d'échec
+      router.push("/paiement/commande/echec");
     } finally {
       setIsProcessing(false);
     }
@@ -697,7 +663,13 @@ export default function CommandesClient() {
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.25 }}
                       >
-                        <PayDunyaCheckout orderId={order.id} amount={total} />
+                        {/* PayDunyaCheckout reçoit la référence commande pour la
+                            stocker dans Zustand avant la redirection PayDunya */}
+                        <PayDunyaCheckout
+                          orderId={order.id}
+                          amount={total}
+                          orderReference={order.reference || undefined}
+                        />
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -797,7 +769,7 @@ export default function CommandesClient() {
 
                 {step === 3 && paymentMethod === "wallet" && (
                   <button
-                    onClick={handlePayWithWallet}
+                    onClick={() => setConfirmModalOpen(true)}
                     disabled={isProcessing || !wallet || parseFloat(wallet.balance) < total}
                     className="group relative flex cursor-pointer items-center gap-2 overflow-hidden rounded-xl bg-[#1f4d3f] px-8 py-3.5 font-bold text-white shadow-lg shadow-[#1f4d3f]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1f4d3f]/90 hover:shadow-xl hover:shadow-[#1f4d3f]/30 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
                   >
@@ -820,101 +792,125 @@ export default function CommandesClient() {
           {/* === Colonne Récapitulatif === */}
           {step < 4 && (
             <div className="lg:col-span-5 xl:col-span-4">
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="sticky top-28 space-y-6"
-                >
-                  {/* Récap Coûts */}
-                  <RecapitulatifCommande
-                    sousTotal={subtotal}
-                    fraisLivraison={shippingCost}
-                    remisePromo={remisePromo}
-                    remiseFidelite={remiseFideliteFCFA}
-                  />
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="sticky top-28 space-y-6"
+              >
+                {/* Récap Coûts */}
+                <RecapitulatifCommande
+                  sousTotal={subtotal}
+                  fraisLivraison={shippingCost}
+                  remisePromo={remisePromo}
+                  remiseFidelite={remiseFideliteFCFA}
+                />
 
-                  {/* Promotions & Fidélité (affiché aux étapes 2 et 3) */}
-                  {step >= 2 && (
-                    <div className="space-y-4">
-                      <CodePromoInput
-                        cartTotal={subtotal + shippingCost}
-                        codeApplique={codeApplique}
-                        onCodeChange={setCodeApplique}
-                      />
-                      <PointsFideliteCard
-                        profil={loyaltyProfile}
-                        totalCommande={subtotal + shippingCost - remisePromo}
-                        valeurPointFCFA={pointValueConfig?.valeur_un_point_frcfa ?? 10}
-                        pointsAppliques={pointsAppliques}
-                        onPointsChange={(pts, fcfa) => {
-                          setPointsAppliques(pts);
-                          setRemiseFideliteFCFA(fcfa);
-                        }}
-                      />
-                    </div>
-                  )}
-
-                  {/* Articles du panier */}
-                  <div className="rounded-3xl p-6" style={{ background: bgElevated, border: `1px solid ${border}` }}>
-                    <div className="mb-4 flex items-center justify-between">
-                      <h4 className="font-bold">Dans votre panier</h4>
-                      <span
-                        className="rounded-full px-2.5 py-0.5 text-[11px] font-bold"
-                        style={{ background: BRAND_GOLD_SOFT, color: BRAND_GOLD }}
-                      >
-                        {itemCount} article{itemCount > 1 ? "s" : ""}
-                      </span>
-                    </div>
-                    <ul className="space-y-4">
-                      {items.map((item) => (
-                        <li key={item.productId} className="group flex gap-4 transition-transform duration-300 hover:-translate-y-0.5">
-                          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-alt shadow-sm">
-                            {item.image && (
-                              <Image src={mediaUrl(item.image) || "/placeholder.png"} alt={item.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="64px" />
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0 pt-1">
-                            <p className="truncate font-semibold text-sm">{item.name}</p>
-                            <p className="mt-1 text-xs text-muted">Qté: {item.quantity}</p>
-                          </div>
-                          <span className="pt-1 font-bold text-sm">
-                            {formatCurrency(String(parseFloat(item.price) * item.quantity), item.currency)}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                {/* Promotions & Fidélité (affiché aux étapes 2 et 3) */}
+                {step >= 2 && (
+                  <div className="space-y-4">
+                    <CodePromoInput
+                      cartTotal={subtotal + shippingCost}
+                      codeApplique={codeApplique}
+                      onCodeChange={setCodeApplique}
+                    />
+                    <PointsFideliteCard
+                      profil={loyaltyProfile}
+                      totalCommande={subtotal + shippingCost - remisePromo}
+                      valeurPointFCFA={pointValueConfig?.valeur_un_point_frcfa ?? 10}
+                      pointsAppliques={pointsAppliques}
+                      onPointsChange={(pts, fcfa) => {
+                        setPointsAppliques(pts);
+                        setRemiseFideliteFCFA(fcfa);
+                      }}
+                    />
                   </div>
+                )}
 
-                  {/* Informations de livraison estimée (utilise l'icône Truck déjà importée) */}
-                  {shippingCost > 0 && (
-                    <div
-                      className="flex items-center gap-2.5 rounded-2xl p-4 text-xs"
-                      style={{ background: isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)", border: `1px solid ${border}` }}
+                {/* Articles du panier */}
+                <div className="rounded-3xl p-6" style={{ background: bgElevated, border: `1px solid ${border}` }}>
+                  <div className="mb-4 flex items-center justify-between">
+                    <h4 className="font-bold">Dans votre panier</h4>
+                    <span
+                      className="rounded-full px-2.5 py-0.5 text-[11px] font-bold"
+                      style={{ background: BRAND_GOLD_SOFT, color: BRAND_GOLD }}
                     >
-                      <Truck className="h-4 w-4 shrink-0" style={{ color: BRAND_FOREST }} />
-                      <span className="text-muted">
-                        Frais de livraison calculés selon votre position : <strong className="font-semibold">{formatCurrency(String(shippingCost), "FCFA")}</strong>
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Sécurité */}
-                  <div className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-500/10 p-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                    <Shield className="h-4 w-4" />
-                    Transaction protégée par chiffrement 256-bit
+                      {itemCount} article{itemCount > 1 ? "s" : ""}
+                    </span>
                   </div>
-                </motion.div>
+                  <ul className="space-y-4">
+                    {items.map((item) => (
+                      <li key={item.productId} className="group flex gap-4 transition-transform duration-300 hover:-translate-y-0.5">
+                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-alt shadow-sm">
+                          {(item.image || item.productImage) ? (
+                            <Image
+                              src={mediaUrl(item.image || item.productImage) || "/placeholder.png"}
+                              alt={item.name}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                              sizes="64px"
+                              unoptimized
+                              onError={(e) => {
+                                const target = e.currentTarget as HTMLImageElement;
+                                // Si l'image primaire échoue, tenter productImage
+                                if (item.productImage && target.src !== (mediaUrl(item.productImage) || "")) {
+                                  target.src = mediaUrl(item.productImage) || "/placeholder.png";
+                                } else {
+                                  target.style.display = "none";
+                                }
+                              }}
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center">
+                              <ShoppingBag className="h-5 w-5 text-muted/30" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0 pt-1">
+                          <p className="truncate font-semibold text-sm">{item.name}</p>
+                          <p className="mt-1 text-xs text-muted">Qté: {item.quantity}</p>
+                        </div>
+                        <span className="pt-1 font-bold text-sm">
+                          {formatCurrency(String(parseFloat(item.price) * item.quantity), item.currency)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Informations de livraison estimée (utilise l'icône Truck déjà importée) */}
+                {shippingCost > 0 && (
+                  <div
+                    className="flex items-center gap-2.5 rounded-2xl p-4 text-xs"
+                    style={{ background: isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)", border: `1px solid ${border}` }}
+                  >
+                    <Truck className="h-4 w-4 shrink-0" style={{ color: BRAND_FOREST }} />
+                    <span className="text-muted">
+                      Frais de livraison calculés selon votre position : <strong className="font-semibold">{formatCurrency(String(shippingCost), "FCFA")}</strong>
+                    </span>
+                  </div>
+                )}
+
+                {/* Sécurité */}
+                <div className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-500/10 p-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                  <Shield className="h-4 w-4" />
+                  Transaction protégée par chiffrement 256-bit
+                </div>
+              </motion.div>
             </div>
           )}
         </div>
       </div>
 
       {/* Modales */}
+      {/* Modale de recharge wallet
+          isInCommandFlow=true : la recharge est déclenchée depuis le tunnel
+          commande, le flag Zustand sera positionné avant la redirection PayDunya */}
       <ModaleRecharge
         open={rechargeModalOpen}
         onOpenChange={setRechargeModalOpen}
         montantDefaut={Math.max(5000, total - (wallet ? parseFloat(wallet.balance) : 0))}
+        isInCommandFlow={true}
       />
 
       <ModaleResultatPaiement
@@ -923,6 +919,18 @@ export default function CommandesClient() {
         message={paymentMessage}
         orderReference={order?.reference}
         onClose={() => setResultModalOpen(false)}
+      />
+
+      {/* Modale de confirmation de paiement wallet — affichée avant l'appel API */}
+      <ConfirmPaiementModal
+        open={confirmModalOpen}
+        amount={total}
+        walletBalance={wallet ? parseFloat(wallet.balance) : 0}
+        customerName={address.firstName || undefined}
+        orderReference={order?.reference || undefined}
+        isProcessing={isProcessing}
+        onCancel={() => setConfirmModalOpen(false)}
+        onConfirm={handlePayWithWallet}
       />
 
       <Toast

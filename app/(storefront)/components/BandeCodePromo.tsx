@@ -1,4 +1,4 @@
-
+﻿
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -7,7 +7,7 @@ import { apiPublic } from "@/lib/axios";
 import type { PromoCodeList } from "@/modeles/promotions";
 import { Tag } from "lucide-react";
 
-// ─── Vitesse de défilement (px par seconde) ──────────────────────────────────
+// --- Vitesse de défilement (px par seconde) ----------------------------------
 // Augmenter pour aller plus vite, diminuer pour ralentir.
 const PX_PER_SECOND = 60;
 
@@ -23,7 +23,7 @@ export default function TrustBand() {
   const [duration, setDuration] = useState<number>(30);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  /* ── Fetch des codes promo actifs ─────────────────────────────────────── */
+  /* -- Fetch des codes promo actifs --------------------------------------- */
   useEffect(() => {
     const fetchPromos = async () => {
       try {
@@ -38,7 +38,7 @@ export default function TrustBand() {
     fetchPromos();
   }, []);
 
-  /* ── Calcul dynamique de la durée selon la largeur réelle du track ─────── */
+  /* -- Calcul dynamique de la durée selon la largeur réelle du track ------- */
   useEffect(() => {
     if (!trackRef.current || promoItems.length === 0) return;
     // On mesure la largeur d'une seule copie (la moitié du track doublé)
@@ -48,7 +48,7 @@ export default function TrustBand() {
   }, [promoItems]);
 
   if (promoItems.length === 0) {
-    /* ── Pas de codes promo : on affiche uniquement les stats ─────────────── */
+    /* -- Pas de codes promo : on affiche uniquement les stats --------------- */
     return (
       <section className="border-y border-border bg-surface">
         <StatsGrid />
@@ -63,7 +63,7 @@ export default function TrustBand() {
     <section className="border-y border-border bg-surface">
       <StatsGrid />
 
-      {/* ── Bannière défilante ─────────────────────────────────────────────── */}
+      {/* -- Bannière défilante ----------------------------------------------- */}
       <div
         className="group relative overflow-hidden bg-primary py-2.5"
         aria-label="Codes promotionnels actifs"
@@ -97,7 +97,7 @@ export default function TrustBand() {
         </div>
       </div>
 
-      {/* ── Keyframe injectée en ligne ─────────────────────────────────────── */}
+      {/* -- Keyframe injectée en ligne --------------------------------------- */}
       <style>{`
         @keyframes marquee-scroll {
           0%   { transform: translateX(0); }
@@ -108,7 +108,7 @@ export default function TrustBand() {
   );
 }
 
-/* ── Chip individuelle pour un code promo ───────────────────────────────────── */
+/* -- Chip individuelle pour un code promo ------------------------------------- */
 function PromoChip({ promo }: { promo: PromoCodeList }) {
   const discountLabel =
     promo.type === "percentage"
@@ -145,7 +145,7 @@ function PromoChip({ promo }: { promo: PromoCodeList }) {
   );
 }
 
-/* ── Grille des statistiques ────────────────────────────────────────────────── */
+/* -- Grille des statistiques -------------------------------------------------- */
 function StatsGrid() {
   return (
     <div className="mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">

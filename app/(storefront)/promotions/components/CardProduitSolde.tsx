@@ -37,7 +37,7 @@ import { useUIStore } from "@/store/uiStore";
 import { mediaUrl } from "@/lib/mediaUrl";
 import { useRef, useCallback } from "react";
 
-/* ─── Constantes ──────────────────────────────────────────────────────────── */
+/* --- Constantes ------------------------------------------------------------ */
 
 /** Image de fallback si le produit n'a pas d'image */
 const FALLBACK_IMAGE = "/assets/images/LOGO.png";
@@ -45,7 +45,7 @@ const FALLBACK_IMAGE = "/assets/images/LOGO.png";
 /** Duree du sweep de lumiere sur la carte active */
 const SHIMMER_DURATION = "3s";
 
-/* ─── CSS global (keyframes injectes une seule fois) ─────────────────────── */
+/* --- CSS global (keyframes injectes une seule fois) ----------------------- */
 
 const CARD_KEYFRAMES = `
   @keyframes promo-card-shimmer {
@@ -65,7 +65,7 @@ const CARD_KEYFRAMES = `
   }
 `;
 
-/* ─── Sous-composants ─────────────────────────────────────────────────────── */
+/* --- Sous-composants ------------------------------------------------------- */
 
 /**
  * Badge remise flottant — haut gauche de la carte.
@@ -168,7 +168,7 @@ function CartButton({
   );
 }
 
-/* ─── Composant principal ─────────────────────────────────────────────────── */
+/* --- Composant principal --------------------------------------------------- */
 
 export interface PromoOfferCardProps {
   item: PromoProductCard;
@@ -183,13 +183,13 @@ export function PromoOfferCard({
   disableEntrance = false,
   dimmed = false,
 }: PromoOfferCardProps) {
-  /* ── Stores ── */
+  /* -- Stores -- */
   const addItem = useCartStore((state) => state.addItem);
 
-  /* ── Derivations ── */
+  /* -- Derivations -- */
   const imageSrc = mediaUrl(item.image || FALLBACK_IMAGE) || "/placeholder.png";
 
-  /* ── Effet 3D tilt (desactive sur les cartes estompees) ── */
+  /* -- Effet 3D tilt (desactive sur les cartes estompees) -- */
   const cardRef = useRef<HTMLElement>(null);
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
@@ -198,7 +198,7 @@ export function PromoOfferCard({
 
 
 
-  /* ── Calcul de la remise ── */
+  /* -- Calcul de la remise -- */
   const discountLabel =
     item.discountPercent > 0
       ? `-${item.discountPercent}%`
@@ -208,7 +208,7 @@ export function PromoOfferCard({
 
   const hasSavings = !!(item.comparePrice && Number(item.comparePrice) > Number(item.price));
 
-  /* ── Handler panier ── */
+  /* -- Handler panier -- */
   const handleAddToCart = useCallback((event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -227,14 +227,14 @@ export function PromoOfferCard({
     });
   }, [addItem, item]);
 
-  /* ── Classes dynamiques ── */
+  /* -- Classes dynamiques -- */
   const cardClassName = cn(
     "group relative overflow-hidden rounded-[1.75rem] p-5",
     "transition-[filter,opacity] duration-500 ease-out",
     dimmed && "brightness-[0.80] saturate-[0.7] pointer-events-none"
   );
 
-  /* ── Contenu interne (partage entre les deux modes de rendu) ── */
+  /* -- Contenu interne (partage entre les deux modes de rendu) -- */
   const content = (
     <>
       {/* Injection unique des keyframes */}
@@ -372,7 +372,7 @@ export function PromoOfferCard({
     </>
   );
 
-  /* ── Rendu : avec ou sans animation d'entree ── */
+  /* -- Rendu : avec ou sans animation d'entree -- */
   if (disableEntrance) {
     return (
       <article

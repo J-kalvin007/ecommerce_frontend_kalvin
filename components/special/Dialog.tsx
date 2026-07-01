@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
@@ -17,7 +17,7 @@ const DialogPortal = ({ ...props }: DialogPrimitive.DialogPortalProps) => (
 )
 DialogPortal.displayName = DialogPrimitive.Portal.displayName
 
-// ── Overlay (backdrop) ──────────────────────────────────────────────────────
+// -- Overlay (backdrop) ------------------------------------------------------
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
@@ -48,7 +48,7 @@ const DialogOverlay = React.forwardRef<
 })
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
-// ── Content panel ───────────────────────────────────────────────────────────
+// -- Content panel -----------------------------------------------------------
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
@@ -103,7 +103,7 @@ const DialogContent = React.forwardRef<
 })
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
-// ── Header ──────────────────────────────────────────────────────────────────
+// -- Header ------------------------------------------------------------------
 const DialogHeader = ({
   className,
   ...props
@@ -115,7 +115,7 @@ const DialogHeader = ({
 )
 DialogHeader.displayName = "DialogHeader"
 
-// ── Footer ──────────────────────────────────────────────────────────────────
+// -- Footer ------------------------------------------------------------------
 const DialogFooter = ({
   className,
   ...props
@@ -127,7 +127,7 @@ const DialogFooter = ({
 )
 DialogFooter.displayName = "DialogFooter"
 
-// ── Title ───────────────────────────────────────────────────────────────────
+// -- Title -------------------------------------------------------------------
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
@@ -145,7 +145,7 @@ const DialogTitle = React.forwardRef<
 })
 DialogTitle.displayName = DialogPrimitive.Title.displayName
 
-// ── Description ─────────────────────────────────────────────────────────────
+// -- Description -------------------------------------------------------------
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>

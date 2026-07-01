@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
@@ -169,7 +169,7 @@ select {
   border-radius: 9999px;
 }
 
-/* ─── Promo code animations ─────────────────────────────────────────────── */
+/* --- Promo code animations ----------------------------------------------- */
 
 @keyframes promo-shimmer {
   0% {

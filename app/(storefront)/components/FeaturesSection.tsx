@@ -1,4 +1,4 @@
-
+﻿
 
 
 
@@ -38,9 +38,9 @@ import {
   Bird,
 } from "lucide-react";
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    DONNÉES — structure d'origine conservée
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 const FEATURES = [
   {
     icon: Wallet,
@@ -98,9 +98,9 @@ const FEATURES = [
   },
 ] as const;
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    DÉCORATION DE FOND — seulement 4 éléments, bien espacés
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 const BG_DECORATIONS = [
   { Icon: Apple, cls: "left-6 top-20 h-9 w-9 rotate-12 text-rose-200/40" },
   { Icon: Leaf, cls: "right-8 bottom-28 h-11 w-11 -rotate-6 text-emerald-200/40" },
@@ -108,9 +108,9 @@ const BG_DECORATIONS = [
   { Icon: Flower2, cls: "right-1/4 top-36 h-8 w-8 text-purple-200/40" },
 ] as const;
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    SOUS-COMPOSANT : FeatureCard
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 interface FeatureCardProps {
   feature: (typeof FEATURES)[number];
   index: number;
@@ -179,23 +179,23 @@ function FeatureCard({ feature, index }: FeatureCardProps) {
   );
 }
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    COMPOSANT PRINCIPAL
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 export default function FeaturesSection() {
   return (
     <section
       className="relative overflow-hidden bg-[#fbf7e8] py-20 lg:py-28"
       aria-labelledby="features-heading"
     >
-      {/* ── Décoration de fond épurée ── */}
+      {/* -- Décoration de fond épurée -- */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
         {BG_DECORATIONS.map(({ Icon, cls }, i) => (
           <Icon key={i} className={`absolute ${cls}`} />
         ))}
       </div>
 
-      {/* ── Halo ivoire chaud centré en haut ── */}
+      {/* -- Halo ivoire chaud centré en haut -- */}
       <div
         className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 h-64 w-[700px] opacity-50"
         style={{ background: "radial-gradient(ellipse at top, #e8d9b8 0%, transparent 70%)" }}
@@ -204,7 +204,7 @@ export default function FeaturesSection() {
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 
-        {/* ── En-tête ── */}
+        {/* -- En-tête -- */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -246,7 +246,7 @@ export default function FeaturesSection() {
           </p>
         </motion.div>
 
-        {/* ── Grille de features ── */}
+        {/* -- Grille de features -- */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((feature, idx) => (
             <FeatureCard key={feature.title} feature={feature} index={idx} />

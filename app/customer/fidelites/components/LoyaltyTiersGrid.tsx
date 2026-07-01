@@ -1,9 +1,9 @@
-
+﻿
 
 
 /**
  * LoyaltyTiersGrid.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Grille visuelle de tous les paliers de fidélité disponibles — version premium.
  *
  * Direction artistique :
@@ -47,7 +47,7 @@ import {
 import type { Tier } from "@/modeles/fidelites";
 import { getTierConfig } from "@/modeles/fidelites";
 
-/* ── Jetons de design premium (partagés avec CommandesClient) ───────────── */
+/* -- Jetons de design premium (partagés avec CommandesClient) ------------- */
 
 /** Vert forêt de marque — couleur primaire de l'écosystème Kalvin. */
 const BRAND_FOREST = "#1f4d3f";
@@ -60,7 +60,7 @@ const BRAND_FOREST = "#1f4d3f";
 const BRAND_GOLD = "#c9a876";
 const BRAND_GOLD_SOFT = "rgba(201,168,118,0.14)";
 
-/* ── Map des icônes de palier ────────────────────────────────────────────── */
+/* -- Map des icônes de palier ---------------------------------------------- */
 const TIER_ICONS: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number; style?: React.CSSProperties }>> = {
   Bronze: Medal,
   Silver: Star,
@@ -69,7 +69,7 @@ const TIER_ICONS: Record<string, React.ComponentType<{ className?: string; strok
   Diamond: Star,
 };
 
-/* ── Utilitaires (identiques à la version d'origine) ───────────────────── */
+/* -- Utilitaires (identiques à la version d'origine) --------------------- */
 
 function formatPoints(pts: number): string {
   return new Intl.NumberFormat("fr-FR").format(pts);
@@ -86,7 +86,7 @@ function formatAmount(amount: string): string {
   );
 }
 
-/* ── Variants d'animation partagés ─────────────────────────────────────── */
+/* -- Variants d'animation partagés --------------------------------------- */
 
 /**
  * Conteneur de la grille : orchestre l'apparition en cascade des cartes.
@@ -109,7 +109,7 @@ const cardVariants: Variants = {
   },
 };
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface LoyaltyTiersGridProps {
   tiers: Tier[];
   currentTierName: string;
@@ -220,7 +220,7 @@ export default function LoyaltyTiersGrid({
   );
 }
 
-/* ── Sous-composant TierCard ────────────────────────────────────────────── */
+/* -- Sous-composant TierCard ---------------------------------------------- */
 
 /**
  * Props internes de la carte d'un palier.
@@ -294,11 +294,11 @@ function TierCard({
           : "0 2px 12px -4px rgba(0,0,0,0.06)",
       }}
     >
-      {/* ────────────────────────────────────────────────────────────────────
+      {/* --------------------------------------------------------------------
        *  Barre supérieure — "lisseuse" chromatique du palier.
        *  Sur un palier verrouillé, elle reste neutre (warm grey) pour
        *  signifier l'inaccessibilité sans être agressive.
-       * ─────────────────────────────────────────────────────────────────── */}
+       * ------------------------------------------------------------------- */}
       <div
         className="h-1.5 w-full"
         style={{
@@ -308,7 +308,7 @@ function TierCard({
         }}
       />
 
-      {/* ────────────────────────────────────────────────────────────────────
+      {/* --------------------------------------------------------------------
        *  Shimmer beam — signature visuelle du grade actuel.
        *
        *  Un SVG transparent (position:absolute, inset-0) contient un
@@ -323,7 +323,7 @@ function TierCard({
        *
        *  Respect de prefers-reduced-motion : l'animation n'est appliquée
        *  que si prefersReducedMotion est false.
-       * ─────────────────────────────────────────────────────────────────── */}
+       * ------------------------------------------------------------------- */}
       {isCurrentTier && !prefersReducedMotion && (
         <>
           <style>{`
@@ -356,10 +356,10 @@ function TierCard({
         </>
       )}
 
-      {/* ────────────────────────────────────────────────────────────────────
+      {/* --------------------------------------------------------------------
        *  Badge "Mon grade" — or champagne, position absolue en haut à droite.
        *  N'apparaît que sur le palier courant.
-       * ─────────────────────────────────────────────────────────────────── */}
+       * ------------------------------------------------------------------- */}
       {isCurrentTier && (
         <motion.div
           initial={{ opacity: 0, scale: 0.7, y: -4 }}
@@ -377,9 +377,9 @@ function TierCard({
         </motion.div>
       )}
 
-      {/* ────────────────────────────────────────────────────────────────────
+      {/* --------------------------------------------------------------------
        *  Corps de la carte (Basé sur le viewMode)
-       * ─────────────────────────────────────────────────────────────────── */}
+       * ------------------------------------------------------------------- */}
       {viewMode === 'list' ? (
         <div className="relative z-[2] p-4 sm:p-5 flex flex-col md:flex-row md:items-center gap-5 md:gap-8">
           {/* Left section: Icon + Info */}
@@ -566,7 +566,7 @@ function TierCard({
   );
 }
 
-/* ── Sous-composant TierIconFrame ───────────────────────────────────────── */
+/* -- Sous-composant TierIconFrame ----------------------------------------- */
 
 /**
  * Châton joaillier qui encadre l'icône de chaque palier.
@@ -633,7 +633,7 @@ function TierIconFrame({
   );
 }
 
-/* ── Sous-composant TierBenefit ─────────────────────────────────────────── */
+/* -- Sous-composant TierBenefit ------------------------------------------- */
 
 /**
  * Ligne d'avantage : label à gauche, valeur à droite.
@@ -672,7 +672,7 @@ function TierBenefit({
   );
 }
 
-/* ── Sous-composant ProgressToTier ──────────────────────────────────────── */
+/* -- Sous-composant ProgressToTier ---------------------------------------- */
 
 /**
  * Indicateur de progression vers un palier verrouillé.

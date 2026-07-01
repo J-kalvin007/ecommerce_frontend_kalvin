@@ -49,54 +49,59 @@ export function PromoCodeCard({ promo, onEdit, onDelete, onView, viewMode = "gri
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 onClick={onView}
-                className="group flex cursor-pointer items-center gap-4 rounded-xl border border-border bg-surface-elevated px-4 py-3 shadow-sm transition-all hover:border-primary/30 hover:shadow-md hover:bg-surface-alt/50"
+                className="group flex cursor-pointer items-center gap-4 rounded-xl border border-border bg-surface-elevated px-4 py-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md hover:bg-surface-alt/50"
             >
                 {/* Icon */}
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Tag className="h-4 w-4" />
+                    <Tag className="h-5 w-5" />
                 </div>
 
                 {/* Code + description */}
                 <div className="flex min-w-0 flex-1 items-center gap-3">
-                    <code className="shrink-0 rounded-lg bg-primary/5 px-2.5 py-1 font-mono text-sm font-black text-primary border border-primary/10">
+                    <code className="shrink-0 rounded-lg bg-primary/5 px-2.5 py-1 font-mono text-[14px]  font-black text-primary border border-primary/10">
                         {promo.code}
                     </code>
-                    <span className="truncate text-xs text-muted-foreground">{promo.description || "—"}</span>
+                    <span className="truncate text-[14px] text-muted-foreground">{promo.description || "—"}</span>
                 </div>
 
                 {/* Type */}
-                <div className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground shrink-0">
+                <div className="hidden sm:flex items-center gap-1 text-[14px] text-muted-foreground shrink-0">
                     {TYPE_ICON[promo.type]}
                 </div>
 
                 {/* Valeur */}
-                <p className="shrink-0 text-base font-extrabold text-primary">{formatValue()}</p>
+                <p className="shrink-0 text-[16px] font-extrabold text-primary">{formatValue()}</p>
 
                 {/* Utilisations */}
-                <p className="hidden md:block shrink-0 text-xs text-muted-foreground">{promo.number_times_used || 0} util.</p>
+                <p className="hidden md:block shrink-0 text-[14px] text-muted-foreground">{promo.number_times_used || 0} util.</p>
 
                 {/* Date expiration */}
-                <p className="hidden lg:block shrink-0 text-xs text-muted-foreground">
+                <p className="hidden lg:block shrink-0 text-[14px] text-muted-foreground">
                     {promo.expires_at ? new Date(promo.expires_at).toLocaleDateString("fr-FR") : "Sans fin"}
                 </p>
 
                 {/* Statut */}
-                <span className={cn("shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-bold", statusCls)}>
+                <span className={cn("shrink-0 rounded-full border px-2 py-0.5 text-[14px] font-bold", statusCls)}>
                     {statusLabel}
                 </span>
 
                 {/* Actions */}
-                <div className="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100" onClick={e => e.stopPropagation()}>
-                    <button onClick={copyCode} className="rounded-lg p-1.5 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors">
-                        {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                <div className="flex shrink-0 items-center gap-1 " onClick={e => e.stopPropagation()}>
+
+                    <button onClick={copyCode} className="rounded-lg p-1.5 cursor-pointer text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors">
+                        {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
                     </button>
-                    <button onClick={e => { e.stopPropagation(); onEdit(); }} className="rounded-lg p-1.5 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors">
-                        <Edit3 className="h-3.5 w-3.5" />
+
+                    <button onClick={e => { e.stopPropagation(); onEdit(); }} className="rounded-lg p-1.5 cursor-pointer text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors">
+                        <Edit3 className="h-4 w-4" />
                     </button>
-                    <button onClick={e => { e.stopPropagation(); onDelete(); }} className="rounded-lg p-1.5 text-muted-foreground hover:bg-red-500/10 hover:text-red-400 transition-colors">
-                        <Trash2 className="h-3.5 w-3.5" />
+
+                    <button onClick={e => { e.stopPropagation(); onDelete(); }} className="rounded-lg p-1.5 cursor-pointer text-muted-foreground hover:bg-red-500/10 hover:text-red-400 transition-colors">
+                        <Trash2 className="h-4 w-4" />
+
                     </button>
                 </div>
+
             </motion.div>
         );
     }

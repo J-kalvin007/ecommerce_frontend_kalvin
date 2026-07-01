@@ -41,9 +41,9 @@ type Props = {
   id?: string | null;
 };
 
-/* ──────────────────────────────────────────────────────────────────────────────
+/* ------------------------------------------------------------------------------
    Utilitaires
-   ────────────────────────────────────────────────────────────────────────── */
+   -------------------------------------------------------------------------- */
 
 function formatWeight(grams: number | null | undefined): string {
   if (!grams) return "";
@@ -54,9 +54,9 @@ function formatWeight(grams: number | null | undefined): string {
 
 
 
-/* ──────────────────────────────────────────────────────────────────────────────
+/* ------------------------------------------------------------------------------
    Carte produit associé
-   ────────────────────────────────────────────────────────────────────────── */
+   -------------------------------------------------------------------------- */
 
 function RelatedProductCard({ product }: { product: ProductList }) {
   const imgSrc = typeof product.primary_image === "object" && product.primary_image
@@ -101,9 +101,9 @@ function RelatedProductCard({ product }: { product: ProductList }) {
   );
 }
 
-/* ──────────────────────────────────────────────────────────────────────────────
+/* ------------------------------------------------------------------------------
    Composant principal
-   ────────────────────────────────────────────────────────────────────────── */
+   -------------------------------------------------------------------------- */
 
 export default function ProductDetailClient({ slug, id }: Props) {
   const activeProductId = useUIStore((state) => state.activeProductId);
@@ -133,7 +133,7 @@ export default function ProductDetailClient({ slug, id }: Props) {
         setLoading(true);
         setError(null);
 
-        // ─── Stratégie 1 : recherche par slug (prioritaire) ───────────────
+        // --- Stratégie 1 : recherche par slug (prioritaire) ---------------
         // L'endpoint ?slug=... retourne déjà les images, variantes, etc.
         // On l'utilise directement sans passer par getPublicProductById.
         const slugRes = await getPublicProducts({ slug });
@@ -146,7 +146,7 @@ export default function ProductDetailClient({ slug, id }: Props) {
           }
         }
 
-        // ─── Stratégie 2 : fallback par ID si le slug n'a rien retourné ───
+        // --- Stratégie 2 : fallback par ID si le slug n'a rien retourné ---
         if (!resolvedProduct) {
           const productId = id || activeProductId;
           if (productId) {
@@ -262,14 +262,26 @@ export default function ProductDetailClient({ slug, id }: Props) {
         return;
       }
 
+      const productName = product.name;
+
+      // Évite "Piment rouge — Piment rouge" si le nom de la variante === nom du produit
+      const cartName =
+        variantName && variantName.trim().toLowerCase() !== productName.trim().toLowerCase()
+          ? `${productName} — ${variantName}`
+          : productName;
+
+      // Image : on cherche d'abord une image propre ; le produit principal sert de fallback
+      const primaryProductImage = images[0] ?? null;
+
       addItem({
         productId: product.id,
         variantId: selectedVariant ? selectedVariant.id : null,
-        name: selectedVariant ? `${product.name} — ${selectedVariant.name}` : product.name,
+        name: cartName,
         sku: selectedVariant?.sku || product.sku,
         price: selectedVariant ? selectedVariant.price : price,
         compareAtPrice: comparePrice!,
-        image: images[0] ?? null,
+        image: primaryProductImage,
+        productImage: primaryProductImage,
         quantity,
         maxStock: Math.max(actualStock, 1),
         currency: "FCFA",
@@ -288,9 +300,9 @@ export default function ProductDetailClient({ slug, id }: Props) {
     [product, addItem, comparePrice, images]
   );
 
-  /* ────────────────────────────────────────────────────────────────────────
+  /* ------------------------------------------------------------------------
      Rendu
-     ──────────────────────────────────────────────────────────────────────── */
+     ------------------------------------------------------------------------ */
   return (
     <main className="min-h-screen bg-[#f6f1e8] pt-24 text-[#1f241c]">
       {/* Toast notifications */}
@@ -300,6 +312,7 @@ export default function ProductDetailClient({ slug, id }: Props) {
         message={toast.message}
         onClose={() => setToast({ ...toast, show: false })}
         duration={4000}
+        position="bottom-right"
       />
 
       {/* Purchase modal */}
@@ -359,19 +372,21 @@ export default function ProductDetailClient({ slug, id }: Props) {
             </div>
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#1f4d3f] to-[#17392f] px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-xl"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-gradient-to-r from-[#1f4d3f] to-[#17392f] px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-xl"
             >
               Retour au catalogue
               <ArrowRight className="h-4 w-4" />
             </Link>
           </motion.div>
+
         ) : (
+
           <div className="space-y-16">
             {/* ═══════════════════════════════════════════════════════════════
                Section principale : Galerie + Détails
                ═══════════════════════════════════════════════════════════════ */}
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-14">
-              {/* ── Galerie d'images ─────────────────────────────────────── */}
+              {/* -- Galerie d'images --------------------------------------- */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -426,6 +441,7 @@ export default function ProductDetailClient({ slug, id }: Props) {
 
                 {/* Miniatures */}
                 {images.length > 1 && (
+
                   <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
                     {images.map((img, index) => {
                       if (failedImages.has(index)) return null;
@@ -472,23 +488,32 @@ export default function ProductDetailClient({ slug, id }: Props) {
                       {activeVariants.map((variant) => (
                         <div
                           key={variant.id}
-                          className="group relative overflow-hidden rounded-2xl border border-[#e7dfd2] bg-gradient-to-b from-white to-[#faf6ef] p-3.5 transition-all hover:border-[#8b5e34]/50 hover:shadow-[0_8px_20px_rgba(139,94,52,0.12)]"
+                          className="group relative flex flex-col overflow-hidden rounded-2xl border border-[#e7dfd2] bg-gradient-to-b from-white to-[#faf6ef] p-4 transition-all hover:border-[#8b5e34]/50 hover:shadow-[0_8px_20px_rgba(139,94,52,0.12)]"
                         >
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                          <p className="text-xs font-bold text-[#1f241c] truncate">{variant.name}</p>
-                          <div className="mt-2 flex flex-col gap-1">
-                            {variant.weight_grams && (
-                              <span className="flex items-center gap-1.5 w-fit rounded-md bg-[#f3ede2]/80 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-[#8b5e34]">
-                                <Weight className="h-3 w-3" />
-                                {formatWeight(variant.weight_grams)}
-                              </span>
-                            )}
-                            <span className="mt-0.5 text-lg font-black tracking-tight text-[#1f4d3f]">
-                              {formatCurrency(variant.price, "FCFA")}
+                          <p className="text-base sm:text-lg font-black leading-tight tracking-tight text-[#1f241c] mb-2">{variant.name}</p>
+                          
+                          {variant.weight_grams && (
+                            <span className="flex items-center gap-1.5 w-fit rounded-xl bg-[#f3ede2]/80 px-2.5 py-1 text-[11px] font-black uppercase tracking-wider text-[#8b5e34] border border-[#e8dfcf]">
+                              <Weight className="h-3.5 w-3.5 opacity-90" />
+                              {formatWeight(variant.weight_grams)}
                             </span>
+                          )}
+
+                          <div className="flex-1" />
+                          <div className="my-3 h-px w-full bg-[#e7dfd2]/60" />
+
+                          <div className="flex items-center justify-between">
+                             <div className="flex items-center gap-2">
+                                <span className="text-[10px] uppercase tracking-wider font-bold text-[#8a9086]">Prix</span>
+                                <span className="text-base font-black tracking-tight text-[#1f4d3f]">
+                                  {formatCurrency(variant.price, "FCFA")}
+                                </span>
+                             </div>
                           </div>
+
                           {variant.stock === 0 && (
-                            <div className="mt-2 flex items-center gap-1.5 rounded-md bg-red-50/80 px-2 py-1 text-[10px] font-bold text-red-600">
+                            <div className="mt-3 flex items-center gap-1.5 rounded-md bg-red-50/80 px-2 py-1 text-[10px] font-bold text-red-600">
                               <X className="h-3 w-3" /> Indisponible
                             </div>
                           )}
@@ -499,7 +524,7 @@ export default function ProductDetailClient({ slug, id }: Props) {
                 )}
               </motion.div>
 
-              {/* ── Détails produit ──────────────────────────────────────── */}
+              {/* -- Détails produit ---------------------------------------- */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -568,7 +593,9 @@ export default function ProductDetailClient({ slug, id }: Props) {
                         Selon la variante sélectionnée
                       </p>
                     </div>
+
                   ) : (
+
                     <div className="flex items-baseline gap-3">
                       <span className="text-3xl font-bold text-[#1f4d3f]">
                         {formatCurrency(displayPrice, "FCFA")}
@@ -584,7 +611,9 @@ export default function ProductDetailClient({ slug, id }: Props) {
                         </span>
                       )}
                     </div>
+
                   )}
+
                 </div>
 
                 {/* Description */}
@@ -608,18 +637,30 @@ export default function ProductDetailClient({ slug, id }: Props) {
                       </span>
                     </div>
                   </div>
+
                   {product.weight_grams && (
                     <div className="rounded-xl border border-[#e7dfd2] bg-white px-4 py-3">
                       <p className="text-[10px] font-semibold uppercase tracking-wider text-[#8a9086]">Poids</p>
-                      <p className="mt-1 text-sm font-bold text-[#1f241c]">{formatWeight(product.weight_grams)}</p>
+                      <p className="mt-1 text-sm font-bold text-[#1f241c]">{formatWeight(product.weight_grams) ? formatWeight(product.weight_grams) : formatWeight(product.variants[0].weight_grams)}</p>
                     </div>
                   )}
+
+
+                  <div className="rounded-xl border border-[#e7dfd2] bg-white px-4 py-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[#8a9086]">Catégorie</p>
+                    <p className="mt-1 text-sm font-bold text-[#1f241c]">
+                      {product.category?.name || (product as any).category_name || "Non spécifiée"}
+                    </p>
+                  </div>
+
+
                   <div className="rounded-xl border border-[#e7dfd2] bg-white px-4 py-3">
                     <p className="text-[10px] font-semibold uppercase tracking-wider text-[#8a9086]">Type</p>
                     <p className="mt-1 text-sm font-bold text-[#1f241c]">
                       {product.product_type === "RAW" ? "Brut" : product.product_type === "PROCESSED" ? "Transformé" : "Export"}
                     </p>
                   </div>
+
                   <div className="rounded-xl border border-[#e7dfd2] bg-white px-4 py-3">
                     <p className="text-[10px] font-semibold uppercase tracking-wider text-[#8a9086]">Réf.</p>
                     <p className="mt-1 text-sm font-bold text-[#1f241c]">{product.sku}</p>

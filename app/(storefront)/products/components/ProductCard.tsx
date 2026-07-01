@@ -1,4 +1,4 @@
-
+﻿
 
 
 "use client";
@@ -47,9 +47,9 @@ import { toggleFavorite, rateProduct } from "@/fonctions_api/notes-favoris.api";
 import type { EnrichedProduct } from "@/app/(storefront)/products/components/ProductsCatalogClient";
 import Toast from "@/components/special/Toast";
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    TYPES — conservation de l'interface d'origine
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 type ProductCardProps = {
   product: EnrichedProduct;
@@ -59,10 +59,10 @@ type ProductCardProps = {
   isFavorited?: boolean;
 };
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    SOUS-COMPOSANT : PriceBlock
    Affiche le bloc prix (variantes ou prix simple) dans les deux modes
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 type PriceBlockProps = {
   product: EnrichedProduct;
@@ -111,10 +111,10 @@ function PriceBlock({ product, finalPrice, hasDiscount, discountPct, align = "le
   );
 }
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    SOUS-COMPOSANT : InteractiveStars
    Étoiles avec hover scale et coloration progressive
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 type InteractiveStarsProps = {
   displayScore: number;
@@ -177,9 +177,9 @@ function InteractiveStars({
   );
 }
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    COMPOSANT PRINCIPAL — conservation du nom d'origine
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 export function ProductCard({
   product,
@@ -194,7 +194,7 @@ export function ProductCard({
 
   const isAuthenticated = status === "authenticated" && Boolean(user);
 
-  /* ── État local — noms d'origine conservés ── */
+  /* -- État local — noms d'origine conservés -- */
   const [isAdding, setIsAdding] = useState(false);
 
   const [isFavorited, setIsFavorited] = useState(initialIsFavorited);
@@ -217,7 +217,7 @@ export function ProductCard({
     setToast({ show: true, type, message });
   }, []);
 
-  /* ── Prix calculés ── */
+  /* -- Prix calculés -- */
   const finalPrice = product.sale_price ?? product.price;
   const hasDiscount =
     product.sale_price &&
@@ -230,7 +230,7 @@ export function ProductCard({
     : 0;
   const isOutOfStock = product.stock === 0;
 
-  /* ── Panier — nom d'origine conservé ── */
+  /* -- Panier — nom d'origine conservé -- */
   const handleAddToCart = (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -242,20 +242,29 @@ export function ProductCard({
 
     const defaultVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
 
+    // Évite "Ananas — Ananas" si le nom de la variante === nom du produit
+    const cartName =
+      defaultVariant && defaultVariant.name.trim().toLowerCase() !== product.name.trim().toLowerCase()
+        ? `${product.name} — ${defaultVariant.name}`
+        : product.name;
+
+    const productImg =
+      typeof product.primary_image === "object" && product.primary_image
+        ? product.primary_image.image
+        : typeof product.primary_image === "string"
+          ? product.primary_image
+          : null;
+
     setIsAdding(true);
     addItem({
       productId: product.id,
       variantId: defaultVariant ? defaultVariant.id : null,
-      name: defaultVariant ? `${product.name} — ${defaultVariant.name}` : product.name,
+      name: cartName,
       sku: defaultVariant?.sku || (product.slug ?? ""),
       price: defaultVariant ? defaultVariant.price : finalPrice,
       compareAtPrice: product.original_price ?? null,
-      image:
-        typeof product.primary_image === "object" && product.primary_image
-          ? product.primary_image.image
-          : typeof product.primary_image === "string"
-            ? product.primary_image
-            : null,
+      image: productImg,
+      productImage: productImg,
       quantity: 1,
       maxStock: defaultVariant ? defaultVariant.stock : product.stock,
       currency: "FCFA",
@@ -266,7 +275,7 @@ export function ProductCard({
     window.setTimeout(() => setIsAdding(false), 2000);
   };
 
-  /* ── Toggle favoris — nom d'origine conservé ── */
+  /* -- Toggle favoris — nom d'origine conservé -- */
   const handleWishlist = async (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -301,7 +310,7 @@ export function ProductCard({
     }
   };
 
-  /* ── Notation — nom d'origine conservé ── */
+  /* -- Notation — nom d'origine conservé -- */
   const handleRate = async (event: React.MouseEvent, score: number) => {
     event.preventDefault();
     event.stopPropagation();
@@ -334,10 +343,10 @@ export function ProductCard({
     }
   };
 
-  /* ── Score à afficher (hover > note perso > moyenne) ── */
+  /* -- Score à afficher (hover > note perso > moyenne) -- */
   const displayScore = hoveredStar ?? userScore ?? avgRating;
 
-  /* ── URL image ── */
+  /* -- URL image -- */
   const imgSrc =
     typeof product.primary_image === "object" && product.primary_image
       ? mediaUrl(product.primary_image.image)
@@ -345,9 +354,9 @@ export function ProductCard({
         ? mediaUrl(product.primary_image)
         : null;
 
-  /* ─────────────────────────────────────────────────────────────
+  /* -------------------------------------------------------------
      RENDU GRILLE
-     ───────────────────────────────────────────────────────────── */
+     ------------------------------------------------------------- */
   if (viewMode === "grid") {
     return (
       <motion.div
@@ -361,6 +370,7 @@ export function ProductCard({
             type={toast.type}
             message={toast.message}
             onClose={() => setToast({ ...toast, show: false })}
+            position="bottom-right"
           />
         )}
 
@@ -375,7 +385,7 @@ export function ProductCard({
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1f4d3f]/40"
           )}
         >
-          {/* ── Zone image ── */}
+          {/* -- Zone image -- */}
           <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-[#f3ede2]">
 
             {imgSrc ? (
@@ -405,7 +415,7 @@ export function ProductCard({
               aria-hidden
             />
 
-            {/* ── Badges haut gauche ── */}
+            {/* -- Badges haut gauche -- */}
             <div className="absolute left-3 top-3 flex flex-col gap-1.5 z-10">
               {hasDiscount && (
                 <motion.span
@@ -445,7 +455,7 @@ export function ProductCard({
               )}
             </div>
 
-            {/* ── Bouton favoris ── */}
+            {/* -- Bouton favoris -- */}
             <motion.button
               type="button"
               onClick={handleWishlist}
@@ -471,7 +481,7 @@ export function ProductCard({
               />
             </motion.button>
 
-            {/* ── CTA "Ajouter" — slide up depuis le bas ── */}
+            {/* -- CTA "Ajouter" — slide up depuis le bas -- */}
             <div
               className={cn(
                 "absolute bottom-3 left-3 right-3 z-10",
@@ -533,7 +543,7 @@ export function ProductCard({
             </div>
           </div>
 
-          {/* ── Informations produit ── */}
+          {/* -- Informations produit -- */}
           <div className="flex flex-1 flex-col p-4">
 
             {/* Catégorie */}
@@ -576,9 +586,9 @@ export function ProductCard({
     );
   }
 
-  /* ─────────────────────────────────────────────────────────────
+  /* -------------------------------------------------------------
      RENDU LISTE
-     ───────────────────────────────────────────────────────────── */
+     ------------------------------------------------------------- */
   return (
     <motion.div
       initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
@@ -621,7 +631,7 @@ export function ProductCard({
           aria-hidden
         />
 
-        {/* ── Image ── */}
+        {/* -- Image -- */}
         <div className="relative aspect-square w-32 shrink-0 overflow-hidden bg-[#f3ede2] sm:w-44">
           {imgSrc ? (
             <Image
@@ -655,7 +665,7 @@ export function ProductCard({
           </div>
         </div>
 
-        {/* ── Détails ── */}
+        {/* -- Détails -- */}
         <div className="flex flex-1 flex-col p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-5">
 
           {/* Infos gauche */}
@@ -679,7 +689,7 @@ export function ProductCard({
             />
           </div>
 
-          {/* ── Section prix + actions ── */}
+          {/* -- Section prix + actions -- */}
           <div className="mt-3 flex flex-col items-start gap-3 sm:mt-0 sm:w-48 sm:items-end sm:text-right">
 
             {/* Prix */}

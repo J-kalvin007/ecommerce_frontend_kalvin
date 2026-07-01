@@ -1,6 +1,6 @@
-/**
+﻿/**
  * FavoriteProductCard.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Carte d'un produit favori dans la grille des favoris du client.
  *
  * Affiche : image produit, nom, prix, date d'ajout, badge stock,
@@ -30,7 +30,7 @@ import { mediaUrl } from "@/lib/mediaUrl";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/uiStore";
 
-/* ── Utilitaires ────────────────────────────────────────────────────────── */
+/* -- Utilitaires ---------------------------------------------------------- */
 
 function formatPrice(price: string): string {
   const num = parseFloat(price || "0");
@@ -55,7 +55,7 @@ function formatDate(dateStr: string): string {
   }
 }
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface FavoriteProductCardProps {
   product: FavoriteProduct;
   index: number;
@@ -106,7 +106,7 @@ export default function FavoriteProductCard({
              viewMode === "list" ? "flex flex-col sm:flex-row items-stretch" : "flex flex-col"
           )}
         >
-          {/* ── Image du produit ── */}
+          {/* -- Image du produit -- */}
           <div className={cn(
             "relative overflow-hidden bg-[#F7F5F0]",
             viewMode === "list" ? "w-full sm:w-56 shrink-0 h-48 sm:h-auto" : "h-48 w-full"
@@ -163,7 +163,7 @@ export default function FavoriteProductCard({
             </motion.button>
           </div>
 
-          {/* ── Infos du produit ── */}
+          {/* -- Infos du produit -- */}
           <div className={cn("p-4 flex flex-1 flex-col", viewMode === "list" ? "justify-center" : "")}>
             <h3 className="mb-1 truncate text-[16px] font-bold text-[#1f241c] leading-snug">
               {product.name}

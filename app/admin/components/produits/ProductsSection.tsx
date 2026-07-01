@@ -1,4 +1,4 @@
-
+﻿
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -81,8 +81,8 @@ function StatCard({
       <div className="flex items-center justify-between">
 
         <div className="relative z-10 mt-3">
-          <p className="text-xl font-black text-foreground tracking-tight leading-none">{value}</p>
-          <p className="mt-1 text-[9px] font-extrabold uppercase tracking-widest text-muted-foreground/80">{label}</p>
+          <p className="text-[24px] font-black text-foreground tracking-tight leading-none">{value}</p>
+          <p className="mt-1 text-[12px] font-extrabold uppercase tracking-widest text-muted-foreground/80">{label}</p>
         </div>
 
 
@@ -259,7 +259,7 @@ export default function ProductsSection() {
 
 
 
-        {/* ── En-tête avec effet premium ── */}
+        {/* -- En-tête avec effet premium -- */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -348,8 +348,11 @@ export default function ProductsSection() {
             <span className="hidden sm:inline">Ajouter un produit</span>
             <span className="sm:hidden">Ajouter</span>
           </motion.button>
+
         </div>
+
       </div>
+
 
       {/* Stats */}
       <AnimatePresence>
@@ -370,8 +373,10 @@ export default function ProductsSection() {
         )}
       </AnimatePresence>
 
+
       {/* Barre de recherche + filtres */}
       <div className="space-y-3">
+
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -381,12 +386,15 @@ export default function ProductsSection() {
               placeholder="Rechercher par nom ou SKU..."
               className="h-10 w-full rounded-xl border border-border/60 bg-white dark:bg-[#1e1e1e] pl-10 pr-4 text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/15 placeholder:text-muted-foreground/50"
             />
+
             {search && (
               <button onClick={() => setSearch("")} className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                 <X className="h-3.5 w-3.5" />
               </button>
             )}
+
           </div>
+
           <motion.button
             onClick={() => setShowFilters(!showFilters)}
             whileHover={{ scale: 1.02 }}
@@ -398,25 +406,69 @@ export default function ProductsSection() {
                 : "border-border/60 bg-white dark:bg-[#1e1e1e] text-muted-foreground hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-foreground"
             )}
           >
+
             <SlidersHorizontal className="h-4 w-4" />
+
             <span className="hidden sm:inline">Filtres</span>
+
             {activeFiltersCount > 0 && (
+
               <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
                 {activeFiltersCount}
               </span>
+
             )}
+
           </motion.button>
+
+
           {/* Compteur résultats */}
           <div className="flex h-10 items-center gap-1.5 rounded-xl border border-border/40  px-3 text-xs text-muted-foreground whitespace-nowrap">
+
             <Filter className="h-3.5 w-3.5" />
             <span className="font-semibold text-foreground">{filteredProducts.length}</span>
             <span className="hidden sm:inline">résultat{filteredProducts.length !== 1 ? "s" : ""}</span>
+
           </div>
+
+
+
+          {/* Bouton bascule de vue juste au-dessus de la liste */}
+          <div className="flex justify-end">
+
+            <div className="flex items-center rounded-[14px] border border-border/50 /60 backdrop-blur-sm p-1 shadow-sm">
+
+              <button
+                onClick={() => setViewMode("grid")}
+                className={cn("rounded-[10px] p-2 cursor-pointer transition-all duration-200 flex items-center gap-2",
+                  viewMode === "grid" ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-slate-50 dark:hover:bg-slate-800"
+                )}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+
+              <button
+                onClick={() => setViewMode("list")}
+                className={cn("rounded-[10px] p-2 cursor-pointer transition-all duration-200 flex items-center gap-2",
+                  viewMode === "list" ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-slate-50 dark:hover:bg-slate-800"
+                )}
+              >
+                <List className="h-4 w-4" />
+              </button>
+
+            </div>
+
+          </div>
+
+
+
         </div>
 
         {/* Panneau filtres avancés */}
         <AnimatePresence>
+
           {showFilters && (
+
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
@@ -458,7 +510,9 @@ export default function ProductsSection() {
                     >
                       {TYPE_FILTERS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
                     </select>
+
                   </div>
+
                   {/* Filtre catégorie */}
                   <div>
                     <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Catégorie</label>
@@ -471,6 +525,7 @@ export default function ProductsSection() {
                       {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
                   </div>
+
                   {/* Filtre TOP */}
                   <div>
                     <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Mise en avant</label>
@@ -485,39 +540,28 @@ export default function ProductsSection() {
                       {filterTop ? "TOP uniquement" : "Tous les produits"}
                     </button>
                   </div>
+
                 </div>
+
               </div>
+
             </motion.div>
+
           )}
+
         </AnimatePresence>
+
       </div>
 
-      {/* Bouton bascule de vue juste au-dessus de la liste */}
-      <div className="flex justify-end">
-        <div className="flex items-center rounded-[14px] border border-border/50 /60 backdrop-blur-sm p-1 shadow-sm">
-          <button
-            onClick={() => setViewMode("grid")}
-            className={cn("rounded-[10px] p-2 cursor-pointer transition-all duration-200 flex items-center gap-2",
-              viewMode === "grid" ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-slate-50 dark:hover:bg-slate-800"
-            )}
-          >
-            <LayoutGrid className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => setViewMode("list")}
-            className={cn("rounded-[10px] p-2 cursor-pointer transition-all duration-200 flex items-center gap-2",
-              viewMode === "list" ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-slate-50 dark:hover:bg-slate-800"
-            )}
-          >
-            <List className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
+
 
       {/* Grille / Liste */}
       {loading ? (
+
         <LoadingStyle label="Chargement des produits..." />
+
       ) : filteredProducts.length === 0 ? (
+
         <EmptyState
           title="Aucun produit trouvé"
           description={activeFiltersCount > 0 ? "Essayez d'ajuster vos filtres." : "Commencez par créer un produit."}
@@ -525,7 +569,9 @@ export default function ProductsSection() {
           onAction={activeFiltersCount > 0 ? clearFilters : () => { setEditingProduct(null); setFormOpen(true); }}
           icon={Package}
         />
+
       ) : viewMode === "grid" ? (
+
         <ProductGrid
           products={filteredProducts}
           onProductClick={(p) => { setSelectedProduct(p); setDetailOpen(true); }}
@@ -533,7 +579,9 @@ export default function ProductsSection() {
           onDelete={(id) => setDeletingId(id)}
           onAddVariant={openVariantModal}
         />
+
       ) : (
+
         <ProductList
           products={filteredProducts}
           onProductClick={(p) => { setSelectedProduct(p); setDetailOpen(true); }}
@@ -541,6 +589,7 @@ export default function ProductsSection() {
           onDelete={(id) => setDeletingId(id)}
           onAddVariant={openVariantModal}
         />
+
       )}
 
       {/* Formulaire produit */}
@@ -590,6 +639,8 @@ export default function ProductsSection() {
         onDeleteVariant={handleDeleteVariant}
         isSaving={saving}
       />
+
     </div>
+
   );
 }

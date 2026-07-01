@@ -1,4 +1,4 @@
-
+﻿
 // app/admin/components/clients/ClientsSection.tsx
 "use client";
 
@@ -22,7 +22,7 @@ import ConfirmDialog from "@/components/special/ConfirmDialog";
 import ErrorState from "@/components/special/ErrorState";
 import EmptyState from "@/components/special/EmptyState";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// --- Constants ----------------------------------------------------------------
 
 const ROLE_FILTERS = [
   { value: "", label: "Tous les rôles" },
@@ -41,7 +41,7 @@ const ROLE_LABELS: Record<string, { label: string; color: string; icon: React.El
   customer: { label: "Client", color: "text-primary bg-primary/10 border-primary/20", icon: UserIcon },
 };
 
-// ─── StatCard ─────────────────────────────────────────────────────────────────
+// --- StatCard -----------------------------------------------------------------
 
 function StatCard({
   icon: Icon, label, value, color, sub,
@@ -58,24 +58,32 @@ function StatCard({
       className="relative overflow-hidden rounded-2xl border border-border/50 bg-white/80 backdrop-blur-sm p-4 shadow-sm transition-all hover:shadow-md group"
     >
       {/* Background pattern */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+      {/* <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{ backgroundImage: "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)", backgroundSize: "20px 20px" }}
       />
-      <div className={cn("absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl opacity-10 pointer-events-none transition-opacity group-hover:opacity-20", color.replace("text-", "bg-"))} />
+      <div className={cn("absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl opacity-10 pointer-events-none transition-opacity group-hover:opacity-20", color.replace("text-", "bg-"))} /> */}
 
       <div className="relative z-10">
-        <div className={cn("flex h-8 w-8 items-center justify-center rounded-xl mb-3", color.replace("text-", "bg-").replace(/\d00/, "100"), color)}>
-          <Icon className="h-4 w-4" />
+
+
+        <div className="flex items-center justify-between">
+
+          <p className="text-2xl font-black text-foreground tracking-tight">{value}</p>
+
+          <div className={cn("flex h-8 w-8 items-center justify-center rounded-xl mb-3", color.replace("text-", "bg-").replace(/\d00/, "100"), color)}>
+            <Icon className="h-4 w-4" />
+          </div>
+
         </div>
-        <p className="text-2xl font-black text-foreground tracking-tight">{value}</p>
-        <p className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider mt-0.5">{label}</p>
-        {sub && <p className="text-[10px] text-muted-foreground/70 mt-1">{sub}</p>}
+
+        <p className="text-[14px] text-muted-foreground font-semibold uppercase tracking-wider mt-0.5">{label}</p>
+        {sub && <p className="text-[12px] text-muted-foreground/70 mt-1">{sub}</p>}
       </div>
     </motion.div>
   );
 }
 
-// ─── ClientsSection ───────────────────────────────────────────────────────────
+// --- ClientsSection -----------------------------------------------------------
 
 export default function ClientsSection() {
   // State
@@ -93,7 +101,7 @@ export default function ClientsSection() {
   const [toggling, setToggling] = useState(false);
   const [toast, setToast] = useState<{ show: boolean; type: "success" | "error" | "info"; message: string }>({ show: false, type: "success", message: "" });
 
-  // ─── Load Data ────────────────────────────────────────────────────────────
+  // --- Load Data ------------------------------------------------------------
 
   const loadUsers = useCallback(async () => {
     setLoading(true);
@@ -109,7 +117,7 @@ export default function ClientsSection() {
 
   useEffect(() => { loadUsers(); }, [loadUsers]);
 
-  // ─── Filters ──────────────────────────────────────────────────────────────
+  // --- Filters --------------------------------------------------------------
 
   const filtered = useMemo(() => {
     let list = [...users];
@@ -128,7 +136,7 @@ export default function ClientsSection() {
     return list;
   }, [users, search, roleFilter, statusFilter]);
 
-  // ─── Stats ────────────────────────────────────────────────────────────────
+  // --- Stats ----------------------------------------------------------------
 
   const stats = useMemo(() => ({
     total: users.length,
@@ -137,7 +145,7 @@ export default function ClientsSection() {
     verified: users.filter(u => u.is_verified).length,
   }), [users]);
 
-  // ─── Handlers ─────────────────────────────────────────────────────────────
+  // --- Handlers -------------------------------------------------------------
 
   const handleViewDetail = (user: User) => {
     setSelectedUser(user);
@@ -160,7 +168,7 @@ export default function ClientsSection() {
 
   const activeFiltersCount = [roleFilter, statusFilter].filter(Boolean).length;
 
-  // ─── Render ───────────────────────────────────────────────────────────────
+  // --- Render ---------------------------------------------------------------
 
   return (
     <div className="space-y-6 px-20">
@@ -170,7 +178,7 @@ export default function ClientsSection() {
 
 
 
-      {/* ── En-tête avec effet premium ── */}
+      {/* -- En-tête avec effet premium -- */}
       <motion.div
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -243,7 +251,7 @@ export default function ClientsSection() {
         <StatCard icon={Users} label="Total utilisateurs" value={stats.total} color="text-blue-500" />
         <StatCard icon={ShieldCheck} label="Comptes actifs" value={stats.active} color="text-emerald-500" sub={`${stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0}% du total`} />
         <StatCard icon={Crown} label="Administrateurs" value={stats.admins} color="text-amber-500" />
-        <StatCard icon={CheckCircle2} label="Emails vérifiés" value={stats.verified} color="text-primary" sub={`${stats.total > 0 ? Math.round((stats.verified / stats.total) * 100) : 0}% du total`} />
+        <StatCard icon={CheckCircle2} label="Emails vérifiés" value={stats.verified} color="text-red-400" sub={`${stats.total > 0 ? Math.round((stats.verified / stats.total) * 100) : 0}% du total`} />
       </div>
 
       {/* Search + Filters */}
@@ -283,6 +291,27 @@ export default function ClientsSection() {
           <Filter className="h-4 w-4" />
           <span className="font-semibold text-primary">{filtered.length}</span> résultat{filtered.length !== 1 ? "s" : ""}
         </div>
+
+
+        {/* View Mode Toggle */}
+        <div className="flex items-center justify-end">
+          <div className="flex items-center gap-1 rounded-xl border border-border bg-white p-1 shadow-sm">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={cn("flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all", viewMode === "grid" ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-white-alt")}
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={cn("flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all", viewMode === "list" ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-white-alt")}
+            >
+              <List className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+
       </div>
 
       {/* Expanded filters */}
@@ -328,36 +357,27 @@ export default function ClientsSection() {
         )}
       </AnimatePresence>
 
-      {/* View Mode Toggle */}
-      <div className="flex items-center justify-end">
-        <div className="flex items-center gap-1 rounded-xl border border-border bg-white p-1 shadow-sm">
-          <button
-            onClick={() => setViewMode("grid")}
-            className={cn("flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all", viewMode === "grid" ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-white-alt")}
-          >
-            <LayoutGrid className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => setViewMode("list")}
-            className={cn("flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all", viewMode === "list" ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-white-alt")}
-          >
-            <List className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
+
 
       {/* Content */}
       {loading ? (
+
         <LoadingStyle label="Chargement des utilisateurs..." size={12} />
+
       ) : error ? (
+
         <ErrorState message={error} onRetry={loadUsers} />
+
       ) : filtered.length === 0 ? (
+
         <EmptyState
           icon={Users}
           title="Aucun utilisateur trouvé"
           description={search || activeFiltersCount > 0 ? "Essayez de modifier vos critères de recherche ou vos filtres." : "Il n'y a encore aucun utilisateur inscrit sur la plateforme."}
         />
+
       ) : viewMode === "grid" ? (
+
         /* Grid View */
         <motion.div
           layout
@@ -374,7 +394,9 @@ export default function ClientsSection() {
             ))}
           </AnimatePresence>
         </motion.div>
+
       ) : (
+
         /* List View */
         <div className="overflow-hidden rounded-2xl border border-border/50 bg-white shadow-sm">
           <div className="overflow-x-auto">
@@ -411,20 +433,28 @@ export default function ClientsSection() {
                           <div className="relative shrink-0">
                             <div className="relative h-10 w-10 rounded-full overflow-hidden border-2 border-border/50 shadow-sm">
                               {resolvedImage ? (
+
                                 <Image src={resolvedImage} alt={user.name} fill className="object-cover" />
+
                               ) : (
+
                                 <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5 text-primary text-sm font-black">
                                   {(user.name || user.email || "?").charAt(0).toUpperCase()}
                                 </div>
+
                               )}
+
                             </div>
                             <div className={cn("absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-surface", user.is_active ? "bg-emerald-500" : "bg-red-500")} />
                           </div>
+
                           <div className="min-w-0">
                             <p className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">{user.name || "Sans nom"}</p>
                             <p className="text-[11px] text-muted-foreground truncate">{user.email}</p>
                           </div>
+
                         </div>
+
                       </td>
 
                       {/* Contact */}
@@ -446,45 +476,61 @@ export default function ClientsSection() {
                       {/* Vérification */}
                       <td className="px-5 py-4">
                         {user.is_verified ? (
+
                           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600"><CheckCircle2 className="h-3.5 w-3.5" /> Vérifié</span>
+
                         ) : (
+
                           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600"><XCircle className="h-3.5 w-3.5" /> Non vérifié</span>
+
                         )}
+
                       </td>
 
                       {/* Statut */}
                       <td className="px-5 py-4">
+
                         <div className={cn(
+
                           "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold border",
                           user.is_active ? "text-emerald-600 bg-emerald-500/10 border-emerald-500/20" : "text-red-600 bg-red-500/10 border-red-500/20"
+
                         )}>
+
                           <div className={cn("h-1.5 w-1.5 rounded-full", user.is_active ? "bg-emerald-500" : "bg-red-500")} />
                           {user.is_active ? "Actif" : "Désactivé"}
+
                         </div>
+
                       </td>
 
                       {/* Actions */}
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-1">
+
                           <button
                             onClick={(e) => { e.stopPropagation(); handleViewDetail(user); }}
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+                            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
                             title="Voir le détail"
                           >
                             <Eye className="h-4 w-4" />
                           </button>
+
                           <button
                             onClick={(e) => { e.stopPropagation(); setToggleTarget(user); }}
                             className={cn(
-                              "flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors",
+                              "flex h-8 w-8 items-center cursor-pointer justify-center rounded-lg text-muted-foreground transition-colors",
                               user.is_active ? "hover:bg-red-500/10 hover:text-red-500" : "hover:bg-emerald-500/10 hover:text-emerald-500"
                             )}
                             title={user.is_active ? "Désactiver" : "Activer"}
                           >
                             {user.is_active ? <ShieldBan className="h-4 w-4" /> : <ShieldCheck className="h-4 w-4" />}
                           </button>
+
                         </div>
+
                       </td>
+
                     </motion.tr>
                   );
                 })}

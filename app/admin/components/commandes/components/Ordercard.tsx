@@ -1,4 +1,4 @@
-// app/admin/components/commandes/components/OrderCard.tsx
+﻿// app/admin/components/commandes/components/OrderCard.tsx
 "use client";
 
 import { useState } from "react";
@@ -19,7 +19,7 @@ interface OrderCardProps {
   isUpdating: boolean;
 }
 
-/* ── Status pill ──────────────────────────────────────────────── */
+/* -- Status pill ------------------------------------------------ */
 function StatusPill({ status }: { status: OrderStatus }) {
   const cfg = ORDER_STATUS_MAP[status];
   if (!cfg) return null;
@@ -34,7 +34,8 @@ function StatusPill({ status }: { status: OrderStatus }) {
   );
 }
 
-/* ── Status quick-change dropdown ─────────────────────────────── */
+
+/* -- Status quick-change dropdown ------------------------------- */
 function StatusDropdown({
   currentStatus,
   isUpdating,
@@ -52,7 +53,7 @@ function StatusDropdown({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -6, scale: 0.96 }}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      className="absolute right-0 top-full z-999 mt-2 w-56 overflow-hidden rounded-2xl border border-border/60 shadow-2xl shadow-black/20 backdrop-blur-xl"
+      className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-border/60 shadow-2xl shadow-black/20 backdrop-blur-xl"
     >
       {/* Header */}
       <div className="border-b border-border/40 px-4 py-3">
@@ -91,7 +92,7 @@ function StatusDropdown({
   );
 }
 
-/* ── Main OrderCard ───────────────────────────────────────────── */
+/* -- Main OrderCard --------------------------------------------- */
 export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating }: OrderCardProps) {
   const [showStatus, setShowStatus] = useState(false);
   const cfg = ORDER_STATUS_MAP[order.status] ?? ORDER_STATUS_MAP.pending_payment;
@@ -100,7 +101,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
   });
   const itemCount = (order as any).items_count ?? "—";
 
-  /* ── GRID card ─────────────────────────────────────────────── */
+  /* -- GRID card ----------------------------------------------- */
   if (viewMode === "grid") {
     return (
       <motion.article
@@ -109,7 +110,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ type: "spring", stiffness: 320, damping: 28 }}
-        className="group relative flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-white-elevated shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20"
+        className="group relative flex flex-col rounded-3xl border border-border/60 bg-white-elevated shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20"
       >
         {/* Top accent bar */}
         <div className={cn("absolute inset-x-0 top-0 h-px", cfg.bg.replace("/10", ""))} />
@@ -119,8 +120,8 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
           <div className="absolute -inset-px rounded-3xl bg-gradient-to-br from-white/5 via-transparent to-transparent" />
         </div>
 
-        {/* ── Image zone (left column feel: full width top half) ── */}
-        <div className="relative h-36 w-full overflow-hidden bg-gradient-to-br from-surface-alt to-surface">
+        {/* -- Image zone (left column feel: full width top half) -- */}
+        <div className="relative h-36 w-full overflow-hidden rounded-t-[calc(1.5rem-1px)] bg-gradient-to-br from-surface-alt to-surface">
           {/* Subtle grid texture */}
           <div className="absolute inset-0 opacity-[0.03]" style={{
             backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 24px,currentColor 24px,currentColor 25px),repeating-linear-gradient(90deg,transparent,transparent 24px,currentColor 24px,currentColor 25px)"
@@ -146,7 +147,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
           </div>
         </div>
 
-        {/* ── Info zone ── */}
+        {/* -- Info zone -- */}
         <div className="flex flex-1 flex-col gap-4 p-5">
           {/* Date + items */}
           <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -224,7 +225,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
     );
   }
 
-  /* ── LIST card ─────────────────────────────────────────────── */
+  /* -- LIST card ----------------------------------------------- */
   return (
     <motion.article
       layout
@@ -232,7 +233,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -6 }}
       transition={{ type: "spring", stiffness: 350, damping: 32 }}
-      className="group relative overflow-hidden rounded-2xl border border-border/60 bg-white-elevated shadow-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/15"
+      className="group relative rounded-2xl border border-border/60 bg-white-elevated shadow-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/15"
     >
       {/* Left accent stripe */}
       <div className={cn("absolute inset-y-0 left-0 w-0.5 rounded-r-full transition-all duration-300 group-hover:w-1", cfg.bg.replace("/10", ""))} />
@@ -244,7 +245,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
 
       <div className="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:gap-0">
 
-        {/* ── Left: image container + reference + status ── */}
+        {/* -- Left: image container + reference + status -- */}
         <div className="flex items-center gap-4 sm:flex-[2]">
           {/* Image / icon container */}
           <div className={cn(
@@ -275,7 +276,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
           </div>
         </div>
 
-        {/* ── Center: amounts ── */}
+        {/* -- Center: amounts -- */}
         <div className="flex items-center gap-6 sm:flex-1 sm:justify-center">
           <div className="text-center">
             <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Articles</p>
@@ -299,7 +300,7 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
           </div>
         </div>
 
-        {/* ── Right: actions ── */}
+        {/* -- Right: actions -- */}
         <div className="flex items-center justify-end gap-2 sm:flex-none sm:pl-6">
           {/* Status dropdown */}
           <div className="relative">

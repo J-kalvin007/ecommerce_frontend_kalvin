@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -24,9 +24,9 @@ import { cn } from "@/lib/utils";
 import Toast from "@/components/special/Toast";
 import { logoImage } from "@/assets/images";
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    Animation variants
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 const stagger: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.08, delayChildren: 0.2 } },
@@ -59,9 +59,9 @@ const rightIn: Variants = {
   },
 };
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    FloatingParticle
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 function FloatingParticle({
   x, y, size, delay, duration,
 }: {
@@ -77,9 +77,9 @@ function FloatingParticle({
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    Steps – how it works
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 const steps = [
   {
     icon: Mail,
@@ -98,9 +98,9 @@ const steps = [
   },
 ];
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    PremiumInput
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 function PremiumInput({
   value,
   onChange,
@@ -183,9 +183,9 @@ function PremiumInput({
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    Success state panel
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 function SuccessPanel({ email }: { email: string }) {
   return (
     <motion.div
@@ -266,9 +266,9 @@ function SuccessPanel({ email }: { email: string }) {
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    Main component
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 export default function ForgotPasswordClient() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -309,9 +309,9 @@ export default function ForgotPasswordClient() {
         onClose={() => setToast({ ...toast, show: false })}
       />
 
-      {/* ── Full-page background ── */}
+      {/* -- Full-page background -- */}
       <div className="flex min-h-screen w-full items-center justify-center bg-[#F0EDE6] p-4 md:p-8">
-        {/* ── Card ── */}
+        {/* -- Card -- */}
         <motion.div
           initial={{ opacity: 0, scale: 0.97, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -321,7 +321,7 @@ export default function ForgotPasswordClient() {
         >
           <div className="flex flex-col lg:flex-row">
 
-            {/* ── LEFT PANEL ── */}
+            {/* -- LEFT PANEL -- */}
             <motion.div
               variants={leftIn}
               initial="hidden"
@@ -483,7 +483,7 @@ export default function ForgotPasswordClient() {
               </motion.div>
             </motion.div>
 
-            {/* ── RIGHT PANEL – FORM ── */}
+            {/* -- RIGHT PANEL – FORM -- */}
             <motion.div
               variants={rightIn}
               initial="hidden"

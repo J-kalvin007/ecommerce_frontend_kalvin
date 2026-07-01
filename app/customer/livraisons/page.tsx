@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -48,7 +48,7 @@ export default function CustomerDeliveriesPage() {
     <CustomerShell activeSection="orders">
       <div className="mx-auto max-w-8xl px-20 py-8 sm:px-6 lg:px-20 space-y-10">
 
-        {/* ── En-tête Premium ── */}
+        {/* -- En-tête Premium -- */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -105,7 +105,7 @@ export default function CustomerDeliveriesPage() {
           </div>
         </motion.div>
 
-        {/* ── Contenu ── */}
+        {/* -- Contenu -- */}
         {isLoading ? (
           <div className="flex justify-center py-20">
             <LoadingStyle label="Chargement de vos livraisons…" size={16} />

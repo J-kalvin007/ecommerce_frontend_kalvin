@@ -1,4 +1,4 @@
-// "use client";
+﻿// "use client";
 // import { motion } from "framer-motion";
 // import { Edit3, Trash2, Calendar, Link as LinkIcon, Power, PowerOff, Target, Eye, LayoutGrid } from "lucide-react";
 // import { cn } from "@/lib/utils";
@@ -264,7 +264,7 @@ interface BannerCardProps {
   onDelete: (e: React.MouseEvent) => void;
 }
 
-// ─── Tiny action button ───────────────────────────────────────────────────────
+// --- Tiny action button -------------------------------------------------------
 function Btn({
   icon,
   title,
@@ -433,7 +433,7 @@ function GridCard({ banner, onView, onEdit, onDelete }: Omit<BannerCardProps, "v
         transition: "box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1)",
       }}
     >
-      {/* ── Top accent line ── */}
+      {/* -- Top accent line -- */}
       <motion.div
         animate={{ scaleX: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
         initial={{ scaleX: 0, opacity: 0 }}
@@ -442,7 +442,7 @@ function GridCard({ banner, onView, onEdit, onDelete }: Omit<BannerCardProps, "v
         className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary via-primary/60 to-transparent z-20 pointer-events-none"
       />
 
-      {/* ── Image preview (compact 120px) ── */}
+      {/* -- Image preview (compact 120px) -- */}
       <div className="relative h-[118px] w-full overflow-hidden bg-surface-alt shrink-0">
         {banner.image ? (
           <motion.img
@@ -461,7 +461,7 @@ function GridCard({ banner, onView, onEdit, onDelete }: Omit<BannerCardProps, "v
         {/* Base gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
 
-        {/* ── Scan line (signature) ── */}
+        {/* -- Scan line (signature) -- */}
         <motion.div
           initial={{ y: "120%" }}
           animate={hovered ? { y: "-20%" } : { y: "120%" }}
@@ -490,7 +490,7 @@ function GridCard({ banner, onView, onEdit, onDelete }: Omit<BannerCardProps, "v
           )}
         </AnimatePresence>
 
-        {/* ── Top badges row ── */}
+        {/* -- Top badges row -- */}
         <div className="absolute top-2.5 left-2.5 right-2.5 flex items-start justify-between gap-2 pointer-events-none">
           {/* Type */}
           <span className={cn(
@@ -513,7 +513,7 @@ function GridCard({ banner, onView, onEdit, onDelete }: Omit<BannerCardProps, "v
           </span>
         </div>
 
-        {/* ── Channel number (bottom-left of image) ── */}
+        {/* -- Channel number (bottom-left of image) -- */}
         <div className="absolute bottom-2 left-2.5 flex items-center gap-1.5">
           <div className="flex items-center gap-1 rounded-md bg-black/50 backdrop-blur-sm border border-white/10 px-1.5 py-0.5">
             <Radio className="h-2.5 w-2.5 text-white/60" />
@@ -524,7 +524,7 @@ function GridCard({ banner, onView, onEdit, onDelete }: Omit<BannerCardProps, "v
         </div>
       </div>
 
-      {/* ── Content (compact) ── */}
+      {/* -- Content (compact) -- */}
       <div className="flex flex-col flex-1 px-3.5 pt-3 pb-3 gap-2">
 
         {/* Title + actions */}
@@ -562,7 +562,7 @@ function GridCard({ banner, onView, onEdit, onDelete }: Omit<BannerCardProps, "v
           </div>
         </div>
 
-        {/* ── Footer: position + date ── */}
+        {/* -- Footer: position + date -- */}
         <div className="flex items-center justify-between pt-2 border-t border-border/30">
           <div className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground/60">
             <LayoutGrid className="h-3 w-3" />

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PaysSelector — Dropdown premium de sélection de pays
  *
  * - Liste complète de tous les pays du monde avec drapeaux emoji
@@ -18,9 +18,9 @@ import { ChevronDown, Search, X } from "lucide-react";
 import ReactCountryFlag from "react-country-flag";
 import { useThemeStore } from "@/store/theme.store";
 
-/* ─────────────────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------------------
    Données — Liste complète des pays
-   ─────────────────────────────────────────────────────────────────────────── */
+   --------------------------------------------------------------------------- */
 
 const PAYS_MONDE = [
   { code: "AF", nom: "Afghanistan", drapeau: "🇦🇫" },
@@ -213,9 +213,9 @@ const PAYS_MONDE = [
   { code: "US", nom: "États-Unis", drapeau: "🇺🇸" },
 ];
 
-/* ─────────────────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------------------
    Props
-   ─────────────────────────────────────────────────────────────────────────── */
+   --------------------------------------------------------------------------- */
 
 interface PaysSelectorProps {
   /** Code pays ISO 3166-1 alpha-2 (ex: "TG") */
@@ -226,9 +226,9 @@ interface PaysSelectorProps {
   error?: string;
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------------------
    Composant principal
-   ─────────────────────────────────────────────────────────────────────────── */
+   --------------------------------------------------------------------------- */
 
 export default function PaysSelector({ value, onChange, error }: PaysSelectorProps) {
   const { resolvedTheme } = useThemeStore();

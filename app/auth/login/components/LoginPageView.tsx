@@ -1,15 +1,15 @@
-"use client";
+﻿"use client";
 
 import { Suspense } from "react";
 import { LoginForm } from "./LoginForm";
 import { ContainerFormAuth } from "@/app/auth/components/ContainerFormAuth";
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    LoginPageView
    The LoginForm is self-contained (own left/right layout).
    ContainerFormAuth adds the full-screen atmosphere layer:
    floating leaves, produce images and gradient background.
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 export function LoginPageView() {
   return (
     <ContainerFormAuth>

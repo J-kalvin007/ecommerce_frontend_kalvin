@@ -1,6 +1,6 @@
-/**
+﻿/**
  * LoyaltyHistoryList.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Historique filtrable des événements de points de fidélité.
  *
  * Fonctionnalités :
@@ -43,7 +43,7 @@ import { LOYALTY_EVENT_LABELS } from "@/modeles/fidelites";
 import { cn } from "@/lib/utils";
 import EmptyState from "@/components/special/EmptyState";
 
-/* ── Map des icônes d'événements ────────────────────────────────────────── */
+/* -- Map des icônes d'événements ------------------------------------------ */
 const EVENT_ICONS: Record<LoyaltyEventReason, React.ComponentType<{ className?: string; strokeWidth?: number; style?: React.CSSProperties }>> = {
   purchase: ShoppingBag,
   refund: RotateCcw,
@@ -55,7 +55,7 @@ const EVENT_ICONS: Record<LoyaltyEventReason, React.ComponentType<{ className?: 
   order_discount: Percent,
 };
 
-/* ── Configuration couleurs d'événements ─────────────────────────────────── */
+/* -- Configuration couleurs d'événements ----------------------------------- */
 const EVENT_COLORS: Record<LoyaltyEventReason, { color: string; bg: string; border: string }> = {
   purchase: { color: "#10b981", bg: "rgba(16,185,129,0.08)", border: "rgba(16,185,129,0.15)" },
   refund: { color: "#ef4444", bg: "rgba(239,68,68,0.08)", border: "rgba(239,68,68,0.15)" },
@@ -67,14 +67,14 @@ const EVENT_COLORS: Record<LoyaltyEventReason, { color: string; bg: string; bord
   order_discount: { color: "#06b6d4", bg: "rgba(6,182,212,0.08)", border: "rgba(6,182,212,0.15)" },
 };
 
-/* ── Types internes ──────────────────────────────────────────────────────── */
+/* -- Types internes -------------------------------------------------------- */
 type FilterReason = "all" | LoyaltyEventReason;
 type FilterDirection = "all" | "gain" | "depense";
 type SortBy = "date_desc" | "date_asc" | "points_desc" | "points_asc";
 
 const PAGE_SIZE = 12;
 
-/* ── Utilitaires ─────────────────────────────────────────────────────────── */
+/* -- Utilitaires ----------------------------------------------------------- */
 function formatDate(dateStr: string): string {
   try {
     return new Intl.DateTimeFormat("fr-FR", {
@@ -89,7 +89,7 @@ function formatDate(dateStr: string): string {
   }
 }
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface LoyaltyHistoryListProps {
   events: LoyaltyEvent[];
   isLoading: boolean;
@@ -105,7 +105,7 @@ export default function LoyaltyHistoryList({
   events,
   isLoading,
 }: LoyaltyHistoryListProps) {
-  /* ── État des filtres ────────────────────────────────────────────────── */
+  /* -- État des filtres -------------------------------------------------- */
   const [filterReason, setFilterReason] = useState<FilterReason>("all");
   const [filterDirection, setFilterDirection] = useState<FilterDirection>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -114,7 +114,7 @@ export default function LoyaltyHistoryList({
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
-  /* ── Filtrage + tri mémoïsés ─────────────────────────────────────────── */
+  /* -- Filtrage + tri mémoïsés ------------------------------------------- */
   const filteredEvents = useMemo(() => {
     let result = events.filter((e) => {
       if (filterReason !== "all" && e.reason !== filterReason) return false;
@@ -162,7 +162,7 @@ export default function LoyaltyHistoryList({
     setVisibleCount((prev) => prev + PAGE_SIZE);
   }, []);
 
-  /* ── Raisons disponibles dans les données ───────────────────────────── */
+  /* -- Raisons disponibles dans les données ----------------------------- */
   const availableReasons = useMemo(() => {
     const reasons = new Set(events.map((e) => e.reason));
     return Array.from(reasons);
@@ -170,7 +170,7 @@ export default function LoyaltyHistoryList({
 
   return (
     <section aria-label="Journal des événements de fidélité">
-      {/* ── Titre ── */}
+      {/* -- Titre -- */}
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h2 className="text-[16px] font-black tracking-tight text-[#1f241c]">
@@ -207,7 +207,7 @@ export default function LoyaltyHistoryList({
         </div>
       </div>
 
-      {/* ── Barre de contrôles ── */}
+      {/* -- Barre de contrôles -- */}
       <div className="sticky top-[72px] z-10 -mx-4 mb-4 border-b border-[#E8E3D8] bg-white/90 px-4 py-3 backdrop-blur-xl sm:mx-0 sm:rounded-2xl sm:border sm:px-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           {/* Filtre direction (Gains / Dépenses) */}
@@ -272,7 +272,7 @@ export default function LoyaltyHistoryList({
           </div>
         </div>
 
-        {/* ── Filtres avancés collapsibles ── */}
+        {/* -- Filtres avancés collapsibles -- */}
         <AnimatePresence>
           {showAdvanced && (
             <motion.div
@@ -367,7 +367,7 @@ export default function LoyaltyHistoryList({
         </AnimatePresence>
       </div>
 
-      {/* ── Liste des événements ── */}
+      {/* -- Liste des événements -- */}
       <div className="rounded-2xl border border-[#E8E3D8] bg-white overflow-hidden">
         <AnimatePresence mode="popLayout">
           {isLoading ? (
@@ -400,7 +400,7 @@ export default function LoyaltyHistoryList({
           ) : (
             <motion.div key="list">
               {viewMode === "list" ? (
-                /* ── VUE LISTE ── */
+                /* -- VUE LISTE -- */
                 <div className="divide-y divide-[#F2EFE8] px-2">
                   {visibleEvents.map((event, idx) => {
                     const cfg = EVENT_COLORS[event.reason] ?? EVENT_COLORS.purchase;
@@ -467,7 +467,7 @@ export default function LoyaltyHistoryList({
                   })}
                 </div>
               ) : (
-                /* ── VUE GRILLE ── */
+                /* -- VUE GRILLE -- */
                 <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
                   {visibleEvents.map((event, idx) => {
                     const cfg = EVENT_COLORS[event.reason] ?? EVENT_COLORS.purchase;

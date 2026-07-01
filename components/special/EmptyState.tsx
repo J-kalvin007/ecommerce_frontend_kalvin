@@ -1,4 +1,4 @@
-
+﻿
 
 
 'use client';
@@ -101,7 +101,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           backdropFilter: 'blur(12px)',
         }}
       >
-        {/* ── Ambient orbs ────────────────────────────────────────────────── */}
+        {/* -- Ambient orbs -------------------------------------------------- */}
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
           <motion.div
             animate={{ scale: [1, 1.15, 1], opacity: [0.08, 0.14, 0.08] }}
@@ -134,7 +134,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           backgroundSize: '128px',
         }} />
 
-        {/* ── Icon block ──────────────────────────────────────────────────── */}
+        {/* -- Icon block ---------------------------------------------------- */}
         <motion.div
           initial={{ scale: 0.7, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -186,7 +186,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           </motion.div>
         </motion.div>
 
-        {/* ── Text ────────────────────────────────────────────────────────── */}
+        {/* -- Text ---------------------------------------------------------- */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -217,7 +217,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           </p>
         </motion.div>
 
-        {/* ── CTA ─────────────────────────────────────────────────────────── */}
+        {/* -- CTA ----------------------------------------------------------- */}
         {actionText && onAction && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}

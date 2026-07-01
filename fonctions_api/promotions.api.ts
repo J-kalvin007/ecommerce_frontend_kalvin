@@ -1,4 +1,4 @@
-
+﻿
 
 // fonctions_api/promotions.api.ts
 import { apiPrivate, apiPublic } from "@/lib/axios";
@@ -39,7 +39,7 @@ const handleApiError = (error: unknown): Result<never> => {
     return { ok: false, error: { status: 500, message: "Erreur inconnue" } };
 };
 
-// ─── Codes promo ─────────────────────────────────────────────
+// --- Codes promo ---------------------------------------------
 export const getAdminPromoCodes = async (): Promise<Result<AdminPromoCode[]>> => {
     try {
         const res = await apiPrivate.get<AdminPromoCode[]>("/api/v1/promotions/admin/codes-promo/");
@@ -89,7 +89,7 @@ export const deactivateExpiredPromoCodes = async (): Promise<Result<DeactivateEx
     } catch (e) { return handleApiError(e); }
 };
 
-// ─── Ventes soldes ──────────────────────────────────────────
+// --- Ventes soldes ------------------------------------------
 export const getAdminSales = async (): Promise<Result<AdminSoldes[]>> => {
     try {
         const res = await apiPrivate.get<AdminSoldes[]>("/api/v1/promotions/admin/ventes-solde/");
@@ -132,7 +132,7 @@ export const deleteAdminSale = async (id: string): Promise<Result<void>> => {
     } catch (e) { return handleApiError(e); }
 };
 
-// ─── Bannières (recommandations) ────────────────────────────
+// --- Bannières (recommandations) ----------------------------
 export const getAdminBanners = async (): Promise<Result<AdminBanner[]>> => {
     try {
         const res = await apiPrivate.get<AdminBanner[]>("/api/v1/promotions/admin/recommendations/");
@@ -177,7 +177,7 @@ export const deleteAdminBanner = async (id: string): Promise<Result<void>> => {
     } catch (e) { return handleApiError(e); }
 };
 
-// ─── Endpoints publics ──────────────────────────────────────
+// --- Endpoints publics --------------------------------------
 export const validatePromoCode = async (payload: ValidateCodePayload): Promise<Result<ValidatePromoResponse>> => {
     try {
         const res = await apiPrivate.post<ValidatePromoResponse>("/api/v1/promotions/codes-promo/validate/", payload);

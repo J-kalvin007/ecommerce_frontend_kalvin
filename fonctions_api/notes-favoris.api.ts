@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Notes & Favoris API — Fonctions d'accès aux endpoints Django DRF
  *
  * Endpoints couverts :
@@ -29,7 +29,7 @@ import type {
   RateProductResponse,
 } from "@/modeles/notes-favoris";
 
-// ─── Helper ───────────────────────────────────────────────────────────────────
+// --- Helper -------------------------------------------------------------------
 
 /**
  * Normalise les erreurs Axios en `ApiError` structurée.

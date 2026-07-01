@@ -1,4 +1,4 @@
-/**
+﻿/**
  * OverviewSection — Dashboard overview admin (Refonte)
  *
  * Tableau de bord central récupérant toutes les métriques clés de la plateforme
@@ -198,7 +198,7 @@ export default function OverviewSection() {
 
 
 
-        {/* ── En-tête avec effet premium ── */}
+        {/* -- En-tête avec effet premium -- */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}

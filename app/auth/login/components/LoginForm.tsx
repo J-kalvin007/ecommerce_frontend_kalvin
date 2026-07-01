@@ -390,7 +390,7 @@ export function LoginForm({
                     </span>
                     <Link
                       href="/auth/forgot-password"
-                      className="text-xs font-medium text-[#8b5e34] transition hover:text-[#1f4d3f] hover:underline"
+                      className="text-[14px] font-medium text-[#8b5e34] transition hover:text-[#1f4d3f] hover:underline"
                     >
                       Mot de passe oublié&nbsp;?
                     </Link>
@@ -479,7 +479,7 @@ export function LoginForm({
                 <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-medium uppercase tracking-wide text-[#8a9685]">
                   <Link href="/auth/forgot-password" className="hover:text-[#1f4d3f] cursor-pointer hover:underline transition-colors">Mot de passe oublié</Link>
                   <span>&bull;</span>
-                  <Link href="/auth/verify-email" className="hover:text-[#1f4d3f] cursor-pointer hover:underline transition-colors">Vérifier mon email</Link>
+                  <Link href="/auth/resend-email" className="hover:text-[#1f4d3f] cursor-pointer hover:underline transition-colors">Vérifier mon email</Link>
                   <span>&bull;</span>
                   <Link href="/auth/reset-password-confirm" className="hover:text-[#1f4d3f] cursor-pointer hover:underline transition-colors">Confirmer mot de passe</Link>
                 </div>

@@ -1,6 +1,6 @@
-/**
+﻿/**
  * WalletActionModal.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Modale d'action unifiée pour les opérations sur le wallet.
  *
  * Gère deux modes distincts via la prop `mode` :
@@ -40,18 +40,18 @@ import {
 import { getMyOrders } from "@/fonctions_api/commandes.api";
 import type { OrderList } from "@/modeles/commandes";
 
-/* ── Types ───────────────────────────────────────────────────────────────── */
+/* -- Types ----------------------------------------------------------------- */
 export type WalletActionMode = "deposit" | "refund";
 
-/* ── Montants rapides pour la recharge ──────────────────────────────────── */
+/* -- Montants rapides pour la recharge ------------------------------------ */
 const QUICK_AMOUNTS = [1000, 2500, 5000, 10000, 25000, 50000];
 
-/* ── Utilitaires ────────────────────────────────────────────────────────── */
+/* -- Utilitaires ---------------------------------------------------------- */
 function formatAmount(amount: number): string {
   return new Intl.NumberFormat("fr-FR").format(amount) + " FCFA";
 }
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface WalletActionModalProps {
   isOpen: boolean;
   mode: WalletActionMode;
@@ -73,22 +73,22 @@ export default function WalletActionModal({
   onSuccess,
   walletId,
 }: WalletActionModalProps) {
-  /* ── État du formulaire dépôt ────────────────────────────────────────── */
+  /* -- État du formulaire dépôt ------------------------------------------ */
   const [depositAmount, setDepositAmount] = useState("");
 
-  /* ── État du formulaire remboursement ───────────────────────────────── */
+  /* -- État du formulaire remboursement --------------------------------- */
   const [refundOrderId, setRefundOrderId] = useState("");
   const [orders, setOrders] = useState<OrderList[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
 
-  /* ── État de la soumission ───────────────────────────────────────────── */
+  /* -- État de la soumission --------------------------------------------- */
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successRedirectUrl, setSuccessRedirectUrl] = useState<string | null>(
     null
   );
 
-  /* ── Réinitialisation à l'ouverture ─────────────────────────────────── */
+  /* -- Réinitialisation à l'ouverture ----------------------------------- */
   useEffect(() => {
     if (isOpen) {
       setDepositAmount("");
@@ -111,7 +111,7 @@ export default function WalletActionModal({
     }
   }, [isOpen, mode]);
 
-  /* ── Gestion de la touche Escape ────────────────────────────────────── */
+  /* -- Gestion de la touche Escape -------------------------------------- */
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && !isSubmitting) onClose();
@@ -120,7 +120,7 @@ export default function WalletActionModal({
     return () => document.removeEventListener("keydown", handleKey);
   }, [isOpen, isSubmitting, onClose]);
 
-  /* ── Soumission du formulaire dépôt ─────────────────────────────────── */
+  /* -- Soumission du formulaire dépôt ----------------------------------- */
   const handleDepositSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -159,7 +159,7 @@ export default function WalletActionModal({
     [depositAmount, walletId, onSuccess]
   );
 
-  /* ── Soumission du formulaire remboursement ──────────────────────────── */
+  /* -- Soumission du formulaire remboursement ---------------------------- */
   const handleRefundSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -187,7 +187,7 @@ export default function WalletActionModal({
     [refundOrderId, onSuccess, onClose]
   );
 
-  /* ── Configuration visuelle par mode ─────────────────────────────────── */
+  /* -- Configuration visuelle par mode ----------------------------------- */
   const config = {
     deposit: {
       title: "Recharger le Wallet",
@@ -324,7 +324,7 @@ export default function WalletActionModal({
                 )}
               </AnimatePresence>
 
-              {/* ── FORMULAIRE DÉPÔT ── */}
+              {/* -- FORMULAIRE DÉPÔT -- */}
               {mode === "deposit" && (
                 <form onSubmit={handleDepositSubmit} className="space-y-5">
                   {/* Montants rapides */}
@@ -399,7 +399,7 @@ export default function WalletActionModal({
                 </form>
               )}
 
-              {/* ── FORMULAIRE REMBOURSEMENT ── */}
+              {/* -- FORMULAIRE REMBOURSEMENT -- */}
               {mode === "refund" && (
                 <form onSubmit={handleRefundSubmit} className="space-y-5">
                   {/* Information */}

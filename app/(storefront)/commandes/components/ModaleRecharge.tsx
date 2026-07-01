@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ModaleRecharge — Modale ultra-premium pour recharger le wallet via PayDunya
  *
  * - Montants rapides (raccourcis cliquables)
@@ -6,6 +6,8 @@
  * - Indicateurs de confiance visuels
  * - AnimatePresence sur le message d'erreur
  * - Toute la logique métier intacte (depositWallet, getMyWallet)
+ * - [NEW] Prop isInCommandFlow : positionne le flag Zustand avant redirection
+ *   pour que la page wallet/success redirige vers /commandes automatiquement
  *
  * @module components/commandes/ModaleRecharge
  */
@@ -24,19 +26,30 @@ import {
 } from "@/components/special/Dialog";
 import { depositWallet, getMyWallet } from "@/fonctions_api/wallets-paiements.api";
 import { useThemeStore } from "@/store/theme.store";
+import { useUIStore } from "@/store/uiStore";
 
 interface ModaleRechargeProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   montantDefaut?: number;
+  /**
+   * Si true, la recharge est déclenchée depuis le tunnel de commande (solde
+   * insuffisant). Le flag inCommandFlow sera positionné dans Zustand avant
+   * la redirection PayDunya, permettant à wallet/success de rediriger vers
+   * /commandes pour finaliser le paiement avec le wallet rechargé.
+   */
+  isInCommandFlow?: boolean;
 }
 
 /** Montants rapides suggérés */
 const QUICK_AMOUNTS = [1000, 2000, 5000, 10000, 20000, 50000] as const;
 
-export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 5000 }: ModaleRechargeProps) {
+export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 5000, isInCommandFlow = false }: ModaleRechargeProps) {
   const { resolvedTheme } = useThemeStore();
   const isDark = resolvedTheme === "dark";
+
+  // Action Zustand pour signaler le flux de recharge depuis une commande
+  const setInCommandFlow = useUIStore((s) => s.setInCommandFlow);
 
   const [amount, setAmount] = useState<string>(montantDefaut.toString());
   const [loading, setLoading] = useState(false);
@@ -78,7 +91,15 @@ export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 500
       });
 
       if (res.ok) {
-        // Redirection automatique vers PayDunya
+        /**
+         * Si la recharge est déclenchée depuis le tunnel commande, on positionne
+         * le flag inCommandFlow dans Zustand (persisté en localStorage).
+         * La page wallet/success le lira pour rediriger vers /commandes.
+         */
+        if (isInCommandFlow) {
+          setInCommandFlow(true);
+        }
+        // Redirection vers PayDunya dans le même onglet
         window.location.href = res.data.payment_url;
       } else {
         setError(res.error?.message || "Erreur lors de l'initiation de la recharge");
@@ -122,7 +143,7 @@ export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 500
 
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          {/* ── Montants rapides ── */}
+          {/* -- Montants rapides -- */}
           <div>
             <p className="mb-2.5 text-[12px] font-bold uppercase tracking-wider" style={{ color: textMuted }}>
               Montants suggérés
@@ -158,7 +179,7 @@ export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 500
             </div>
           </div>
 
-          {/* ── Champ montant custom ── */}
+          {/* -- Champ montant custom -- */}
           <div>
             <label className="mb-2 block text-[13px] font-bold" style={{ color: text }}>
               Ou saisissez un montant personnalisé
@@ -196,7 +217,7 @@ export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 500
             )}
           </div>
 
-          {/* ── Erreur animée ── */}
+          {/* -- Erreur animée -- */}
           <AnimatePresence>
             {error && (
               <motion.div
@@ -215,7 +236,7 @@ export default function ModaleRecharge({ open, onOpenChange, montantDefaut = 500
             )}
           </AnimatePresence>
 
-          {/* ── Bouton de confirmation ── */}
+          {/* -- Bouton de confirmation -- */}
           <div className="pt-1">
             <button
               type="submit"

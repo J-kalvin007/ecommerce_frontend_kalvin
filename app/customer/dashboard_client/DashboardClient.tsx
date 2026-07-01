@@ -1,6 +1,6 @@
-/**
+﻿/**
  * DashboardClient.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Panneau de contrôle principal de l'espace client — version premium.
  *
  * Direction artistique — "private banking portal" :
@@ -65,7 +65,7 @@ import type { Wallet as WalletModel, WalletTransaction } from "@/modeles/wallets
 import type { LoyaltyProfile } from "@/modeles/fidelites";
 import type { FavoriteProduct } from "@/modeles/notes-favoris";
 
-/* ── Jetons de design (cohérents avec CommandesClient & LoyaltyTiersGrid) ── */
+/* -- Jetons de design (cohérents avec CommandesClient & LoyaltyTiersGrid) -- */
 
 const BRAND_FOREST = "#1f4d3f";
 const BRAND_GOLD = "#c9a876";
@@ -75,7 +75,7 @@ const STONE = "#8A9080";
 const WARM_PAPER = "#F7F5F0";
 const WARM_BORDER = "#E8E3D8";
 
-/* ── Variants d'animation partagés ─────────────────────────────────────── */
+/* -- Variants d'animation partagés --------------------------------------- */
 
 /** Conteneur qui orchestre l'apparition en cascade de ses enfants directs. */
 const cascadeContainer: Variants = {
@@ -89,7 +89,7 @@ const cascadeItem: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
-/* ── Utilitaires (identiques à la version d'origine) ───────────────────── */
+/* -- Utilitaires (identiques à la version d'origine) --------------------- */
 
 function formatAmount(amount: string | number): string {
   const num = typeof amount === "string" ? parseFloat(amount) : amount;
@@ -154,13 +154,13 @@ const ORDER_STATUS_BORDER: Record<string, string> = {
   refunded: "#EC4899",
 };
 
-/* ── Dashboard Aggregator ────────────────────────────────────────────────── */
+/* -- Dashboard Aggregator -------------------------------------------------- */
 
 export default function DashboardClient() {
   const { user } = useAuthStore();
   const prefersReducedMotion = useReducedMotion();
 
-  /* ── États (identiques à l'original) ─────────────────────────────────── */
+  /* -- États (identiques à l'original) ----------------------------------- */
   const [isLoading, setIsLoading] = useState(true);
   const [orders, setOrders] = useState<OrderList[]>([]);
   const [wallet, setWallet] = useState<WalletModel | null>(null);
@@ -168,7 +168,7 @@ export default function DashboardClient() {
   const [loyalty, setLoyalty] = useState<LoyaltyProfile | null>(null);
   const [favorites, setFavorites] = useState<FavoriteProduct[]>([]);
 
-  /* ── Chargement de toutes les données en parallèle (identique) ──────── */
+  /* -- Chargement de toutes les données en parallèle (identique) -------- */
   useEffect(() => {
     async function fetchDashboardData() {
       setIsLoading(true);
@@ -203,7 +203,7 @@ export default function DashboardClient() {
     fetchDashboardData();
   }, []);
 
-  /* ── État de chargement ──────────────────────────────────────────────── */
+  /* -- État de chargement ------------------------------------------------ */
   if (isLoading) {
     return (
       <div className="flex min-h-[90vh] flex-col items-center justify-center">
@@ -212,7 +212,7 @@ export default function DashboardClient() {
     );
   }
 
-  /* ── Données dérivées (identiques à l'original) ─────────────────────── */
+  /* -- Données dérivées (identiques à l'original) ----------------------- */
   const greeting = (() => {
     const hour = new Date().getHours();
     if (hour < 12) return "Bonjour";
@@ -229,9 +229,9 @@ export default function DashboardClient() {
   return (
     <div className="relative mx-auto max-w-8xl space-y-8 px-20 py-8 sm:px-6 lg:px-20">
 
-      {/* ─────────────────────────────────────────────────────────────────────
+      {/* ---------------------------------------------------------------------
        *  Halo ambiant — cohérent avec le tunnel de commande
-       * ─────────────────────────────────────────────────────────────────── */}
+       * ------------------------------------------------------------------- */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-10"
@@ -425,7 +425,7 @@ export default function DashboardClient() {
         animate="visible"
         className="grid grid-cols-1 gap-6 lg:grid-cols-3"
       >
-        {/* ── Colonne gauche : Portefeuille & Fidélité ────────────────────── */}
+        {/* -- Colonne gauche : Portefeuille & Fidélité ---------------------- */}
         <div className="space-y-6 lg:col-span-1">
 
           {/* Carte Portefeuille — traitement "carte bancaire physique" */}
@@ -439,7 +439,7 @@ export default function DashboardClient() {
           </motion.div>
         </div>
 
-        {/* ── Colonne droite : Commandes récentes + Transactions + Favoris ── */}
+        {/* -- Colonne droite : Commandes récentes + Transactions + Favoris -- */}
         <div className="space-y-6 lg:col-span-2">
 
           {/* Commandes récentes */}
@@ -653,7 +653,7 @@ export default function DashboardClient() {
   );
 }
 
-/* ── Sous-composant KpiTile ─────────────────────────────────────────────── */
+/* -- Sous-composant KpiTile ----------------------------------------------- */
 
 /**
  * KpiTile — une tuile de la bande KPI Ticker.
@@ -716,45 +716,66 @@ function KpiTile({
 
   return (
     <motion.div variants={cascadeItem}>
+
       <Link
         href={href}
         className="group flex flex-col gap-3 rounded-2xl border bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
         style={{ borderColor: WARM_BORDER }}
       >
-        {/* Icône colorée */}
-        <div
-          className="flex h-9 w-9 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
-          style={{
-            background: `${color}14`,
-            border: `1px solid ${color}22`,
-          }}
-        >
-          <Icon className="h-4.5 w-4.5" strokeWidth={1.75} style={{ color }} />
+
+
+
+        <div className="flex items-center justify-between">
+
+          {/* Valeur animée */}
+          <div className="flex flex-col items-center justify-center ">
+
+            <p
+              className="text-[22px] font-black tabular-nums tracking-tight leading-none"
+              style={{ color: DARK_INK }}
+            >
+              {formatFn(displayValue)}
+            </p>
+
+            <p className="mt-0.5 text-[14px] font-semibold" style={{ color }}>
+              {unit}
+            </p>
+
+          </div>
+
+
+
+
+          {/* Icône colorée */}
+          <div
+            className="flex h-9 w-9 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
+            style={{
+              background: `${color}14`,
+              border: `1px solid ${color}22`,
+            }}
+          >
+            <Icon className="h-4.5 w-4.5" strokeWidth={1.75} style={{ color }} />
+          </div>
+
+
         </div>
 
-        {/* Valeur animée */}
-        <div>
-          <p
-            className="text-[22px] font-black tabular-nums tracking-tight leading-none"
-            style={{ color: DARK_INK }}
-          >
-            {formatFn(displayValue)}
-          </p>
-          <p className="mt-0.5 text-[11px] font-semibold" style={{ color }}>
-            {unit}
-          </p>
-        </div>
+
+
 
         {/* Label */}
-        <p className="text-[11.5px] leading-tight" style={{ color: STONE }}>
+        <p className="text-[14px] leading-tight" style={{ color: STONE }}>
           {label}
         </p>
+
       </Link>
+
     </motion.div>
+
   );
 }
 
-/* ── Sous-composant WalletPhysicalCard ──────────────────────────────────── */
+/* -- Sous-composant WalletPhysicalCard ------------------------------------ */
 
 /**
  * WalletPhysicalCard — carte portefeuille au format "carte de crédit".
@@ -851,7 +872,7 @@ function WalletPhysicalCard({
   );
 }
 
-/* ── Sous-composant LoyaltyCard ─────────────────────────────────────────── */
+/* -- Sous-composant LoyaltyCard ------------------------------------------- */
 
 /**
  * LoyaltyCard — aperçu fidélité avec barre de progression vers le prochain palier.
@@ -973,7 +994,7 @@ function LoyaltyCard({ loyalty }: { loyalty: LoyaltyProfile | null }) {
   );
 }
 
-/* ── Sous-composant OrderRow ─────────────────────────────────────────────── */
+/* -- Sous-composant OrderRow ----------------------------------------------- */
 
 /**
  * OrderRow — ligne de commande avec bordure gauche colorée par statut.
@@ -1041,7 +1062,7 @@ function OrderRow({
   );
 }
 
-/* ── Sous-composant TransactionRow ──────────────────────────────────────── */
+/* -- Sous-composant TransactionRow ---------------------------------------- */
 
 /**
  * TransactionRow — ligne de transaction au format "grand livre" (ledger).
@@ -1105,7 +1126,7 @@ function TransactionRow({
   );
 }
 
-/* ── Sous-composant EmptyState ───────────────────────────────────────────── */
+/* -- Sous-composant EmptyState --------------------------------------------- */
 
 /**
  * EmptyState — état vide avec invitation à agir.

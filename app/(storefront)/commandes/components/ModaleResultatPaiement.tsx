@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ModaleResultatPaiement — Modale ultra-premium de feedback après paiement
  *
  * - Animation Lottie one-shot (succès) ou loop (erreur)
@@ -88,7 +88,7 @@ export default function ModaleResultatPaiement({
           className="relative overflow-hidden rounded-3xl"
           style={{ backgroundColor: bgSurface }}
         >
-          {/* ── Background Ambiance ── */}
+          {/* -- Background Ambiance -- */}
           <div className="absolute inset-0 pointer-events-none">
             <motion.div
               initial={{ opacity: 0 }}
@@ -106,7 +106,7 @@ export default function ModaleResultatPaiement({
             />
           </div>
 
-          {/* ── Top Border Indicator ── */}
+          {/* -- Top Border Indicator -- */}
           <div
             className="relative h-1.5 w-full"
             style={{
@@ -116,7 +116,7 @@ export default function ModaleResultatPaiement({
             }}
           />
 
-          {/* ── Content ── */}
+          {/* -- Content -- */}
           <div className="relative z-10 px-8 pb-10 pt-10 text-center">
             {/* Lottie Container */}
             <div className="relative mx-auto mb-8 flex h-40 w-40 items-center justify-center">

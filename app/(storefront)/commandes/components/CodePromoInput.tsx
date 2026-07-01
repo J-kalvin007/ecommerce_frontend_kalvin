@@ -13,7 +13,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, CheckCircle2, XCircle, X, Sparkles, TicketPercent, ArrowRight } from "lucide-react";
+import { Loader2, CheckCircle2, XCircle, X, Sparkles, TicketPercent, ArrowRight, Rocket } from "lucide-react";
 import { useThemeStore } from "@/store/theme.store";
 import { validatePromoCode } from "@/fonctions_api/promotions.api";
 import { formatCurrency } from "@/lib/utils";
@@ -93,27 +93,27 @@ export default function CodePromoInput({ cartTotal, codeApplique, onCodeChange }
   // Animations Framer Motion
   const containerVariants = {
     hidden: { opacity: 0, y: 15, scale: 0.98 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
+    visible: {
+      opacity: 1,
+      y: 0,
       scale: 1,
-      transition: { type: "spring", stiffness: 300, damping: 25, mass: 0.8 } 
+      transition: { type: "spring", stiffness: 300, damping: 25, mass: 0.8 }
     },
-    exit: { 
-      opacity: 0, 
-      y: -15, 
+    exit: {
+      opacity: 0,
+      y: -15,
       scale: 0.98,
-      transition: { duration: 0.2, ease: "easeInOut" } 
+      transition: { duration: 0.2, ease: "easeInOut" }
     }
   };
 
   const errorVariants = {
     hidden: { opacity: 0, height: 0, marginTop: 0 },
-    visible: { 
-      opacity: 1, 
-      height: "auto", 
+    visible: {
+      opacity: 1,
+      height: "auto",
       marginTop: 12,
-      transition: { type: "spring", stiffness: 400, damping: 25 } 
+      transition: { type: "spring", stiffness: 400, damping: 25 }
     },
     exit: { opacity: 0, height: 0, marginTop: 0, transition: { duration: 0.2 } }
   };
@@ -130,8 +130,8 @@ export default function CodePromoInput({ cartTotal, codeApplique, onCodeChange }
             exit="exit"
             className="relative overflow-hidden rounded-2xl p-5 sm:p-6"
             style={{
-              background: isDark 
-                ? "linear-gradient(135deg, rgba(31,77,63,0.15) 0%, rgba(31,77,63,0.05) 100%)" 
+              background: isDark
+                ? "linear-gradient(135deg, rgba(31,77,63,0.15) 0%, rgba(31,77,63,0.05) 100%)"
                 : "linear-gradient(135deg, rgba(31,77,63,0.08) 0%, rgba(31,77,63,0.02) 100%)",
               border: `1px solid ${isDark ? "rgba(31,77,63,0.3)" : "rgba(31,77,63,0.15)"}`,
               boxShadow: isDark ? "0 8px 32px rgba(0,0,0,0.2)" : "0 8px 32px rgba(31,77,63,0.05)",
@@ -139,11 +139,11 @@ export default function CodePromoInput({ cartTotal, codeApplique, onCodeChange }
           >
             {/* Décoration d'arrière-plan */}
             <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#1f4d3f] opacity-5 blur-3xl" />
-            
+
             <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm"
-                     style={{ border: "1px solid rgba(31,77,63,0.1)" }}>
+                  style={{ border: "1px solid rgba(31,77,63,0.1)" }}>
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -176,7 +176,7 @@ export default function CodePromoInput({ cartTotal, codeApplique, onCodeChange }
                     -{formatCurrency(codeApplique.discount_amount, "FCFA")}
                   </span>
                 </div>
-                
+
                 <button
                   type="button"
                   onClick={handleRemove}
@@ -197,8 +197,8 @@ export default function CodePromoInput({ cartTotal, codeApplique, onCodeChange }
             animate="visible"
             exit="exit"
             className="relative rounded-2xl p-5 sm:p-6 transition-all duration-300"
-            style={{ 
-              background: bg, 
+            style={{
+              background: bg,
               border: `1px solid ${isFocused ? (isDark ? "rgba(31,77,63,0.5)" : "rgba(31,77,63,0.3)") : border}`,
               boxShadow: isFocused ? "0 12px 40px -10px rgba(31,77,63,0.15)" : shadow,
             }}
@@ -210,7 +210,7 @@ export default function CodePromoInput({ cartTotal, codeApplique, onCodeChange }
                 </div>
                 Code promotionnel
               </label>
-              <Sparkles className="h-4 w-4 text-[#1f4d3f]/40" />
+              <Rocket className="h-4 w-4 text-[#1f4d3f]/40" />
             </div>
 
             <div className="relative flex items-center">
@@ -230,14 +230,14 @@ export default function CodePromoInput({ cartTotal, codeApplique, onCodeChange }
                 }}
                 onKeyDown={(e) => e.key === "Enter" && handleApply()}
               />
-              
+
               <div className="absolute right-1.5 flex items-center">
                 <button
                   type="button"
                   onClick={handleApply}
                   disabled={!code.trim() || loading}
                   className="group relative flex h-[38px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg px-5 text-sm font-bold text-white transition-all disabled:cursor-not-allowed disabled:opacity-50"
-                  style={{ 
+                  style={{
                     background: !code.trim() ? (isDark ? "#333" : "#d1d5db") : brandColor,
                     color: !code.trim() && !isDark ? "#6b7280" : "#ffffff"
                   }}
@@ -246,7 +246,7 @@ export default function CodePromoInput({ cartTotal, codeApplique, onCodeChange }
                   {!!code.trim() && (
                     <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full" />
                   )}
-                  
+
                   <span className="relative z-10 flex items-center gap-1.5">
                     {loading ? (
                       <Loader2 className="h-4 w-4 animate-spin" />

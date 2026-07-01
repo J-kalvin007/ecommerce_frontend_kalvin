@@ -1,4 +1,4 @@
-
+﻿
 'use client';
 
 import { AlertTriangle, Info, CheckCircle, X, HelpCircle, Trash2 } from 'lucide-react';
@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import LoadingKalvin from './loadingKalvin';
 import { useThemeStore } from '@/store/theme.store';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// --- Types --------------------------------------------------------------------
 interface ConfirmDialogProps {
   isOpen: boolean;
   onConfirm: () => void;
@@ -21,7 +21,7 @@ interface ConfirmDialogProps {
   children?: React.ReactNode;
 }
 
-// ─── Per-type tokens ──────────────────────────────────────────────────────────
+// --- Per-type tokens ----------------------------------------------------------
 const TYPE_CONFIG = {
   warning: {
     Icon: AlertTriangle,
@@ -95,7 +95,7 @@ const TYPE_CONFIG = {
   },
 } as const;
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// --- Component ----------------------------------------------------------------
 const ConfirmDialog = ({
   isOpen,
   onConfirm,
@@ -293,7 +293,7 @@ const ConfirmDialog = ({
                 <X size={15} strokeWidth={2.5} />
               </button>
 
-              {/* ── Body ─────────────────────────────────────────────────────── */}
+              {/* -- Body ------------------------------------------------------- */}
               <div style={{ padding: '52px 40px 36px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 0 }}>
 
                 {/* Icon */}
@@ -361,10 +361,10 @@ const ConfirmDialog = ({
                 )}
               </div>
 
-              {/* ── Divider ───────────────────────────────────────────────── */}
+              {/* -- Divider ------------------------------------------------- */}
               <div style={{ height: 1, background: isDark ? 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)' : 'linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent)', margin: '0 40px' }} />
 
-              {/* ── Footer ───────────────────────────────────────────────── */}
+              {/* -- Footer ------------------------------------------------- */}
               <div style={{
                 padding: '24px 40px 32px',
                 display: 'flex',

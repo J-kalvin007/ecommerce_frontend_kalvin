@@ -1,6 +1,6 @@
-/**
+﻿/**
  * SettingsClient.tsx — Paramètres du compte client
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Page de gestion du profil et de la sécurité du compte.
  *
  * Sections :
@@ -38,7 +38,7 @@ import { mediaUrl } from "@/lib/mediaUrl";
 import { cn } from "@/lib/utils";
 import LoadingStyle from "@/components/special/loadingStyle";
 
-/* ── Types locaux ──────────────────────────────────────────────────────────── */
+/* -- Types locaux ------------------------------------------------------------ */
 
 type ProfileForm = {
   name: string;
@@ -56,7 +56,7 @@ type FeedbackState = {
   message: string;
 } | null;
 
-/* ── Sous-composants ───────────────────────────────────────────────────────── */
+/* -- Sous-composants --------------------------------------------------------- */
 
 function SectionHeader({
   icon: Icon,
@@ -206,7 +206,7 @@ function SaveButton({
   );
 }
 
-/* ── Composant principal ───────────────────────────────────────────────────── */
+/* -- Composant principal ----------------------------------------------------- */
 
 export default function SettingsClient() {
   const { user, updateProfile: updateAuthStore } = useAuthStore();
@@ -352,12 +352,12 @@ export default function SettingsClient() {
 
   const avatarSrc = user?.profile_image ? mediaUrl(user.profile_image) : null;
 
-  /* ── Rendu ─────────────────────────────────────────────────────────────────── */
+  /* -- Rendu ------------------------------------------------------------------- */
   return (
     <CustomerShell activeSection="settings">
       <div className="mx-auto max-w-8xl px-20 py-8 sm:px-6 lg:px-20 space-y-10">
 
-        {/* ── En-tête avec effet premium ── */}
+        {/* -- En-tête avec effet premium -- */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -418,13 +418,13 @@ export default function SettingsClient() {
           </div>
         </motion.div>
 
-        {/* ── Grille principale ── */}
+        {/* -- Grille principale -- */}
         <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_300px]">
 
-          {/* ── Colonne gauche ── */}
+          {/* -- Colonne gauche -- */}
           <div className="space-y-6">
 
-            {/* ── Section Profil ── */}
+            {/* -- Section Profil -- */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -486,7 +486,7 @@ export default function SettingsClient() {
               )}
             </motion.div>
 
-            {/* ── Section Sécurité ── */}
+            {/* -- Section Sécurité -- */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -587,7 +587,7 @@ export default function SettingsClient() {
             </motion.div>
           </div>
 
-          {/* ── Colonne droite : résumé du compte ── */}
+          {/* -- Colonne droite : résumé du compte -- */}
           <motion.div
             initial={{ opacity: 0, x: 16 }}
             animate={{ opacity: 1, x: 0 }}

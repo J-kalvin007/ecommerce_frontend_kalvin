@@ -4,7 +4,7 @@
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Mail, Phone, Shield, ShieldCheck, ShieldBan, CheckCircle2, XCircle, User as UserIcon, Calendar, Crown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import type { User } from "@/modeles/user";
 import { mediaUrl } from "@/lib/mediaUrl";
 
@@ -46,7 +46,7 @@ export function ClientDetailModal({ open, onClose, user }: ClientDetailModalProp
             className="relative z-10 w-full max-w-lg mx-4 rounded-3xl border border-border/50 bg-white shadow-2xl overflow-hidden"
           >
             {/* Top gradient accent */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary/80 to-amber-500" />
+            {/* <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary/80 to-amber-500" /> */}
 
             {/* Close */}
             <button
@@ -108,9 +108,9 @@ export function ClientDetailModal({ open, onClose, user }: ClientDetailModalProp
                 <div className="rounded-2xl border border-border/50 bg-white-alt/30 p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Shield className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">ID Utilisateur</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Ajouter le </span>
                   </div>
-                  <p className="text-sm font-semibold text-foreground font-mono">#{user.id}</p>
+                  <p className="text-sm font-semibold text-foreground font-mono"> {formatDate(user.created_at, "fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", })}</p>
                 </div>
 
                 {/* Statut Actif */}

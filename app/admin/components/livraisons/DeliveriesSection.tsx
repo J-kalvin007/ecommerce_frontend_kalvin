@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -78,20 +78,13 @@ export default function DeliveriesSection() {
 
   return (
     <div className="space-y-6 px-20">
-      {/* ── En-tête ── */}
+      {/* -- En-tête -- */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
 
 
 
-
-
-
-
-
-
-
-        {/* ── En-tête avec effet premium ── */}
+        {/* -- En-tête avec effet premium -- */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -160,27 +153,32 @@ export default function DeliveriesSection() {
 
 
         <div className="flex items-center gap-3">
+
           <button
             onClick={() => setIsFraisModalOpen(true)}
-            className="flex items-center cursor-pointer gap-2 rounded-xl border border-[#E8E3D8] bg-white px-4 py-2 text-[13px] font-semibold text-[#1f241c] shadow-sm transition-all hover:bg-[#F7F5F0]"
+            className="flex items-center cursor-pointer gap-2 rounded-xl border border-[#E8E3D8] bg-white px-4 py-3 text-[14px] font-semibold text-[#1f241c] shadow-sm transition-all hover:bg-[#F7F5F0]"
           >
             <Settings2 className="h-4 w-4" />
             <span className="hidden sm:inline">Configuration</span>
           </button>
+
           <button
             onClick={() => {
               setSelectedDelivery(undefined);
               setIsDeliveryModalOpen(true);
             }}
-            className="flex items-center cursor-pointer gap-2 rounded-xl bg-[#1f4d3f] px-4 py-2 text-[13px] font-bold text-white shadow-sm transition-all hover:bg-[#16332b]"
+            className="flex items-center cursor-pointer gap-2 rounded-xl bg-[#1f4d3f] px-4 py-3 text-[14px] font-bold text-gray-100 shadow-sm transition-all hover:bg-[#16332b]"
           >
             <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">Nouvelle Livraison</span>
           </button>
+
         </div>
+
       </div>
 
-      {/* ── Barre de recherche ── */}
+
+      {/* -- Barre de recherche -- */}
       <div className="relative max-w-md">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A9080]" />
         <input
@@ -192,13 +190,17 @@ export default function DeliveriesSection() {
         />
       </div>
 
-      {/* ── Contenu ── */}
+      {/* -- Contenu -- */}
       {isLoading ? (
+
         <div className="flex justify-center py-20">
           <LoadingStyle label="Chargement des données..." size={16} />
         </div>
+
       ) : error ? (
+
         <ErrorState title="Erreur" message={error} buttonText="Réessayer" onRetry={fetchData} />
+
       ) : (
         <div className="rounded-2xl border border-[#E8E3D8] bg-white shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
@@ -274,11 +276,16 @@ export default function DeliveriesSection() {
                   );
                 })}
                 {filteredDeliveries.length === 0 && (
+
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-[#8A9080]">
+                    <td colSpan={5} className="px-6 py-12 text-center text-[#8A9080] text-[20px]">
+                      <span className="flex items-center justify-center m-2">
+                        <MapPin className="h-10 w-10 shrink-0" />
+                      </span>
                       Aucune livraison trouvée.
                     </td>
                   </tr>
+
                 )}
               </tbody>
             </table>

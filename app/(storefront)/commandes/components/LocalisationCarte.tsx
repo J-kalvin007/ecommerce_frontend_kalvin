@@ -1,4 +1,4 @@
-/**
+﻿/**
  * LocalisationCarte — Bouton de localisation + intégration CarteGoogleMaps
  *
  * - Bouton "Localiser sur la carte" ouvrant CarteGoogleMaps
@@ -23,11 +23,11 @@ const CarteGoogleMaps = dynamic(
   { ssr: false, loading: () => null }
 );
 
-/* ─────────────────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------------------
    Format de stockage de l'adresse
    "{adresse_texte}|{latitude}&{longitude}"
    Exemple : "Rue du Commerce, Lomé|6.1375&1.2123"
-   ─────────────────────────────────────────────────────────────────────────── */
+   --------------------------------------------------------------------------- */
 
 interface LocalisationCarteProps {
   /** Valeur courante du champ adresse (format texte|lat&lng) */

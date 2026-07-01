@@ -1,4 +1,4 @@
-// // app/admin/components/fidelites/LoyaltyProfileDetailModal.tsx
+﻿// // app/admin/components/fidelites/LoyaltyProfileDetailModal.tsx
 // "use client";
 // import { useEffect, useState } from "react";
 // import { motion, AnimatePresence } from "framer-motion";
@@ -396,7 +396,7 @@ export function LoyaltyProfileDetailModal({
             transition={{ type: "spring", stiffness: 260, damping: 28 }}
             className="fixed right-0 top-0 z-50 flex h-full w-full max-w-xl flex-col bg-surface border-l border-border/40 shadow-2xl"
           >
-            {/* ── Header ── */}
+            {/* -- Header -- */}
             <div className="relative overflow-hidden flex-shrink-0">
               {/* Gradient wash */}
               <div className={cn("absolute inset-0 bg-gradient-to-br opacity-[0.07]", cfg.gradient)} />
@@ -478,7 +478,7 @@ export function LoyaltyProfileDetailModal({
                 </div>
               </div>
 
-              {/* ── Tabs ── */}
+              {/* -- Tabs -- */}
               <div className="relative flex border-t border-border/30 px-6">
                 {TABS.map((t) => (
                   <button
@@ -501,7 +501,7 @@ export function LoyaltyProfileDetailModal({
               </div>
             </div>
 
-            {/* ── Body ── */}
+            {/* -- Body -- */}
             <div className="flex-1 overflow-y-auto p-5">
               <AnimatePresence mode="wait">
                 {tab === "overview" && (
@@ -615,7 +615,7 @@ export function LoyaltyProfileDetailModal({
               </AnimatePresence>
             </div>
 
-            {/* ── Footer actions ── */}
+            {/* -- Footer actions -- */}
             <div className="flex-shrink-0 border-t border-border/30 p-4 flex gap-2.5">
               {/* Delete */}
               <motion.button

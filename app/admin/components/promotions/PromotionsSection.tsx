@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tag, Zap, Plus, LayoutGrid, List, Star } from "lucide-react";
@@ -15,14 +15,14 @@ import {
 } from "@/fonctions_api/promotions.api";
 import type { AdminPromoCode, AdminSoldes } from "@/modeles/promotions";
 
-// ─── Composants spéciaux partagés ────────────────────────────────────────────
+// --- Composants spéciaux partagés --------------------------------------------
 import Toast from "@/components/notifications/Toast";
 import LoadingKalvin from "@/components/special/loadingKalvin";
 import EmptyState from "@/components/special/EmptyState";
 import ErrorState from "@/components/special/ErrorState";
 import ConfirmDialog from "@/components/special/ConfirmDialog";
 
-// ─── Sous-composants promotions ───────────────────────────────────────────────
+// --- Sous-composants promotions -----------------------------------------------
 import { PromoCodeCard } from "./components/PromoCodeCard";
 import { PromoCodeModal } from "./components/PromoCodeModal";
 import { PromoCodeDetailModal } from "./components/PromoCodeDetailModal";
@@ -65,7 +65,7 @@ export default function PromotionsSection() {
     const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
     const [productsList, setProductsList] = useState<{ id: string; name: string }[]>([]);
 
-    // ── Chargement ───────────────────────────────────────────────────────────
+    // -- Chargement -----------------------------------------------------------
     const loadData = async () => {
         setLoading(true);
         setError(null);
@@ -102,14 +102,14 @@ export default function PromotionsSection() {
 
     useEffect(() => { loadData(); }, []);
 
-    // ── Statistiques ─────────────────────────────────────────────────────────
+    // -- Statistiques ---------------------------------------------------------
     const stats = useMemo(() => ({
         activeCodes: promoCodes.filter(c => c.is_active && (!c.expires_at || new Date(c.expires_at) > new Date())).length,
         totalUses: promoCodes.reduce((acc, c) => acc + (c.number_times_used || 0), 0),
         activeSales: sales.filter(s => s.is_active && new Date(s.ends_at) > new Date()).length,
     }), [promoCodes, sales]);
 
-    // ── Handlers codes promo ──────────────────────────────────────────────────
+    // -- Handlers codes promo --------------------------------------------------
     const handleSaveCode = async (data: any) => {
         setSaving(true);
         const res = editingCode
@@ -125,7 +125,7 @@ export default function PromotionsSection() {
         setSaving(false);
     };
 
-    // ── Handlers ventes flash ─────────────────────────────────────────────────
+    // -- Handlers ventes flash -------------------------------------------------
     const handleSaveSale = async (data: any) => {
         setSaving(true);
         const res = editingSale
@@ -141,7 +141,7 @@ export default function PromotionsSection() {
         setSaving(false);
     };
 
-    // ── Handler suppression ───────────────────────────────────────────────────
+    // -- Handler suppression ---------------------------------------------------
     const handleDelete = async () => {
         if (!deleteConfirm) return;
         setDeleting(true);
@@ -158,14 +158,14 @@ export default function PromotionsSection() {
         setDeleteConfirm(null);
     };
 
-    // ── Erreur totale ─────────────────────────────────────────────────────────
+    // -- Erreur totale ---------------------------------------------------------
     if (error && !promoCodes.length && !sales.length) {
         return <ErrorState message={error} onRetry={loadData} />;
     }
 
     return (
         <div className="space-y-8 px-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* ── Toast ─────────────────────────────────────────────────────── */}
+            {/* -- Toast ------------------------------------------------------- */}
             <Toast
                 show={toast.show}
                 type={toast.type}
@@ -173,7 +173,7 @@ export default function PromotionsSection() {
                 onClose={() => setToast(p => ({ ...p, show: false }))}
             />
 
-            {/* ── Confirm suppression ───────────────────────────────────────── */}
+            {/* -- Confirm suppression ----------------------------------------- */}
             <ConfirmDialog
                 isOpen={!!deleteConfirm}
                 onCancel={() => setDeleteConfirm(null)}
@@ -185,7 +185,7 @@ export default function PromotionsSection() {
                 isLoading={deleting}
             />
 
-            {/* ── Modales Détail ────────────────────────────────────────────── */}
+            {/* -- Modales Détail ---------------------------------------------- */}
             <PromoCodeDetailModal
                 promo={detailCode}
                 onClose={() => setDetailCode(null)}
@@ -201,7 +201,7 @@ export default function PromotionsSection() {
                 }}
             />
 
-            {/* ── Modales Création / Édition ────────────────────────────────── */}
+            {/* -- Modales Création / Édition ---------------------------------- */}
             <PromoCodeModal
                 open={codeModalOpen}
                 onClose={() => setCodeModalOpen(false)}
@@ -212,6 +212,7 @@ export default function PromotionsSection() {
                 products={productsList}
                 categories={categories}
             />
+
             <FlashSaleModal
                 open={saleModalOpen}
                 onClose={() => setSaleModalOpen(false)}
@@ -222,14 +223,14 @@ export default function PromotionsSection() {
                 products={productsList}
             />
 
-            {/* ── En-tête ───────────────────────────────────────────────────── */}
+            {/* -- En-tête ----------------------------------------------------- */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
 
 
 
 
-                {/* ── En-tête avec effet premium ── */}
+                {/* -- En-tête avec effet premium -- */}
                 <motion.div
                     initial={{ opacity: 0, y: -12 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -300,68 +301,94 @@ export default function PromotionsSection() {
                         if (tab === "codes") { setEditingCode(null); setCodeModalOpen(true); }
                         else { setEditingSale(null); setSaleModalOpen(true); }
                     }}
-                    className="flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:scale-105 active:scale-95"
+                    className="flex items-center cursor-pointer gap-2 cursor-pointers rounded-xl bg-primary px-6 py-3 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:scale-105 active:scale-95"
                 >
                     <Plus className="h-5 w-5" />
                     {tab === "codes" ? "Nouveau code promo" : "Nouvelle vente flash"}
                 </button>
+
             </div>
 
-            {/* ── KPI ──────────────────────────────────────────────────────── */}
+            {/* -- KPI -------------------------------------------------------- */}
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
                 {[
                     { icon: <Tag className="h-6 w-6 text-primary" />, value: stats.activeCodes, label: "Codes promo actifs", glow: "bg-primary/10" },
                     { icon: <Tag className="h-6 w-6 text-blue-500" />, value: stats.totalUses, label: "Utilisations totales", glow: "bg-blue-500/10" },
-                    { icon: <Zap className="h-6 w-6 text-amber-500" />, value: stats.activeSales, label: "Ventes flash en cours", glow: "bg-amber-500/10" },
+                    { icon: <Zap className="h-6 w-6 text-amber-500" />, value: stats.activeSales, label: "Ventes en solde en cours", glow: "bg-amber-500/10" },
+
                 ].map((kpi, i) => (
+
                     <motion.div key={i} whileHover={{ y: -4 }} className="relative overflow-hidden rounded-2xl border border-border bg-surface-elevated p-6 shadow-sm">
-                        <div className={cn("absolute -right-4 -top-4 h-24 w-24 rounded-full blur-2xl", kpi.glow)} />
-                        {kpi.icon}
-                        <p className="mt-3 text-4xl font-extrabold text-foreground">{kpi.value}</p>
+
+                        {/* <div className={cn("absolute -right-4 -top-4 h-24 w-24 rounded-full blur-2xl", kpi.glow)} /> */}
+
+                        <div className="flex items-center justify-between">
+                            <p className="mt-3 text-4xl font-extrabold text-foreground">{kpi.value}</p>
+                            {kpi.icon}
+                        </div>
+
                         <p className="mt-1 text-sm font-medium text-muted-foreground">{kpi.label}</p>
                     </motion.div>
+
                 ))}
+
             </div>
 
-            {/* ── Onglets + vue ─────────────────────────────────────────────── */}
+            {/* -- Onglets + vue ----------------------------------------------- */}
             <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-surface-elevated p-2 rounded-2xl border border-border shadow-sm">
+
                 <div className="flex gap-2 w-full sm:w-auto">
+
                     {([
-                        { key: "codes", label: "Codes Promo", icon: <Tag className="h-4 w-4" />, count: promoCodes.length },
-                        { key: "sales", label: "Ventes Flash", icon: <Zap className="h-4 w-4" />, count: sales.length },
+                        { key: "codes", label: "Codes Promo", icon: <Tag className="h-6 w-6" />, count: promoCodes.length },
+                        { key: "sales", label: "Ventes en solde", icon: <Zap className="h-6 w-6" />, count: sales.length },
+
                     ] as const).map(t => (
+
                         <button
                             key={t.key}
                             onClick={() => setTab(t.key)}
                             className={cn(
-                                "flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all",
+                                "flex-1 sm:flex-none flex cursor-pointer items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-[18px] font-semibold transition-all",
                                 tab === t.key ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-surface-alt hover:text-foreground"
                             )}
                         >
                             {t.icon} {t.label}
                             <span className={cn(
-                                "rounded-md px-1.5 py-0.5 text-[10px] font-bold",
+                                "rounded-md px-1.5 py-0.5 text-[14px] font-bold",
                                 tab === t.key ? "bg-white/20" : "bg-surface-alt"
                             )}>{t.count}</span>
+
                         </button>
+
                     ))}
+
                 </div>
+
 
                 <div className="flex rounded-xl border border-border bg-surface p-1 pr-2">
-                    <button onClick={() => setViewMode("grid")} className={cn("rounded-lg p-2 transition-colors", viewMode === "grid" ? "bg-surface-alt text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>
+
+                    <button onClick={() => setViewMode("grid")} className={cn("rounded-lg p-2 cursor-pointer transition-colors", viewMode === "grid" ? "bg-surface-alt text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>
                         <LayoutGrid className="h-4 w-4" />
                     </button>
-                    <button onClick={() => setViewMode("list")} className={cn("rounded-lg p-2 transition-colors", viewMode === "list" ? "bg-surface-alt text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>
+
+                    <button onClick={() => setViewMode("list")} className={cn("rounded-lg p-2 cursor-pointer transition-colors", viewMode === "list" ? "bg-surface-alt text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>
                         <List className="h-4 w-4" />
                     </button>
+
                 </div>
+
             </div>
 
-            {/* ── Contenu ───────────────────────────────────────────────────── */}
+            {/* -- Contenu ----------------------------------------------------- */}
             {loading ? (
+
                 <LoadingKalvin />
+
             ) : tab === "codes" ? (
+
                 promoCodes.length === 0 ? (
+
                     <EmptyState
                         title="Aucun code promo"
                         description="Vous n'avez pas encore créé de code de réduction pour vos clients."
@@ -369,7 +396,9 @@ export default function PromotionsSection() {
                         onAction={() => { setEditingCode(null); setCodeModalOpen(true); }}
                         icon={Tag}
                     />
+
                 ) : (
+
                     <motion.div
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -393,8 +422,11 @@ export default function PromotionsSection() {
                         </AnimatePresence>
                     </motion.div>
                 )
+
             ) : (
+
                 sales.length === 0 ? (
+
                     <EmptyState
                         title="Aucune vente flash"
                         description="Créez une vente flash pour mettre en avant un produit à prix réduit pendant un temps limité."
@@ -402,7 +434,9 @@ export default function PromotionsSection() {
                         onAction={() => { setEditingSale(null); setSaleModalOpen(true); }}
                         icon={Zap}
                     />
+
                 ) : (
+
                     <motion.div
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}

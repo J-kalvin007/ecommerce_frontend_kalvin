@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Notes & Favoris — Modèles TypeScript synchronisés avec le backend Django DRF
  *
  * Source de vérité : documentation OpenAPI du backend « Atelier du Terroir »
@@ -15,7 +15,7 @@
  * @module modeles/notes-favoris
  */
 
-// ─── FAVORIS ──────────────────────────────────────────────────────────────────
+// --- FAVORIS ------------------------------------------------------------------
 
 /**
  * Produit favori tel que retourné par GET /api/v1/catalog/products/my-favorites/
@@ -64,7 +64,7 @@ export interface FavoriteProduct {
   default_variant_id?: string | null;
 }
 
-// ─── TOGGLE FAVORIS ───────────────────────────────────────────────────────────
+// --- TOGGLE FAVORIS -----------------------------------------------------------
 
 /**
  * Payload pour POST /api/v1/catalog/favorites-toggle/
@@ -111,7 +111,7 @@ export interface FavoriteRemovedResponse {
  */
 export type ToggleFavoriteResponse = FavoriteAddedResponse | FavoriteRemovedResponse;
 
-// ─── NOTES PRODUIT ────────────────────────────────────────────────────────────
+// --- NOTES PRODUIT ------------------------------------------------------------
 
 /**
  * Note d'un utilisateur pour un produit, telle que retournée par
@@ -176,7 +176,7 @@ export interface RateProductResponse {
   updated: boolean;
 }
 
-// ─── MAP UTILITAIRE ───────────────────────────────────────────────────────────
+// --- MAP UTILITAIRE -----------------------------------------------------------
 
 /**
  * Map product_id → score pour un accès O(1) lors du rendu.

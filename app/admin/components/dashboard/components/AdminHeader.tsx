@@ -1,4 +1,4 @@
-
+﻿
 
 
 // app/admin/components/dashboard/components/AdminHeader.tsx
@@ -132,7 +132,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
 
           {/* Droite : thème, notifications, profil */}
           <div className="flex items-center gap-2">
-            {/* ── Bouton retour à l'accueil (visible desktop) ── */}
+            {/* -- Bouton retour à l'accueil (visible desktop) -- */}
             <motion.button
               // onClick={affichetoken}
               whileHover={{ scale: 1.06 }}

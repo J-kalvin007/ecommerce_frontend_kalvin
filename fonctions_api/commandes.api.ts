@@ -1,4 +1,4 @@
-// fonctions_api/commandes.api.ts
+﻿// fonctions_api/commandes.api.ts
 import { apiPrivate } from "@/lib/axios";
 import { AxiosError } from "axios";
 import type { Result } from "@/modeles/user";
@@ -25,7 +25,7 @@ const handleApiError = (error: unknown): Result<never> => {
     return { ok: false, error: { status: 500, message: "Erreur inconnue" } };
 };
 
-// ─── ADMIN ────────────────────────────────────────────────────────────────────
+// --- ADMIN --------------------------------------------------------------------
 
 /** Récupérer toutes les commandes (admin) avec filtres optionnels */
 export const getAdminOrders = async (filters?: AdminOrderFilters): Promise<Result<OrderList[]>> => {
@@ -69,7 +69,7 @@ export const updateOrderStatus = async (
     }
 };
 
-// ─── CLIENT / MES COMMANDES ────────────────────────────────────────────────────
+// --- CLIENT / MES COMMANDES ----------------------------------------------------
 
 /** Récupérer les commandes du client connecté */
 export const getMyOrders = async (): Promise<Result<OrderList[]>> => {

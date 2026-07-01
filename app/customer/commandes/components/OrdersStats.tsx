@@ -1,6 +1,6 @@
-/**
+﻿/**
  * OrdersStats.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Barre de statistiques premium en haut de la page commandes.
  *
  * Affiche 4 KPIs visuels :
@@ -18,7 +18,7 @@ import { motion } from "framer-motion";
 import { Package, PackageCheck, RefreshCcw, TrendingUp } from "lucide-react";
 import type { OrderList } from "@/modeles/commandes";
 
-/* ── Utilitaires ────────────────────────────────────────────────────────── */
+/* -- Utilitaires ---------------------------------------------------------- */
 
 function formatAmount(amount: number): string {
   return new Intl.NumberFormat("fr-FR", {
@@ -27,7 +27,7 @@ function formatAmount(amount: number): string {
   }).format(amount) + " FCFA";
 }
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface OrdersStatsProps {
   orders: OrderList[];
 }
@@ -39,7 +39,7 @@ interface OrdersStatsProps {
  * de commandes du client. Chaque carte est animée en stagger.
  */
 export default function OrdersStats({ orders }: OrdersStatsProps) {
-  /* ── Calculs des KPIs ───────────────────────────────────────────────── */
+  /* -- Calculs des KPIs ------------------------------------------------- */
   const total = orders.length;
   const delivered = orders.filter((o) => o.status === "delivered").length;
   const inProgress = orders.filter(

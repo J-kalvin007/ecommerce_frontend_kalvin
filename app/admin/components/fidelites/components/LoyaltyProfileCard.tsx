@@ -1,4 +1,4 @@
-
+﻿
 
 
 
@@ -14,7 +14,7 @@ import type { LoyaltyProfile, Tier } from "@/modeles/fidelites";
 import { LoyaltyTierBadge } from "./LoyaltyTierBadge";
 import { LoyaltyTierProgressBar } from "./LoyaltyTierProgressBar";
 
-// ─── Count-up hook ────────────────────────────────────────────────────────────
+// --- Count-up hook ------------------------------------------------------------
 function useCountUp(target: number, duration = 950) {
   const [val, setVal] = useState(0);
   const raf = useRef<number | null>(null);
@@ -32,7 +32,7 @@ function useCountUp(target: number, duration = 950) {
   return val;
 }
 
-// ─── Holographic ring (SVG conic for premium tiers) ──────────────────────────
+// --- Holographic ring (SVG conic for premium tiers) --------------------------
 const PREMIUM_TIERS = new Set(["Gold", "Platinum", "Diamond"]);
 
 function HoloRing({ tierName, size, hovered }: { tierName: string; size: number; hovered: boolean }) {
@@ -79,7 +79,7 @@ function HoloRing({ tierName, size, hovered }: { tierName: string; size: number;
   );
 }
 
-// ─── Avatar with holo ring ────────────────────────────────────────────────────
+// --- Avatar with holo ring ----------------------------------------------------
 function MemberAvatar({
   profile,
   size = 52,
@@ -129,7 +129,7 @@ function MemberAvatar({
   );
 }
 
-// ─── Props ────────────────────────────────────────────────────────────────────
+// --- Props --------------------------------------------------------------------
 interface LoyaltyProfileCardProps {
   profile: LoyaltyProfile;
   tiers: Tier[];
@@ -192,7 +192,7 @@ function ListCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardP
       {/* Progress compact */}
       <div className="hidden md:block flex-1 px-2">
         <LoyaltyTierProgressBar
-          currentPoints={profile.total_points_earned}
+          currentPoints={(profile.total_points_earned ?? profile.total_points_gagne ?? 0)}
           currentTierName={profile.tier_name}
           tiers={tiers}
           compact
@@ -210,7 +210,7 @@ function ListCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardP
         </div>
         <div className="hidden sm:block">
           <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/60">Lifetime</p>
-          <p className="text-xs font-bold text-foreground">{profile.total_points_earned.toLocaleString("fr-FR")} pts</p>
+          <p className="text-xs font-bold text-foreground">{(profile.total_points_earned ?? profile.total_points_gagne ?? 0).toLocaleString("fr-FR")} pts</p>
         </div>
         <div className="hidden md:block">
           <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/60">Dépenses</p>
@@ -285,14 +285,14 @@ function GridCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardP
         transition: "box-shadow 0.42s ease, transform 0.42s cubic-bezier(0.22,1,0.36,1)",
       }}
     >
-      {/* ── Top gradient wash ── */}
+      {/* -- Top gradient wash -- */}
       <div className={cn("absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r", cfg.gradient)} />
       <div
         className="absolute top-0 left-0 right-0 h-20 pointer-events-none"
         style={{ background: `linear-gradient(to bottom, rgba(0,0,0,0.03), transparent)` }}
       />
 
-      {/* ── Header ── */}
+      {/* -- Header -- */}
       <div className="relative flex flex-col items-center pt-6 pb-4 px-5 gap-3">
         {/* Radial glow */}
         <div
@@ -328,10 +328,10 @@ function GridCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardP
         </div>
       </div>
 
-      {/* ── Divider ── */}
+      {/* -- Divider -- */}
       <div className="mx-5 h-px bg-border/30" />
 
-      {/* ── Points hero ── */}
+      {/* -- Points hero -- */}
       <div className="flex flex-col items-center px-5 py-4 gap-1">
         <p className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60">
           Solde disponible
@@ -344,20 +344,20 @@ function GridCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardP
         </div>
       </div>
 
-      {/* ── Progress bar ── */}
+      {/* -- Progress bar -- */}
       <div className="px-5 pb-3">
         <LoyaltyTierProgressBar
-          currentPoints={profile.total_points_earned}
+          currentPoints={(profile.total_points_earned ?? profile.total_points_gagne ?? 0)}
           currentTierName={profile.tier_name}
           tiers={tiers}
           compact
         />
       </div>
 
-      {/* ── Divider ── */}
+      {/* -- Divider -- */}
       <div className="mx-5 h-px bg-border/30" />
 
-      {/* ── Stats row ── */}
+      {/* -- Stats row -- */}
       <div className="grid grid-cols-2 gap-px bg-border/20 mx-5 my-3 rounded-xl overflow-hidden border border-border/20">
         <div className="flex flex-col items-center py-2.5 bg-surface gap-0.5">
           <div className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-muted-foreground/60">
@@ -377,7 +377,7 @@ function GridCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardP
         </div>
       </div>
 
-      {/* ── Actions (revealed on hover) ── */}
+      {/* -- Actions (revealed on hover) -- */}
       <AnimatePresence>
         {hovered && (
           <motion.div

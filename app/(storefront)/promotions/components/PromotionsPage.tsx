@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file PromotionsPage.tsx
  * @description Page des promotions - edition ultra-premium "Atelier du Terroir".
  *
@@ -45,11 +45,11 @@ import { mediaUrl } from "@/lib/mediaUrl";
 import { PromoCodesGrid } from "./PromoCodesGrid";
 import { PromoProductsCarousel } from "./PromoProductsCarousel";
 
-/* ─── Constantes ──────────────────────────────────────────────────────────── */
+/* --- Constantes ------------------------------------------------------------ */
 
 const FALLBACK_HERO = "/assets/images/LOGO.png";
 
-/* ─── CSS global (keyframes injectes une seule fois) ─────────────────────── */
+/* --- CSS global (keyframes injectes une seule fois) ----------------------- */
 
 const GLOBAL_KEYFRAMES = `
   @keyframes promo-grain {
@@ -83,7 +83,7 @@ const GLOBAL_KEYFRAMES = `
   }
 `;
 
-/* ─── Types ───────────────────────────────────────────────────────────────── */
+/* --- Types ----------------------------------------------------------------- */
 
 /**
  * Carte produit promotionnel normalisee.
@@ -102,7 +102,7 @@ export interface PromoProductCard {
   rating: number;
 }
 
-/* ─── Utilitaires ─────────────────────────────────────────────────────────── */
+/* --- Utilitaires ----------------------------------------------------------- */
 
 /** Convertit un objet Soldes (API) vers une PromoProductCard (UI) */
 function mapSaleToCard(sale: Soldes): PromoProductCard {

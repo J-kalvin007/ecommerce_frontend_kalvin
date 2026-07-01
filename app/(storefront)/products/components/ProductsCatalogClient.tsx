@@ -1,4 +1,4 @@
-
+﻿
 
 
 
@@ -233,7 +233,7 @@
 //   const [productsError, setProductsError] = useState<string | null>(null);
 //   const [categoriesError, setCategoriesError] = useState<string | null>(null);
 
-//   // ─── Données utilisateur (notes + favoris) — chargées seulement si connecté
+//   // --- Données utilisateur (notes + favoris) — chargées seulement si connecté
 //   const [userRatingsMap, setUserRatingsMap] = useState<UserRatingsMap>(new Map());
 //   const [userFavoriteIds, setUserFavoriteIds] = useState<Set<string>>(new Set());
 
@@ -737,9 +737,9 @@ import { ProductCard } from "./ProductCard";
 import { useAuthStore } from "@/store/authStore";
 import LoadingKalvin from "@/components/special/loadingKalvin";
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    TYPES EXPORTÉS — conservation intégrale
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 /** Un produit avec d'éventuelles infos de vente flash */
 export type EnrichedProduct = ProductList & {
@@ -748,9 +748,9 @@ export type EnrichedProduct = ProductList & {
   variants?: ProductVariant[];
 };
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    CONSTANTES — conservation intégrale
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 const SORT_OPTIONS = [
   { value: "-created_at", label: "Nouveautés" },
@@ -759,9 +759,9 @@ const SORT_OPTIONS = [
   { value: "-note_produit", label: "Mieux notés" },
 ] as const;
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    FONCTIONS UTILITAIRES — conservation intégrale
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 /** Compte récursivement les catégories */
 function countCategories(categories: Category[]): number {
@@ -817,10 +817,10 @@ function enrichProductsWithSales(
   });
 }
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    SOUS-COMPOSANT : CategoryTreeItem — conservation du nom d'origine
    Enrichi : indicateur de sélection animé (barre gauche forest green)
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 type CategoryTreeItemProps = {
   category: Category;
@@ -923,16 +923,16 @@ function CategoryTreeItem({
   );
 }
 
-/* ─────────────────────────────────────────────────────────────
+/* -------------------------------------------------------------
    COMPOSANT PRINCIPAL — conservation du nom d'origine
-   ───────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------- */
 
 export function ProductsCatalogClient() {
   const { status, user } = useAuthStore();
   const isAuthenticated = status === "authenticated" && Boolean(user);
   const prefersReducedMotion = useReducedMotion();
 
-  /* ── États UI — conservation des noms d'origine ── */
+  /* -- États UI — conservation des noms d'origine -- */
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState("-created_at");
@@ -940,7 +940,7 @@ export function ProductsCatalogClient() {
   const [showFilters, setShowFilters] = useState(false);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
 
-  /* ── États données — conservation des noms d'origine ── */
+  /* -- États données — conservation des noms d'origine -- */
   const [products, setProducts] = useState<ProductList[]>([]);
   const [sales, setSales] = useState<Soldes[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -952,11 +952,11 @@ export function ProductsCatalogClient() {
   const [productsError, setProductsError] = useState<string | null>(null);
   const [categoriesError, setCategoriesError] = useState<string | null>(null);
 
-  /* ── États utilisateur — conservation des noms d'origine ── */
+  /* -- États utilisateur — conservation des noms d'origine -- */
   const [userRatingsMap, setUserRatingsMap] = useState<UserRatingsMap>(new Map());
   const [userFavoriteIds, setUserFavoriteIds] = useState<Set<string>>(new Set());
 
-  /* ── Chargement des ventes flash ── */
+  /* -- Chargement des ventes flash -- */
   useEffect(() => {
     (async () => {
       const res = await getActiveSales();
@@ -965,7 +965,7 @@ export function ProductsCatalogClient() {
     })();
   }, []);
 
-  /* ── Chargement notes & favoris utilisateur ── */
+  /* -- Chargement notes & favoris utilisateur -- */
   useEffect(() => {
     if (!isAuthenticated) {
       setUserRatingsMap(new Map());
@@ -979,7 +979,7 @@ export function ProductsCatalogClient() {
     })();
   }, [isAuthenticated]);
 
-  /* ── Chargement catégories ── */
+  /* -- Chargement catégories -- */
   useEffect(() => {
     (async () => {
       setLoadingCategories(true);
@@ -998,7 +998,7 @@ export function ProductsCatalogClient() {
     })();
   }, []);
 
-  /* ── Chargement produits avec debounce ── */
+  /* -- Chargement produits avec debounce -- */
   useEffect(() => {
     const timeout = window.setTimeout(() => {
       (async () => {
@@ -1029,7 +1029,7 @@ export function ProductsCatalogClient() {
     return () => window.clearTimeout(timeout);
   }, [searchQuery, selectedCategory, sortBy]);
 
-  /* ── Enrichissement + filtrage local ── */
+  /* -- Enrichissement + filtrage local -- */
   const enrichedProducts = useMemo(() => {
     let result = enrichProductsWithSales(products, sales);
 
@@ -1073,7 +1073,7 @@ export function ProductsCatalogClient() {
 
 
 
-  /* ── Handlers — conservation des noms d'origine ── */
+  /* -- Handlers — conservation des noms d'origine -- */
   const toggleCategoryExpand = (id: string) => {
     setExpandedCategoryIds((prev) => {
       const next = new Set(prev);
@@ -1101,7 +1101,7 @@ export function ProductsCatalogClient() {
 
 
 
-  /* ── Nombre de filtres actifs (pour le badge mobile) ── */
+  /* -- Nombre de filtres actifs (pour le badge mobile) -- */
   const activeFiltersCount = [
     selectedCategory !== null,
     priceRange[1] < 100000,
@@ -1110,9 +1110,9 @@ export function ProductsCatalogClient() {
 
 
 
-  /* ─────────────────────────────────────────────────────────────
+  /* -------------------------------------------------------------
      RENDU
-     ───────────────────────────────────────────────────────────── */
+     ------------------------------------------------------------- */
   return (
     <div className="page-transition bg-[#fbf7e8]">
       <ProductsPageHeader
@@ -1122,7 +1122,7 @@ export function ProductsCatalogClient() {
 
       <div className="mx-auto max-w-[var(--content-max-width)] px-[var(--spacing-page-x)] py-8">
 
-        {/* ── Barre d'outils ── */}
+        {/* -- Barre d'outils -- */}
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
           {/* Champ recherche */}
@@ -1242,10 +1242,10 @@ export function ProductsCatalogClient() {
           </div>
         </div>
 
-        {/* ── Layout principal : sidebar + grille ── */}
+        {/* -- Layout principal : sidebar + grille -- */}
         <div className="flex gap-8">
 
-          {/* ── Sidebar filtres ── */}
+          {/* -- Sidebar filtres -- */}
           <AnimatePresence>
             {(showFilters || true) && (
               <motion.aside
@@ -1396,7 +1396,7 @@ export function ProductsCatalogClient() {
             )}
           </AnimatePresence>
 
-          {/* ── Zone principale produits ── */}
+          {/* -- Zone principale produits -- */}
           <div className="flex-1 min-w-0">
 
             {/* Compteur résultats */}
@@ -1410,7 +1410,7 @@ export function ProductsCatalogClient() {
             {loading ? (
               <ProductGridSkeleton count={6} />
             ) : productsError ? (
-              /* ── État erreur ── */
+              /* -- État erreur -- */
               <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-red-200 bg-red-50/50 py-20">
                 <p className="text-sm font-medium text-red-600">{productsError}</p>
                 <button
@@ -1423,7 +1423,7 @@ export function ProductsCatalogClient() {
                 </button>
               </div>
             ) : enrichedProducts.length > 0 ? (
-              /* ── Grille produits ── */
+              /* -- Grille produits -- */
               <motion.div
                 layout
                 className={cn(
@@ -1445,7 +1445,7 @@ export function ProductsCatalogClient() {
                 ))}
               </motion.div>
             ) : (
-              /* ── État vide — invitation poétique ── */
+              /* -- État vide — invitation poétique -- */
               <motion.div
                 initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

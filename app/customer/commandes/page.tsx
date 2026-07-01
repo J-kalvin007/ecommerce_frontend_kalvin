@@ -1,6 +1,6 @@
-/**
+﻿/**
  * page.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Page principale de gestion des commandes client.
  * Intégrée dans le CustomerShell.
  * 
@@ -32,19 +32,19 @@ import OrdersStats from "./components/OrdersStats";
 import OrdersFilter, { FilterStatus } from "./components/OrdersFilter";
 
 export default function CustomerOrdersPage() {
-  /* ── State principal (Liste) ────────────────────────────────────────── */
+  /* -- State principal (Liste) ------------------------------------------ */
   const [orders, setOrders] = useState<OrderList[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  /* ── State Filtres & Recherche ────────────────────────────────────── */
+  /* -- State Filtres & Recherche -------------------------------------- */
   const [activeFilter, setActiveFilter] = useState<FilterStatus>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [sortBy, setSortBy] = useState<"date_desc" | "date_asc" | "amount_desc" | "amount_asc">("date_desc");
 
-  /* ── State Modale de détail ───────────────────────────────────────── */
+  /* -- State Modale de détail ----------------------------------------- */
   const [selectedOrderRef, setSelectedOrderRef] = useState<string | null>(null);
   const [orderDetail, setOrderDetail] = useState<OrderDetail | null>(null);
   const [orderHistory, setOrderHistory] = useState<OrderHistory[]>([]);
@@ -53,7 +53,7 @@ export default function CustomerOrdersPage() {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
 
-  /* ── State Notification ───────────────────────────────────────────── */
+  /* -- State Notification --------------------------------------------- */
   const [toast, setToast] = useState<{ show: boolean; type: "success" | "error" | "info"; message: string }>({
     show: false, type: "info", message: "",
   });
@@ -62,7 +62,7 @@ export default function CustomerOrdersPage() {
     setToast({ show: true, type, message });
   };
 
-  /* ── Fetch : Liste des commandes ──────────────────────────────────── */
+  /* -- Fetch : Liste des commandes ------------------------------------ */
   const fetchOrders = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -81,7 +81,7 @@ export default function CustomerOrdersPage() {
     fetchOrders();
   }, [fetchOrders]);
 
-  /* ── Actions : Modale de détail ───────────────────────────────────── */
+  /* -- Actions : Modale de détail ------------------------------------- */
   const handleViewOrder = useCallback(async (reference: string) => {
     setSelectedOrderRef(reference);
     setOrderDetail(null);
@@ -131,7 +131,7 @@ export default function CustomerOrdersPage() {
     }
   }, [selectedOrderRef, fetchOrders, handleCloseModal]);
 
-  /* ── Filtrage côté client ─────────────────────────────────────────── */
+  /* -- Filtrage côté client ------------------------------------------- */
   const filteredOrders = useMemo(() => {
     let result = orders.filter((order) => {
       // 1. Filtre par statut
@@ -161,12 +161,12 @@ export default function CustomerOrdersPage() {
   }, [orders, activeFilter, searchQuery, sortBy]);
 
 
-  /* ── Rendu principal ──────────────────────────────────────────────── */
+  /* -- Rendu principal ------------------------------------------------ */
   return (
     <CustomerShell activeSection="orders">
       <div className="mx-auto max-w-8xl px-20 py-8 lg:px-20 space-y-8">
 
-        {/* ── En-tête avec effet premium ── */}
+        {/* -- En-tête avec effet premium -- */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -243,13 +243,13 @@ export default function CustomerOrdersPage() {
 
 
 
-        {/* ── Chargement global ── */}
+        {/* -- Chargement global -- */}
         {isLoading ? (
           <div className="flex justify-center py-20">
             <LoadingStyle label="Chargement de vos commandes…" size={16} />
           </div>
         ) : error ? (
-          /* ── Erreur globale ── */
+          /* -- Erreur globale -- */
           <ErrorState
             title="Oups ! Erreur de chargement"
             message={error}
@@ -257,7 +257,7 @@ export default function CustomerOrdersPage() {
             onRetry={fetchOrders}
           />
         ) : orders.length === 0 ? (
-          /* ── État vide global (0 commandes au total) ── */
+          /* -- État vide global (0 commandes au total) -- */
           <EmptyState
             title="Aucune commande trouvée"
             description="Vous n'avez pas encore passé de commande. Explorez notre boutique pour découvrir nos produits d'exception."
@@ -266,7 +266,7 @@ export default function CustomerOrdersPage() {
             onAction={() => window.location.href = "/"}
           />
         ) : (
-          /* ── Contenu principal (liste chargée) ── */
+          /* -- Contenu principal (liste chargée) -- */
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Category Models — Interfaces TypeScript strictement synchronisées avec le backend Django DRF
  *
  * Source de vérité absolue : schéma OpenAPI du backend "Atelier du Terroir".
@@ -13,7 +13,7 @@
  * @module models/categories
  */
 
-// ─── Entité principale ────────────────────────────────────────────────────────
+// --- Entité principale --------------------------------------------------------
 
 /**
  * Catégorie telle que retournée par le backend Django (admin + public).
@@ -53,7 +53,7 @@ export interface Category {
   readonly children: Category[];
 }
 
-// ─── Payloads de mutation ─────────────────────────────────────────────────────
+// --- Payloads de mutation -----------------------------------------------------
 
 /**
  * Payload pour créer une catégorie.

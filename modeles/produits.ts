@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Product Models — Interfaces TypeScript strictement synchronisées avec le backend Django DRF
  *
  * Source de vérité absolue : schéma OpenAPI du backend "Atelier du Terroir".
@@ -16,7 +16,7 @@ import type { Category } from "@/modeles/categories";
 
 
 
-// ─── Enums ────────────────────────────────────────────────────────────────────
+// --- Enums --------------------------------------------------------------------
 
 /**
  * Types de produit supportés par le backend.
@@ -42,7 +42,7 @@ export const PRODUCT_TYPE_LABELS: Record<ProductType, string> = {
 
 
 
-// ─── Images Produit ───────────────────────────────────────────────────────────
+// --- Images Produit -----------------------------------------------------------
 
 /**
  * Image produit telle que retournée dans le détail d'un produit (sans champ `product`).
@@ -121,7 +121,7 @@ export type PatchProductImagePayload = Partial<CreateProductImagePayload>;
 
 
 
-// ─── Variantes Produit ────────────────────────────────────────────────────────
+// --- Variantes Produit --------------------------------------------------------
 
 /**
  * Variante produit telle que retournée dans le détail d'un produit (sans champ `product`).
@@ -215,7 +215,7 @@ export type PatchProductVariantPayload = Partial<CreateProductVariantPayload>;
 
 
 
-// ─── Produits ─────────────────────────────────────────────────────────────────
+// --- Produits -----------------------------------------------------------------
 
 /**
  * Produit en format liste allégé.
@@ -427,7 +427,7 @@ export interface ProductDetail {
   /** Date de dernière modification — readOnly */
   readonly updated_at: string;
 
-  // ─── Champs optionnels présents dans certaines réponses legacy ────────
+  // --- Champs optionnels présents dans certaines réponses legacy --------
   /** Image principale URL — parfois incluse dans les réponses */
   primary_image?: string | null;
   /** URL d'image legacy */
@@ -516,7 +516,7 @@ export interface ProductDetailPublicTop {
   /** Date de dernière modification — readOnly */
   readonly updated_at: string;
 
-  // ─── Champs optionnels présents dans certaines réponses legacy ────────
+  // --- Champs optionnels présents dans certaines réponses legacy --------
   /** Image principale URL — parfois incluse dans les réponses */
   primary_image?: string | null;
   /** URL d'image legacy */

@@ -1,6 +1,6 @@
-/**
+﻿/**
  * RatingProductCard.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Carte d'un produit noté par le client dans l'onglet « Mes Notes ».
  *
  * Combine les données du produit favori (image, nom, prix) avec
@@ -34,7 +34,7 @@ import { mediaUrl } from "@/lib/mediaUrl";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/uiStore";
 
-/* ── Utilitaires ────────────────────────────────────────────────────────── */
+/* -- Utilitaires ---------------------------------------------------------- */
 
 function formatPrice(price: string): string {
   const num = parseFloat(price || "0");
@@ -47,7 +47,7 @@ function formatPrice(price: string): string {
   );
 }
 
-/* ── Composant étoiles interactives ─────────────────────────────────────── */
+/* -- Composant étoiles interactives --------------------------------------- */
 interface StarRatingProps {
   value: number;
   onChange?: (score: number) => void;
@@ -95,7 +95,7 @@ function StarRating({
   );
 }
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface RatingProductCardProps {
   product: FavoriteProduct;
   userScore: number;
@@ -126,7 +126,7 @@ export default function RatingProductCard({
 
   const imageUrl = mediaUrl(product.image);
 
-  /* ── Notation (mise à jour optimiste) ───────────────────────────────── */
+  /* -- Notation (mise à jour optimiste) --------------------------------- */
   const handleRate = useCallback(
     async (score: number) => {
       if (score === currentScore || isRating) return;
@@ -143,7 +143,7 @@ export default function RatingProductCard({
     [currentScore, isRating, onRate, product.id]
   );
 
-  /* ── Suppression de note ────────────────────────────────────────────── */
+  /* -- Suppression de note ---------------------------------------------- */
   const handleDelete = useCallback(async () => {
     setIsDeleting(true);
     await onDelete(product.id);
@@ -166,7 +166,7 @@ export default function RatingProductCard({
         viewMode === "list" ? "flex flex-col sm:flex-row items-stretch" : "flex flex-col"
       )}
     >
-      {/* ── Image du produit ── */}
+      {/* -- Image du produit -- */}
       <div className={cn(
         "relative overflow-hidden bg-[#F7F5F0]",
         viewMode === "list" ? "w-full sm:w-56 shrink-0 h-48 sm:h-auto" : "h-48 w-full"
@@ -212,7 +212,7 @@ export default function RatingProductCard({
         </motion.button>
       </div>
 
-      {/* ── Corps de la carte ── */}
+      {/* -- Corps de la carte -- */}
       <div className={cn("p-4 flex flex-1 flex-col", viewMode === "list" ? "justify-center" : "")}>
         <h3 className="mb-1 truncate text-[16px] font-bold text-[#1f241c] leading-snug">
           {product.name}

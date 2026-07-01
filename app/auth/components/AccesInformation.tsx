@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -15,9 +15,9 @@ import {
 } from "lucide-react";
 import { logoImage } from "@/assets/images";
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    Animation variants
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 18 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.52, ease: [0.22, 1, 0.36, 1] } },
@@ -72,9 +72,9 @@ const steps = [
   },
 ];
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    Animated envelope icon
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 function EnvelopeAnimation() {
   return (
     <div className="relative flex h-24 w-24 items-center justify-center">
@@ -117,9 +117,9 @@ function EnvelopeAnimation() {
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    AccesInformation
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 export default function AccesInformation() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") ?? "";
@@ -135,7 +135,7 @@ export default function AccesInformation() {
       >
         <div className="flex flex-col lg:flex-row">
 
-          {/* ── LEFT PANEL ── */}
+          {/* -- LEFT PANEL -- */}
           <motion.div
             variants={leftIn}
             initial="hidden"
@@ -243,7 +243,7 @@ export default function AccesInformation() {
             </motion.div>
           </motion.div>
 
-          {/* ── RIGHT PANEL ── */}
+          {/* -- RIGHT PANEL -- */}
           <motion.div
             variants={rightIn}
             initial="hidden"

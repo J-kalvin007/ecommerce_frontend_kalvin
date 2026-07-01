@@ -1,4 +1,4 @@
-
+﻿
 
 // // components/admin/categories/CategoryCard.tsx
 // "use client";
@@ -18,7 +18,7 @@
 // import { cn } from "@/lib/utils";
 // import type { Category } from "@/modeles/categories";
 
-// // ─── Utility: resolve image URL ─────────────────────────────────────────────
+// // --- Utility: resolve image URL ---------------------------------------------
 // function resolveUrl(src?: string | null): string | null {
 //   if (!src) return null;
 //   return src.startsWith("http")
@@ -26,7 +26,7 @@
 //     : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${src.startsWith("/") ? "" : "/"}${src}`;
 // }
 
-// // ─── Safe image with fallback icon ──────────────────────────────────────────
+// // --- Safe image with fallback icon ------------------------------------------
 // function SafeImage({ src, alt, ...props }: any) {
 //   const [error, setError] = useState(false);
 //   const resolved = resolveUrl(src);
@@ -44,7 +44,7 @@
 //   );
 // }
 
-// // ─── Circular arc progress (SVG) for subcategory count ──────────────────────
+// // --- Circular arc progress (SVG) for subcategory count ----------------------
 // function ArcProgress({
 //   count,
 //   max = 10,
@@ -108,7 +108,7 @@
 //   );
 // }
 
-// // ─── Gradient palette per category (deterministic from name) ─────────────────
+// // --- Gradient palette per category (deterministic from name) -----------------
 // const PALETTES = [
 //   { from: "#1a1a2e", via: "#16213e", to: "#0f3460", accent: "#e94560" },
 //   { from: "#0d1b2a", via: "#1b2a3f", to: "#243b55", accent: "#f5a623" },
@@ -124,7 +124,7 @@
 //   return PALETTES[Math.abs(hash) % PALETTES.length];
 // }
 
-// // ─── Props ────────────────────────────────────────────────────────────────────
+// // --- Props --------------------------------------------------------------------
 // interface CategoryCardProps {
 //   category: Category & { levelText?: string };
 //   onClick?: () => void;
@@ -242,7 +242,7 @@
 //   );
 // }
 
-// // ─── Small action button ─────────────────────────────────────────────────────
+// // --- Small action button -----------------------------------------------------
 // function ActionBtn({
 //   icon,
 //   title,
@@ -317,7 +317,7 @@
 //         minHeight: "230px",
 //       }}
 //     >
-//       {/* ── Noise grain texture overlay ── */}
+//       {/* -- Noise grain texture overlay -- */}
 //       <div
 //         className="absolute inset-0 pointer-events-none opacity-[0.035]"
 //         style={{
@@ -326,7 +326,7 @@
 //         }}
 //       />
 
-//       {/* ── Shimmer sweep (signature element) ── */}
+//       {/* -- Shimmer sweep (signature element) -- */}
 //       <motion.div
 //         initial={{ x: "-130%", skewX: -12 }}
 //         animate={hovered ? { x: "220%" } : { x: "-130%" }}
@@ -338,7 +338,7 @@
 //         }}
 //       />
 
-//       {/* ── Radial glow at top-right ── */}
+//       {/* -- Radial glow at top-right -- */}
 //       <div
 //         className="absolute -top-12 -right-12 h-40 w-40 rounded-full pointer-events-none"
 //         style={{
@@ -346,7 +346,7 @@
 //         }}
 //       />
 
-//       {/* ── Top row: chip icon + actions ── */}
+//       {/* -- Top row: chip icon + actions -- */}
 //       <div className="relative z-20 flex items-start justify-between p-4 pb-0">
 //         {/* EMV chip style icon */}
 //         <div
@@ -381,7 +381,7 @@
 //         </AnimatePresence>
 //       </div>
 
-//       {/* ── Central medallion image ── */}
+//       {/* -- Central medallion image -- */}
 //       <div className="relative z-20 flex justify-center py-3">
 //         <div className="relative">
 //           {/* Outer glow ring */}
@@ -416,7 +416,7 @@
 //         </div>
 //       </div>
 
-//       {/* ── Name + slug ── */}
+//       {/* -- Name + slug -- */}
 //       <div className="relative z-20 flex flex-col items-center text-center px-4 gap-1">
 //         <h3 className="text-sm font-black text-white leading-tight line-clamp-1 tracking-tight">
 //           {category.name}
@@ -427,7 +427,7 @@
 //         </div>
 //       </div>
 
-//       {/* ── Bottom: Subcategory section ── */}
+//       {/* -- Bottom: Subcategory section -- */}
 //       <div className="relative z-20 mt-auto p-4 pt-3">
 //         {hasChildren ? (
 //           <div
@@ -545,7 +545,7 @@ import { cn } from "@/lib/utils";
 import type { Category } from "@/modeles/categories";
 import { mediaUrl } from "@/lib/mediaUrl";
 
-/* ─── Composant image sécurisé (fallback si erreur) ─── */
+/* --- Composant image sécurisé (fallback si erreur) --- */
 function SafeImage({ src, alt, className }: { src?: string | null; alt: string; className?: string }) {
   const [error, setError] = useState(false);
   const resolvedSrc = mediaUrl(src);
@@ -567,7 +567,7 @@ function SafeImage({ src, alt, className }: { src?: string | null; alt: string; 
   );
 }
 
-/* ─── Palette de couleurs pour les accents ─── */
+/* --- Palette de couleurs pour les accents --- */
 const PALETTES = [
   { from: "#0f172a", to: "#1e3a8a", accent: "#3b82f6" },
   { from: "#0f172a", to: "#0d9488", accent: "#14b8a6" },
@@ -583,7 +583,7 @@ function getPalette(name: string) {
   return PALETTES[Math.abs(hash) % PALETTES.length];
 }
 
-/* ─── Types ─── */
+/* --- Types --- */
 interface CategoryCardProps {
   category: Category & { levelText?: string };
   onClick?: () => void;
@@ -777,7 +777,7 @@ function GridCard({ category, onClick, onEdit, onDelete, onAddSubcategory }: Omi
   );
 }
 
-/* ─── Bouton d'action miniature ─── */
+/* --- Bouton d'action miniature --- */
 function ActionBtn({ icon, title, onClick }: { icon: React.ReactNode; title: string; onClick: (e: React.MouseEvent) => void }) {
   return (
     <motion.button
@@ -792,7 +792,7 @@ function ActionBtn({ icon, title, onClick }: { icon: React.ReactNode; title: str
   );
 }
 
-/* ─── Export principal ─── */
+/* --- Export principal --- */
 export default function CategoryCard({ isGridView = true, ...props }: CategoryCardProps) {
   return isGridView ? <GridCard {...props} /> : <ListCard {...props} />;
 }

@@ -1,8 +1,8 @@
-// app/admin/components/fidelites/LoyaltySection.tsx
-"use client";
+﻿"use client";
+
 import { useEffect, useState, useMemo } from "react";
-import { motion } from "framer-motion";
-import { Star, Crown, Search, LayoutGrid, List, Settings } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Star, Crown, Search, LayoutGrid, List, Settings, Gift, RefreshCcw, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import {
@@ -14,14 +14,14 @@ import {
 import type { LoyaltyProfile, Tier } from "@/modeles/fidelites";
 import { computeLoyaltyStats } from "@/modeles/fidelites";
 
-// ─── Composants spéciaux partagés ────────────────────────────────────────────
+// --- Composants spéciaux partagés --------------------------------------------
 import Toast from "@/components/notifications/Toast";
 import LoadingKalvin from "@/components/special/loadingKalvin";
 import EmptyState from "@/components/special/EmptyState";
 import ErrorState from "@/components/special/ErrorState";
 import ConfirmDialog from "@/components/special/ConfirmDialog";
 
-// ─── Sous-composants fidélité ────────────────────────────────────────────────
+// --- Sous-composants fidélité ------------------------------------------------
 import { LoyaltyStatsBar } from "./components/LoyaltyStatsBar";
 import { LoyaltyProfileGrid } from "./components/LoyaltyProfileGrid";
 import { LoyaltyProfileDetailModal } from "./components/LoyaltyProfileDetailModal";
@@ -29,8 +29,9 @@ import { LoyaltyAdjustPointsModal } from "./components/LoyaltyAdjustPointsModal"
 import { LoyaltyTiersPanel } from "./components/LoyaltyTiersPanel";
 import { LoyaltyTierFormModal } from "./components/LoyaltyTierFormModal";
 import { LoyaltyPointValuePanel } from "./components/LoyaltyPointValuePanel";
+import { LoyaltyRewardRulePanel } from "./components/LoyaltyRewardRulePanel";
 
-type TabType = "profiles" | "tiers" | "config";
+type TabType = "profiles" | "tiers" | "rewards" | "config";
 
 export default function LoyaltySection() {
     const [tab, setTab] = useState<TabType>("profiles");
@@ -62,7 +63,7 @@ export default function LoyaltySection() {
     const [toast, setToast] = useState<{ show: boolean; type: "success" | "error"; message: string }>
         ({ show: false, type: "success", message: "" });
 
-    // ── Chargement ───────────────────────────────────────────────────────────
+    // -- Chargement -----------------------------------------------------------
     const loadData = async () => {
         setLoading(true);
         setError(null);
@@ -87,10 +88,10 @@ export default function LoyaltySection() {
 
     useEffect(() => { loadData(); }, []);
 
-    // ── Stats ────────────────────────────────────────────────────────────────
+    // -- Stats ----------------------------------------------------------------
     const stats = useMemo(() => computeLoyaltyStats(profiles), [profiles]);
 
-    // ── Filtrage ─────────────────────────────────────────────────────────────
+    // -- Filtrage -------------------------------------------------------------
     const filteredProfiles = useMemo(() => {
         if (!search) return profiles;
         const q = search.toLowerCase();
@@ -100,7 +101,7 @@ export default function LoyaltySection() {
         );
     }, [profiles, search]);
 
-    // ── Handler suppression ───────────────────────────────────────────────────
+    // -- Handler suppression ---------------------------------------------------
     const handleDelete = async () => {
         if (!deleteConfirm) return;
         setDeleting(true);
@@ -130,14 +131,26 @@ export default function LoyaltySection() {
         setDeleteTierConfirm(null);
     };
 
-    // ── Erreur totale ─────────────────────────────────────────────────────────
+    // -- Erreur totale ---------------------------------------------------------
     if (error && !profiles.length) {
-        return <ErrorState message={error} onRetry={loadData} />;
+        return (
+            <div className="flex h-64 items-center justify-center">
+                <div className="flex flex-col items-center gap-4 text-center">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-500">
+                        <RefreshCcw className="h-8 w-8" />
+                    </div>
+                    <p className="font-bold text-[#0F2D20]">{error}</p>
+                    <button onClick={loadData} className="rounded-xl bg-[#0F2D20] cursor-pointer px-6 py-2 text-sm font-bold text-gray-100 transition-all hover:bg-[#1a4a30]">
+                        Réessayer
+                    </button>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className="space-y-8 px-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* ── Toast ─────────────────────────────────────────────────────── */}
+        <div className="space-y-10 px-8 py-8 xl:px-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* -- Toast ------------------------------------------------------- */}
             <Toast
                 show={toast.show}
                 type={toast.type}
@@ -145,7 +158,7 @@ export default function LoyaltySection() {
                 onClose={() => setToast(p => ({ ...p, show: false }))}
             />
 
-            {/* ── Confirm suppression ───────────────────────────────────────── */}
+            {/* -- Confirm suppression ----------------------------------------- */}
             <ConfirmDialog
                 isOpen={!!deleteConfirm}
                 onCancel={() => setDeleteConfirm(null)}
@@ -157,7 +170,7 @@ export default function LoyaltySection() {
                 isLoading={deleting}
             />
 
-            {/* ── Confirm suppression Palier ───────────────────────────────────────── */}
+            {/* -- Confirm suppression Palier ----------------------------------------- */}
             <ConfirmDialog
                 isOpen={!!deleteTierConfirm}
                 onCancel={() => setDeleteTierConfirm(null)}
@@ -169,7 +182,7 @@ export default function LoyaltySection() {
                 isLoading={deleting}
             />
 
-            {/* ── Formulaire Palier ───────────────────────────────────────── */}
+            {/* -- Formulaire Palier ----------------------------------------- */}
             <LoyaltyTierFormModal
                 open={tierFormOpen}
                 onClose={() => setTierFormOpen(false)}
@@ -181,7 +194,7 @@ export default function LoyaltySection() {
                 }}
             />
 
-            {/* ── Modales ───────────────────────────────────────────────────── */}
+            {/* -- Modales ----------------------------------------------------- */}
             <LoyaltyProfileDetailModal
                 profile={detailProfile}
                 tiers={tiers}
@@ -206,11 +219,37 @@ export default function LoyaltySection() {
                 onSuccess={loadData}
             />
 
+            {/* -- En-tête avec effet premium -- */}
+            {/* <motion.div
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="flex flex-col gap-2 relative overflow-hidden rounded-[2.5rem] bg-[#0F2D20] p-10 md:p-12 shadow-2xl"
+            >
+                <div className="absolute inset-0 opacity-10 pointer-events-none mix-blend-overlay" style={{ backgroundImage: "url('/noise.png')" }}></div>
+                <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-[#C9963A]/20 blur-3xl pointer-events-none" />
+                <div className="absolute -right-10 -bottom-10 h-72 w-72 rounded-full bg-[#1a4a30]/80 blur-3xl pointer-events-none" />
+
+                <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 backdrop-blur-md">
+                            <Crown className="h-4 w-4 text-[#C9963A]" />
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9963A]">Fidélité & Récompenses</span>
+                        </div>
+                        <h1 className="text-4xl md:text-5xl font-black text-gray-100 tracking-tight">
+                            Atelier du <span className="text-[#C9963A]">Terroir</span>
+                        </h1>
+                        <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-gray-100/70 font-medium">
+                            Pilotez l'intégralité du programme de fidélité, définissez vos récompenses sur mesure, ajustez les paliers VIP et administrez les points de vos clients avec une précision absolue.
+                        </p>
+                    </div>
+                </div>
+            </motion.div> */}
 
 
 
 
-            {/* ── En-tête avec effet premium ── */}
+            {/* -- En-tête avec effet premium -- */}
             <motion.div
                 initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -230,8 +269,8 @@ export default function LoyaltySection() {
                             backgroundClip: "text",
                         }}
                     >
-                        <Crown className="h-8 w-8 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
-                        Programme de Fidélité
+                        <Crown className="h-10 w-10 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
+                        Points de Fidélité
                     </h2>
 
                     {/* Kicker discret en lettres espacées doré, signature premium */}
@@ -239,7 +278,7 @@ export default function LoyaltySection() {
                         className="block text-[11px] font-semibold uppercase tracking-[0.35em] mt-2 mb-2"
                         style={{ color: "#B8924A", opacity: 0.85 }}
                     >
-                        Supervisez les points de vos clients, analysez la répartition par paliers.
+                        Pilotez l'intégralité du programme de fidélité.
                     </span>
 
                     {/* Gradient SVG caché pour l'icône */}
@@ -272,33 +311,27 @@ export default function LoyaltySection() {
                 </div>
             </motion.div>
 
-
-
-
-
-
-
-
-
-
-
-            {/* ── Stats globales ────────────────────────────────────────────── */}
+            {/* -- Stats globales ---------------------------------------------- */}
             <LoyaltyStatsBar stats={stats} />
 
-            {/* ── Onglets ───────────────────────────────────────────────────── */}
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-surface-elevated p-2 rounded-2xl border border-border shadow-sm">
-                <div className="flex gap-2 w-full sm:w-auto">
+            {/* -- Navigation (Onglets) ----------------------------------------------------- */}
+            <div className="flex flex-col xl:flex-row gap-5 items-center justify-between rounded-3xl bg-white p-3 shadow-[0_8px_30px_rgba(15,45,32,0.04)] border border-[#dde5d8]">
+                <div className="flex w-full xl:w-auto gap-2 overflow-x-auto pb-1 xl:pb-0 hide-scrollbar">
                     {([
-                        { key: "profiles", label: "Profils clients", icon: <Star className="h-4 w-4" /> },
-                        { key: "tiers", label: "Paliers & Avantages", icon: <Crown className="h-4 w-4" /> },
-                        { key: "config", label: "Valeur des Points", icon: <Settings className="h-4 w-4" /> },
+                        { key: "profiles", label: "Profils Clients", icon: <Star className="h-4 w-4" /> },
+                        { key: "tiers", label: "Paliers VIP", icon: <Crown className="h-4 w-4" /> },
+                        { key: "rewards", label: "Règles & Bénéfices", icon: <Gift className="h-4 w-4" /> },
+                        { key: "config", label: "Taux de Conversion", icon: <Settings className="h-4 w-4" /> },
+
                     ] as const).map(t => (
                         <button
                             key={t.key}
                             onClick={() => setTab(t.key)}
                             className={cn(
-                                "flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all",
-                                tab === t.key ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-surface-alt hover:text-foreground"
+                                "flex-shrink-0 flex items-center cursor-pointer justify-center gap-2.5 rounded-2xl px-6 py-3.5 text-[13px] font-bold tracking-wide uppercase transition-all duration-300",
+                                tab === t.key
+                                    ? "bg-[#0F2D20] text-gray-100 shadow-[0_8px_20px_rgba(15,45,32,0.2)]"
+                                    : "text-[#6b7a65] hover:bg-[#f8faf6] hover:text-[#0F2D20]"
                             )}
                         >
                             {t.icon} {t.label}
@@ -306,80 +339,105 @@ export default function LoyaltySection() {
                     ))}
                 </div>
 
+
                 {tab === "profiles" && (
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <div className="relative w-full sm:w-64 shrink-0">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <div className="flex items-center gap-3 w-full xl:w-auto shrink-0">
+                        <div className="relative flex-1 xl:w-72">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8a9685]" />
                             <input
                                 type="text"
-                                placeholder="Rechercher..."
+                                placeholder="Rechercher un profil..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="h-10 w-full rounded-xl border border-border bg-surface pl-10 pr-4 text-sm font-medium outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
+                                className="h-12 w-full rounded-2xl border-2 border-[#f0f3ed] bg-[#f8faf6] pl-11 pr-4 text-sm font-semibold text-[#0F2D20] outline-none transition-all placeholder:text-[#8a9685] focus:border-[#C9963A] focus:bg-white"
                             />
                         </div>
-                        <div className="flex bg-surface-alt rounded-lg p-1 border border-border">
+
+                        <div className="flex items-center gap-1 bg-[#f8faf6] rounded-2xl p-1.5 border-2 border-[#f0f3ed]">
+
                             <button
                                 onClick={() => setViewMode("grid")}
                                 className={cn(
-                                    "p-1.5 rounded-md transition-colors",
-                                    viewMode === "grid" ? "bg-surface shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                                    "flex h-9 w-10 items-center cursor-pointer justify-center rounded-xl transition-all duration-300",
+                                    viewMode === "grid" ? "bg-white text-[#0F2D20] shadow-sm" : "text-[#8a9685] hover:text-[#0F2D20]"
                                 )}
-                                title="Vue Grille"
                             >
                                 <LayoutGrid className="h-4 w-4" />
                             </button>
+
                             <button
                                 onClick={() => setViewMode("list")}
                                 className={cn(
-                                    "p-1.5 rounded-md transition-colors",
-                                    viewMode === "list" ? "bg-surface shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                                    "flex h-9 w-10 items-center cursor-pointer justify-center rounded-xl transition-all duration-300",
+                                    viewMode === "list" ? "bg-white text-[#0F2D20] shadow-sm" : "text-[#8a9685] hover:text-[#0F2D20]"
                                 )}
-                                title="Vue Liste"
                             >
                                 <List className="h-4 w-4" />
                             </button>
+
                         </div>
+
                     </div>
                 )}
             </div>
 
-            {/* ── Contenu ───────────────────────────────────────────────────── */}
-            {loading ? (
-                <LoadingKalvin message="Chargement des utilisateurs.." />
-            ) : tab === "profiles" ? (
-                filteredProfiles.length === 0 ? (
-                    <EmptyState
-                        title="Aucun profil de fidélité"
-                        description={search ? `Aucun résultat pour "${search}".` : "Il n'y a pas encore de clients inscrits au programme de fidélité."}
-                        icon={Star}
-                    />
-                ) : (
-                    <LoyaltyProfileGrid
-                        profiles={filteredProfiles}
-                        tiers={tiers}
-                        onView={setDetailProfile}
-                        onAdjust={setAdjustProfile}
-                        viewMode={viewMode}
-                    />
-                )
-            ) : tab === "tiers" ? (
-                <div className="max-w-4xl">
-                    <LoyaltyTiersPanel
-                        tiers={tiers}
-                        isAdmin={true}
-                        onAdd={() => { setEditingTier(null); setTierFormOpen(true); }}
-                        onEdit={(tier) => { setEditingTier(tier); setTierFormOpen(true); }}
-                        onDelete={(tier) => setDeleteTierConfirm(tier)}
-                    />
-                </div>
-            ) : (
-                <div className="max-w-2xl">
-                    <LoyaltyPointValuePanel
-                        onToast={(type, message) => setToast({ show: true, type, message })}
-                    />
-                </div>
-            )}
+            {/* -- Contenu Principal ----------------------------------------------------- */}
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={tab}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    {loading ? (
+                        <div className="flex h-64 items-center justify-center">
+                            <div className="flex flex-col items-center gap-4">
+                                <Loader2 className="h-10 w-10 animate-spin text-[#C9963A]" />
+                                <p className="text-sm font-semibold tracking-widest text-[#8a9685] uppercase">Chargement des données...</p>
+                            </div>
+                        </div>
+                    ) : tab === "profiles" ? (
+                        filteredProfiles.length === 0 ? (
+                            <EmptyState
+                                title="Aucun profil de fidélité"
+                                description={search ? `Aucun résultat pour "${search}".` : "Il n'y a pas encore de clients inscrits au programme de fidélité."}
+                                icon={Star}
+                            />
+                        ) : (
+                            <LoyaltyProfileGrid
+                                profiles={filteredProfiles}
+                                tiers={tiers}
+                                onView={setDetailProfile}
+                                onAdjust={setAdjustProfile}
+                                viewMode={viewMode}
+                            />
+                        )
+                    ) : tab === "tiers" ? (
+                        <div className="mx-auto max-w-5xl">
+                            <LoyaltyTiersPanel
+                                tiers={tiers}
+                                isAdmin={true}
+                                onAdd={() => { setEditingTier(null); setTierFormOpen(true); }}
+                                onEdit={(tier) => { setEditingTier(tier); setTierFormOpen(true); }}
+                                onDelete={(tier) => setDeleteTierConfirm(tier)}
+                            />
+                        </div>
+                    ) : tab === "rewards" ? (
+                        <div className="mx-auto max-w-5xl">
+                            <LoyaltyRewardRulePanel
+                                onToast={(type, message) => setToast({ show: true, type, message })}
+                            />
+                        </div>
+                    ) : (
+                        <div className="mx-auto max-w-3xl">
+                            <LoyaltyPointValuePanel
+                                onToast={(type, message) => setToast({ show: true, type, message })}
+                            />
+                        </div>
+                    )}
+                </motion.div>
+            </AnimatePresence>
         </div>
     );
 }

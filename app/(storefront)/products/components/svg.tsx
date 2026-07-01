@@ -1,4 +1,4 @@
-
+﻿
 // "use client";
 
 // import { useEffect, useMemo, useState } from "react";
@@ -633,14 +633,14 @@
 // /**
 //  * ProductDetailClient — Page de détail produit connectée au backend Django DRF
 //  *
-//  * ┌─────────────────────────────────────────────────────────────────────────────┐
+//  * ┌-----------------------------------------------------------------------------┐
 //  * │  Design System Kalvin — Premium Luxury Edition                              │
-//  * │  ─────────────────────────────────────────────────────────────────────────  │
+//  * │  -------------------------------------------------------------------------  │
 //  * │  Palette   : Forêt #1f4d3f · Or #c9a96e · Ambre #8b5e34 · Ivoire #faf7f2  │
 //  * │  Layout    : Galerie sticky gauche · Panel info scrollable droite           │
 //  * │  Motion    : Entrance stagger · Crossfade images · Spring modal             │
 //  * │  Signature : Filet or sous le titre + galerie sticky + modale glassmorphic  │
-//  * └─────────────────────────────────────────────────────────────────────────────┘
+//  * └-----------------------------------------------------------------------------┘
 //  *
 //  * Workflow :
 //  *  - Stratégie 1 : GET /api/v1/catalog/products/?slug=... (prioritaire)
@@ -787,7 +787,7 @@
 
 // /* ═══════════════════════════════════════════════════════════════════════════════
 //    SOUS-COMPOSANT : PurchaseModal
-//    ─ Modale de configuration d'achat : sélection variante + quantité + confirmation
+//    - Modale de configuration d'achat : sélection variante + quantité + confirmation
 //    ═══════════════════════════════════════════════════════════════════════════════ */
 
 // type PurchaseModalProps = {
@@ -811,21 +811,21 @@
 //   onClose,
 //   onConfirm,
 // }: PurchaseModalProps) {
-//   /* ── Dérivés ─────────────────────────────────────────────────────────────── */
+//   /* -- Dérivés --------------------------------------------------------------- */
 //   const activeVariants = useMemo(
 //     () => (product.variants ?? []).filter((v) => v.is_active),
 //     [product.variants]
 //   );
 //   const hasVariants = activeVariants.length > 0;
 
-//   /* ── État local ──────────────────────────────────────────────────────────── */
+//   /* -- État local ------------------------------------------------------------ */
 //   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
 //     hasVariants ? activeVariants[0] : null
 //   );
 //   const [quantity, setQuantity] = useState(1);
 //   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-//   /* ── Dérivés calculés depuis la sélection ────────────────────────────────── */
+//   /* -- Dérivés calculés depuis la sélection ---------------------------------- */
 //   const currentPrice = selectedVariant?.price ?? (flashSale?.sale_price ?? product.price);
 //   const currentWeight = selectedVariant?.weight_grams ?? product.weight_grams;
 //   const currentStock = selectedVariant ? selectedVariant.stock : product.stock;
@@ -844,7 +844,7 @@
 
 //   return (
 //     <AnimatePresence>
-//       {/* ── Backdrop ──────────────────────────────────────────────────────── */}
+//       {/* -- Backdrop -------------------------------------------------------- */}
 //       <motion.div
 //         key="purchase-backdrop"
 //         initial={{ opacity: 0 }}
@@ -854,7 +854,7 @@
 //         className="fixed inset-0 z-[200] flex items-end justify-center bg-black/55 backdrop-blur-sm sm:items-center sm:p-4"
 //         onClick={onClose}
 //       >
-//         {/* ── Panel modal ───────────────────────────────────────────────── */}
+//         {/* -- Panel modal ------------------------------------------------- */}
 //         <motion.div
 //           key="purchase-modal"
 //           variants={MOTION.modalPanel}
@@ -883,7 +883,7 @@
 //             <X className="h-4 w-4" />
 //           </motion.button>
 
-//           {/* ── En-tête : vignette + identité produit ─────────────────────── */}
+//           {/* -- En-tête : vignette + identité produit ----------------------- */}
 //           <div className="flex shrink-0 items-center gap-4 border-b border-[#f0e8dc] bg-[#faf7f2] px-5 py-4 sm:px-6 sm:py-5">
 //             {/* Vignette produit */}
 //             <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-[#e8dfd0] bg-white shadow-sm">
@@ -919,10 +919,10 @@
 //             </div>
 //           </div>
 
-//           {/* ── Corps scrollable ──────────────────────────────────────────── */}
+//           {/* -- Corps scrollable -------------------------------------------- */}
 //           <div className="space-y-5 overflow-y-auto px-5 py-5 sm:px-6 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[#e8dfd0]">
 
-//             {/* ── Sélecteur de variantes ──────────────────────────────────── */}
+//             {/* -- Sélecteur de variantes ------------------------------------ */}
 //             {hasVariants && (
 //               <div>
 //                 <div className="mb-3 flex items-center gap-2">
@@ -1095,7 +1095,7 @@
 //               </div>
 //             )}
 
-//             {/* ── Bloc prix actif + total ──────────────────────────────────── */}
+//             {/* -- Bloc prix actif + total ------------------------------------ */}
 //             <div className="overflow-hidden rounded-2xl border border-[#e8dfd0] bg-[#faf7f2]">
 //               <div className="flex items-center justify-between px-5 py-4">
 //                 <div>
@@ -1135,7 +1135,7 @@
 //               </div>
 //             </div>
 
-//             {/* ── Sélecteur de quantité ───────────────────────────────────── */}
+//             {/* -- Sélecteur de quantité ------------------------------------- */}
 //             <div>
 //               <label className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#5d6b58]">
 //                 Quantité
@@ -1183,7 +1183,7 @@
 //             </div>
 //           </div>
 
-//           {/* ── Pied de modal : CTA ───────────────────────────────────────── */}
+//           {/* -- Pied de modal : CTA ----------------------------------------- */}
 //           <div className="shrink-0 border-t border-[#f0e8dc] bg-[#faf7f2] px-5 py-4 sm:px-6">
 //             <motion.button
 //               type="button"
@@ -1212,7 +1212,7 @@
 
 // /* ═══════════════════════════════════════════════════════════════════════════════
 //    SOUS-COMPOSANT : RelatedProductCard
-//    ─ Carte produit associé avec hover lift et image zoom
+//    - Carte produit associé avec hover lift et image zoom
 //    ═══════════════════════════════════════════════════════════════════════════════ */
 
 // function RelatedProductCard({ product }: { product: ProductList }) {
@@ -1278,7 +1278,7 @@
 //   const activeProductId = useUIStore((state) => state.activeProductId);
 //   const prefersReducedMotion = useReducedMotion();
 
-//   /* ── État ─────────────────────────────────────────────────────────────────── */
+//   /* -- État ------------------------------------------------------------------- */
 //   const [product, setProduct] = useState<ProductDetail | null>(null);
 //   const [flashSale, setFlashSale] = useState<Soldes | null>(null);
 //   const [loading, setLoading] = useState(true);
@@ -1291,14 +1291,14 @@
 
 //   const addItem = useCartStore((state) => state.addItem);
 
-//   /* ── Toast ────────────────────────────────────────────────────────────────── */
+//   /* -- Toast ------------------------------------------------------------------ */
 //   const [toast, setToast] = useState<{
 //     show: boolean;
 //     type: "success" | "error" | "info";
 //     message: string;
 //   }>({ show: false, type: "info", message: "" });
 
-//   /* ── Chargement du produit ────────────────────────────────────────────────── */
+//   /* -- Chargement du produit -------------------------------------------------- */
 //   useEffect(() => {
 //     let active = true;
 
@@ -1307,7 +1307,7 @@
 //         setLoading(true);
 //         setError(null);
 
-//         // ── Stratégie 1 : par slug (prioritaire) ──────────────────────────
+//         // -- Stratégie 1 : par slug (prioritaire) --------------------------
 //         const slugRes = await getPublicProducts({ slug });
 //         let resolvedProduct: ProductDetail | null = null;
 
@@ -1320,7 +1320,7 @@
 //           }
 //         }
 
-//         // ── Stratégie 2 : fallback par ID ────────────────────────────────
+//         // -- Stratégie 2 : fallback par ID --------------------------------
 //         if (!resolvedProduct) {
 //           const productId = id || activeProductId;
 //           if (productId) {
@@ -1384,7 +1384,7 @@
 //     };
 //   }, [slug]);
 
-//   /* ── Résolution des images ────────────────────────────────────────────────── */
+//   /* -- Résolution des images -------------------------------------------------- */
 //   const images = useMemo(() => {
 //     if (!product) return [];
 //     const gallery = (product.images ?? [])
@@ -1400,7 +1400,7 @@
 //     return resolved ? [resolved] : [];
 //   }, [product]);
 
-//   /* ── Dérivés produit ──────────────────────────────────────────────────────── */
+//   /* -- Dérivés produit -------------------------------------------------------- */
 //   const categoryName = product?.category?.name || "Catalogue";
 //   const displayPrice = flashSale?.sale_price ?? product?.price ?? "0";
 //   const comparePrice = flashSale ? product?.price : null;
@@ -1420,7 +1420,7 @@
 //     return { min: Math.min(...prices), max: Math.max(...prices) };
 //   }, [activeVariants]);
 
-//   /* ── Handler d'ajout au panier ───────────────────────────────────────────── */
+//   /* -- Handler d'ajout au panier --------------------------------------------- */
 //   const handleAddToCart = useCallback(
 //     (
 //       variantId: string | null,
@@ -1494,7 +1494,7 @@
 //         />
 //       )}
 
-//       {/* ── Fil d'Ariane ──────────────────────────────────────────────────────── */}
+//       {/* -- Fil d'Ariane -------------------------------------------------------- */}
 //       <div className="border-b border-[#e8dfd0]/60 bg-white/70 backdrop-blur-md">
 //         <div className="mx-auto flex max-w-7xl items-center gap-1.5 px-4 py-3.5 text-xs sm:px-6">
 //           <Link
@@ -1519,14 +1519,14 @@
 
 //       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
 
-//         {/* ── État : chargement ─────────────────────────────────────────────── */}
+//         {/* -- État : chargement ----------------------------------------------- */}
 //         {loading && (
 //           <div className="flex min-h-[60vh] items-center justify-center">
 //             <LoadingSpinner size="lg" variant="luxury" label="Chargement du produit" />
 //           </div>
 //         )}
 
-//         {/* ── État : erreur ou produit manquant ─────────────────────────────── */}
+//         {/* -- État : erreur ou produit manquant ------------------------------- */}
 //         {!loading && (error || !product) && (
 //           <motion.div
 //             variants={MOTION.fadeUp}
@@ -1562,7 +1562,7 @@
 //           </motion.div>
 //         )}
 
-//         {/* ── État : produit chargé ─────────────────────────────────────────── */}
+//         {/* -- État : produit chargé ------------------------------------------- */}
 //         {!loading && !error && product && (
 //           <div className="space-y-16">
 
@@ -1571,9 +1571,9 @@
 //                 ════════════════════════════════════════════════════════════════ */}
 //             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
 
-//               {/* ──────────────────────────────────────────────────────────────
+//               {/* --------------------------------------------------------------
 //                   COLONNE GAUCHE — Galerie d'images (sticky sur desktop)
-//                   ────────────────────────────────────────────────────────────── */}
+//                   -------------------------------------------------------------- */}
 //               <motion.div
 //                 variants={
 //                   !prefersReducedMotion ? MOTION.slideInLeft : undefined
@@ -1582,7 +1582,7 @@
 //                 animate="show"
 //                 className="space-y-4 lg:sticky lg:top-24 lg:self-start"
 //               >
-//                 {/* ── Image principale ──────────────────────────────────── */}
+//                 {/* -- Image principale ------------------------------------ */}
 //                 <div
 //                   className="group relative aspect-square overflow-hidden rounded-3xl border border-[#e8dfd0] bg-white"
 //                   style={{
@@ -1669,7 +1669,7 @@
 //                   )}
 //                 </div>
 
-//                 {/* ── Bande de miniatures ───────────────────────────────── */}
+//                 {/* -- Bande de miniatures --------------------------------- */}
 //                 {images.length > 1 && (
 //                   <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-hide">
 //                     {images.map((img, index) => {
@@ -1722,7 +1722,7 @@
 //                   </div>
 //                 )}
 
-//                 {/* ── Grille des variantes sous la galerie ──────────────── */}
+//                 {/* -- Grille des variantes sous la galerie ---------------- */}
 //                 {activeVariants.length > 0 && (
 //                   <motion.div
 //                     initial={{ opacity: 0, y: 12 }}
@@ -1770,9 +1770,9 @@
 //                 )}
 //               </motion.div>
 
-//               {/* ──────────────────────────────────────────────────────────────
+//               {/* --------------------------------------------------------------
 //                   COLONNE DROITE — Informations produit
-//                   ────────────────────────────────────────────────────────────── */}
+//                   -------------------------------------------------------------- */}
 //               <motion.div
 //                 variants={
 //                   !prefersReducedMotion ? MOTION.slideInRight : undefined
@@ -1781,7 +1781,7 @@
 //                 animate="show"
 //                 className="space-y-7"
 //               >
-//                 {/* ── Catégorie + Titre + Ligne or (signature) ─────────── */}
+//                 {/* -- Catégorie + Titre + Ligne or (signature) ----------- */}
 //                 <div>
 //                   <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#c9a96e]">
 //                     {categoryName}
@@ -1797,7 +1797,7 @@
 //                     transition={{ delay: 0.5, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
 //                   />
 
-//                   {/* ── Étoiles de notation + favoris ──────────────────── */}
+//                   {/* -- Étoiles de notation + favoris -------------------- */}
 //                   <div className="mt-4 flex flex-wrap items-center gap-3">
 //                     <div className="flex items-center gap-0.5">
 //                       {[1, 2, 3, 4, 5].map((star) => (
@@ -1830,7 +1830,7 @@
 //                   </div>
 //                 </div>
 
-//                 {/* ── Bloc prix ─────────────────────────────────────────── */}
+//                 {/* -- Bloc prix ------------------------------------------- */}
 //                 <div className="overflow-hidden rounded-2xl border border-[#e8dfd0] bg-white">
 //                   <div className="px-5 py-5">
 //                     {variantPriceRange ? (
@@ -1879,7 +1879,7 @@
 //                   </div>
 //                 </div>
 
-//                 {/* ── Description produit ───────────────────────────────── */}
+//                 {/* -- Description produit --------------------------------- */}
 //                 {product.description && (
 //                   <div>
 //                     <h2 className="mb-2.5 text-[10px] font-bold uppercase tracking-[0.24em] text-[#5d6b58]">
@@ -1891,7 +1891,7 @@
 //                   </div>
 //                 )}
 
-//                 {/* ── Grille d'informations produit ─────────────────────── */}
+//                 {/* -- Grille d'informations produit ----------------------- */}
 //                 <div className="grid grid-cols-2 gap-2.5">
 //                   {/* Stock */}
 //                   <div className="rounded-2xl border border-[#e8dfd0] bg-white px-4 py-3.5">
@@ -1951,7 +1951,7 @@
 //                   </div>
 //                 </div>
 
-//                 {/* ── Bouton CTA principal ──────────────────────────────── */}
+//                 {/* -- Bouton CTA principal -------------------------------- */}
 //                 <motion.button
 //                   type="button"
 //                   disabled={isOutOfStock}
@@ -1979,7 +1979,7 @@
 //                     : "Configurer et ajouter au panier"}
 //                 </motion.button>
 
-//                 {/* ── Garanties ─────────────────────────────────────────── */}
+//                 {/* -- Garanties ------------------------------------------- */}
 //                 <div className="grid grid-cols-3 gap-2.5">
 //                   {(
 //                     [

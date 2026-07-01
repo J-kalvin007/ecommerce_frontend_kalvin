@@ -1,9 +1,9 @@
-
+﻿
 // app/admin/components/produits/productsUtils.ts
 // Types et utilitaires pour la gestion des produits admin
 // (types absorbés depuis types.ts supprimé)
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// --- Types --------------------------------------------------------------------
 
 export interface ProductFormState {
   name: string;
@@ -37,7 +37,7 @@ export interface UploadedProductImage {
   is_primary?: boolean;
 }
 
-// ─── Constantes ───────────────────────────────────────────────────────────────
+// --- Constantes ---------------------------------------------------------------
 
 export const INITIAL_FORM: ProductFormState = {
   name: "",
@@ -54,7 +54,7 @@ export const INITIAL_FORM: ProductFormState = {
   alt_text: "",
 };
 
-// ─── Utilitaires ──────────────────────────────────────────────────────────────
+// --- Utilitaires --------------------------------------------------------------
 
 export const slugify = (value: string) =>
   value

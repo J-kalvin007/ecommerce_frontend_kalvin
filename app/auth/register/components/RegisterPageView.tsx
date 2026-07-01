@@ -1,15 +1,15 @@
-"use client";
+﻿"use client";
 
 import { Suspense } from "react";
 import { RegisterForm } from "./RegisterForm";
 import { ContainerFormAuth } from "@/app/auth/components/ContainerFormAuth";
 
-/* ─────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------------
    RegisterPageView
    The RegisterForm is self-contained (own left/right layout).
    ContainerFormAuth adds the full-screen atmosphere layer:
    floating leaves, produce images and gradient background.
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 export function RegisterPageView() {
   return (
     <ContainerFormAuth>

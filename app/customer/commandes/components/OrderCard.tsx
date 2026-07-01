@@ -1,6 +1,6 @@
-/**
+﻿/**
  * OrderCard.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Carte de commande premium pour la liste des commandes client.
  *
  * Affiche : référence, statut, date, montant, nombre d'articles,
@@ -16,7 +16,7 @@ import { Package, ChevronRight, Calendar, ShoppingBag, MapPin } from "lucide-rea
 import type { OrderList } from "@/modeles/commandes";
 import OrderStatusBadge from "./OrderStatusBadge";
 
-/* ── Utilitaires ────────────────────────────────────────────────────────── */
+/* -- Utilitaires ---------------------------------------------------------- */
 
 /**
  * Formate un montant string (ex: "35900") en devise FCFA.
@@ -45,7 +45,7 @@ function formatDate(dateStr: string): string {
   }
 }
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface OrderCardProps {
   order: OrderList;
   index: number;

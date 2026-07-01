@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Save, MapPin, DollarSign } from "lucide-react";
 import type { FraisLivraison } from "@/modeles/livraisons";
 import { createFraisLivraison, partialUpdateFraisLivraison } from "@/fonctions_api/livraisons.api";
+import CarteGoogleMaps from "@/app/(storefront)/commandes/components/CarteGoogleMaps";
 
 interface FraisLivraisonModalProps {
   isOpen: boolean;
@@ -18,6 +19,18 @@ export default function FraisLivraisonModal({ isOpen, onClose, fraisConfig, onSu
   const [coordonneeAdmin, setCoordonneeAdmin] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isMapOpen, setIsMapOpen] = useState(false);
+
+  const parseCoords = (coordsStr: string) => {
+    if (!coordsStr) return null;
+    const parts = coordsStr.split(",");
+    if (parts.length === 2) {
+      const lat = parseFloat(parts[0].trim());
+      const lng = parseFloat(parts[1].trim());
+      if (!isNaN(lat) && !isNaN(lng)) return { lat, lng };
+    }
+    return null;
+  };
 
   useEffect(() => {
     if (fraisConfig) {
@@ -112,18 +125,28 @@ export default function FraisLivraisonModal({ isOpen, onClose, fraisConfig, onSu
 
               <div className="space-y-1.5">
                 <label className="text-[13px] font-bold text-[#1f241c]">Coordonnées Admin (Point de départ)</label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A9080]" />
-                  <input
-                    type="text"
-                    required
-                    value={coordonneeAdmin}
-                    onChange={(e) => setCoordonneeAdmin(e.target.value)}
-                    className="w-full rounded-xl border border-[#E8E3D8] py-2.5 pl-9 pr-3 text-[14px] outline-none transition-colors focus:border-[#1f4d3f] focus:ring-1 focus:ring-[#1f4d3f]/20"
-                    placeholder="Ex: Lomé, Togo ou Lat/Lng"
-                  />
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A9080]" />
+                    <input
+                      type="text"
+                      required
+                      value={coordonneeAdmin}
+                      onChange={(e) => setCoordonneeAdmin(e.target.value)}
+                      className="w-full rounded-xl border border-[#E8E3D8] py-2.5 pl-9 pr-3 text-[14px] outline-none transition-colors focus:border-[#1f4d3f] focus:ring-1 focus:ring-[#1f4d3f]/20"
+                      placeholder="Ex: 6.1375, 1.2123"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsMapOpen(true)}
+                    className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#1f4d3f]/10 px-4 text-[13px] font-bold text-[#1f4d3f] transition-colors hover:bg-[#1f4d3f]/20"
+                  >
+                    <MapPin className="h-4 w-4" />
+                    Carte
+                  </button>
                 </div>
-                <p className="text-[11px] text-[#8A9080]">Utilisé pour calculer les distances de livraison si activé.</p>
+                <p className="text-[11px] text-[#8A9080]">Utilisé pour calculer les distances de livraison si activé. (Format: latitude, longitude)</p>
               </div>
 
               <div className="pt-4 flex justify-end gap-3">
@@ -147,6 +170,16 @@ export default function FraisLivraisonModal({ isOpen, onClose, fraisConfig, onSu
           </motion.div>
         </div>
       )}
+      
+      <CarteGoogleMaps
+        open={isMapOpen}
+        initialCoords={parseCoords(coordonneeAdmin)}
+        onConfirm={(lat, lng) => {
+          setCoordonneeAdmin(`${lat}, ${lng}`);
+          setIsMapOpen(false);
+        }}
+        onClose={() => setIsMapOpen(false)}
+      />
     </AnimatePresence>
   );
 }

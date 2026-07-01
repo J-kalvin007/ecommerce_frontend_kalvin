@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PromotionsClient - Offres, ventes flash et reductions
  * @module app/promotions/PromotionsClient
  */
@@ -57,7 +57,7 @@ export default function PromotionsClient() {
   return (
     <div className="page-transition">
 
-      {/* ── Hero ─────────────────────────────────────────── */}
+      {/* -- Hero ------------------------------------------- */}
       <section className="bg-primary py-20 text-white">
         <div className="mx-auto max-w-[var(--content-max-width)] px-[var(--spacing-page-x)] text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white/80 backdrop-blur-sm">
@@ -73,10 +73,10 @@ export default function PromotionsClient() {
         </div>
       </section>
 
-      {/* ── Page body ────────────────────────────────────── */}
+      {/* -- Page body -------------------------------------- */}
       <div className="mx-auto max-w-[var(--content-max-width)] px-[var(--spacing-page-x)] py-14">
 
-        {/* ── Offres actives (spotlight) ───────────────── */}
+        {/* -- Offres actives (spotlight) ----------------- */}
         <section className="mb-14">
           <div className="mb-7 flex items-center gap-3">
             <Tag className="h-4.5 w-4.5 text-primary" />
@@ -127,7 +127,7 @@ export default function PromotionsClient() {
           )}
         </section>
 
-        {/* ── Produits en promotion (grid) ─────────────── */}
+        {/* -- Produits en promotion (grid) --------------- */}
         <section>
           <div className="mb-7 flex items-center gap-3">
             <Zap className="h-4.5 w-4.5 text-primary" />
@@ -212,7 +212,7 @@ export default function PromotionsClient() {
           )}
         </section>
 
-        {/* ── Fidélité CTA ─────────────────────────────── */}
+        {/* -- Fidélité CTA ------------------------------- */}
         <div className="mt-14 rounded-2xl border border-primary/15 bg-primary/5 px-8 py-10 text-center">
           <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-primary/20 bg-primary/10">
             <Star className="h-5 w-5 text-primary" />
@@ -236,7 +236,7 @@ export default function PromotionsClient() {
   );
 }
 
-/* ── Shared micro-components ─────────────────────────────── */
+/* -- Shared micro-components ------------------------------- */
 
 function LoadingPlaceholder({ label }: { label: string }) {
   return (

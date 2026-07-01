@@ -1,4 +1,4 @@
-/**
+﻿/**
  * WalletSection — Interface Admin de gestion des Wallets & Paiements
  *
  * Page principale du module financier. Elle orchestre :
@@ -293,9 +293,9 @@ export default function WalletSection() {
      ============================================================ */
   return (
     <div className="min-h-full px-20 space-y-6 bg-white dark:bg-transparent p-1">
-      {/* ─────────────────────────────────────────────────────── */}
+      {/* ------------------------------------------------------- */}
       {/* SECTION 1 : En-tête de page                           */}
-      {/* ─────────────────────────────────────────────────────── */}
+      {/* ------------------------------------------------------- */}
       <motion.div
         variants={fadeUp}
         initial="hidden"
@@ -310,7 +310,7 @@ export default function WalletSection() {
 
 
 
-        {/* ── En-tête avec effet premium ── */}
+        {/* -- En-tête avec effet premium -- */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -417,9 +417,9 @@ export default function WalletSection() {
         </div>
       </motion.div>
 
-      {/* ─────────────────────────────────────────────────────── */}
+      {/* ------------------------------------------------------- */}
       {/* SECTION 2 : Cartes KPI                                */}
-      {/* ─────────────────────────────────────────────────────── */}
+      {/* ------------------------------------------------------- */}
       <motion.div
         variants={staggerContainer}
         initial="hidden"
@@ -472,9 +472,9 @@ export default function WalletSection() {
         })}
       </motion.div>
 
-      {/* ─────────────────────────────────────────────────────── */}
+      {/* ------------------------------------------------------- */}
       {/* SECTION 3 : Onglets de navigation                     */}
-      {/* ─────────────────────────────────────────────────────── */}
+      {/* ------------------------------------------------------- */}
       <motion.div variants={fadeUp} initial="hidden" animate="visible" className="flex gap-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-1 w-fit">
         {TABS.map((tab) => {
           const Icon = tab.icon;
@@ -511,9 +511,9 @@ export default function WalletSection() {
         })}
       </motion.div>
 
-      {/* ─────────────────────────────────────────────────────── */}
+      {/* ------------------------------------------------------- */}
       {/* SECTION 4 : Contenu principal (table selon l'onglet)  */}
-      {/* ─────────────────────────────────────────────────────── */}
+      {/* ------------------------------------------------------- */}
       <AnimatePresence mode="wait">
         {activeTab === "wallets" ? (
           <motion.div
@@ -635,9 +635,9 @@ export default function WalletSection() {
         )}
       </AnimatePresence>
 
-      {/* ─────────────────────────────────────────────────────── */}
+      {/* ------------------------------------------------------- */}
       {/* MODALES                                               */}
-      {/* ─────────────────────────────────────────────────────── */}
+      {/* ------------------------------------------------------- */}
 
       {/* Modale de modification du statut d'un wallet */}
       <WalletStatusModal

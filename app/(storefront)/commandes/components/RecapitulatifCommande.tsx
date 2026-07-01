@@ -1,4 +1,4 @@
-/**
+﻿/**
  * RecapitulatifCommande — Résumé de commande ultra-premium
  *
  * - Design Stripe / Apple avec hiérarchie typographique raffinée
@@ -26,7 +26,7 @@ interface RecapitulatifCommandeProps {
   remiseFidelite: number;
 }
 
-/* ─── Sous-composant : Ligne de récapitulatif ────────────────────────────── */
+/* --- Sous-composant : Ligne de récapitulatif ------------------------------ */
 
 interface LigneProps {
   label: string;
@@ -124,7 +124,7 @@ function Ligne({
   );
 }
 
-/* ─── Composant principal ───────────────────────────────────────────────── */
+/* --- Composant principal ------------------------------------------------- */
 
 export default function RecapitulatifCommande({
   sousTotal,
@@ -162,7 +162,7 @@ export default function RecapitulatifCommande({
       {/* Orbe décorative arrière-plan */}
       <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-[#1f4d3f] opacity-[0.035] blur-3xl" />
 
-      {/* ── En-tête ── */}
+      {/* -- En-tête -- */}
       <div className="relative z-10 flex items-center gap-3 border-b px-5 py-5 sm:px-6" style={{ borderColor: divider }}>
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#1f4d3f]/10">
           <Receipt className="h-4 w-4 text-[#1f4d3f]" />
@@ -177,7 +177,7 @@ export default function RecapitulatifCommande({
         </div>
       </div>
 
-      {/* ── Lignes de détail ── */}
+      {/* -- Lignes de détail -- */}
       <div className="relative z-10 space-y-3.5 px-5 py-5 sm:px-6">
         {/* Sous-total */}
         <Ligne
@@ -268,7 +268,7 @@ export default function RecapitulatifCommande({
         </AnimatePresence>
       </div>
 
-      {/* ── Ligne Total ── */}
+      {/* -- Ligne Total -- */}
       <div
         className="relative z-10 mx-0 overflow-hidden rounded-b-2xl px-5 py-5 sm:px-6"
         style={{

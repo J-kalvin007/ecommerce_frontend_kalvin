@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -39,7 +39,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       `}
     >
 
-      {/* ── Ambient background glow ─────────────────────────────── */}
+      {/* -- Ambient background glow ------------------------------- */}
       <div
         aria-hidden
         className={`
@@ -61,7 +61,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
         `}
       />
 
-      {/* ── Icon block ──────────────────────────────────────────── */}
+      {/* -- Icon block -------------------------------------------- */}
       <motion.div
         initial={{ scale: 0.75, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -98,7 +98,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
         </div>
       </motion.div>
 
-      {/* ── Text ────────────────────────────────────────────────── */}
+      {/* -- Text -------------------------------------------------- */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -119,7 +119,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
         </p>
       </motion.div>
 
-      {/* ── CTA ─────────────────────────────────────────────────── */}
+      {/* -- CTA --------------------------------------------------- */}
       {actionText && onAction && (
 
         <motion.div

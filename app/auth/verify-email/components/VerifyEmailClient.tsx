@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
@@ -19,10 +19,10 @@ import { getVerifyEmailError } from "@/lib/auth-errors";
 import Toast from "@/components/special/Toast";
 import { logoImage } from "@/assets/images";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// --- Types --------------------------------------------------------------------
 type PageState = "verifying" | "success" | "error";
 
-// ─── Animation variants ───────────────────────────────────────────────────────
+// --- Animation variants -------------------------------------------------------
 const leftIn: Variants = {
   hidden: { opacity: 0, x: -32 },
   visible: {
@@ -68,7 +68,7 @@ function FloatingParticle({
   );
 }
 
-// ─── Composant : Icône centrale animée ───────────────────────────────────────
+// --- Composant : Icône centrale animée ---------------------------------------
 function StatusIcon({ state }: { state: PageState }) {
   const isSuccess = state === "success";
   const isError = state === "error";
@@ -84,7 +84,7 @@ function StatusIcon({ state }: { state: PageState }) {
 
   return (
     <div style={{ position: "relative", width: 96, height: 96, margin: "0 auto 24px" }}>
-      {/* ── Halo extérieur pulsant ── */}
+      {/* -- Halo extérieur pulsant -- */}
       <motion.div
         animate={{
           scale: isSuccess ? [1, 1.35, 1] : [1, 1.15, 1],
@@ -98,7 +98,7 @@ function StatusIcon({ state }: { state: PageState }) {
         }}
       />
 
-      {/* ── Anneau intermédiaire ── */}
+      {/* -- Anneau intermédiaire -- */}
       <motion.div
         animate={{ scale: [1, 1.08, 1], opacity: [0.45, 0.15, 0.45] }}
         transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
@@ -108,7 +108,7 @@ function StatusIcon({ state }: { state: PageState }) {
         }}
       />
 
-      {/* ── Container de l'icône ── */}
+      {/* -- Container de l'icône -- */}
       <motion.div
         animate={isVerifying
           ? { rotate: [0, 4, -4, 3, -3, 0] }
@@ -167,7 +167,7 @@ function StatusIcon({ state }: { state: PageState }) {
         </AnimatePresence>
       </motion.div>
 
-      {/* ── Particules de confetti (état succès uniquement) ── */}
+      {/* -- Particules de confetti (état succès uniquement) -- */}
       {isSuccess && [
         { x: -36, y: -22, delay: 0.1, size: 5, color: "#10b981" },
         { x: 40, y: -28, delay: 0.28, size: 4, color: "#34d399" },
@@ -190,7 +190,7 @@ function StatusIcon({ state }: { state: PageState }) {
   );
 }
 
-// ─── Composant : Barre de progression de la redirection ──────────────────────
+// --- Composant : Barre de progression de la redirection ----------------------
 function RedirectCountdown({
   countdown,
   total = 5,
@@ -330,7 +330,7 @@ export default function VerifyEmailClient() {
         >
           <div className="flex flex-col lg:flex-row h-full min-h-[540px]">
 
-            {/* ── LEFT PANEL ── */}
+            {/* -- LEFT PANEL -- */}
             <motion.div
               variants={leftIn}
               initial="hidden"
@@ -409,7 +409,7 @@ export default function VerifyEmailClient() {
               </motion.div>
             </motion.div>
 
-            {/* ── RIGHT PANEL – SPA STATES ── */}
+            {/* -- RIGHT PANEL – SPA STATES -- */}
             <motion.div
               variants={rightIn}
               initial="hidden"
@@ -419,7 +419,7 @@ export default function VerifyEmailClient() {
               <div className="w-full max-w-sm">
                 <AnimatePresence mode="wait">
                   
-                  {/* ─────────────────── ÉTAT : VÉRIFICATION EN COURS ─────────────────── */}
+                  {/* ------------------- ÉTAT : VÉRIFICATION EN COURS ------------------- */}
                   {state === "verifying" && (
                     <motion.div
                       key="verifying"
@@ -456,7 +456,7 @@ export default function VerifyEmailClient() {
                     </motion.div>
                   )}
 
-                  {/* ─────────────────── ÉTAT : SUCCÈS ─────────────────────────────────── */}
+                  {/* ------------------- ÉTAT : SUCCÈS ----------------------------------- */}
                   {state === "success" && (
                     <motion.div
                       key="success"
@@ -499,7 +499,7 @@ export default function VerifyEmailClient() {
                     </motion.div>
                   )}
 
-                  {/* ─────────────────── ÉTAT : ERREUR ─────────────────────────────────── */}
+                  {/* ------------------- ÉTAT : ERREUR ----------------------------------- */}
                   {state === "error" && (
                     <motion.div
                       key="error"

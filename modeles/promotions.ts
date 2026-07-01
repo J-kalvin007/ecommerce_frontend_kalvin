@@ -1,4 +1,4 @@
-
+﻿
 
 
 // modeles/promotions.ts
@@ -43,7 +43,7 @@ export interface DeactivateExpiredResponse {
     deactivated: number;
 }
 
-// ─── Ventes soldes (flash) ──────────────────────────────────
+// --- Ventes soldes (flash) ----------------------------------
 export interface AdminSoldes {
     id: string;
     created_at: string;
@@ -71,7 +71,7 @@ export interface CreateSalePayload {
 
 export type UpdateSalePayload = Partial<CreateSalePayload>;
 
-// ─── Bannières / recommandations ────────────────────────────
+// --- Bannières / recommandations ----------------------------
 export type BannerType = "carousel" | "popup" | "hero" | "side_banner";
 
 export interface AdminBanner {
@@ -105,7 +105,7 @@ export interface CreateBannerPayload {
 
 export type UpdateBannerPayload = Partial<CreateBannerPayload>;
 
-// ─── Endpoints publics (validation) ─────────────────────────
+// --- Endpoints publics (validation) -------------------------
 export interface ValidateCodePayload {
     code: string;
     cart_total: string;

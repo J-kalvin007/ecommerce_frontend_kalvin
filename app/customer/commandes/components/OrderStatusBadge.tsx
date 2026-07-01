@@ -1,6 +1,6 @@
-/**
+﻿/**
  * OrderStatusBadge.tsx
- * ─────────────────────────────────────────────────────────────────────────────
+ * -----------------------------------------------------------------------------
  * Badge de statut de commande ultra-premium avec icône, label et couleur
  * dynamiques basés sur ORDER_STATUS_MAP du modèle commandes.ts.
  *
@@ -25,7 +25,7 @@ import type { LucideIcon } from "lucide-react";
 import type { OrderStatus } from "@/modeles/commandes";
 import { ORDER_STATUS_MAP } from "@/modeles/commandes";
 
-/* ── Map des icônes Lucide par statut ──────────────────────────────────── */
+/* -- Map des icônes Lucide par statut ------------------------------------ */
 const STATUS_ICONS: Record<OrderStatus, LucideIcon> = {
   draft:           FileText,
   pending_payment: Clock,
@@ -38,7 +38,7 @@ const STATUS_ICONS: Record<OrderStatus, LucideIcon> = {
   refunded:        RotateCcw,
 };
 
-/* ── Props ──────────────────────────────────────────────────────────────── */
+/* -- Props ---------------------------------------------------------------- */
 interface OrderStatusBadgeProps {
   status: OrderStatus;
   /** Taille du badge : "sm" = compact, "md" = standard (défaut) */
@@ -47,7 +47,7 @@ interface OrderStatusBadgeProps {
   animated?: boolean;
 }
 
-/* ── Statuts considérés comme "actifs" (pulse animé) ────────────────────── */
+/* -- Statuts considérés comme "actifs" (pulse animé) ---------------------- */
 const ACTIVE_STATUSES: OrderStatus[] = ["processing", "shipped", "confirmed", "paid"];
 
 /**
