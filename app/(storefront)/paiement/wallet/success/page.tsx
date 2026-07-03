@@ -18,13 +18,13 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { CheckCircle2, ArrowRight, Wallet, Sparkles } from "lucide-react";
+import { CheckCircle2, ArrowRight, Wallet, Star } from "lucide-react";
 import { useUIStore } from "@/store/uiStore";
 import { useThemeStore } from "@/store/theme.store";
 
 // Chargement dynamique de Lottie pour SSR
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
-import successAnimation from "@/public/assets/lottis/success_01.json";
+import successAnimation from "@/public/assets/lottis/success.json";
 
 const REDIRECT_DELAY_SECONDS = 5;
 const BRAND_FOREST = "#1f4d3f";
@@ -140,11 +140,11 @@ function SuccessWalletContent() {
               transition={{ delay: 0.25, duration: 0.45 }}
             >
               <div className="mb-2 flex items-center justify-center gap-2">
-                <Sparkles className="h-4 w-4" style={{ color: BRAND_GOLD }} />
+                <Star className="h-4 w-4" style={{ color: BRAND_GOLD }} />
                 <span className="text-[11px] font-black uppercase tracking-[0.22em]" style={{ color: BRAND_GOLD }}>
                   Transaction confirmée
                 </span>
-                <Sparkles className="h-4 w-4" style={{ color: BRAND_GOLD }} />
+                <Star className="h-4 w-4" style={{ color: BRAND_GOLD }} />
               </div>
               <h1 className="font-display text-3xl font-black tracking-tight" style={{ color: textPrimary }}>
                 Recharge réussie !

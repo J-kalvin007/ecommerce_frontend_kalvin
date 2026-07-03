@@ -1,4 +1,4 @@
-﻿/**
+/**
  * RedeemPointsModal.tsx
  * -----------------------------------------------------------------------------
  * Modale pour dépenser des points de fidélité sur une commande.
@@ -87,10 +87,10 @@ export default function RedeemPointsModal({
         ? pointValueConfig.valeur_un_point_frcfa / pointValueConfig.nombre_de_point 
         : 10;
     const baseDiscount = parsedPoints * ratio;
-    const discountRate = parseFloat(profile.tier.discount_percent || "0") / 100;
+    const discountRate = parseFloat(profile.tier?.discount_percent || "0") / 100;
     const discount = baseDiscount + (baseDiscount * discountRate);
     return formatAmount(String(discount));
-  }, [parsedPoints, isValidPoints, profile.tier.discount_percent, pointValueConfig]);
+  }, [parsedPoints, isValidPoints, profile.tier?.discount_percent, pointValueConfig]);
 
   /* -- Réinitialisation à l'ouverture ----------------------------------- */
   useEffect(() => {
@@ -190,7 +190,7 @@ export default function RedeemPointsModal({
             <div
               className="h-1 w-full"
               style={{
-                background: `linear-gradient(90deg, transparent, ${profile.tier.name === "Gold" ? "#FFD700" : "#C9963A"}88, ${profile.tier.name === "Gold" ? "#FFD700" : "#C9963A"}, transparent)`,
+                background: `linear-gradient(90deg, transparent, ${profile.tier?.name === "Gold" ? "#FFD700" : "#C9963A"}88, ${profile.tier?.name === "Gold" ? "#FFD700" : "#C9963A"}, transparent)`,
               }}
             />
 
