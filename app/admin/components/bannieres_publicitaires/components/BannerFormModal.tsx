@@ -28,6 +28,7 @@ const INITIAL_FORM: CreateAdminBannerPayload = {
 };
 
 export function BannerFormModal({ open, onClose, onSave, initialData, isSaving }: BannerFormModalProps) {
+
     const [form, setForm] = useState<CreateAdminBannerPayload>(INITIAL_FORM);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -82,13 +83,13 @@ export function BannerFormModal({ open, onClose, onSave, initialData, isSaving }
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-4xl p-0 overflow-hidden border-border/50 bg-surface/95 backdrop-blur-xl shadow-2xl shadow-primary/10">
+            <DialogContent className="sm:max-w-4xl p-0 overflow-hidden bg-white ">
                 <div className="relative flex flex-col max-h-[90vh]">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-32 bg-primary/10 blur-[80px] pointer-events-none rounded-t-full" />
+                    {/* <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-32 bg-primary/10 blur-[80px] pointer-events-none rounded-t-full" /> */}
 
                     <DialogHeader className="p-8 pb-4 relative z-10 border-b border-border/40">
                         <DialogTitle className="text-2xl font-extrabold flex items-center gap-3">
-                            <div className="p-2.5 bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl border border-primary/20 text-primary shadow-inner">
+                            <div className="p-2.5">
                                 <LayoutGrid className="h-5 w-5" />
                             </div>
                             {initialData ? "Modifier la bannière" : "Créer une nouvelle bannière"}
@@ -111,7 +112,7 @@ export function BannerFormModal({ open, onClose, onSave, initialData, isSaving }
                                     <div
                                         onClick={() => fileInputRef.current?.click()}
                                         className={cn(
-                                            "relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed bg-surface-alt transition-all hover:bg-surface-elevated hover:border-primary/50",
+                                            "relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed bg-white-alt transition-all hover:bg-surface-elevated hover:border-primary/50",
                                             previewUrl ? "h-64 border-transparent bg-transparent" : "h-48 border-border"
                                         )}
                                     >
@@ -288,23 +289,27 @@ export function BannerFormModal({ open, onClose, onSave, initialData, isSaving }
 
                         {/* Footer Actions */}
                         <div className="flex items-center justify-end gap-3 pt-8 pb-2 mt-4 border-t border-border/40">
+
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground hover:bg-surface-alt transition-colors"
+                                className="rounded-xl cursor-pointer px-6 py-2.5 text-sm font-bold text-muted-foreground hover:bg-surface-alt transition-colors"
                             >
                                 Annuler
                             </button>
+
                             <button
                                 type="submit"
                                 disabled={isSaving}
-                                className="relative overflow-hidden flex items-center gap-2 rounded-xl bg-primary px-8 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(var(--primary),0.3)] transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 group"
+                                className="relative cursor-pointer overflow-hidden flex items-center gap-2 rounded-xl bg-primary px-8 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(var(--primary),0.3)] transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 group"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full duration-1000 transition-transform"></div>
                                 {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                                 {initialData ? "Mettre à jour" : "Publier la bannière"}
                             </button>
+
                         </div>
+
                     </form>
                 </div>
             </DialogContent>

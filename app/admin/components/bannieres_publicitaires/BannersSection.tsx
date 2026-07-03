@@ -151,8 +151,8 @@ export default function BannersSection() {
 
             {/* Header */}
             <div className="relative overflow-hidden rounded-3xl border border-border bg-surface-elevated p-8 shadow-sm">
-                <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
-                <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
+                {/* <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+                <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" /> */}
 
                 <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6 z-10">
 
@@ -236,7 +236,7 @@ export default function BannersSection() {
 
                     <button
                         onClick={openCreate}
-                        className="group flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-primary/30 active:scale-95"
+                        className="group flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-bold text-white transition-all hover:scale-103 active:scale-98"
                     >
                         <Plus className="h-5 w-5 transition-transform group-hover:rotate-90" />
                         Nouvelle Bannière
@@ -246,7 +246,9 @@ export default function BannersSection() {
 
             {/* Filters & Toggles */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
                 <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-surface-elevated border border-border w-fit shadow-sm">
+
                     <button
                         onClick={() => setFilterType("all")}
                         className={cn(
@@ -257,6 +259,7 @@ export default function BannersSection() {
                         <Layers className="h-4 w-4" />
                         Toutes
                     </button>
+
                     {(Object.entries(BANNER_TYPE_LABELS) as [BannerTypeEnum, string][]).map(([type, label]) => (
                         <button
                             key={type}

@@ -53,11 +53,11 @@ function StatusDropdown({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -6, scale: 0.96 }}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-border/60 shadow-2xl shadow-black/20 backdrop-blur-xl"
+      className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-border/60 backdrop-blur-xl"
     >
       {/* Header */}
       <div className="border-b border-border/40 px-4 py-3">
-        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Changer le statut</p>
+        <p className="text-[10px] font-bold uppercase tracking-widest">Changer le statut</p>
       </div>
       {/* Options */}
       <div className="p-1.5">

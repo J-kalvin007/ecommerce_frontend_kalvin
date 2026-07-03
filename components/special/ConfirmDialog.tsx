@@ -145,7 +145,7 @@ const ConfirmDialog = ({
           height: 48px;
           padding: 0 24px;
           min-width: 130px;
-          border-radius: 13px;
+          border-radius: 50px;
           font-size: 14px;
           font-weight: 600;
           letter-spacing: -0.01em;
@@ -168,7 +168,7 @@ const ConfirmDialog = ({
           height: 48px;
           padding: 0 28px;
           min-width: 148px;
-          border-radius: 13px;
+          border-radius: 50px;
           font-size: 14px;
           font-weight: 700;
           letter-spacing: -0.01em;
@@ -260,16 +260,16 @@ const ConfirmDialog = ({
               }}
             >
               {/* Top accent stripe */}
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: cfg.stripe }} />
+              {/* <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: cfg.stripe }} /> */}
 
               {/* Inner ambient glow */}
-              <div style={{
+              {/* <div style={{
                 position: 'absolute', top: -60, right: -60, width: 220, height: 220,
                 borderRadius: '50%',
                 background: `radial-gradient(circle, rgba(${cfg.accentRgb},0.12) 0%, transparent 70%)`,
                 filter: 'blur(30px)',
                 pointerEvents: 'none',
-              }} />
+              }} /> */}
 
               {/* Close button */}
               <button
@@ -373,7 +373,7 @@ const ConfirmDialog = ({
                 flexWrap: 'wrap',
               }}>
                 <button
-                  className="gc-cd-cancel"
+                  className="gc-cd-cancel rounded-full"
                   onClick={onCancel}
                   disabled={isLoading}
                 >
@@ -381,7 +381,7 @@ const ConfirmDialog = ({
                 </button>
 
                 <button
-                  className="gc-cd-confirm"
+                  className="gc-cd-confirm rounded-full"
                   onClick={onConfirm}
                   disabled={isLoading}
                   style={{

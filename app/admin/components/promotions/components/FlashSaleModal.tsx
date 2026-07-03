@@ -95,14 +95,14 @@ export function FlashSaleModal({
             <DialogContent className="sm:max-w-2xl p-0 overflow-hidden border-border/50 bg-surface/95 backdrop-blur-xl shadow-2xl shadow-primary/10">
                 <div className="relative flex flex-col max-h-[90vh]">
                     {/* Glowing effect in background */}
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-32 bg-primary/10 blur-[80px] pointer-events-none rounded-t-full" />
+                    {/* <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-32 bg-primary/10 blur-[80px] pointer-events-none rounded-t-full" /> */}
 
                     <DialogHeader className="p-8 pb-4 relative z-10 border-b border-border/40">
                         <DialogTitle className="text-2xl font-extrabold flex items-center gap-3">
                             <div className="p-2.5 bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl border border-primary/20 text-primary shadow-inner">
                                 <Zap className="h-5 w-5" />
                             </div>
-                            {isEditing ? "Modifier la vente flash" : "Lancer une vente flash"}
+                            {isEditing ? "Modifier la vente en solde" : "Lancer une vente en solde"}
                         </DialogTitle>
                         <DialogDescription className="text-sm font-medium mt-2">
                             Configurez une promotion exclusive et éphémère pour générer de l'urgence.

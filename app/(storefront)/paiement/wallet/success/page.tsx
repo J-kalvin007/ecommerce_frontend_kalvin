@@ -1,4 +1,4 @@
-﻿// /**
+// /**
 //  * Page de succès de recharge Wallet — Ultra Premium
 //  *
 //  * Affichée après une recharge réussie via PayDunya.
@@ -335,28 +335,26 @@ function SuccessWalletContent() {
 
   useEffect(() => { setIsMounted(true); }, []);
 
-  // Logique de décompte et redirection — IDENTIQUE à l'original
+  // Logique de décompte et redirection
   useEffect(() => {
     if (!isMounted) return;
 
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          if (!hasRedirected.current) {
-            hasRedirected.current = true;
-            const targetUrl = inCommandFlow ? "/commandes" : "/customer/wallet";
-            if (inCommandFlow) setInCommandFlow(false);
-            router.push(targetUrl);
-          }
-          return 0;
-        }
-        return prev - 1;
-      });
+    if (countdown <= 0) {
+      if (!hasRedirected.current) {
+        hasRedirected.current = true;
+        const targetUrl = inCommandFlow ? "/commandes" : "/customer/wallet";
+        if (inCommandFlow) setInCommandFlow(false);
+        router.push(targetUrl);
+      }
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setCountdown((prev) => prev - 1);
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [isMounted, inCommandFlow, setInCommandFlow, router]);
+    return () => clearTimeout(timer);
+  }, [countdown, isMounted, inCommandFlow, setInCommandFlow, router]);
 
   // Jetons de thème — IDENTIQUES à l'original
   const bg = isDark
@@ -448,13 +446,13 @@ function SuccessWalletContent() {
           </div>
 
           {/* Liseré doré supérieur — signature Kalvin (IDENTIQUE à l'original) */}
-          <div
+          {/* <div
             aria-hidden
             className="absolute inset-x-0 top-0 z-10 h-1"
             style={{
               background: `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_GOLD}, ${BRAND_FOREST})`,
             }}
-          />
+          /> */}
 
           <div className="relative z-[2] px-8 pb-10 pt-10 text-center">
 

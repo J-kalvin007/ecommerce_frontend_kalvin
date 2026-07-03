@@ -330,7 +330,7 @@ export default function ProductsSection() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
             className={cn(
-              "flex items-center gap-2 cursor-pointer rounded-xl border px-4 py-2.5 text-sm font-semibold transition-all shadow-sm",
+              "flex items-center gap-2 cursor-pointer rounded-lg border px-4 py-3 text-sm font-semibold transition-all ",
               showStats ? "border-primary bg-primary/10 text-primary" : "border-border/50 bg-white dark:bg-[#1e1e1e] text-muted-foreground hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-foreground"
             )}
           >
@@ -342,7 +342,7 @@ export default function ProductsSection() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => { setEditingProduct(null); setFormOpen(true); }}
-            className="flex items-center gap-2 cursor-pointer rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary/90"
+            className="flex items-center gap-2 cursor-pointer rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">Ajouter un produit</span>

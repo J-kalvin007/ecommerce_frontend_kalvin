@@ -55,19 +55,19 @@ const EMPTY_FORM = {
 /* ─────────────────────────────────────────────────────────────── */
 export function LoyaltyRewardRulePanel({ onToast }: LoyaltyRewardRulePanelProps) {
     /* -- State principal ---------------------------------------- */
-    const [rules, setRules]               = useState<LoyaltyRewardRule[]>([]);
-    const [loading, setLoading]           = useState(true);
-    const [error, setError]               = useState<string | null>(null);
+    const [rules, setRules] = useState<LoyaltyRewardRule[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     /* -- Formulaire --------------------------------------------- */
-    const [isFormOpen, setIsFormOpen]     = useState(false);
-    const [editingRule, setEditingRule]   = useState<LoyaltyRewardRule | null>(null);
-    const [saving, setSaving]             = useState(false);
-    const [form, setForm]                 = useState(EMPTY_FORM);
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [editingRule, setEditingRule] = useState<LoyaltyRewardRule | null>(null);
+    const [saving, setSaving] = useState(false);
+    const [form, setForm] = useState(EMPTY_FORM);
 
     /* -- Confirmation suppression -------------------------------- */
     const [deleteConfirm, setDeleteConfirm] = useState<LoyaltyRewardRule | null>(null);
-    const [deleting, setDeleting]           = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     /* ── Chargement des données ────────────────────────────────── */
     const loadRules = async () => {
@@ -89,11 +89,11 @@ export function LoyaltyRewardRulePanel({ onToast }: LoyaltyRewardRulePanelProps)
         if (rule) {
             setEditingRule(rule);
             setForm({
-                level:               String(rule.level),
-                montant_min:         rule.montant_min,
-                montant_max:         rule.montant_max || "",
+                level: String(rule.level),
+                montant_min: rule.montant_min,
+                montant_max: rule.montant_max || "",
                 nombre_point_gagner: String(rule.nombre_point_gagner),
-                is_active:           rule.is_active,
+                is_active: rule.is_active,
             });
         } else {
             setEditingRule(null);
@@ -118,11 +118,11 @@ export function LoyaltyRewardRulePanel({ onToast }: LoyaltyRewardRulePanelProps)
         setSaving(true);
 
         const payload: LoyaltyRewardRulePayload = {
-            level:               parseInt(form.level, 10) || 1,
-            montant_min:         form.montant_min,
-            montant_max:         form.montant_max || undefined,
+            level: parseInt(form.level, 10) || 1,
+            montant_min: form.montant_min,
+            montant_max: form.montant_max || undefined,
             nombre_point_gagner: parseInt(form.nombre_point_gagner, 10) || 0,
-            is_active:           form.is_active,
+            is_active: form.is_active,
         };
 
         const res = editingRule
@@ -243,7 +243,7 @@ export function LoyaltyRewardRulePanel({ onToast }: LoyaltyRewardRulePanelProps)
                             className="relative overflow-hidden rounded-[24px] border border-slate-100 dark:border-slate-800 bg-white dark:bg-[#1a1a1a] shadow-xl"
                         >
                             {/* Liseré supérieur signature */}
-                            <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+                            {/* <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" /> */}
 
                             <div className="p-7">
                                 {/* En-tête formulaire */}
@@ -339,6 +339,7 @@ export function LoyaltyRewardRulePanel({ onToast }: LoyaltyRewardRulePanelProps)
 
                                     {/* Règle active (toggle) */}
                                     <div className="sm:col-span-2 flex items-center gap-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-4">
+
                                         <button
                                             type="button"
                                             role="switch"
@@ -354,6 +355,7 @@ export function LoyaltyRewardRulePanel({ onToast }: LoyaltyRewardRulePanelProps)
                                                 form.is_active ? "translate-x-5" : "translate-x-0"
                                             )} />
                                         </button>
+
                                         <div>
                                             <p className="text-[13px] font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                                                 {form.is_active
@@ -367,7 +369,9 @@ export function LoyaltyRewardRulePanel({ onToast }: LoyaltyRewardRulePanelProps)
                                                     : "La règle est désactivée et n'attribuera aucun point."}
                                             </p>
                                         </div>
+
                                     </div>
+
                                 </div>
 
                                 {/* Aperçu calculé */}
@@ -442,19 +446,19 @@ export function LoyaltyRewardRulePanel({ onToast }: LoyaltyRewardRulePanelProps)
                                 )}
                             >
                                 {/* Liseré top */}
-                                <div className={cn(
+                                {/* <div className={cn(
                                     "absolute inset-x-0 top-0 h-[2px] rounded-t-[20px]",
                                     rule.is_active
                                         ? "bg-gradient-to-r from-transparent via-primary/50 to-transparent"
                                         : "bg-gradient-to-r from-transparent via-slate-300 to-transparent"
-                                )} />
+                                )} /> */}
 
                                 {/* Badge inactif */}
-                                {!rule.is_active && (
+                                {/* {!rule.is_active && (
                                     <span className="absolute top-3 right-3 rounded-full bg-slate-200 dark:bg-slate-700 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                                         Inactif
                                     </span>
-                                )}
+                                )} */}
 
                                 {/* Corps */}
                                 <div className="space-y-4">

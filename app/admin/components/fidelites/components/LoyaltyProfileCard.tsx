@@ -169,7 +169,7 @@ function ListCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardP
       }}
     >
       {/* Left tier accent */}
-      <div className={cn("absolute left-0 top-0 bottom-0 w-1 rounded-r-full bg-gradient-to-b", cfg.gradient)} />
+      {/* <div className={cn("absolute left-0 top-0 bottom-0 w-1 rounded-r-full bg-gradient-to-b", cfg.gradient)} /> */}
 
       {/* Avatar */}
       <div className="pl-1">
@@ -274,7 +274,7 @@ function GridCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardP
       onHoverEnd={() => setHovered(false)}
       onClick={onView}
       className={cn(
-        "group relative flex flex-col cursor-pointer overflow-hidden rounded-[22px] border bg-surface",
+        "group relative flex flex-col cursor-pointer overflow-hidden rounded-[22px] border bg-white",
         cfg.border
       )}
       style={{
@@ -286,19 +286,19 @@ function GridCard({ profile, tiers, onView, onAdjust }: Omit<LoyaltyProfileCardP
       }}
     >
       {/* -- Top gradient wash -- */}
-      <div className={cn("absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r", cfg.gradient)} />
+      {/* <div className={cn("absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r", cfg.gradient)} />
       <div
         className="absolute top-0 left-0 right-0 h-20 pointer-events-none"
         style={{ background: `linear-gradient(to bottom, rgba(0,0,0,0.03), transparent)` }}
-      />
+      /> */}
 
       {/* -- Header -- */}
       <div className="relative flex flex-col items-center pt-6 pb-4 px-5 gap-3">
         {/* Radial glow */}
-        <div
+        {/* <div
           className="absolute top-0 left-1/2 -translate-x-1/2 h-24 w-24 rounded-full blur-2xl opacity-20 pointer-events-none"
           style={{ background: `var(--color-primary)` }}
-        />
+        /> */}
 
         {/* Avatar + holo ring */}
         <MemberAvatar profile={profile} size={52} ringSize={66} hovered={hovered} />

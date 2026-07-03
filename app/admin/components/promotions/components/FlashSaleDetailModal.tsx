@@ -102,7 +102,7 @@ export function FlashSaleDetailModal({
                         transition={{ type: "spring", stiffness: 300, damping: 28 }}
                         className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
                     >
-                        <div 
+                        <div
                             className="no-scrollbar relative w-full max-w-4xl max-h-[92vh] overflow-y-auto overflow-x-hidden rounded-[24px] bg-white dark:bg-[#1a1a1a] shadow-2xl border border-slate-200 dark:border-slate-800"
                             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                         >
@@ -116,13 +116,13 @@ export function FlashSaleDetailModal({
                             {/* <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-slate-300 via-primary/50 to-slate-300 dark:from-slate-700 dark:via-primary/60 dark:to-slate-700" /> */}
 
                             {/* Halos ambiants */}
-                            <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-primary/6 blur-3xl" />
-                            <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-slate-200/50 dark:bg-slate-800/50 blur-3xl" />
+                            {/* <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-primary/6 blur-3xl" />
+                            <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-slate-200/50 dark:bg-slate-800/50 blur-3xl" /> */}
 
                             {/* Bouton fermer */}
                             <button
                                 onClick={onClose}
-                                className="absolute right-5 top-5 z-20 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 transition-all hover:rotate-90 hover:bg-slate-200 dark:hover:bg-slate-700"
+                                className="absolute cursor-pointer right-5 top-5 z-20 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 transition-all hover:rotate-90 hover:bg-slate-200 dark:hover:bg-slate-700"
                                 aria-label="Fermer"
                             >
                                 <X className="h-4 w-4" />

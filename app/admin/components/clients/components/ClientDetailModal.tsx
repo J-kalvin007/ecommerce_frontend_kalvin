@@ -36,7 +36,7 @@ export function ClientDetailModal({ open, onClose, user }: ClientDetailModalProp
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute h-screen inset-0 bg-black/50 backdrop-blur-sm"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.92, y: 20 }}
@@ -59,7 +59,7 @@ export function ClientDetailModal({ open, onClose, user }: ClientDetailModalProp
             {/* Header with avatar */}
             <div className="relative px-8 pt-10 pb-6 flex flex-col items-center text-center">
               {/* Background glow */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-gradient-to-b from-primary/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+              {/* <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-gradient-to-b from-primary/10 to-transparent rounded-full blur-3xl pointer-events-none" /> */}
 
               {/* Avatar */}
               <div className="relative mb-5">

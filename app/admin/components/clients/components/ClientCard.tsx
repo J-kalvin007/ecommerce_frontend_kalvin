@@ -1,167 +1,4 @@
 ﻿
-// // components/admin/clients/ClientCard.tsx
-// "use client";
-// import Image from "next/image";
-// import { useState } from "react";
-// import { motion } from "framer-motion";
-// import { Eye, ShieldBan, ShieldCheck, Mail, Phone, Crown, User as UserIcon, CheckCircle2, XCircle } from "lucide-react";
-// import { cn } from "@/lib/utils";
-// import type { User } from "@/modeles/user";
-
-// const ROLE_LABELS: Record<string, { label: string; color: string; icon: React.ElementType }> = {
-//   platform_admin: { label: "Admin", color: "text-amber-600 bg-amber-500/10 border-amber-500/20", icon: Crown },
-//   customer: { label: "Client", color: "text-primary bg-primary/10 border-primary/20", icon: UserIcon },
-// };
-
-// interface ClientCardProps {
-//   user: User;
-//   onViewDetail: () => void;
-//   onToggleActive: () => void;
-// }
-
-// export function ClientCard({ user, onViewDetail, onToggleActive }: ClientCardProps) {
-//   const [imgError, setImgError] = useState(false);
-//   const role = ROLE_LABELS[user.role] || ROLE_LABELS.customer;
-//   const RoleIcon = role.icon;
-
-//   const resolvedImage = user.profile_image
-//     ? (user.profile_image.startsWith("http")
-//       ? user.profile_image
-//       : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${user.profile_image.startsWith("/") ? "" : "/"}${user.profile_image}`)
-//     : null;
-
-//   return (
-//     <motion.div
-//       layout
-//       initial={{ opacity: 0, y: 15 }}
-//       animate={{ opacity: 1, y: 0 }}
-//       whileHover={{ y: -6, transition: { duration: 0.3, ease: "easeOut" } }}
-//       onClick={onViewDetail}
-//       className="group relative flex flex-col rounded-[24px] border border-border/40 bg-white shadow-sm hover:shadow-[0_16px_32px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 overflow-hidden cursor-pointer p-5"
-//     >
-//       {/* Top row: Avatar + Actions */}
-//       <div className="flex items-start justify-between mb-4">
-//         <div className="flex items-center gap-3 min-w-0">
-//           {/* Avatar */}
-//           <div className="relative shrink-0">
-//             <div className="relative h-12 w-12 rounded-full overflow-hidden border-2 border-border/50 shadow-sm">
-//               {resolvedImage && !imgError ? (
-//                 <Image
-//                   src={resolvedImage}
-//                   alt={user.name}
-//                   fill
-//                   className="object-cover"
-//                   onError={() => setImgError(true)}
-//                 />
-//               ) : (
-//                 <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5 text-primary text-lg font-black">
-//                   {(user.name || user.email || "?").charAt(0).toUpperCase()}
-//                 </div>
-//               )}
-//             </div>
-//             <div className={cn(
-//               "absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-surface",
-//               user.is_active ? "bg-emerald-500" : "bg-red-500"
-//             )} />
-//           </div>
-
-//           {/* Name + email */}
-//           <div className="min-w-0">
-//             <h3 className="text-sm font-bold text-foreground truncate leading-tight group-hover:text-primary transition-colors duration-200">
-//               {user.name || "Sans nom"}
-//             </h3>
-//             <p className="text-[11px] text-muted-foreground truncate">{user.email}</p>
-//           </div>
-//         </div>
-
-//         {/* Action buttons */}
-//         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-//           <button
-//             onClick={(e) => { e.stopPropagation(); onViewDetail(); }}
-//             title="Voir le détail"
-//             className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-all duration-200 hover:bg-primary hover:text-white hover:shadow-md"
-//           >
-//             <Eye className="h-4 w-4" />
-//           </button>
-//           <button
-//             onClick={(e) => { e.stopPropagation(); onToggleActive(); }}
-//             title={user.is_active ? "Désactiver le compte" : "Activer le compte"}
-//             className={cn(
-//               "flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-all duration-200 hover:shadow-md",
-//               user.is_active ? "hover:bg-red-500 hover:text-white" : "hover:bg-emerald-500 hover:text-white"
-//             )}
-//           >
-//             {user.is_active ? <ShieldBan className="h-4 w-4" /> : <ShieldCheck className="h-4 w-4" />}
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Info badges */}
-//       <div className="flex flex-wrap items-center gap-2 mb-3">
-//         <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold border", role.color)}>
-//           <RoleIcon className="h-3 w-3" />
-//           {role.label}
-//         </span>
-//         {user.is_verified ? (
-//           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-[10px] font-bold text-emerald-600 border border-emerald-500/20">
-//             <CheckCircle2 className="h-3 w-3" /> Vérifié
-//           </span>
-//         ) : (
-//           <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-1 text-[10px] font-bold text-amber-600 border border-amber-500/20">
-//             <XCircle className="h-3 w-3" /> Non vérifié
-//           </span>
-//         )}
-//       </div>
-
-//       {/* Footer: Phone + Status */}
-//       <div className="flex items-center justify-between pt-3 mt-auto border-t border-border/50">
-//         <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-//           <Phone className="h-3 w-3" />
-//           <span className="truncate max-w-[120px]">{user.phone_number || "Non renseigné"}</span>
-//         </div>
-//         <div className={cn(
-//           "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold border",
-//           user.is_active
-//             ? "text-emerald-600 bg-emerald-500/10 border-emerald-500/20"
-//             : "text-red-600 bg-red-500/10 border-red-500/20"
-//         )}>
-//           <div className={cn("h-1.5 w-1.5 rounded-full", user.is_active ? "bg-emerald-500" : "bg-red-500")} />
-//           {user.is_active ? "Actif" : "Inactif"}
-//         </div>
-//       </div>
-//     </motion.div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -299,18 +136,18 @@ export function ClientCard({ user, onViewDetail, onToggleActive }: ClientCardPro
       }}
     >
       {/* -- Top accent bar (thin, primary color, slides in on hover) -- */}
-      <motion.div
+      {/* <motion.div
         animate={{ scaleX: hovered ? 1 : 0 }}
         initial={{ scaleX: 0 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         style={{ originX: 0 }}
         className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary via-primary/80 to-transparent pointer-events-none z-10"
-      />
+      /> */}
 
       {/* -- Header section -- */}
       <div className="relative flex flex-col items-center pt-7 pb-4 px-5">
         {/* Subtle radial bg behind avatar */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-28 w-28 rounded-full bg-primary/[0.04] blur-2xl pointer-events-none" />
+        {/* <div className="absolute top-0 left-1/2 -translate-x-1/2 h-28 w-28 rounded-full bg-primary/[0.04] blur-2xl pointer-events-none" /> */}
 
         {/* Avatar + status ring */}
         <div className="relative mb-3" style={{ width: 64, height: 64 }}>

@@ -227,9 +227,6 @@ export default function PromotionsSection() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
 
-
-
-
                 {/* -- En-tête avec effet premium -- */}
                 <motion.div
                     initial={{ opacity: 0, y: -12 }}
@@ -237,27 +234,62 @@ export default function PromotionsSection() {
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     className="flex flex-col gap-2"
                 >
-                    <div className="flex items-center gap-4">
-                        {/* Icône principale sobre */}
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 dark:bg-primary/20 border border-primary/20">
-                            <Tag className="h-6 w-6 text-primary" />
-                        </div>
-                        <div>
-                            <h2
-                                className="text-2xl font-black tracking-tight sm:text-3xl lg:text-4xl"
-                                style={{ color: "#0D1F17", letterSpacing: "-0.025em" }}
-                            >
-                                Promotions
-                            </h2>
-                            <span
-                                className="block text-[11px] font-semibold uppercase tracking-[0.25em] mt-0.5"
-                                style={{ color: "#8A9080" }}
-                            >
-                                Gérez vos codes de réduction et ventes en solde
-                            </span>
-                        </div>
+                    <div className="relative inline-block group">
+                        <h2
+                            className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-4xl premium-title-shine flex items-center gap-3"
+                            style={{
+                                letterSpacing: "-0.025em",
+                                backgroundImage:
+                                    "linear-gradient(110deg, #0D2E1E 0%, #1F4D34 45%, #0D2E1E 90%)",
+                                backgroundSize: "220% auto",
+                                WebkitBackgroundClip: "text",
+                                WebkitTextFillColor: "transparent",
+                                backgroundClip: "text",
+                            }}
+                        >
+                            <Tag className="h-10 w-10 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
+                            Promotions
+                        </h2>
+
+                        {/* Kicker discret en lettres espacées doré, signature premium */}
+                        <span
+                            className="block text-[11px] font-semibold uppercase tracking-[0.35em] mt-2 mb-2"
+                            style={{ color: "#B8924A", opacity: 0.85 }}
+                        >
+                            Gérez vos codes de réduction et ventes en solde
+                        </span>
+
+                        {/* Gradient SVG caché pour l'icône */}
+                        <svg width="0" height="0" className="absolute">
+                            <defs>
+                                <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stopColor="#FDE68A" />
+                                    <stop offset="50%" stopColor="#D97706" />
+                                    <stop offset="100%" stopColor="#B45309" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+
+
+                        {/* Animations scoppées, avec respect du prefers-reduced-motion */}
+                        <style>{`
+                        @keyframes premium-title-shine-anim {
+                            0%, 100% { background-position: 0% center; }
+                            50% { background-position: 100% center; }
+                        }
+                        .premium-title-shine {
+                            animation: premium-title-shine-anim 6s ease-in-out infinite;
+                        }
+                        @media (prefers-reduced-motion: reduce) {
+                            .premium-title-shine {
+                            animation: none;
+                            }
+                        }
+                        `}</style>
                     </div>
                 </motion.div>
+
+
 
 
 
@@ -268,7 +300,7 @@ export default function PromotionsSection() {
                         if (tab === "codes") { setEditingCode(null); setCodeModalOpen(true); }
                         else { setEditingSale(null); setSaleModalOpen(true); }
                     }}
-                    className="flex items-center cursor-pointer gap-2 cursor-pointers rounded-xl bg-primary px-6 py-3 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:scale-105 active:scale-95"
+                    className="flex items-center cursor-pointer gap-2 cursor-pointers rounded-xl bg-primary px-6 py-3 text-sm font-bold text-white transition-all hover:bg-primary/90 hover:scale-102 active:scale-95"
                 >
                     <Plus className="h-5 w-5" />
                     {tab === "codes" ? "Nouveau code promo" : "Nouvelle vente en solde"}
@@ -334,7 +366,7 @@ export default function PromotionsSection() {
                             key={t.key}
                             onClick={() => setTab(t.key)}
                             className={cn(
-                                "flex-1 sm:flex-none flex cursor-pointer items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-[18px] font-semibold transition-all",
+                                "flex-1 sm:flex-none flex cursor-pointer items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-[18px] font-bold transition-all",
                                 tab === t.key ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-surface-alt hover:text-foreground"
                             )}
                         >
@@ -389,7 +421,7 @@ export default function PromotionsSection() {
                         animate={{ opacity: 1, y: 0 }}
                         className={cn(
                             viewMode === "grid"
-                                ? "grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+                                ? "grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                                 : "flex flex-col gap-2"
                         )}
                     >
@@ -427,7 +459,7 @@ export default function PromotionsSection() {
                         animate={{ opacity: 1, y: 0 }}
                         className={cn(
                             viewMode === "grid"
-                                ? "grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:grid-cols-5 "
+                                ? "grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:grid-cols-4"
                                 : "flex flex-col gap-2"
                         )}
                     >

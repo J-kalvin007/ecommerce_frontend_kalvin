@@ -107,7 +107,7 @@ export function PromoCodeModal({
             <DialogContent className="sm:max-w-3xl p-0 overflow-hidden border-border/50 bg-white backdrop-blur-xl shadow-2xl shadow-primary/10">
                 <div className="relative flex flex-col max-h-[90vh]">
                     {/* Glowing effect in background */}
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-primary/10 blur-[100px] pointer-events-none rounded-t-full" />
+                    {/* <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-primary/10 blur-[100px] pointer-events-none rounded-t-full" /> */}
 
                     <DialogHeader className="p-8 pb-4 relative z-10 border-b border-border/40">
                         <DialogTitle className="text-2xl font-extrabold flex items-center gap-3">

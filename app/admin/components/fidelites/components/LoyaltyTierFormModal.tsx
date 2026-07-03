@@ -74,12 +74,12 @@ export function LoyaltyTierFormModal({
     tier,
     onSuccess,
 }: LoyaltyTierFormModalProps) {
-    const [name, setName]                         = useState("");
-    const [minPoints, setMinPoints]               = useState("");
-    const [minSolde, setMinSolde]                 = useState("");
-    const [discountPercent, setDiscountPercent]   = useState("");
-    const [saving, setSaving]                     = useState(false);
-    const [error, setError]                       = useState<string | null>(null);
+    const [name, setName] = useState("");
+    const [minPoints, setMinPoints] = useState("");
+    const [minSolde, setMinSolde] = useState("");
+    const [discountPercent, setDiscountPercent] = useState("");
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     /* Pré-remplissage en mode édition */
     useEffect(() => {
@@ -108,8 +108,8 @@ export function LoyaltyTierFormModal({
 
         const payload = {
             name,
-            min_points:       parseInt(minPoints) || 0,
-            min_solde:        minSolde,
+            min_points: parseInt(minPoints) || 0,
+            min_solde: minSolde,
             discount_percent: discountPercent,
         };
 
@@ -134,10 +134,10 @@ export function LoyaltyTierFormModal({
             <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden border-border/40 bg-white dark:bg-[#1a1a1a] shadow-2xl">
                 <div className="relative flex flex-col">
                     {/* Liseré supérieur signature */}
-                    <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+                    {/* <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" /> */}
 
                     {/* Halo ambiant */}
-                    <div className="pointer-events-none absolute -left-12 -top-12 h-48 w-48 rounded-full bg-primary/5 blur-3xl" />
+                    {/* <div className="pointer-events-none absolute -left-12 -top-12 h-48 w-48 rounded-full bg-primary/5 blur-3xl" /> */}
 
                     {/* En-tête */}
                     <DialogHeader className="relative z-10 px-7 pt-8 pb-5 border-b border-slate-100 dark:border-slate-800">

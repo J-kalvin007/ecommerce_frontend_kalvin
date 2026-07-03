@@ -81,7 +81,7 @@ export function LoyaltyAdjustPointsModal({ open, onClose, profile, onSuccess }: 
                         </DialogTitle>
                         <DialogDescription className="text-sm font-medium mt-1">
                             Profil <strong>{profile.id.slice(0, 8)}…</strong> — Solde actuel :
-                            <span className="ml-1 font-black text-primary">{profile.points_balance.toLocaleString("fr-FR")} pts</span>
+                            <span className="ml-1 font-black text-primary">{(Number(profile.points_balance) || 0).toLocaleString("fr-FR")} pts</span>
                         </DialogDescription>
                     </DialogHeader>
 

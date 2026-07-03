@@ -97,9 +97,9 @@ export const ORDER_STATUS_MAP: Record<OrderStatus, {
     border: string;
     icon: string;
 }> = {
-    draft: { label: "Brouillon", color: "text-slate-400", bg: "bg-slate-500/10", border: "border-slate-500/20", icon: "FileText" },
-    pending_payment: { label: "Paiement en attente", color: "text-yellow-400", bg: "bg-yellow-500/10", border: "border-yellow-500/20", icon: "Clock" },
-    paid: { label: "Payée", color: "text-green-400", bg: "bg-green-500/10", border: "border-green-500/20", icon: "CreditCard" },
+    draft: { label: "Brouillon", color: "text-slate-400", bg: "bg-black-500/10", border: "border-slate-500/20", icon: "FileText" },
+    pending_payment: { label: "Paiement en attente", color: "text-black-400", bg: "bg-yellow-500/10", border: "border-yellow-500/20", icon: "Clock" },
+    paid: { label: "Payée", color: "text-black-400", bg: "bg-green-500/10", border: "border-green-500/20", icon: "CreditCard" },
     confirmed: { label: "Confirmée", color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20", icon: "CheckCircle2" },
     processing: { label: "En préparation", color: "text-orange-400", bg: "bg-orange-500/10", border: "border-orange-500/20", icon: "ShoppingCart" },
     shipped: { label: "Expédiée", color: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/20", icon: "Truck" },

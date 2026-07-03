@@ -36,16 +36,16 @@ interface LoyaltyPointValuePanelProps {
 /* ─────────────────────────────────────────────────────────────── */
 export function LoyaltyPointValuePanel({ onToast }: LoyaltyPointValuePanelProps) {
     /* -- État principal ----------------------------------------- */
-    const [configs, setConfigs]           = useState<PointValue[]>([]);
+    const [configs, setConfigs] = useState<PointValue[]>([]);
     const [activeConfig, setActiveConfig] = useState<PointValue | null>(null);
-    const [loading, setLoading]           = useState(true);
-    const [saving, setSaving]             = useState(false);
-    const [error, setError]               = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     /* -- Champs de formulaire ----------------------------------- */
-    const [valeurUnPoint, setValeurUnPoint]   = useState("");
-    const [nombreDePoint, setNombreDePoint]   = useState("");
-    const [dureeValidite, setDureeValidite]   = useState("");
+    const [valeurUnPoint, setValeurUnPoint] = useState("");
+    const [nombreDePoint, setNombreDePoint] = useState("");
+    const [dureeValidite, setDureeValidite] = useState("");
 
     /* ── Chargement (GET) — pré-remplissage de la config active ── */
     const loadConfigs = async () => {
@@ -90,9 +90,9 @@ export function LoyaltyPointValuePanel({ onToast }: LoyaltyPointValuePanelProps)
 
         const payload = {
             valeur_un_point_frcfa: parseFloat(valeurUnPoint),
-            nombre_de_point:       parseInt(nombreDePoint, 10),
-            duree_validite:        parseInt(dureeValidite, 10) || 0,
-            is_active:             true,
+            nombre_de_point: parseInt(nombreDePoint, 10),
+            duree_validite: parseInt(dureeValidite, 10) || 0,
+            is_active: true,
         };
 
         const res = activeConfig?.id
@@ -168,11 +168,11 @@ export function LoyaltyPointValuePanel({ onToast }: LoyaltyPointValuePanelProps)
             {/* Carte principale */}
             <div className="relative overflow-hidden rounded-[24px] border border-slate-100 dark:border-slate-800 bg-white dark:bg-[#1a1a1a] shadow-xl">
                 {/* Liseré supérieur signature */}
-                <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+                {/* <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" /> */}
 
                 {/* Halos ambiants */}
-                <div className="pointer-events-none absolute -left-12 -top-12 h-48 w-48 rounded-full bg-primary/5 blur-3xl" />
-                <div className="pointer-events-none absolute -bottom-16 -right-16 h-56 w-56 rounded-full bg-slate-100/80 dark:bg-slate-800/30 blur-3xl" />
+                {/* <div className="pointer-events-none absolute -left-12 -top-12 h-48 w-48 rounded-full bg-primary/5 blur-3xl" />
+                <div className="pointer-events-none absolute -bottom-16 -right-16 h-56 w-56 rounded-full bg-slate-100/80 dark:bg-slate-800/30 blur-3xl" /> */}
 
                 <div className="relative z-10 p-7">
 
@@ -181,7 +181,7 @@ export function LoyaltyPointValuePanel({ onToast }: LoyaltyPointValuePanelProps)
                         {activeConfig ? (
                             <>
                                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-                                <span className="text-emerald-600 dark:text-emerald-400">Configuration existante — mise à jour (PATCH)</span>
+                                <span className="text-emerald-600 dark:text-emerald-400">Configuration existante — mise à jour </span>
                             </>
                         ) : (
                             <>

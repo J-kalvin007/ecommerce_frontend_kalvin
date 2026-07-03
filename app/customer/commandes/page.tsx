@@ -1,4 +1,4 @@
-﻿/**
+/**
  * page.tsx
  * -----------------------------------------------------------------------------
  * Page principale de gestion des commandes client.
@@ -139,7 +139,7 @@ export default function CustomerOrdersPage() {
       // 2. Recherche par référence
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
-        if (!order.reference.toLowerCase().includes(query)) return false;
+        if (!(order.reference || "").toLowerCase().includes(query)) return false;
       }
       return true;
     });
@@ -410,7 +410,7 @@ export default function CustomerOrdersPage() {
                   >
                     {filteredOrders.map((order, idx) => (
                       <OrderCard
-                        key={order.reference}
+                        key={order.reference || order.id || `order-${idx}`}
                         order={order}
                         index={idx}
                         onView={handleViewOrder}

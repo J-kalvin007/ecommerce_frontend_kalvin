@@ -196,9 +196,9 @@ export function ProductFormModal({
         </DialogTitle>
 
         {/* Header fixe */}
-        <div className="relative shrink-0 border-b border-border/50 bg-gradient-to-r from-white via-transparent to-transparent px-5 py-4 md:px-6 md:py-5">
+        <div className="relative shrink-0 border-b border-border/50  px-5 py-4 md:px-6 md:py-5">
           {/* Déco */}
-          <div className="absolute right-8 top-0 h-24 w-24 rounded-full bg-primary/5 blur-2xl pointer-events-none" />
+          {/* <div className="absolute right-8 top-0 h-24 w-24 rounded-full bg-primary/5 blur-2xl pointer-events-none" /> */}
           <div className="flex items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white">

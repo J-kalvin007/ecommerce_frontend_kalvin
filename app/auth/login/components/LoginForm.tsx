@@ -480,8 +480,8 @@ export function LoginForm({
                   <Link href="/auth/forgot-password" className="hover:text-[#1f4d3f] cursor-pointer hover:underline transition-colors">Mot de passe oublié</Link>
                   <span>&bull;</span>
                   <Link href="/auth/resend-email" className="hover:text-[#1f4d3f] cursor-pointer hover:underline transition-colors">Vérifier mon email</Link>
-                  <span>&bull;</span>
-                  <Link href="/auth/reset-password-confirm" className="hover:text-[#1f4d3f] cursor-pointer hover:underline transition-colors">Confirmer mot de passe</Link>
+                  {/* <span>&bull;</span> */}
+                  {/* <Link href="/auth/password-reset/confirm" className="hover:text-[#1f4d3f] cursor-pointer hover:underline transition-colors">Confirmer mot de passe</Link> */}
                 </div>
               </div>
             </div>
