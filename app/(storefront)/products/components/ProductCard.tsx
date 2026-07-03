@@ -1,4 +1,4 @@
-﻿
+
 
 
 "use client";
@@ -76,6 +76,7 @@ type PriceBlockProps = {
 function PriceBlock({ product, finalPrice, hasDiscount, discountPct, align = "left", size = "sm" }: PriceBlockProps) {
   const activeVariants = product.variants?.filter((v) => v.is_active);
   const priceSize = size === "lg" ? "text-2xl" : "text-xl";
+  const oldPriceSize = size === "lg" ? "text-sm" : "text-xs";
   const alignClass = align === "right" ? "items-end" : "items-start";
 
   if (activeVariants && activeVariants.length > 0) {
@@ -90,23 +91,40 @@ function PriceBlock({ product, finalPrice, hasDiscount, discountPct, align = "le
             À partir de
           </span>
         )}
-        <span className={cn(priceSize, "font-black tracking-tight text-[#1f4d3f]")}>
-          {formatCurrency(minPrice, "FCFA")}
-        </span>
+        {hasDiscount ? (
+          <div className="flex flex-row items-baseline gap-2">
+            <span className={cn(oldPriceSize, "font-bold text-[#8a9086] line-through decoration-[#ef8219]/60 decoration-2")}>
+              {formatCurrency(product.original_price!, "FCFA")}
+            </span>
+            <span className={cn(priceSize, "font-black tracking-tight text-black")}>
+              {formatCurrency(finalPrice, "FCFA")}
+            </span>
+          </div>
+        ) : (
+          <span className={cn(priceSize, "font-black tracking-tight text-[#1f4d3f]")}>
+            {formatCurrency(minPrice, "FCFA")}
+          </span>
+        )}
       </div>
     );
   }
 
   return (
     <div className={cn("flex flex-col", alignClass)}>
-      {hasDiscount && (
-        <span className="mb-0.5 text-xs font-bold text-[#8a9086] line-through decoration-[#ef8219]/60 decoration-2">
-          {formatCurrency(product.original_price!, "FCFA")}
+      {hasDiscount ? (
+        <div className="flex flex-row items-baseline gap-2">
+          <span className={cn(oldPriceSize, "font-bold text-[#8a9086] line-through decoration-[#ef8219]/60 decoration-2")}>
+            {formatCurrency(product.original_price!, "FCFA")}
+          </span>
+          <span className={cn(priceSize, "font-black tracking-tight text-black")}>
+            {formatCurrency(finalPrice, "FCFA")}
+          </span>
+        </div>
+      ) : (
+        <span className={cn(priceSize, "font-black tracking-tight text-[#1f4d3f]")}>
+          {formatCurrency(finalPrice, "FCFA")}
         </span>
       )}
-      <span className={cn(priceSize, "font-black tracking-tight", hasDiscount ? "text-[#ef8219]" : "text-[#1f4d3f]")}>
-        {formatCurrency(finalPrice, "FCFA")}
-      </span>
     </div>
   );
 }

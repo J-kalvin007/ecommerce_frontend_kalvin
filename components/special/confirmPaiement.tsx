@@ -1,25 +1,18 @@
-﻿/**
+/**
  * ConfirmPaiementModal — Modale ultra-premium de confirmation de paiement wallet
  *
  * Affichée uniquement pour le paiement via le portefeuille interne du client.
- * Présente un récapitulatif clair (montant, source, solde restant estimé) et
- * deux actions : Annuler et Confirmer le paiement.
- *
- * Design :
- *  - Glassmorphism avec halo vert ambiant
- *  - Typographie haut de gamme, icônes Lucide
- *  - Micro-animations Framer Motion (slide-up spring)
- *  - Bouton de confirmation avec shimmer et état de chargement désactivant
- *  - Accessibilité : focus trap, aria-labelledby, aria-describedby
+ * Refonte horizontale : Séparation claire entre les informations de paiement (gauche)
+ * et les actions (droite) dans deux conteneurs distincts, épurés et luxueux.
  *
  * @module components/special/confirmPaiement
  */
 
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Wallet, ShieldCheck, X, Loader2, AlertTriangle } from "lucide-react";
+import { Wallet, ShieldCheck, X, Loader2, AlertTriangle, ArrowRight } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { useThemeStore } from "@/store/theme.store";
 
@@ -28,21 +21,13 @@ import { useThemeStore } from "@/store/theme.store";
 /* ----------------------------------------------- */
 
 export interface ConfirmPaiementModalProps {
-  /** Contrôle la visibilité de la modale */
   open: boolean;
-  /** Montant total à débiter du wallet (en FCFA) */
   amount: number;
-  /** Solde actuel du wallet (en FCFA) */
   walletBalance: number;
-  /** Prénom du client pour la personnalisation */
   customerName?: string;
-  /** Référence de la commande */
   orderReference?: string;
-  /** En cours de traitement (désactive les boutons) */
   isProcessing: boolean;
-  /** Rappel : l'utilisateur annule */
   onCancel: () => void;
-  /** Rappel : l'utilisateur confirme le paiement */
   onConfirm: () => void;
 }
 
@@ -52,6 +37,11 @@ export interface ConfirmPaiementModalProps {
 
 const BRAND_FOREST = "#1f4d3f";
 const BRAND_GOLD = "#c9a876";
+const BRAND_FOREST_LIGHT = "#2d7a63";
+
+const BRAND_DANGER = "#ef4444";
+const BRAND_DANGER_SOFT = "rgba(239,68,68,0.12)";
+const BRAND_DANGER_BORDER = "rgba(239,68,68,0.22)";
 
 /* ----------------------------------------------- */
 /* Composant principal                             */
@@ -69,298 +59,318 @@ export default function ConfirmPaiementModal({
 }: ConfirmPaiementModalProps) {
   const { resolvedTheme } = useThemeStore();
   const isDark = resolvedTheme === "dark";
+  const dialogRef = useRef<HTMLDivElement>(null);
 
-  /* Solde restant estimé après débit */
   const balanceAfter = walletBalance - amount;
   const isInsufficient = balanceAfter < 0;
 
-  /* Tokens couleur selon le thème */
-  const overlayBg = isDark ? "rgba(0,0,0,0.75)" : "rgba(0,0,0,0.55)";
-  const cardBg = isDark
-    ? "rgba(10,20,13,0.95)"
-    : "rgba(255,255,255,0.97)";
-  const cardBorder = isDark
-    ? "rgba(255,255,255,0.08)"
-    : "rgba(0,0,0,0.08)";
-  const textPrimary = isDark ? "rgba(255,255,255,0.95)" : "#0f1a10";
-  const textMuted = isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)";
-  const rowBg = isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)";
-  const rowBorder = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)";
+  const gaugeReference = Math.max(walletBalance, amount, 1);
+  const gaugeAfterPercent = Math.max(0, Math.min(100, (balanceAfter / gaugeReference) * 100));
+
+  useEffect(() => {
+    if (!open) return;
+    dialogRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !isProcessing) {
+        onCancel();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open, isProcessing, onCancel]);
+
+  const overlayBg = isDark ? "rgba(0,0,0,0.85)" : "rgba(10,20,13,0.4)";
+  const cardBg = isDark ? "rgba(15,20,17,0.85)" : "rgba(255,255,255,0.92)";
+  const cardBorder = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)";
+  const textPrimary = isDark ? "rgba(255,255,255,0.98)" : "#0f1a10";
+  const textMuted = isDark ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.55)";
+  const innerCardBg = isDark ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.6)";
+  const innerCardBorder = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
+  const rowBg = isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)";
+  const rowBorder = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+  const chipBg = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)";
 
   return (
     <AnimatePresence>
       {open && (
         <>
-          {/* -- Backdrop -- */}
+          {/* Backdrop avec un blur prononcé */}
           <motion.div
             key="backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            animate={{ opacity: 1, backdropFilter: "blur(12px)" }}
+            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-50"
-            style={{ background: overlayBg, backdropFilter: "blur(6px)" }}
+            style={{ background: overlayBg }}
             onClick={!isProcessing ? onCancel : undefined}
             aria-hidden
           />
 
-          {/* -- Carte modale -- */}
+          {/* Wrapper Modale */}
           <motion.div
             key="modal"
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="confirm-paiement-title"
-            aria-describedby="confirm-paiement-desc"
-            initial={{ opacity: 0, y: 32, scale: 0.96 }}
+            tabIndex={-1}
+            initial={{ opacity: 0, y: 40, scale: 0.94 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.97 }}
-            transition={{
-              type: "spring",
-              stiffness: 340,
-              damping: 28,
-              mass: 0.9,
-            }}
-            className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 px-4"
+            exit={{ opacity: 0, y: 20, scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden p-4 focus:outline-none sm:p-6"
           >
             <div
-              className="relative overflow-hidden rounded-3xl shadow-2xl"
+              className="relative w-full max-w-4xl overflow-hidden rounded-[2rem] shadow-2xl"
               style={{
                 background: cardBg,
                 border: `1px solid ${cardBorder}`,
-                backdropFilter: "blur(24px)",
+                backdropFilter: "blur(32px)",
                 boxShadow: isDark
-                  ? "0 32px 64px -12px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.05)"
-                  : "0 32px 64px -12px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.05)",
+                  ? "0 40px 80px -20px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.08)"
+                  : "0 40px 80px -20px rgba(31,77,63,0.15), 0 0 0 1px rgba(0,0,0,0.05)",
               }}
             >
-              {/* Bande dorée supérieure — signature fintech premium */}
-              <div
+              {/* Liseré or supérieur */}
+              {/* <div
                 aria-hidden
-                className="absolute inset-x-0 top-0 h-[3px]"
-                style={{
-                  background: `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_GOLD}, ${BRAND_FOREST})`,
-                }}
-              />
+                className="absolute inset-x-0 top-0 h-1"
+                style={{ background: `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_GOLD}, ${BRAND_FOREST})` }}
+              /> */}
 
-              {/* Halo ambiant discret */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -top-24 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full blur-3xl"
-                style={{ background: "rgba(31,77,63,0.18)" }}
-              />
+              {/* Halos lumineux */}
+              <div aria-hidden className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full blur-[80px]" style={{ background: "rgba(31,77,63,0.15)" }} />
+              <div aria-hidden className="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full blur-[100px]" style={{ background: "rgba(201,168,118,0.1)" }} />
 
-              {/* Bouton de fermeture */}
+              {/* Bouton Fermer */}
               {!isProcessing && (
                 <button
                   onClick={onCancel}
-                  className="absolute right-5 top-5 z-10 flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 hover:scale-110"
-                  style={{
-                    background: isDark
-                      ? "rgba(255,255,255,0.06)"
-                      : "rgba(0,0,0,0.05)",
-                    color: textMuted,
-                  }}
-                  aria-label="Fermer la modale"
+                  className="absolute right-6 top-6 z-20 flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:rotate-90 hover:scale-110 focus-visible:outline-none focus-visible:ring-2"
+                  style={{ background: chipBg, color: textMuted, ["--tw-ring-color" as string]: BRAND_GOLD }}
+                  aria-label="Fermer"
                 >
                   <X className="h-4 w-4" />
                 </button>
               )}
 
-              {/* -- Corps -- */}
-              <div className="relative z-10 px-8 pb-8 pt-9">
+              {/* Structure Horizontale */}
+              <div className="relative z-10 flex flex-col gap-4 p-4 md:flex-row md:gap-5 md:p-6 lg:p-7">
 
-                {/* Icône principale */}
-                <motion.div
-                  initial={{ scale: 0, rotate: -15 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 350,
-                    damping: 18,
-                    delay: 0.05,
-                  }}
-                  className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg"
-                  style={{
-                    background: `linear-gradient(135deg, ${BRAND_FOREST}, #2d7a63)`,
-                    boxShadow: `0 8px 28px rgba(31,77,63,0.38)`,
-                  }}
+                {/* ---------------------------------------------------- */}
+                {/* COLONNE GAUCHE : RÉCAPITULATIF                       */}
+                {/* ---------------------------------------------------- */}
+                <div
+                  className="flex flex-1 flex-col rounded-[24px] p-6 sm:p-8"
+                  style={{ background: innerCardBg, border: `1px solid ${innerCardBorder}`, boxShadow: "inset 0 2px 10px rgba(255,255,255,0.02)" }}
                 >
-                  <Wallet className="h-8 w-8 text-white" />
-                </motion.div>
+                  {/* Entête gauche */}
+                  <div className="mb-8 flex flex-col items-start gap-5 sm:flex-row">
+                    <motion.div
+                      initial={{ scale: 0, rotate: -20 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
+                      className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl shadow-xl"
+                      style={{ background: `linear-gradient(135deg, ${BRAND_FOREST}, ${BRAND_FOREST_LIGHT})` }}
+                    >
+                      <Wallet className="h-6 w-6 text-white" />
+                    </motion.div>
+                    <div>
+                      <motion.h2
+                        id="confirm-paiement-title"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.15 }}
+                        className="font-display text-2xl font-black tracking-tight sm:text-3xl"
+                        style={{ color: textPrimary }}
+                      >
+                        Confirmation
+                      </motion.h2>
+                      <motion.p
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="mt-1 text-sm leading-relaxed"
+                        style={{ color: textMuted }}
+                      >
+                        {customerName ? `${customerName}, voici le récapitulatif de votre paiement.` : "Voici le récapitulatif de votre paiement."}
+                      </motion.p>
+                    </div>
+                  </div>
 
-                {/* Titre */}
-                <motion.h2
-                  id="confirm-paiement-title"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1, duration: 0.35 }}
-                  className="mb-1 text-center font-display text-2xl font-black tracking-tight"
-                  style={{ color: textPrimary }}
-                >
-                  Confirmer le paiement
-                </motion.h2>
-
-                {/* Sous-titre personnalisé */}
-                <motion.p
-                  id="confirm-paiement-desc"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.15 }}
-                  className="mb-7 text-center text-sm leading-relaxed"
-                  style={{ color: textMuted }}
-                >
-                  {customerName
-                    ? `${customerName}, confirmez le débit de votre portefeuille interne.`
-                    : "Confirmez le débit de votre portefeuille interne."}
-                </motion.p>
-
-                {/* -- Récapitulatif financier -- */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.18 }}
-                  className="mb-6 space-y-3 rounded-2xl p-5"
-                  style={{ background: rowBg, border: `1px solid ${rowBorder}` }}
-                >
-                  {/* Référence commande */}
+                  {/* Puces d'informations */}
                   {orderReference && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-[12px] font-bold uppercase tracking-widest" style={{ color: textMuted }}>
-                        Référence
-                      </span>
-                      <span className="font-mono text-sm font-black" style={{ color: BRAND_FOREST }}>
+
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.25 }}
+                      className="mb-8 flex flex-wrap items-center gap-3"
+                    >
+
+                      <span className="flex items-center gap-2 rounded-full px-4 py-2 font-mono text-[13px] font-bold shadow-sm" style={{ background: chipBg, color: BRAND_FOREST, border: `1px solid ${rowBorder}` }}>
+                        <span className="text-[10px] uppercase tracking-widest opacity-60">Réf</span>
                         {orderReference}
                       </span>
-                    </div>
-                  )}
 
-                  {/* Séparateur si référence présente */}
-                  {orderReference && (
-                    <div className="h-px" style={{ background: rowBorder }} />
-                  )}
+                      <span className="flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-bold shadow-sm" style={{ background: chipBg, color: textPrimary, border: `1px solid ${rowBorder}` }}>
+                        <Wallet className="h-3.5 w-3.5" style={{ color: BRAND_GOLD }} />
+                        Portefeuille interne
+                      </span>
 
-                  {/* Solde actuel */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-[12px] font-semibold uppercase tracking-wider" style={{ color: textMuted }}>
-                      Solde actuel
-                    </span>
-                    <span className="text-sm font-bold" style={{ color: textPrimary }}>
-                      {formatCurrency(String(walletBalance), "FCFA")}
-                    </span>
-                  </div>
-
-                  {/* Montant à débiter */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-[12px] font-semibold uppercase tracking-wider" style={{ color: textMuted }}>
-                      Montant à débiter
-                    </span>
-                    <span className="text-sm font-bold text-red-500">
-                      − {formatCurrency(String(amount), "FCFA")}
-                    </span>
-                  </div>
-
-                  {/* Séparateur */}
-                  <div className="h-px" style={{ background: rowBorder }} />
-
-                  {/* Solde restant estimé */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-[12px] font-bold uppercase tracking-wider" style={{ color: textMuted }}>
-                      Solde restant
-                    </span>
-                    <span
-                      className="text-base font-black"
-                      style={{ color: isInsufficient ? "#ef4444" : BRAND_FOREST }}
-                    >
-                      {formatCurrency(String(Math.max(0, balanceAfter)), "FCFA")}
-                    </span>
-                  </div>
-                </motion.div>
-
-                {/* Avertissement solde insuffisant (cas de protection UI) */}
-                <AnimatePresence>
-                  {isInsufficient && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="mb-5 overflow-hidden"
-                    >
-                      <div className="flex items-center gap-3 rounded-xl bg-red-500/10 px-4 py-3"
-                           style={{ border: "1px solid rgba(239,68,68,0.2)" }}>
-                        <AlertTriangle className="h-4 w-4 shrink-0 text-red-500" />
-                        <p className="text-[13px] font-semibold text-red-500">
-                          Solde insuffisant pour finaliser ce paiement.
-                        </p>
-                      </div>
                     </motion.div>
                   )}
-                </AnimatePresence>
 
-                {/* Badge de sécurité */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.25 }}
-                  className="mb-6 flex items-center justify-center gap-2"
+                  <div className="mt-auto">
+                    {/* Jauge de solde animée */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="rounded-2xl p-5"
+                      style={{ background: rowBg, border: `1px solid ${rowBorder}` }}
+                    >
+                      <div className="mb-3 flex items-center justify-between text-[11px] font-black uppercase tracking-[0.15em]" style={{ color: textMuted }}>
+                        <span>Solde actuel</span>
+                        <span>Après paiement</span>
+                      </div>
+
+                      <div className="relative mb-4 h-2.5 w-full overflow-hidden rounded-full" style={{ background: chipBg, boxShadow: "inset 0 1px 3px rgba(0,0,0,0.1)" }}>
+                        <motion.div
+                          className="h-full rounded-full"
+                          style={{ background: isInsufficient ? BRAND_DANGER : `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_FOREST_LIGHT})` }}
+                          initial={{ width: "100%" }}
+                          animate={{ width: `${gaugeAfterPercent}%` }}
+                          transition={{ delay: 0.5, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                        />
+                      </div>
+
+                      <div className="flex items-end justify-between font-mono">
+                        <span className="text-sm font-semibold" style={{ color: textMuted }}>{formatCurrency(String(walletBalance), "FCFA")}</span>
+                        <span className="text-lg font-black tracking-tight" style={{ color: isInsufficient ? BRAND_DANGER : textPrimary }}>
+                          {formatCurrency(String(Math.max(0, balanceAfter)), "FCFA")}
+                        </span>
+                      </div>
+                    </motion.div>
+                  </div>
+                </div>
+
+                {/* ---------------------------------------------------- */}
+                {/* COLONNE DROITE : ACTIONS ET MONTANT                  */}
+                {/* ---------------------------------------------------- */}
+                <div
+                  className="flex w-full flex-col justify-between rounded-[24px] p-6 md:w-[360px] lg:w-[400px] sm:p-8"
+                  style={{ background: innerCardBg, border: `1px solid ${innerCardBorder}`, boxShadow: "inset 0 2px 10px rgba(255,255,255,0.02)" }}
                 >
-                  <ShieldCheck className="h-3.5 w-3.5" style={{ color: BRAND_FOREST }} />
-                  <span className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: textMuted }}>
-                    Transaction sécurisée · Portefeuille interne
-                  </span>
-                </motion.div>
+                  <div className="mb-8 text-center md:mt-4 md:text-left">
 
-                {/* -- Boutons d'action -- */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="flex gap-3"
-                >
-                  {/* Annuler */}
-                  <button
-                    onClick={onCancel}
-                    disabled={isProcessing}
-                    className="flex-1 rounded-2xl py-3.5 text-sm font-bold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
-                    style={{
-                      background: rowBg,
-                      border: `1px solid ${rowBorder}`,
-                      color: textMuted,
-                    }}
-                  >
-                    Annuler
-                  </button>
+                    <motion.span
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.35 }}
+                      className="text-[12px] font-black uppercase tracking-[0.2em]"
+                      style={{ color: textMuted }}
+                    >
+                      Montant à débiter
+                    </motion.span>
 
-                  {/* Confirmer */}
-                  <button
-                    onClick={onConfirm}
-                    disabled={isProcessing || isInsufficient}
-                    className="group relative flex-1 overflow-hidden rounded-2xl py-3.5 text-sm font-black text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
-                    style={{
-                      background: `linear-gradient(135deg, ${BRAND_FOREST}, #2d7a63)`,
-                      boxShadow: `0 8px 24px rgba(31,77,63,0.32)`,
-                    }}
-                  >
-                    {/* Shimmer au hover */}
-                    <span
-                      aria-hidden
-                      className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 group-hover:translate-x-full"
-                    />
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+                      className="mt-2 font-display text-[42px] font-black leading-none tabular-nums tracking-tighter lg:text-[48px]"
+                      style={{ color: BRAND_FOREST, textShadow: isDark ? "0 4px 12px rgba(31,77,63,0.3)" : "none" }}
+                    >
+                      {formatCurrency(String(amount), "FCFA")}
+                    </motion.div>
 
-                    <span className="relative z-10 flex items-center justify-center gap-2.5">
-                      {isProcessing ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          Traitement…
-                        </>
-                      ) : (
-                        <>
-                          <Wallet className="h-4 w-4" />
-                          Confirmer le paiement
-                        </>
+                  </div>
+
+                  <div className="mt-auto space-y-5">
+                    {/* Avertissement solde insuffisant */}
+                    <AnimatePresence>
+                      {isInsufficient && (
+
+                        <motion.div
+                          initial={{ opacity: 0, height: 0, y: 10 }}
+                          animate={{ opacity: 1, height: "auto", y: 0 }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="flex items-start gap-3 rounded-xl p-4" style={{ background: BRAND_DANGER_SOFT, border: `1px solid ${BRAND_DANGER_BORDER}` }}>
+                            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" style={{ color: BRAND_DANGER }} />
+                            <p className="text-[13px] font-semibold leading-relaxed" style={{ color: BRAND_DANGER }}>
+                              Solde insuffisant pour ce paiement. Veuillez recharger votre compte.
+                            </p>
+                          </div>
+                        </motion.div>
+
                       )}
-                    </span>
-                  </button>
-                </motion.div>
+                    </AnimatePresence>
+
+                    {/* Actions */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.45 }}
+                      className="flex flex-col gap-3"
+                    >
+                      <button
+                        onClick={onConfirm}
+                        disabled={isProcessing || isInsufficient}
+                        className="group cursor-pointer relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-[18px] py-4 text-[15px] font-black text-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+                        style={{
+                          background: `linear-gradient(135deg, ${BRAND_FOREST}, ${BRAND_FOREST_LIGHT})`,
+                          // boxShadow: `0 12px 32px rgba(31,77,63,0.35)`,
+                          ["--tw-ring-color" as string]: BRAND_GOLD,
+                        }}
+                      >
+                        {!(isProcessing || isInsufficient) && (
+                          <span
+                            aria-hidden
+                            className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
+                          />
+                        )}
+                        <span className="relative z-10 flex items-center justify-center gap-2">
+                          {isProcessing ? (
+                            <>
+                              <Loader2 className="h-5 w-5 animate-spin" />
+                              Traitement en cours...
+                            </>
+                          ) : (
+                            <>
+                              Confirmer le paiement
+                              <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                            </>
+                          )}
+                        </span>
+                      </button>
+
+                      <button
+                        onClick={onCancel}
+                        disabled={isProcessing}
+                        className="group flex w-full cursor-pointer items-center justify-center gap-2 rounded-[18px] py-4 text-[14px] font-bold transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        style={{ color: textMuted, ["--tw-ring-color" as string]: BRAND_GOLD }}
+                      >
+                        Annuler la transaction
+                      </button>
+                    </motion.div>
+
+                    {/* Sécurité */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                      className="flex items-center justify-center gap-2 pt-2"
+                    >
+                      <ShieldCheck className="h-3.5 w-3.5" style={{ color: BRAND_GOLD }} />
+                      <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: textMuted }}>
+                        Transaction sécurisée
+                      </span>
+                    </motion.div>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>

@@ -1,7 +1,7 @@
-﻿"use client";
+"use client";
 import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Tag, Zap, Plus, LayoutGrid, List, Star } from "lucide-react";
+import { Tag, TrendingDown, Plus, LayoutGrid, List, BarChart3, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
     getAdminPromoCodes,
@@ -132,7 +132,7 @@ export default function PromotionsSection() {
             ? await updateAdminSale(editingSale.id, data)
             : await createAdminSale(data);
         if (res.ok) {
-            setToast({ show: true, type: "success", message: `Vente flash ${editingSale ? "modifiée" : "créée"} avec succès` });
+            setToast({ show: true, type: "success", message: `Vente en solde ${editingSale ? "modifiée" : "créée"} avec succès` });
             setSaleModalOpen(false);
             loadData();
         } else {
@@ -237,58 +237,25 @@ export default function PromotionsSection() {
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     className="flex flex-col gap-2"
                 >
-                    <div className="relative inline-block group">
-                        <h2
-                            className="relative text-2xl uppercase font-black tracking-tight sm:text-3xl lg:text-4xl xl:text-4xl premium-title-shine flex items-center gap-3"
-                            style={{
-                                letterSpacing: "-0.025em",
-                                backgroundImage:
-                                    "linear-gradient(110deg, #0D2E1E 0%, #1F4D34 45%, #0D2E1E 90%)",
-                                backgroundSize: "220% auto",
-                                WebkitBackgroundClip: "text",
-                                WebkitTextFillColor: "transparent",
-                                backgroundClip: "text",
-                            }}
-                        >
-                            <Star className="h-10 w-10 text-amber-500 shrink-0" style={{ fill: "url(#gold-gradient)" }} />
-                            Promotions
-                        </h2>
-
-                        {/* Kicker discret en lettres espacées doré, signature premium */}
-                        <span
-                            className="block text-[11px] font-semibold uppercase tracking-[0.35em] mt-2 mb-2"
-                            style={{ color: "#B8924A", opacity: 0.85 }}
-                        >
-                            Gérez vos codes de réduction, lancez des ventes en soldes et boostez vos ventes.
-                        </span>
-
-                        {/* Gradient SVG caché pour l'icône */}
-                        <svg width="0" height="0" className="absolute">
-                            <defs>
-                                <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stopColor="#FDE68A" />
-                                    <stop offset="50%" stopColor="#D97706" />
-                                    <stop offset="100%" stopColor="#B45309" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-
-
-                        {/* Animations scoppées, avec respect du prefers-reduced-motion */}
-                        <style>{`
-                    @keyframes premium-title-shine-anim {
-                    0%, 100% { background-position: 0% center; }
-                    50% { background-position: 100% center; }
-                    }
-                    .premium-title-shine {
-                    animation: premium-title-shine-anim 6s ease-in-out infinite;
-                    }
-                    @media (prefers-reduced-motion: reduce) {
-                    .premium-title-shine {
-                        animation: none;
-                    }
-                    }
-                `}</style>
+                    <div className="flex items-center gap-4">
+                        {/* Icône principale sobre */}
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 dark:bg-primary/20 border border-primary/20">
+                            <Tag className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                            <h2
+                                className="text-2xl font-black tracking-tight sm:text-3xl lg:text-4xl"
+                                style={{ color: "#0D1F17", letterSpacing: "-0.025em" }}
+                            >
+                                Promotions
+                            </h2>
+                            <span
+                                className="block text-[11px] font-semibold uppercase tracking-[0.25em] mt-0.5"
+                                style={{ color: "#8A9080" }}
+                            >
+                                Gérez vos codes de réduction et ventes en solde
+                            </span>
+                        </div>
                     </div>
                 </motion.div>
 
@@ -304,7 +271,7 @@ export default function PromotionsSection() {
                     className="flex items-center cursor-pointer gap-2 cursor-pointers rounded-xl bg-primary px-6 py-3 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:scale-105 active:scale-95"
                 >
                     <Plus className="h-5 w-5" />
-                    {tab === "codes" ? "Nouveau code promo" : "Nouvelle vente flash"}
+                    {tab === "codes" ? "Nouveau code promo" : "Nouvelle vente en solde"}
                 </button>
 
             </div>
@@ -312,26 +279,45 @@ export default function PromotionsSection() {
             {/* -- KPI -------------------------------------------------------- */}
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
                 {[
-                    { icon: <Tag className="h-6 w-6 text-primary" />, value: stats.activeCodes, label: "Codes promo actifs", glow: "bg-primary/10" },
-                    { icon: <Tag className="h-6 w-6 text-blue-500" />, value: stats.totalUses, label: "Utilisations totales", glow: "bg-blue-500/10" },
-                    { icon: <Zap className="h-6 w-6 text-amber-500" />, value: stats.activeSales, label: "Ventes en solde en cours", glow: "bg-amber-500/10" },
-
+                    {
+                        icon: <Tag className="h-5 w-5" />,
+                        value: stats.activeCodes,
+                        label: "Codes promo actifs",
+                        color: "text-primary",
+                        bg: "bg-primary/8",
+                    },
+                    {
+                        icon: <BarChart3 className="h-5 w-5" />,
+                        value: stats.totalUses,
+                        label: "Utilisations totales",
+                        color: "text-slate-600 dark:text-slate-300",
+                        bg: "bg-slate-100 dark:bg-slate-800",
+                    },
+                    {
+                        icon: <TrendingDown className="h-5 w-5" />,
+                        value: stats.activeSales,
+                        label: "Ventes en solde en cours",
+                        color: "text-primary",
+                        bg: "bg-primary/8",
+                    },
                 ].map((kpi, i) => (
-
-                    <motion.div key={i} whileHover={{ y: -4 }} className="relative overflow-hidden rounded-2xl border border-border bg-surface-elevated p-6 shadow-sm">
-
-                        {/* <div className={cn("absolute -right-4 -top-4 h-24 w-24 rounded-full blur-2xl", kpi.glow)} /> */}
+                    <motion.div
+                        key={i}
+                        whileHover={{ y: -3 }}
+                        className="relative overflow-hidden rounded-2xl border border-border/60 bg-white dark:bg-[#1e1e1e] p-6 shadow-sm"
+                    >
+                        {/* Liseré discret */}
+                        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
                         <div className="flex items-center justify-between">
-                            <p className="mt-3 text-4xl font-extrabold text-foreground">{kpi.value}</p>
-                            {kpi.icon}
+                            <p className="mt-2 text-4xl font-extrabold text-slate-900 dark:text-white">{kpi.value}</p>
+                            <div className={cn("flex h-10 w-10 items-center justify-center rounded-xl", kpi.bg, kpi.color)}>
+                                {kpi.icon}
+                            </div>
                         </div>
-
-                        <p className="mt-1 text-sm font-medium text-muted-foreground">{kpi.label}</p>
+                        <p className="mt-1.5 text-sm font-medium text-muted-foreground">{kpi.label}</p>
                     </motion.div>
-
                 ))}
-
             </div>
 
             {/* -- Onglets + vue ----------------------------------------------- */}
@@ -340,9 +326,8 @@ export default function PromotionsSection() {
                 <div className="flex gap-2 w-full sm:w-auto">
 
                     {([
-                        { key: "codes", label: "Codes Promo", icon: <Tag className="h-6 w-6" />, count: promoCodes.length },
-                        { key: "sales", label: "Ventes en solde", icon: <Zap className="h-6 w-6" />, count: sales.length },
-
+                        { key: "codes", label: "Codes Promo", icon: <Tag className="h-5 w-5" />, count: promoCodes.length },
+                        { key: "sales", label: "Ventes en solde", icon: <TrendingDown className="h-5 w-5" />, count: sales.length },
                     ] as const).map(t => (
 
                         <button
@@ -404,7 +389,7 @@ export default function PromotionsSection() {
                         animate={{ opacity: 1, y: 0 }}
                         className={cn(
                             viewMode === "grid"
-                                ? "grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                                ? "grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
                                 : "flex flex-col gap-2"
                         )}
                     >
@@ -428,9 +413,9 @@ export default function PromotionsSection() {
                 sales.length === 0 ? (
 
                     <EmptyState
-                        title="Aucune vente flash"
-                        description="Créez une vente flash pour mettre en avant un produit à prix réduit pendant un temps limité."
-                        actionText="Lancer une vente flash"
+                        title="Aucune vente en solde"
+                        description="Créez une vente en solde pour mettre en avant un produit à prix réduit pendant un temps limité."
+                        actionText="Lancer une vente en solde"
                         onAction={() => { setEditingSale(null); setSaleModalOpen(true); }}
                         icon={Zap}
                     />
@@ -442,7 +427,7 @@ export default function PromotionsSection() {
                         animate={{ opacity: 1, y: 0 }}
                         className={cn(
                             viewMode === "grid"
-                                ? "grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                                ? "grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:grid-cols-5 "
                                 : "flex flex-col gap-2"
                         )}
                     >

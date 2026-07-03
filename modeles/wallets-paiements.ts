@@ -182,6 +182,14 @@ export interface MyTransfer {
   order_reference: string;
   /** Date de création ISO 8601 */
   created_at: string;
+  /** Nom du client ayant effectué la transaction */
+  user_name?: string;
+  /** Email du client ayant effectué la transaction */
+  user_email?: string;
+  /** Fallback pour le nom du client */
+  client_name?: string;
+  /** Fallback pour l'email du client */
+  client_email?: string;
 }
 
 /**

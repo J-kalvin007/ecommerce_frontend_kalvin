@@ -327,7 +327,7 @@ export default function CustomerNotesFavorisPage() {
           {/* Onglet Notes */}
           <button
             onClick={() => setActiveTab("ratings")}
-            className={`relative z-10 flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[15px] font-bold transition-colors cursor-pointer ${activeTab === "ratings" ? "text-[#1f241c]" : "text-[#8A9080] hover:text-[#4A5540]"
+            className={`relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl py-2.5 text-[15px] font-bold transition-colors cursor-pointer ${activeTab === "ratings" ? "text-[#1f241c]" : "text-[#8A9080] hover:text-[#4A5540]"
               }`}
           >
             <Star
@@ -453,7 +453,7 @@ export default function CustomerNotesFavorisPage() {
                     <motion.div
                       className={cn(
                         viewMode === "grid"
-                          ? "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+                          ? "grid grid-cols-1 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
                           : "flex flex-col gap-4"
                       )}
                       layout
@@ -612,7 +612,7 @@ export default function CustomerNotesFavorisPage() {
                     <motion.div
                       className={cn(
                         viewMode === "grid"
-                          ? "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+                          ? "grid grid-cols-1 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
                           : "flex flex-col gap-4"
                       )}
                       layout

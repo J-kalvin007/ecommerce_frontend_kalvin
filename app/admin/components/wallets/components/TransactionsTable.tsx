@@ -231,7 +231,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
         <table className="w-full min-w-[820px]">
           <thead>
             <tr className="border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/30">
-              {["Type", "Fournisseur", "Montant", "Commande", "Référence externe", "Statut", "Date"].map((h) => (
+              {["Type", "Client", "Fournisseur", "Montant", "Commande", "Référence externe", "Statut", "Date"].map((h) => (
                 <th key={h} className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-400">
                   {h}
                 </th>
@@ -241,7 +241,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
           <tbody>
             {paginated.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-5 py-16 text-center">
+                <td colSpan={8} className="px-5 py-16 text-center">
                   <div className="flex flex-col items-center gap-3">
                     <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
                       <Receipt className="h-6 w-6 text-slate-400" />
@@ -276,6 +276,18 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                         </div>
                         <span className="text-sm text-slate-700 dark:text-slate-300 font-medium">
                           {tx.type_label}
+                        </span>
+                      </div>
+                    </td>
+
+                    {/* Client */}
+                    <td className="px-5 py-4">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                          {tx.user_name || tx.client_name || "Client inconnu"}
+                        </span>
+                        <span className="text-xs text-slate-500">
+                          {tx.user_email || tx.client_email || "N/A"}
                         </span>
                       </div>
                     </td>

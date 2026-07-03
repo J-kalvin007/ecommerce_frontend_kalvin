@@ -13,12 +13,13 @@ interface StepImagesProps {
   existingImages: ProductImageAdmin[];
   onAddImages: (files: File[]) => void;
   onRemoveUploaded: (id: string) => void;
+  onRemoveExisting?: (id: string) => void;
   onSetPrimaryUploaded: (id: string) => void;
   altText: string;
   onAltTextChange: (value: string) => void;
 }
 
-export function StepImages({ uploadedImages, existingImages, onAddImages, onRemoveUploaded, onSetPrimaryUploaded, altText, onAltTextChange }: StepImagesProps) {
+export function StepImages({ uploadedImages, existingImages, onAddImages, onRemoveUploaded, onRemoveExisting, onSetPrimaryUploaded, altText, onAltTextChange }: StepImagesProps) {
   const ref = useRef<HTMLInputElement>(null);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -43,7 +44,7 @@ export function StepImages({ uploadedImages, existingImages, onAddImages, onRemo
                 {img.is_primary && <span className="absolute left-1 top-1 rounded bg-primary px-1.5 py-0.5 text-[9px] font-bold text-white shadow-sm z-10">Principale</span>}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-1.5">
                   <div className="flex justify-end w-full">
-                    <button onClick={() => onRemoveUploaded(img.id)} className="rounded-full bg-red-500/90 hover:bg-red-500 p-1.5 text-white transition-colors"><X className="h-3 w-3" /></button>
+                    <button type="button" onClick={() => onRemoveUploaded(img.id)} className="rounded-full bg-red-500/90 hover:bg-red-500 p-1.5 text-white transition-colors cursor-pointer"><X className="h-3 w-3" /></button>
                   </div>
                   {!img.is_primary && (
                     <button onClick={() => onSetPrimaryUploaded(img.id)} className="w-full rounded bg-white/20 backdrop-blur-sm py-1 text-[10px] font-semibold text-white hover:bg-primary transition-colors">Définir principale</button>
@@ -59,14 +60,23 @@ export function StepImages({ uploadedImages, existingImages, onAddImages, onRemo
           <h4 className="mb-2 text-sm font-semibold text-foreground">Images existantes ({existingImages.length})</h4>
           <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 lg:grid-cols-6">
             {existingImages.map((img) => (
-              <div key={img.id} className="relative aspect-square overflow-hidden rounded-2xl border border-border  shadow-sm">
+              <div key={img.id} className="group relative aspect-square overflow-hidden rounded-2xl border border-border shadow-sm">
                 <Image
                   src={img.image.startsWith("http") ? img.image : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${img.image.startsWith("/") ? "" : "/"}${img.image}`}
                   alt={img.alt_text}
                   fill
                   className="object-cover"
                 />
-                {img.is_primary && <span className="absolute left-1 top-1 rounded bg-primary px-1.5 py-0.5 text-[9px] font-bold text-white shadow-sm">Principale</span>}
+                {img.is_primary && <span className="absolute left-1 top-1 rounded bg-primary px-1.5 py-0.5 text-[9px] font-bold text-white shadow-sm z-10">Principale</span>}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-1.5">
+                  <div className="flex justify-end w-full">
+                    {onRemoveExisting && (
+                      <button type="button" onClick={() => onRemoveExisting(img.id)} className="rounded-full bg-red-500/90 hover:bg-red-500 p-1.5 text-white transition-colors cursor-pointer">
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
             ))}
           </div>

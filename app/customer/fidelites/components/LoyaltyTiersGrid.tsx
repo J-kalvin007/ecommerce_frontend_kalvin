@@ -145,7 +145,7 @@ export default function LoyaltyTiersGrid({
             Programme exclusif
           </p>
           <h2
-            className="text-[18px] font-black tracking-tight"
+            className="text-[22px] font-bold tracking-tight"
             style={{ color: "#1f241c" }}
           >
             Votre parcours de fidélité
@@ -160,8 +160,8 @@ export default function LoyaltyTiersGrid({
           <button
             onClick={() => setViewMode('grid')}
             className={`flex items-center cursor-pointer justify-center rounded-md p-1.5 transition-all ${viewMode === 'grid'
-                ? 'bg-[#F2EFE8] text-[#1f4d3f]'
-                : 'text-[#8A9080] hover:text-[#1f4d3f]'
+              ? 'bg-[#F2EFE8] text-[#1f4d3f]'
+              : 'text-[#8A9080] hover:text-[#1f4d3f]'
               }`}
             aria-label="Vue grille"
           >
@@ -170,8 +170,8 @@ export default function LoyaltyTiersGrid({
           <button
             onClick={() => setViewMode('list')}
             className={`flex items-center cursor-pointer justify-center rounded-md p-1.5 transition-all ${viewMode === 'list'
-                ? 'bg-[#F2EFE8] text-[#1f4d3f]'
-                : 'text-[#8A9080] hover:text-[#1f4d3f]'
+              ? 'bg-[#F2EFE8] text-[#1f4d3f]'
+              : 'text-[#8A9080] hover:text-[#1f4d3f]'
               }`}
             aria-label="Vue liste"
           >
@@ -619,7 +619,7 @@ function TierIconFrame({
         {isUnlocked ? (
           <TierIcon
             className="h-7 w-7"
-            style={{ 
+            style={{
               color: isCurrentTier ? cfg.color : cfg.color,
               filter: `drop-shadow(0 2px 4px ${cfg.color}66)`
             }}

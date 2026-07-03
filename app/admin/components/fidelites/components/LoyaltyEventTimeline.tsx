@@ -1,4 +1,8 @@
-// app/admin/components/fidelites/LoyaltyEventTimeline.tsx
+/**
+ * LoyaltyEventTimeline — Affichage luxueux de l'historique des événements de points
+ *
+ * @module app/admin/components/fidelites/components/LoyaltyEventTimeline
+ */
 "use client";
 import { motion } from "framer-motion";
 import {
@@ -58,8 +62,9 @@ export function LoyaltyEventTimeline({ events, loading }: LoyaltyEventTimelinePr
     }
     if (!events.length) {
         return (
-            <div className="flex h-24 items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
-                Aucun événement de points enregistré.
+            <div className="flex flex-col h-40 items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 text-sm font-medium text-muted-foreground p-6 text-center">
+                <Clock className="h-8 w-8 mb-3 opacity-20" />
+                Aucun historique d'événement de points enregistré.
             </div>
         );
     }
@@ -67,15 +72,17 @@ export function LoyaltyEventTimeline({ events, loading }: LoyaltyEventTimelinePr
     const groups = groupByPeriod(events);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             {groups.map((group, gi) => (
                 <div key={group.label}>
-                    <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 pl-7">
+                    <p className="mb-4 text-[10px] font-extrabold uppercase tracking-[0.2em] text-muted-foreground/80 pl-8">
                         {group.label}
                     </p>
                     <div className="relative pl-6">
-                        <div className="absolute left-2 top-2 bottom-2 w-0.5 rounded-full bg-border/60" />
-                        <div className="space-y-3">
+                        {/* Ligne verticale timeline */}
+                        <div className="absolute left-2 top-3 bottom-0 w-px bg-slate-200 dark:bg-slate-800" />
+                        
+                        <div className="space-y-4">
                             {group.events.map((event, i) => {
                                 const reason  = event.reason as LoyaltyEventReason;
                                 const ecfg    = LOYALTY_EVENT_CONFIG[reason] ?? LOYALTY_EVENT_CONFIG.purchase;
@@ -85,38 +92,57 @@ export function LoyaltyEventTimeline({ events, loading }: LoyaltyEventTimelinePr
                                 return (
                                     <motion.div
                                         key={event.id}
-                                        initial={{ opacity: 0, x: -12 }}
+                                        initial={{ opacity: 0, x: -15 }}
                                         animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: (gi * 3 + i) * 0.04 }}
-                                        className="relative flex items-start gap-3"
+                                        transition={{ delay: (gi * 3 + i) * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                                        className="group relative flex items-start gap-4"
                                     >
-                                        {/* Bullet */}
-                                        <div className={cn(
-                                            "absolute -left-6 top-1.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 border-surface-elevated",
-                                            ecfg.bg, ecfg.border
-                                        )}>
-                                            <div className={cn("h-1.5 w-1.5 rounded-full", ecfg.color.replace("text-", "bg-"))} />
+                                        {/* Point sur la timeline */}
+                                        <div className="absolute -left-[22px] top-3 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-[3px] border-white dark:border-[#1a1a1a] bg-slate-100 dark:bg-slate-800 transition-colors group-hover:border-primary/20 group-hover:bg-primary z-10">
+                                            <div className="h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-600 group-hover:bg-white transition-colors" />
                                         </div>
 
-                                        <div className="flex flex-1 items-start justify-between gap-2 rounded-xl border border-border bg-surface p-3 transition-colors hover:bg-surface-elevated">
-                                            <div className="flex items-start gap-2.5">
-                                                <div className={cn("mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg", ecfg.bg)}>
-                                                    <Icon className={cn("h-4 w-4", ecfg.color)} />
+                                        {/* Carte événement */}
+                                        <div className="flex flex-1 items-start justify-between gap-3 rounded-[16px] border border-slate-100 dark:border-slate-800 bg-white dark:bg-[#1a1a1a] p-4 shadow-sm transition-all hover:shadow-md hover:border-slate-200 dark:hover:border-slate-700">
+                                            
+                                            <div className="flex items-start gap-3">
+                                                {/* Icône */}
+                                                <div className={cn(
+                                                    "mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-transform group-hover:scale-105",
+                                                    ecfg.bg, ecfg.border
+                                                )}>
+                                                    <Icon className={cn("h-5 w-5", ecfg.color)} />
                                                 </div>
+                                                
+                                                {/* Textes */}
                                                 <div className="min-w-0">
-                                                    <p className="text-xs font-bold text-foreground truncate">{event.reason_display || LOYALTY_EVENT_LABELS[reason]}</p>
-                                                    <p className="text-[10px] text-muted-foreground line-clamp-1">{event.description}</p>
-                                                    <p className="mt-1 text-[10px] text-muted-foreground/60">
+                                                    <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                                                        {event.reason_display || LOYALTY_EVENT_LABELS[reason]}
+                                                    </p>
+                                                    <p className="text-[11px] font-medium text-muted-foreground mt-0.5 line-clamp-2 pr-2">
+                                                        {event.description}
+                                                    </p>
+                                                    <p className="mt-1.5 flex items-center gap-1 text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest">
+                                                        <Clock className="h-3 w-3" />
                                                         {new Date(event.created_at).toLocaleString("fr-FR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div className="shrink-0 text-right">
-                                                <p className={cn("text-sm font-extrabold", isGain ? "text-emerald-400" : "text-red-400")}>
-                                                    {isGain ? "+" : ""}{event.points_delta} pts
-                                                </p>
-                                                <p className="text-[10px] text-muted-foreground/60">
-                                                    → {event.new_points_balance_after.toLocaleString("fr-FR")}
+
+                                            {/* Points */}
+                                            <div className="shrink-0 text-right flex flex-col items-end justify-center">
+                                                <div className={cn(
+                                                    "inline-flex items-baseline gap-1 rounded-lg px-2.5 py-1 text-sm font-extrabold",
+                                                    isGain 
+                                                        ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" 
+                                                        : "bg-red-500/10 text-red-600 dark:text-red-400"
+                                                )}>
+                                                    <span>{isGain ? "+" : ""}</span>
+                                                    <span className="text-base">{event.points_delta}</span>
+                                                    <span className="text-[10px]">pts</span>
+                                                </div>
+                                                <p className="mt-1 text-[10px] font-bold text-muted-foreground">
+                                                    Solde final: {event.new_points_balance_after.toLocaleString("fr-FR")}
                                                 </p>
                                             </div>
                                         </div>

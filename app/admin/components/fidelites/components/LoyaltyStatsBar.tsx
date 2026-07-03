@@ -1,8 +1,13 @@
-// app/admin/components/fidelites/LoyaltyStatsBar.tsx
+/**
+ * LoyaltyStatsBar — Bar de KPIs premium pour la fidélité
+ *
+ * @module app/admin/components/fidelites/components/LoyaltyStatsBar
+ */
 "use client";
+
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Users, Star, TrendingUp, BarChart3 } from "lucide-react";
+import { Users, Star, TrendingUp, BarChart3, ChevronRight } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { getTierConfig } from "@/modeles/fidelites";
 import type { LoyaltyStats } from "@/modeles/fidelites";
@@ -14,7 +19,10 @@ function AnimatedCounter({ target, suffix = "", prefix = "" }: { target: number;
     const rafRef = useRef<number | null>(null);
 
     useEffect(() => {
-        if (target === 0) return;
+        if (target === 0) {
+            setDisplay(0);
+            return;
+        }
         const duration = 1200;
         const start = performance.now();
         const step = (now: number) => {
@@ -42,23 +50,32 @@ function KPICard({
 }) {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: delay ?? 0, duration: 0.5, ease: "easeOut" }}
-            className="relative overflow-hidden rounded-2xl border border-border bg-surface-elevated p-5 shadow-sm"
+            transition={{ delay: delay ?? 0, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="group relative overflow-hidden rounded-[24px] border border-slate-100 dark:border-slate-800 bg-white dark:bg-[#1a1a1a] p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
         >
-            <div className={cn("absolute -right-4 -top-4 h-20 w-20 rounded-full blur-2xl opacity-60", accent)} />
-            <div className="relative">
-
-                <div className="flex items-center justify-between">
-                    <p className="text-3xl font-extrabold tracking-tight text-foreground">{value}</p>
-                    <div className={cn("mb-3 inline-flex items-center justify-center rounded-xl p-2.5", accent, "bg-opacity-20")}>
-                        {icon}
+            {/* Ambient glow caché derrière */}
+            <div className={cn("absolute -right-8 -top-8 h-32 w-32 rounded-full blur-[50px] opacity-20 transition-opacity duration-500 group-hover:opacity-40", accent)} />
+            
+            <div className="relative z-10 flex flex-col h-full justify-between gap-4">
+                <div className="flex items-start justify-between">
+                    <div className={cn("flex h-12 w-12 items-center justify-center rounded-2xl border bg-white dark:bg-slate-900 shadow-sm", accent.replace('bg-', 'border-').replace('/10', '/20'))}>
+                        <div className={cn("text-current opacity-80", accent.replace('bg-', 'text-').replace('/10', ''))}>
+                            {icon}
+                        </div>
                     </div>
+                    {sub && (
+                        <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 bg-slate-50 dark:bg-slate-800/50 px-2 py-1 rounded-lg">
+                            {sub}
+                        </div>
+                    )}
                 </div>
 
-                <p className="mt-1 text-xs font-semibold text-muted-foreground">{label}</p>
-                {sub && <p className="mt-0.5 text-[10px] text-muted-foreground/60">{sub}</p>}
+                <div>
+                    <p className="text-3xl font-black tracking-tighter text-slate-900 dark:text-white drop-shadow-sm mb-1">{value}</p>
+                    <p className="text-xs font-bold text-muted-foreground">{label}</p>
+                </div>
             </div>
         </motion.div>
     );
@@ -71,52 +88,65 @@ export function LoyaltyStatsBar({ stats }: LoyaltyStatsBarProps) {
     const totalByTier = tierEntries.reduce((s, [, n]) => s + n, 0) || 1;
 
     return (
-        <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="space-y-6">
+            {/* KPIs Principaux */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <KPICard
-                    delay={0}
-                    icon={<Users className="h-5 w-5 text-primary" />}
-                    label="Membres inscrits"
+                    delay={0.05}
+                    icon={<Users className="h-6 w-6" />}
+                    label="Membres du programme"
                     value={<AnimatedCounter target={stats.totalMembers} />}
-                    accent="bg-primary/10"
+                    accent="bg-blue-500/10 border-blue-500/20 text-blue-500"
+                    sub="Inscrits"
                 />
                 <KPICard
-                    delay={0.08}
-                    icon={<Star className="h-5 w-5 text-amber-400" />}
-                    label="Points distribués"
-                    value={<AnimatedCounter target={stats.totalPointsEarned} suffix=" pts" />}
-                    accent="bg-amber-400/10"
-                    sub="Total lifetime cumulé"
+                    delay={0.10}
+                    icon={<Star className="h-6 w-6" />}
+                    label="Total des points distribués"
+                    value={<><AnimatedCounter target={stats.totalPointsEarned} /><span className="text-base font-bold text-muted-foreground ml-1">pts</span></>}
+                    accent="bg-amber-500/10 border-amber-500/20 text-amber-500"
+                    sub="Lifetime"
                 />
                 <KPICard
-                    delay={0.16}
-                    icon={<TrendingUp className="h-5 w-5 text-emerald-400" />}
-                    label="Dépenses cumulées"
+                    delay={0.15}
+                    icon={<TrendingUp className="h-6 w-6" />}
+                    label="Chiffre d'affaires fidélité"
                     value={<AnimatedCounter target={Math.round(stats.totalSpend)} suffix=" F" />}
-                    accent="bg-emerald-400/10"
-                    sub="Toutes commandes livrées"
+                    accent="bg-emerald-500/10 border-emerald-500/20 text-emerald-500"
+                    sub="Généré"
                 />
                 <KPICard
-                    delay={0.24}
-                    icon={<BarChart3 className="h-5 w-5 text-blue-400" />}
-                    label="Points disponibles"
-                    value={<AnimatedCounter target={stats.totalPointsBalance} suffix=" pts" />}
-                    accent="bg-blue-400/10"
-                    sub="Solde actuel total"
+                    delay={0.20}
+                    icon={<BarChart3 className="h-6 w-6" />}
+                    label="Solde total en circulation"
+                    value={<><AnimatedCounter target={stats.totalPointsBalance} /><span className="text-base font-bold text-muted-foreground ml-1">pts</span></>}
+                    accent="bg-purple-500/10 border-purple-500/20 text-purple-500"
+                    sub="Actif"
                 />
             </div>
 
             {/* Répartition par palier */}
             {tierEntries.length > 0 && (
                 <motion.div
-                    initial={{ opacity: 0, y: 12 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.35 }}
-                    className="rounded-2xl border border-border bg-surface-elevated p-4"
+                    transition={{ delay: 0.3 }}
+                    className="relative overflow-hidden rounded-[24px] border border-slate-100 dark:border-slate-800 bg-white dark:bg-[#1a1a1a] p-6 shadow-sm"
                 >
-                    <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">Répartition par palier</p>
-                    <div className="flex h-3 w-full overflow-hidden rounded-full">
-                        {tierEntries.map(([tier, count]) => {
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h3 className="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">
+                                Répartition par Niveau VIP
+                            </h3>
+                            <p className="text-xs font-medium text-muted-foreground mt-0.5">
+                                Vue d'ensemble de la distribution de vos membres.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Barre de progression multi-segments */}
+                    <div className="relative h-4 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800 shadow-inner flex">
+                        {tierEntries.map(([tier, count], idx) => {
                             const cfg = getTierConfig(tier);
                             const pct = (count / totalByTier) * 100;
                             return (
@@ -124,21 +154,33 @@ export function LoyaltyStatsBar({ stats }: LoyaltyStatsBarProps) {
                                     key={tier}
                                     initial={{ width: 0 }}
                                     animate={{ width: `${pct}%` }}
-                                    transition={{ duration: 0.9, delay: 0.4, ease: "easeOut" }}
-                                    className={cn("h-full bg-gradient-to-r first:rounded-l-full last:rounded-r-full", cfg.gradient)}
+                                    transition={{ duration: 1, delay: 0.4 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                                    className={cn("h-full border-r border-white/20 last:border-0 bg-gradient-to-r", cfg.gradient)}
                                     title={`${tier}: ${count} membres (${pct.toFixed(0)}%)`}
-                                />
+                                >
+                                    {/* Effet reflet */}
+                                    <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent opacity-50" />
+                                </motion.div>
                             );
                         })}
                     </div>
-                    <div className="mt-3 flex flex-wrap gap-3">
+
+                    {/* Légende */}
+                    <div className="mt-6 flex flex-wrap gap-4">
                         {tierEntries.map(([tier, count]) => {
                             const cfg = getTierConfig(tier);
+                            const pct = ((count / totalByTier) * 100).toFixed(1);
                             return (
-                                <div key={tier} className="flex items-center gap-1.5">
-                                    <div className={cn("h-2.5 w-2.5 rounded-full bg-gradient-to-r", cfg.gradient)} />
-                                    <span className={cn("text-xs font-semibold", cfg.textColor)}>{tier}</span>
-                                    <span className="text-xs text-muted-foreground">({count})</span>
+                                <div key={tier} className="flex items-center gap-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 px-3 py-2">
+                                    <div className={cn("h-3 w-3 rounded-full shadow-sm bg-gradient-to-br", cfg.gradient)} />
+                                    <div>
+                                        <p className="text-[11px] font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">
+                                            {tier}
+                                        </p>
+                                        <p className="text-[10px] font-semibold text-muted-foreground">
+                                            {count} membres <span className="opacity-50">({pct}%)</span>
+                                        </p>
+                                    </div>
                                 </div>
                             );
                         })}

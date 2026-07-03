@@ -130,7 +130,7 @@ export function WalletStatusModal({
             className="relative z-10 w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1e1e1e] shadow-2xl"
           >
             {/* Barre de couleur supérieure */}
-            <div className="absolute inset-x-0 top-0 h-1 rounded-t-3xl bg-gradient-to-r from-primary via-primary/70 to-highlight" />
+            {/* <div className="absolute inset-x-0 top-0 h-1 rounded-t-3xl bg-gradient-to-r from-primary via-primary/70 to-highlight" /> */}
 
             {/* En-tête */}
             <div className="flex items-start justify-between p-6 pt-8">

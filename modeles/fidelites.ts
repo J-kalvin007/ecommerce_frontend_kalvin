@@ -1,4 +1,4 @@
-﻿// modeles/fidelites.ts
+// modeles/fidelites.ts
 // Source de vérité pour tous les types du module de fidélité "Atelier du Terroir"
 
 // --- Enum des raisons d'événements de points ---------------------------------
@@ -239,20 +239,31 @@ export interface PointValuePayload {
     is_active?: boolean;
 }
 
-/** Règle de récompense / Bénéfice (backend) */
+/** Règle de gain de points / Bénéfice (backend) */
 export interface LoyaltyRewardRule {
     readonly id: string;
-    readonly name: string;
-    readonly description: string;
-    readonly cost_in_points: number;
-    readonly is_active: boolean;
     readonly created_at: string;
+    readonly updated_at: string;
+    /** Niveau / niveau de la règle (ex: 1, 2, 3) */
+    readonly level: number;
+    /** Montant minimum d'achat pour déclencher la règle (en FCFA, décimal) */
+    readonly montant_min: string;
+    /** Montant maximum d'achat pour la règle (en FCFA, décimal — vide = illimité) */
+    readonly montant_max: string;
+    /** Nombre de points à gagner quand la règle est déclenchée */
+    readonly nombre_point_gagner: number;
+    readonly is_active: boolean;
 }
 
-/** Payload de création/modification de règle de récompense (admin) */
+/** Payload de création/modification de règle de gain (admin) */
 export interface LoyaltyRewardRulePayload {
-    name: string;
-    description: string;
-    cost_in_points: number;
+    /** Niveau de la règle */
+    level: number;
+    /** Montant minimum déclencheur (string décimal) */
+    montant_min: string;
+    /** Montant maximum (string décimal, vide = pas de limite haute) */
+    montant_max?: string;
+    /** Points à attribuer */
+    nombre_point_gagner: number;
     is_active?: boolean;
 }

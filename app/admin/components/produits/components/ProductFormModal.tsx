@@ -1,4 +1,4 @@
-﻿
+
 // components/admin/produits/ProductFormModal.tsx
 "use client";
 import { useState, useEffect } from "react";
@@ -49,6 +49,7 @@ export function ProductFormModal({
   const [altText, setAltText] = useState(initialForm.alt_text || "");
   const [selectedCatId, setSelectedCatId] = useState(selectedCategoryId);
   const [variants, setVariants] = useState(existingVariants);
+  const [deletedImageIds, setDeletedImageIds] = useState<string[]>([]);
 
   // --- Fix critique : re-synchroniser le state quand la modale s'ouvre ---------
   useEffect(() => {
@@ -58,6 +59,7 @@ export function ProductFormModal({
       setAltText(initialForm.alt_text || "");
       setVariants(existingVariants);
       setUploadedImages([]);
+      setDeletedImageIds([]);
       setCurrentStep(0);
       setCompletedSteps([]);
       setFormErrors({});
@@ -131,7 +133,7 @@ export function ProductFormModal({
 
   const handleFinalSave = async () => {
     if (!validateGeneralStep()) { setCurrentStep(0); return; }
-    await onSave({ ...form, category: selectedCatId, alt_text: altText }, uploadedImages, variants);
+    await onSave({ ...form, category: selectedCatId, alt_text: altText, deleted_image_ids: deletedImageIds }, uploadedImages, variants);
     onClose();
   };
 
@@ -160,9 +162,10 @@ export function ProductFormModal({
     <StepImages
       key="images"
       uploadedImages={uploadedImages}
-      existingImages={existingImages}
+      existingImages={existingImages.filter(img => !deletedImageIds.includes(img.id))}
       onAddImages={handleAddImages}
       onRemoveUploaded={removeUploadedImage}
+      onRemoveExisting={(id) => setDeletedImageIds(prev => [...prev, id])}
       onSetPrimaryUploaded={handleSetPrimaryUploaded}
       altText={altText}
       onAltTextChange={setAltText}

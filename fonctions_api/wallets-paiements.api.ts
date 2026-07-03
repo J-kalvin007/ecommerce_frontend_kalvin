@@ -87,7 +87,9 @@ export const getAdminAllTransactions = async (): Promise<Result<MyTransfer[]>> =
     const response = await apiPrivate.get<any>(
       "/api/v1/paiements/admin/all-transactions/"
     );
-    const data = Array.isArray(response.data) ? response.data : (response.data.results || []);
+    const data = Array.isArray(response.data) 
+      ? response.data 
+      : (response.data?.data || response.data?.results || response.data?.transactions || []);
     return { ok: true, data };
   } catch (error) {
     return handleApiError(error);

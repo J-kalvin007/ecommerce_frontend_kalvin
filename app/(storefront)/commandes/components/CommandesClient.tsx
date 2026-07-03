@@ -1031,7 +1031,7 @@ function PaymentMethodCard({
   return (
     <button
       onClick={onClick}
-      className="relative flex flex-col items-center gap-3 rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-0.5"
+      className="relative cursor-pointer flex flex-col items-center gap-3 rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-0.5"
       style={{
         borderColor: active ? accentColor : border,
         background: active ? accentBg : bgElevated,

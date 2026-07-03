@@ -407,14 +407,16 @@ export default function WalletSection() {
           </button>
 
           {/* Retrait Mobile Money */}
-          <button
+          {/* <button
             onClick={() => setShowWithdrawModal(true)}
             className="flex cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-orange-500/20 transition-all hover:-translate-y-0.5 hover:shadow-orange-500/40 active:translate-y-0"
           >
             <Banknote className="h-4 w-4" />
             <span className="hidden sm:inline">Retrait Mobile Money</span>
-          </button>
+          </button> */}
+
         </div>
+
       </motion.div>
 
       {/* ------------------------------------------------------- */}
