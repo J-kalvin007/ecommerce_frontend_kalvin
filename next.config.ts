@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
   output: "standalone",
 
   // -- Dev only: allow hot-reload from local network IPs ------------
-  allowedDevOrigins: ["192.168.1.205"],
+  allowedDevOrigins: ["192.168.88.211"],
 
   // -- Image optimization --------------------------------------------
   images: {

@@ -19,7 +19,7 @@ import {
   ShieldCheck,
   Wallet,
   PackageSearch,
-  Star,
+
   Shield,
   ShieldCog,
 } from "lucide-react";
