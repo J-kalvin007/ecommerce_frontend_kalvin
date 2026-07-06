@@ -19,7 +19,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogDescription,
-} from "@/components/widgets_originaux/special/Dialog";
+} from "@/components/special/Dialog";
 import { cn } from "@/lib/utils";
 import type { Tier } from "@/modeles/fidelites";
 import { createAdminLoyaltyTier, updateAdminLoyaltyTier } from "@/fonctions_api/fidelites.api";

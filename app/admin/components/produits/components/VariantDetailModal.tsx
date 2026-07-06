@@ -4,7 +4,7 @@
 import { X, Layers, Hash, Package, Weight, Calendar, CheckCircle2, XCircle, Clock } from "lucide-react";
 import { formatCurrency, cn } from "@/lib/utils";
 import type { ProductVariant } from "@/modeles/produits";
-import { Dialog, DialogContent, DialogTitle } from "@/components/widgets_originaux/special/ui/Dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/special/ui/Dialog";
 
 interface VariantDetailModalProps {
   open: boolean;

@@ -105,18 +105,16 @@ export default function ResetPasswordConfirmPage({
   // Unwrap params using React.use() for Next.js 15+
   const resolvedParams = use(params);
   
-  const rawUid = resolvedParams.uid;
-  const rawToken = resolvedParams.token;
-
-  const uid = rawUid ? decodeURIComponent(rawUid) : '';
-  const token = rawToken ? decodeURIComponent(rawToken) : '';
+  // Ne pas décoder l'uid/token — ils arrivent déjà correctement encodés dans l'URL
+  // decodeURIComponent peut corrompre certains caractères valides du token Django
+  const uid = resolvedParams.uid ?? '';
+  const token = resolvedParams.token ?? '';
 
   const [pageState, setPageState] = useState<PageState>(() => {
-    // Pré-validation simple : si l'uid ou le token est vide/invalide, montrer l'état invalid
+    // Pré-validation simple : si l'uid ou le token est vide, afficher l'état invalid
     if (!uid || !token) return 'invalid_link';
-    // L'uid doit ressembler à du base64url (pas vide, pas de caractères incorrects)
-    const validBase64Url = /^[A-Za-z0-9_-]+$/.test(uid);
-    if (!validBase64Url) return 'invalid_link';
+    // L'uid doit être non-vide (validation minimale, le serveur fait la vraie validation)
+    if (uid.length < 2) return 'invalid_link';
     return 'idle';
   });
 
@@ -170,32 +168,54 @@ export default function ResetPasswordConfirmPage({
 
     if (!result.ok) {
       const rawError = result.error?.raw;
-      const status = result.error?.status;
+      const httpStatus = result.error?.status;
 
-      // Vérifier les erreurs de uid / token invalides ou expirés depuis la réponse brute
-      const isUidError = rawError?.uid && Array.isArray(rawError.uid);
-      const isTokenError = rawError?.token && Array.isArray(rawError.token);
-      const isLinkError = isUidError || isTokenError;
+      // Détecter les erreurs de lien invalide / token expiré depuis la réponse structurée
+      // Notre vue custom retourne des erreurs avec les clés "uid" et "token"
+      const uidError = rawError?.uid;
+      const tokenError = rawError?.token;
+      const isLinkError = (
+        (uidError && (Array.isArray(uidError) || typeof uidError === "string")) ||
+        (tokenError && (Array.isArray(tokenError) || typeof tokenError === "string"))
+      );
 
       if (isLinkError) {
-        // Cas : lien expiré ou déjà utilisé — le token ne peut être utilisé qu'une seule fois
-        const hint = isTokenError
-          ? "Le lien a expiré ou a déjà été utilisé. Chaque lien de réinitialisation ne fonctionne qu'une seule fois."
-          : "L'identifiant de compte dans le lien est invalide. Veuillez demander un nouveau lien.";
-        setGlobalError(hint);
+        const hint = tokenError
+          ? (Array.isArray(tokenError) ? tokenError[0] : String(tokenError))
+          : (Array.isArray(uidError) ? uidError![0] : String(uidError));
+        setGlobalError(hint as string || "Le lien de réinitialisation est invalide ou a expiré.");
         setPageState('invalid_link');
         return;
       }
 
-      const errorMessage = getResetPasswordError(rawError, status);
+      // Erreurs sur les champs de mot de passe (new_password1, new_password2)
+      const fieldErrMap: Record<string, string> = {};
+      if (rawError?.new_password1) {
+        fieldErrMap.new_password1 = Array.isArray(rawError.new_password1)
+          ? String(rawError.new_password1[0])
+          : String(rawError.new_password1);
+      }
+      if (rawError?.new_password2) {
+        fieldErrMap.new_password2 = Array.isArray(rawError.new_password2)
+          ? String(rawError.new_password2[0])
+          : String(rawError.new_password2);
+      }
 
-      // Check if it's a link/token error via le message décodé
+      if (Object.keys(fieldErrMap).length > 0) {
+        setFieldErrors(fieldErrMap);
+        setPageState('error');
+        return;
+      }
+
+      // Fallback : message global
+      const errorMessage = getResetPasswordError(rawError, httpStatus);
+
+      // Vérification secondaire des erreurs de lien via le message traduit
       if (
         errorMessage.toLowerCase().includes("expiré") ||
         errorMessage.toLowerCase().includes("invalide") ||
         errorMessage.toLowerCase().includes("incorrect") ||
-        errorMessage.toLowerCase().includes("uid") ||
-        errorMessage.toLowerCase().includes("expire")
+        errorMessage.toLowerCase().includes("uid")
       ) {
         setGlobalError(errorMessage);
         setPageState('invalid_link');
@@ -210,6 +230,7 @@ export default function ResetPasswordConfirmPage({
 
     setPageState('success');
   };
+
 
   // Render helpers
   const renderInvalidLink = () => (

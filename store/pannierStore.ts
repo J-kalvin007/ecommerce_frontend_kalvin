@@ -13,49 +13,32 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { getCart, addCartItem, updateCartItem, removeCartItem, clearCartAPI } from "@/fonctions_api/pannier.api";
+import { useAuthStore } from "./authStore";
 
 /** Article dans le panier */
 export interface CartItem {
-  /** UUID du produit */
   productId: string;
-  /** UUID de la variante (null si produit simple) */
   variantId: string | null;
-  /** Nom du produit (snapshot pour affichage offline) */
   name: string;
-  /** SKU */
   sku: string;
-  /** Prix unitaire (string décimal) */
   price: string;
-  /** Ancien prix barré */
   compareAtPrice: string | null;
-  /** URL de l'image (variante ou produit parent) */
   image: string | null;
-  /** URL de l'image du produit parent — fallback si l'image variante est indisponible */
   productImage?: string | null;
-  /** Quantité */
   quantity: number;
-  /** Stock disponible (pour validation côté client) */
   maxStock: number;
-  /** Devise */
   currency: string;
-  /** Slug pour le lien vers la page produit */
   slug: string;
 }
 
-/** Shape du store panier */
 interface CartState {
-  /** Articles dans le panier */
   items: CartItem[];
-  /** Code promo appliqué (null si aucun) */
   promoCode: string | null;
-  /** Montant de réduction du code promo */
   promoDiscount: number;
-  /** Points de fidélité à utiliser */
   loyaltyPointsToUse: number;
-  /** Visibilité du drawer panier */
   isDrawerOpen: boolean;
 
-  /* --- Actions --- */
   addItem: (item: CartItem, preventOpenDrawer?: boolean) => void;
   removeItem: (productId: string, variantId: string | null) => void;
   updateQuantity: (productId: string, variantId: string | null, qty: number) => void;
@@ -63,17 +46,13 @@ interface CartState {
   setPromoCode: (code: string | null, discount: number) => void;
   setLoyaltyPoints: (points: number) => void;
   toggleDrawer: (open?: boolean) => void;
+  syncCart: () => Promise<void>;
 
-  /* --- Computed (getters) --- */
   getItemCount: () => number;
   getSubtotal: () => number;
   getTotal: () => number;
 }
 
-/**
- * Store Zustand pour le panier.
- * Persiste en localStorage pour retrouver le panier entre les sessions.
- */
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
@@ -89,39 +68,54 @@ export const useCartStore = create<CartState>()(
             (i) => i.productId === item.productId && i.variantId === item.variantId
           );
 
+          let updatedItems;
           if (existingIndex >= 0) {
-            /* Article déjà dans le panier → incrémenter la quantité */
             const updated = [...state.items];
             const existing = updated[existingIndex];
-            const newQty = Math.min(
-              existing.quantity + item.quantity,
-              existing.maxStock
-            );
+            const newQty = Math.min(existing.quantity + item.quantity, existing.maxStock);
             updated[existingIndex] = { ...existing, quantity: newQty };
-            return { items: updated, isDrawerOpen: preventOpenDrawer ? state.isDrawerOpen : true };
+            updatedItems = updated;
+          } else {
+            updatedItems = [...state.items, item];
           }
 
-          /* Nouvel article */
-          return { items: [...state.items, item], isDrawerOpen: preventOpenDrawer ? state.isDrawerOpen : true };
+          // Background API sync
+          if (useAuthStore.getState().status === "authenticated") {
+            const targetId = item.variantId || item.productId;
+            addCartItem({ product_id: targetId, quantity: item.quantity }).catch(console.error);
+          }
+
+          return { items: updatedItems, isDrawerOpen: preventOpenDrawer ? state.isDrawerOpen : true };
         });
       },
 
       removeItem: (productId, variantId) => {
-        set((state) => ({
-          items: state.items.filter(
-            (i) => !(i.productId === productId && i.variantId === variantId)
-          ),
-        }));
+        set((state) => {
+          const targetId = variantId || productId;
+          if (useAuthStore.getState().status === "authenticated") {
+            removeCartItem(targetId).catch(console.error);
+          }
+          return {
+            items: state.items.filter((i) => !(i.productId === productId && i.variantId === variantId)),
+          };
+        });
       },
 
       updateQuantity: (productId, variantId, qty) => {
         set((state) => {
+          const targetId = variantId || productId;
+
           if (qty <= 0) {
+            if (useAuthStore.getState().status === "authenticated") {
+              removeCartItem(targetId).catch(console.error);
+            }
             return {
-              items: state.items.filter(
-                (i) => !(i.productId === productId && i.variantId === variantId)
-              ),
+              items: state.items.filter((i) => !(i.productId === productId && i.variantId === variantId)),
             };
+          }
+
+          if (useAuthStore.getState().status === "authenticated") {
+            updateCartItem(targetId, qty).catch(console.error);
           }
 
           return {
@@ -135,12 +129,72 @@ export const useCartStore = create<CartState>()(
       },
 
       clearCart: () => {
+        if (useAuthStore.getState().status === "authenticated") {
+          clearCartAPI().catch(console.error);
+        }
         set({
           items: [],
           promoCode: null,
           promoDiscount: 0,
           loyaltyPointsToUse: 0,
         });
+      },
+
+      syncCart: async () => {
+        const isAuth = useAuthStore.getState().status === "authenticated";
+        if (!isAuth) return;
+
+        const res = await getCart();
+        if (res.ok) {
+          const remoteItems = res.data.items;
+          const localItems = get().items;
+
+          // Push local items to backend if missing or update quantity
+          for (const local of localItems) {
+            const targetId = local.variantId || local.productId;
+            const existsRemote = remoteItems.find(ri => ri.product === targetId || ri.product_details?.id === targetId);
+            if (!existsRemote) {
+              await addCartItem({ product_id: targetId, quantity: local.quantity });
+            }
+          }
+
+          // Fetch updated remote cart
+          const updatedRes = await getCart();
+          if (updatedRes.ok) {
+             const finalRemoteItems = updatedRes.data.items;
+             
+             // Convert remote items to local format
+             const mergedItems: CartItem[] = finalRemoteItems.map(ri => {
+                const isVariant = ri.product_details?.product !== undefined; // ProductVariant model structure
+                const productId = ri.parent_product_id || ri.product_details?.product || ri.product;
+                const variantId = isVariant ? ri.product : null;
+                
+                // Try to find if we already have it locally to preserve images and metadata
+                const localMatch = localItems.find(li => li.productId === productId && li.variantId === variantId);
+                
+                if (localMatch) {
+                   return { ...localMatch, quantity: ri.quantity };
+                }
+
+                return {
+                  productId: productId,
+                  variantId: variantId,
+                  name: ri.product_details?.name || "Produit",
+                  sku: ri.product_details?.sku || "SKU",
+                  price: ri.product_details?.price || "0",
+                  compareAtPrice: null,
+                  image: ri.primary_image || null,
+                  productImage: ri.primary_image || null,
+                  quantity: ri.quantity,
+                  maxStock: ri.product_details?.stock || 99,
+                  currency: "FCFA",
+                  slug: ri.slug || "produit",
+                };
+             });
+
+             set({ items: mergedItems });
+          }
+        }
       },
 
       setPromoCode: (code, discount) => {

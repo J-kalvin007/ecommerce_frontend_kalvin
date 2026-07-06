@@ -83,7 +83,7 @@ function scoreProductMatch(query: string, product: ProductListItem) {
     [
       product.name,
       product.category_name ?? "",
-      product.labels.join(" "),
+      (product.labels ?? []).join(" "),
       product.stock_status,
     ].join(" "),
   );
@@ -137,10 +137,10 @@ function getRecommendationsFallback(
       let score = 0;
 
       if (product.is_featured) score += 3;
-      if (product.is_boosted) score += 2;
+      if (product.is_top) score += 2;
       if (preferredIds.has(product.id)) score += 4;
       if (preferredCategories.has(normalizeText(product.category_name ?? ""))) score += 5;
-      score += Math.round(product.avg_rating);
+      score += Math.round(product.avg_rating || 0);
 
       return { product, score };
     })

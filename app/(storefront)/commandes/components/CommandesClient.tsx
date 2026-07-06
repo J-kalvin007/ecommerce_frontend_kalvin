@@ -55,7 +55,7 @@ import { useThemeStore } from "@/store/theme.store";
 import { validateOrder } from "@/fonctions_api/commandes.api";
 import { getMyWallet, payWithWallet } from "@/fonctions_api/wallets-paiements.api";
 import { getMyLoyaltyProfile, redeemLoyaltyPoints, getPointValue } from "@/fonctions_api/fidelites.api";
-import { getFraisLivraison } from "@/fonctions_api/livraisons.api";
+import { getFraisLivraison, createDelivery } from "@/fonctions_api/livraisons.api";
 
 // Types
 import { OrderDetail } from "@/modeles/commandes";
@@ -153,6 +153,9 @@ export default function CommandesClient() {
   const [step, setStep] = useState(paymentSuccess ? 4 : 1);
   const [paymentMethod, setPaymentMethod] = useState<"wallet" | "paydunya">("wallet");
   const [isProcessing, setIsProcessing] = useState(false);
+  /** true = livraison à domicile, false = retrait en boutique */
+  const [withDelivery, setWithDelivery] = useState(true);
+  const [distanceKm, setDistanceKm] = useState<number | null>(null);
 
   // Notification Toast
   const [toastConfig, setToastConfig] = useState<{ show: boolean; type: "success" | "error" | "info"; message: string }>({
@@ -225,6 +228,11 @@ export default function CommandesClient() {
 
   // Calcul dynamique des frais de livraison
   useEffect(() => {
+    if (!withDelivery) {
+      setDynamicShippingCost(null);
+      setDistanceKm(null);
+      return;
+    }
     if (fraisLivraisonAdmin && address.address) {
       const parts = address.address.split("|");
       if (parts.length > 1) {
@@ -243,29 +251,31 @@ export default function CommandesClient() {
             const calculatedCost = Math.ceil(distance * basePrice);
             // On s'assure d'avoir au moins le prix de base si la distance est trop faible
             setDynamicShippingCost(calculatedCost > basePrice ? calculatedCost : basePrice);
+            setDistanceKm(distance);
           }
         }
       }
     }
-  }, [address.address, fraisLivraisonAdmin]);
+  }, [address.address, fraisLivraisonAdmin, withDelivery]);
 
   // Coûts
-  const shippingCost = (dynamicShippingCost !== null ? dynamicShippingCost : 0);
+  const shippingCost = (withDelivery && dynamicShippingCost !== null ? dynamicShippingCost : 0);
   const remisePromo = codeApplique ? parseFloat(codeApplique.discount_amount) : 0;
   const total = Math.max(0, subtotal + shippingCost - remisePromo - remiseFideliteFCFA);
 
-  // Validation Étape 1
+  // Validation Étape 1 — l'adresse GPS n'est requise que si livraison choisie
   const canProceedStep1 = useMemo(() => {
-    return (
+    const base =
       address.firstName &&
       address.lastName &&
       address.email &&
       address.phone &&
-      address.address &&
       address.city &&
-      address.country
-    );
-  }, [address]);
+      address.country;
+    if (!base) return false;
+    if (withDelivery && !address.address) return false;
+    return true;
+  }, [address, withDelivery]);
 
   // Chargement des données au montage de l'étape 2 ou 3
   useEffect(() => {
@@ -297,7 +307,9 @@ export default function CommandesClient() {
       // Création de la commande brouillon au passage à l'étape 2
       setIsProcessing(true);
       const res = await validateOrder({
-        address_livraison: address.address,
+        address_livraison: withDelivery
+          ? address.address
+          : `Retrait en boutique — ${address.city}`,
         phone_livraison: address.phone,
         city: address.city,
         country: address.country,
@@ -343,6 +355,20 @@ export default function CommandesClient() {
          * dédiée avec la référence de commande. La facture est désormais
          * envoyée par email via le service SMTP Django (signal post-save).
          */
+        // Création automatique d'une livraison si l'utilisateur a choisi la livraison
+        if (withDelivery) {
+          await createDelivery({
+            order: order.id,
+            status: "pending",
+            delivery_address: address.address.split("|")[0].trim() || address.address,
+            tracking_number: "",
+            delivery_person: null,
+            estimated_delivery_date: null,
+            actual_delivery_date: null,
+            notes: address.addressLine2 || "",
+            is_active: true,
+          });
+        }
         clearCart();
         router.push(`/paiement/commande/success?ref=${encodeURIComponent(order.reference || "")}`);
       } else {
@@ -469,20 +495,20 @@ export default function CommandesClient() {
            * -------------------------------------------------------- */}
           <div className="relative mt-7">
             {/* Rail de fond */}
-            {/* <div
+            <div
               aria-hidden
               className="absolute left-5 right-5 top-5 h-[2px] sm:left-6 sm:right-6"
               style={{ background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}
-            /> */}
+            />
             {/* Fil de progression doré, animé en largeur */}
-            {/* <motion.div
+            <motion.div
               aria-hidden
               className="absolute left-5 top-5 h-[2px] sm:left-6"
               style={{ background: `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_GOLD})` }}
               initial={false}
               animate={{ width: `calc(${stepperProgress * 100}% - ${stepperProgress > 0 ? 8 : 0}px)` }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.6, ease: [0.16, 1, 0.3, 1] }}
-            /> */}
+            />
 
             <div className="relative flex items-center justify-between sm:justify-start sm:gap-8">
               {STEPS.map((s) => {
@@ -534,7 +560,7 @@ export default function CommandesClient() {
           {/* === Colonne Principale === */}
           <div className="lg:col-span-7 xl:col-span-8">
             <AnimatePresence mode="wait">
-              {/* --- ÉTAPE 1 : Adresse --- */}
+              {/* --- ÉTAPE 1 : Informations & livraison --- */}
               {step === 1 && (
                 <motion.div
                   key="address"
@@ -545,8 +571,8 @@ export default function CommandesClient() {
                 >
                   <SectionHeading
                     eyebrow="01"
-                    title="Informations de livraison"
-                    subtitle="Ces informations nous permettent de préparer et d'acheminer votre commande avec précision."
+                    title="Informations de commande"
+                    subtitle="Renseignez vos coordonnées et choisissez votre mode de récupération."
                     isDark={isDark}
                   />
 
@@ -557,7 +583,108 @@ export default function CommandesClient() {
                     className="space-y-6 rounded-2xl p-5 shadow-sm sm:p-7"
                     style={{ background: bgElevated, border: `1px solid ${border}` }}
                   >
-                    {/* Sous-section : Identité & contact */}
+                    {/* ── Toggle Livraison / Retrait ── */}
+                    <motion.div variants={fieldItemVariants}>
+                      <FieldGroupLabel label="Mode de récupération" isDark={isDark} icon={Truck} />
+                      <div className="grid grid-cols-2 gap-3">
+
+                        {/* Carte Livraison */}
+                        <button
+                          type="button"
+                          onClick={() => setWithDelivery(true)}
+                          className="relative flex flex-col items-center gap-2.5 rounded-2xl border-2 p-4 text-center transition-all duration-300 cursor-pointer hover:-translate-y-0.5"
+                          style={{
+                            borderColor: withDelivery ? BRAND_FOREST : border,
+                            background: withDelivery ? "rgba(31,77,63,0.06)" : bgElevated,
+                            boxShadow: withDelivery ? "0 8px 24px rgba(31,77,63,0.12)" : "none",
+                          }}
+                        >
+                          {withDelivery && (
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 18 }}
+                              className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full text-white"
+                              style={{ background: BRAND_FOREST }}
+                            >
+                              <CheckCircle2 className="h-3 w-3" />
+                            </motion.div>
+                          )}
+                          <div
+                            className="flex h-10 w-10 items-center justify-center rounded-full transition-colors duration-300"
+                            style={{ background: withDelivery ? BRAND_FOREST : isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)" }}
+                          >
+                            <Truck className="h-5 w-5" style={{ color: withDelivery ? "#fff" : undefined }} />
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold" style={{ color: withDelivery ? BRAND_FOREST : undefined }}>Livraison</p>
+                            <p className="text-[11px] text-muted">À mon adresse</p>
+                          </div>
+                        </button>
+
+                        {/* Carte Retrait */}
+                        <button
+                          type="button"
+                          onClick={() => setWithDelivery(false)}
+                          className="relative flex flex-col items-center gap-2.5 rounded-2xl border-2 p-4 text-center transition-all duration-300 cursor-pointer hover:-translate-y-0.5"
+                          style={{
+                            borderColor: !withDelivery ? BRAND_FOREST : border,
+                            background: !withDelivery ? "rgba(31,77,63,0.06)" : bgElevated,
+                            boxShadow: !withDelivery ? "0 8px 24px rgba(31,77,63,0.12)" : "none",
+                          }}
+                        >
+                          {!withDelivery && (
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 18 }}
+                              className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full text-white"
+                              style={{ background: BRAND_FOREST }}
+                            >
+                              <CheckCircle2 className="h-3 w-3" />
+                            </motion.div>
+                          )}
+                          <div
+                            className="flex h-10 w-10 items-center justify-center rounded-full transition-colors duration-300"
+                            style={{ background: !withDelivery ? BRAND_FOREST : isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)" }}
+                          >
+                            <ShoppingBag className="h-5 w-5" style={{ color: !withDelivery ? "#fff" : undefined }} />
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold" style={{ color: !withDelivery ? BRAND_FOREST : undefined }}>Retrait boutique</p>
+                            <p className="text-[11px] text-muted">Je viens chercher</p>
+                          </div>
+                        </button>
+                      </div>
+
+                      {/* Info point de retrait */}
+                      <AnimatePresence>
+                        {!withDelivery && (
+                          <motion.div
+                            key="retrait-info"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                            className="overflow-hidden"
+                          >
+                            <div
+                              className="mt-3 flex items-start gap-3 rounded-xl p-3.5"
+                              style={{ background: "rgba(31,77,63,0.06)", border: "1px solid rgba(31,77,63,0.15)" }}
+                            >
+                              <MapPin className="h-4 w-4 mt-0.5 shrink-0" style={{ color: BRAND_FOREST }} />
+                              <div>
+                                <p className="text-[12px] font-bold" style={{ color: BRAND_FOREST }}>Point de retrait</p>
+                                <p className="text-[11px] text-muted mt-0.5">Rue 120 Agoe Minamadou, Lomé — Togo</p>
+                                <p className="text-[11px] text-muted">Horaires : Lun–Sam · 08h00–18h00</p>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+
+                    {/* ── Identité & contact ── */}
                     <FieldGroupLabel label="Identité & contact" isDark={isDark} />
                     <motion.div variants={fieldItemVariants} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <InputField label="Prénom" value={address.firstName} onChange={(v) => updateAddress("firstName", v)} required />
@@ -571,17 +698,76 @@ export default function CommandesClient() {
                       </div>
                     </motion.div>
 
-                    {/* Sous-section : Localisation */}
-                    <motion.div variants={fieldItemVariants} className="border-t pt-5" style={{ borderColor: border }}>
-                      <FieldGroupLabel label="Localisation GPS & adresse" isDark={isDark} icon={MapPin} />
-                      <LocalisationCarte value={address.address} onChange={(v) => updateAddress("address", v)} />
-                    </motion.div>
+                    {/* ── Section Localisation (uniquement si livraison sélectionnée) ── */}
+                    <AnimatePresence>
+                      {withDelivery && (
+                        <motion.div
+                          key="livraison-location"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <div className="border-t pt-5" style={{ borderColor: border }}>
+                            <FieldGroupLabel label="Localisation GPS & adresse" isDark={isDark} icon={MapPin} />
+                            <LocalisationCarte value={address.address} onChange={(v) => updateAddress("address", v)} />
 
-                    <motion.div variants={fieldItemVariants}>
-                      <InputField label="Informations complémentaires (Bâtiment, Étage...)" value={address.addressLine2} onChange={(v) => updateAddress("addressLine2", v)} />
-                    </motion.div>
+                            {/* Panneau breakdown frais de livraison */}
+                            <AnimatePresence>
+                              {fraisLivraisonAdmin && distanceKm !== null && dynamicShippingCost !== null && (
+                                <motion.div
+                                  key="delivery-breakdown"
+                                  initial={{ opacity: 0, y: 8 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: -4 }}
+                                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                                  className="mt-4 overflow-hidden rounded-2xl"
+                                  style={{ border: "1px solid rgba(31,77,63,0.22)" }}
+                                >
+                                  <div
+                                    className="flex items-center gap-2 px-4 py-2.5"
+                                    style={{ background: "rgba(31,77,63,0.08)" }}
+                                  >
+                                    <Truck className="h-4 w-4" style={{ color: BRAND_FOREST }} />
+                                    <span
+                                      className="text-[11px] font-bold uppercase tracking-widest"
+                                      style={{ color: BRAND_FOREST }}
+                                    >
+                                      Estimation de livraison
+                                    </span>
+                                  </div>
+                                  <div className="divide-y px-4" style={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)" }}>
+                                    <div className="flex items-center justify-between py-2.5">
+                                      <span className="text-xs text-muted">Distance estimée</span>
+                                      <span className="text-xs font-bold">{distanceKm.toFixed(1)} km</span>
+                                    </div>
+                                    <div className="flex items-center justify-between py-2.5">
+                                      <span className="text-xs text-muted">Tarif par km</span>
+                                      <span className="text-xs font-bold">{formatCurrency(String(fraisLivraisonAdmin.prix_livraison), "FCFA")}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between py-2.5">
+                                      <span className="text-xs font-bold" style={{ color: BRAND_FOREST }}>Total livraison</span>
+                                      <span className="text-sm font-black" style={{ color: BRAND_FOREST }}>{formatCurrency(String(dynamicShippingCost), "FCFA")}</span>
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
 
-                    {/* Sous-section : Ville & pays */}
+                            <div className="mt-4">
+                              <InputField
+                                label="Informations complémentaires (Bâtiment, Étage...)"
+                                value={address.addressLine2}
+                                onChange={(v) => updateAddress("addressLine2", v)}
+                              />
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* ── Ville & pays ── */}
                     <motion.div variants={fieldItemVariants} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <InputField label="Ville" value={address.city} onChange={(v) => updateAddress("city", v)} required />
                       <div>
@@ -676,62 +862,122 @@ export default function CommandesClient() {
                 </motion.div>
               )}
 
-              {/* --- ÉTAPE 3 : Confirmation --- */}
+              {/* --- ÉTAPE 3 : Vérification & Paiement final --- */}
               {step === 3 && (
                 <motion.div
                   key="confirm"
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative flex flex-col items-center gap-6 overflow-hidden rounded-3xl p-8 text-center lg:p-14"
-                  style={{ background: bgElevated, border: `1px solid ${border}` }}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 16 }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  {/* Liseré doré supérieur — détail de finition premium */}
-                  <div
-                    aria-hidden
-                    className="absolute inset-x-0 top-0 h-[3px]"
-                    style={{ background: `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_GOLD}, ${BRAND_FOREST})` }}
+                  <SectionHeading
+                    eyebrow="03"
+                    title="Vérification & paiement"
+                    subtitle="Vérifiez les détails de votre commande, puis cliquez sur Payer pour finaliser."
+                    isDark={isDark}
                   />
 
                   <motion.div
-                    initial={{ scale: 0, rotate: -10 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.1 }}
-                    className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-500/10"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+                    className="relative space-y-4 overflow-hidden rounded-2xl p-5 shadow-sm sm:p-7"
+                    style={{ background: bgElevated, border: `1px solid ${border}` }}
                   >
-                    <CheckCircle2 className="h-10 w-10 text-emerald-500" />
-                  </motion.div>
+                    {/* Liseré doré supérieur */}
+                    <div
+                      aria-hidden
+                      className="absolute inset-x-0 top-0 h-[3px]"
+                      style={{ background: `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_GOLD}, ${BRAND_FOREST})` }}
+                    />
 
-                  <div>
-                    <h2 className="font-display text-3xl font-bold">Commande confirmée !</h2>
-                    <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
-                      Merci pour votre commande. Nous la préparons avec le plus grand soin.
-                      Vous recevrez un email de confirmation à <strong>{address.email}</strong>.
-                    </p>
-                  </div>
-
-                  <div
-                    className="flex items-center gap-3 rounded-2xl px-8 py-4"
-                    style={{ background: isDark ? "rgba(255,255,255,0.05)" : "#f8f9f8", border: `1px solid ${border}` }}
-                  >
-                    <Receipt className="h-5 w-5 shrink-0" style={{ color: BRAND_GOLD }} />
-                    <div className="text-left">
-                      <p className="mb-0.5 text-[11px] uppercase tracking-widest text-muted">N° de commande</p>
-                      <p className="font-mono text-xl font-black" style={{ color: BRAND_FOREST }}>
-                        {order?.reference || "REF-ATTENTE"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-2">
-                    <Link
-                      href="/products"
-                      className="group flex items-center gap-2 rounded-xl bg-[#1f4d3f] px-8 py-4 font-bold text-white shadow-lg shadow-[#1f4d3f]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1f4d3f]/90 hover:shadow-xl hover:shadow-[#1f4d3f]/30"
+                    {/* Référence commande */}
+                    <div
+                      className="flex items-center gap-3 rounded-xl p-4"
+                      style={{ background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.02)", border: `1px solid ${border}` }}
                     >
-                      Continuer mes achats
-                      <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                    </Link>
-                  </div>
+                      <Receipt className="h-5 w-5 shrink-0" style={{ color: BRAND_GOLD }} />
+                      <div>
+                        <p className="text-[10px] uppercase tracking-widest text-muted">Référence commande</p>
+                        <p className="font-mono text-lg font-black" style={{ color: BRAND_FOREST }}>
+                          {order?.reference || "—"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Récapitulatif paiement wallet */}
+                    {paymentMethod === "wallet" && wallet && (
+                      <div className="space-y-2">
+                        <div
+                          className="flex items-center justify-between rounded-xl px-4 py-3"
+                          style={{ background: isDark ? "rgba(255,255,255,0.03)" : "#f8f9f8", border: `1px solid ${border}` }}
+                        >
+                          <div className="flex items-center gap-2">
+                            <WalletIcon className="h-4 w-4" style={{ color: BRAND_FOREST }} />
+                            <span className="text-sm font-medium">Solde portefeuille</span>
+                          </div>
+                          <span className="font-bold text-sm">{formatCurrency(wallet.balance, "FCFA")}</span>
+                        </div>
+                        <div
+                          className="flex items-center justify-between rounded-xl px-4 py-3"
+                          style={{ background: "rgba(31,77,63,0.06)", border: "1px solid rgba(31,77,63,0.18)" }}
+                        >
+                          <div className="flex items-center gap-2">
+                            <Lock className="h-4 w-4" style={{ color: BRAND_FOREST }} />
+                            <span className="text-sm font-bold" style={{ color: BRAND_FOREST }}>Montant à débiter</span>
+                          </div>
+                          <span className="text-base font-black" style={{ color: BRAND_FOREST }}>{formatCurrency(String(total), "FCFA")}</span>
+                        </div>
+                        {parseFloat(wallet.balance) >= total ? (
+                          <motion.div
+                            initial={{ opacity: 0, y: 4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex items-center gap-2 rounded-xl px-4 py-3 text-xs font-semibold text-emerald-600 dark:text-emerald-400"
+                            style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.18)" }}
+                          >
+                            <CheckCircle2 className="h-4 w-4 shrink-0" />
+                            Solde suffisant — cliquez sur &quot;Payer&quot; ci-dessous pour finaliser
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            initial={{ opacity: 0, y: 4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex items-center gap-2 rounded-xl px-4 py-3 text-xs font-semibold text-red-600 dark:text-red-400"
+                            style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.18)" }}
+                          >
+                            <Sparkles className="h-4 w-4 shrink-0" />
+                            Solde insuffisant — veuillez recharger votre portefeuille
+                          </motion.div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Mode de récupération récap */}
+                    <div
+                      className="flex items-center gap-3 rounded-xl px-4 py-3"
+                      style={{ background: isDark ? "rgba(255,255,255,0.03)" : "#f8f9f8", border: `1px solid ${border}` }}
+                    >
+                      {withDelivery
+                        ? <Truck className="h-4 w-4 shrink-0" style={{ color: BRAND_FOREST }} />
+                        : <ShoppingBag className="h-4 w-4 shrink-0" style={{ color: BRAND_FOREST }} />
+                      }
+                      <div>
+                        <p className="text-[10px] uppercase tracking-widest text-muted">Mode de récupération</p>
+                        <p className="text-sm font-semibold">
+                          {withDelivery
+                            ? `Livraison — ${address.address.split("|")[0].trim() || address.city}`
+                            : "Retrait en boutique · Rue 120 Agoe Minamadou, Lomé"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Badge sécurité */}
+                    <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 px-4 py-3 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                      <Shield className="h-4 w-4 shrink-0" />
+                      Transaction protégée par chiffrement 256-bit SSL
+                    </div>
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>

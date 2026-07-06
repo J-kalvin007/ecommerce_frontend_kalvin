@@ -12,7 +12,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Loader2, CheckCircle2, XCircle, X, Sparkles, TicketPercent, ArrowRight, Rocket } from "lucide-react";
 import { useThemeStore } from "@/store/theme.store";
 import { validatePromoCode } from "@/fonctions_api/promotions.api";
@@ -91,7 +91,7 @@ export default function CodePromoInput({ cartTotal, codeApplique, onCodeChange }
   const brandColor = "#1f4d3f";
 
   // Animations Framer Motion
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0, y: 15, scale: 0.98 },
     visible: {
       opacity: 1,
@@ -107,7 +107,7 @@ export default function CodePromoInput({ cartTotal, codeApplique, onCodeChange }
     }
   };
 
-  const errorVariants = {
+  const errorVariants: Variants = {
     hidden: { opacity: 0, height: 0, marginTop: 0 },
     visible: {
       opacity: 1,

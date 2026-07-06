@@ -58,7 +58,7 @@ export default function ChatBot() {
     <>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="fixed bottom-5 right-5 z-[80] flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-[0_18px_45px_rgba(255,107,53,0.34)] transition-transform hover:scale-105"
+        className="fixed cursor-pointer bottom-5 right-5 z-[80] flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-[0_18px_45px_rgba(255,107,53,0.34)] transition-transform hover:scale-105"
         aria-label="Ouvrir le chatbot IA"
       >
         {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
@@ -142,7 +142,7 @@ export default function ChatBot() {
                 <button
                   type="submit"
                   disabled={!canSend}
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-45"
+                  className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-primary text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-45"
                   aria-label="Envoyer au chatbot"
                 >
                   <Send className="h-4 w-4" />

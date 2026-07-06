@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import ResendEmailForm from "./components/ResendEmailForm";
 import { ContainerFormAuth } from "@/app/auth/components/ContainerFormAuth";
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
 export default function ResendEmailPage() {
   return (
     <ContainerFormAuth>
-      <ResendEmailForm />
+      <Suspense fallback={null}>
+        <ResendEmailForm />
+      </Suspense>
     </ContainerFormAuth>
   );
 }

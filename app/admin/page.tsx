@@ -4,7 +4,7 @@
 // app/admin/page.tsx
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import LoadingStyle from "@/components/widgets_originaux/special/loadingStyle";
+import LoadingStyle from "@/components/special/loadingStyle";
 import AdminDashboard from "./components/dashboard/components/AdminDashboard";
 
 export const metadata: Metadata = {

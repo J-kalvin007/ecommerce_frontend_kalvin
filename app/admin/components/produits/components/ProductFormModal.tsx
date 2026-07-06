@@ -2,7 +2,7 @@
 // components/admin/produits/ProductFormModal.tsx
 "use client";
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/widgets_originaux/special/ui/Dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/special/ui/Dialog";
 import { StepIndicator, type Step } from "./StepIndicator";
 import { StepGeneralInfo } from "./ProductFormSteps/StepGeneralInfo";
 import { StepImages } from "./ProductFormSteps/StepImages";

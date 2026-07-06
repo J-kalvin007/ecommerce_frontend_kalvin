@@ -3,6 +3,7 @@
  * @module app/commandes/page
  */
 
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import CommandesClient from "./components/CommandesClient";
 
@@ -12,5 +13,9 @@ export const metadata: Metadata = {
 };
 
 export default function CommandesPage() {
-  return <CommandesClient />;
+  return (
+    <Suspense fallback={null}>
+      <CommandesClient />
+    </Suspense>
+  );
 }

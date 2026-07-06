@@ -26,6 +26,13 @@ export const metadata: Metadata = {
     "bio",
     "gourmet",
   ],
+  icons: {
+    icon: [
+      { url: "/assets/images/LOGO.png", type: "image/png" },
+    ],
+    shortcut: "/assets/images/LOGO.png",
+    apple: "/assets/images/LOGO.png",
+  },
   openGraph: {
     type: "website",
     locale: "fr_FR",

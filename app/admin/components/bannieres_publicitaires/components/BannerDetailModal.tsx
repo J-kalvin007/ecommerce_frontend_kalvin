@@ -1,6 +1,6 @@
 "use client";
 import { X, Calendar, Link as LinkIcon, Target, Power, PowerOff, LayoutGrid, Edit, Trash2 } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/widgets_originaux/special/ui/Dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/special/ui/Dialog";
 import { cn } from "@/lib/utils";
 import type { AdminBanner } from "@/modeles/bannieres";
 import { BANNER_TYPE_LABELS, BANNER_TYPE_COLORS } from "@/modeles/bannieres";

@@ -672,12 +672,21 @@ export default function ProductDetailClient({ slug, id }: Props) {
                   type="button"
                   disabled={isOutOfStock}
                   onClick={() => setIsPurchaseModalOpen(true)}
-                  whileHover={{ scale: isOutOfStock ? 1 : 1.01 }}
+                  whileHover={{ scale: isOutOfStock ? 1 : 1.02 }}
                   whileTap={{ scale: isOutOfStock ? 1 : 0.98 }}
-                  className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-[#1f4d3f] to-[#17392f] px-6 py-4.5 text-base font-bold text-white shadow-[0_16px_40px_rgba(31,77,63,0.28)] transition-all hover:shadow-[0_20px_50px_rgba(31,77,63,0.35)] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="group relative flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#1f4d3f] to-[#123128] px-6 py-4.5 text-base font-bold text-white shadow-[0_16px_40px_rgba(31,77,63,0.28)] transition-all hover:shadow-[0_20px_50px_rgba(31,77,63,0.4)] disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <ShoppingBag className="h-5 w-5" />
-                  {isOutOfStock ? "Produit indisponible" : "Configurer et ajouter au panier"}
+                  {!isOutOfStock && (
+                    <motion.div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-0"
+                      style={{ background: "linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.2) 40%, transparent 60%)" }}
+                      animate={{ x: ["-100%", "200%"] }}
+                      transition={{ repeat: Infinity, duration: 3, ease: "linear", repeatDelay: 1 }}
+                    />
+                  )}
+                  <ShoppingBag className="relative h-5 w-5 transition-transform group-hover:scale-110" />
+                  <span className="relative tracking-wide">{isOutOfStock ? "Produit indisponible" : "Configurer et ajouter au panier"}</span>
                 </motion.button>
 
                 {/* Garanties */}

@@ -39,7 +39,7 @@ import PhoneInputWithCountry from "@/components/special/PhoneInputWithCountry";
 import { patchUser, changePassword } from "@/fonctions_api/auth.api";
 import { getToken } from "@/lib/axios";
 import { useThemeStore } from '@/store/theme.store';
-import ConfirmDialog from "@/components/widgets_originaux/special/ConfirmDialog";
+import ConfirmDialog from "@/components/special/ConfirmDialog";
 import Toast from "@/components/notifications/Toast";
 import {
   Dialog,
@@ -47,7 +47,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/widgets_originaux/special/ui/Dialog";
+} from "@/components/special/ui/Dialog";
 import type { User } from "@/modeles/user";
 import LogoutDialog from "../special/LogoutDialog";
 

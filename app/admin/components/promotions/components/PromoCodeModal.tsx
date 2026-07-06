@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/widgets_originaux/special/ui/Dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/special/ui/Dialog";
 import { Save, Loader2, Tag, Percent, Banknote, Truck, Clock, Star, Check, Search, Layers, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AdminPromoCode, DiscountType } from "@/modeles/promotions";

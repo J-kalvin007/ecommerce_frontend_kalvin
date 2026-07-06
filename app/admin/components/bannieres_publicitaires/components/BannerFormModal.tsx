@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/widgets_originaux/special/ui/Dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/special/ui/Dialog";
 import { Save, Loader2, Image as ImageIcon, Link2, Type, Calendar, Target, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AdminBanner, BannerTypeEnum, CreateAdminBannerPayload } from "@/modeles/bannieres";

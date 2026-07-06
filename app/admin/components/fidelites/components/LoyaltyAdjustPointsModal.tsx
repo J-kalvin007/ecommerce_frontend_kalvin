@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Plus, Minus, Zap, AlertTriangle, Check, Loader2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/widgets_originaux/special/Dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/special/Dialog";
 import { cn } from "@/lib/utils";
 import { adjustAdminLoyaltyPoints } from "@/fonctions_api/fidelites.api";
 import type { LoyaltyProfile } from "@/modeles/fidelites";
