@@ -10,7 +10,7 @@
 
 import type { NextConfig } from "next";
 
-const apiUrl = new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://outrage-dealer-entrap.ngrok-free.dev");
+const apiUrl = new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://ecommerce-atelier-terroir-backtend-prod.onrender.com");
 
 const nextConfig: NextConfig = {
   // -- Production Docker requirement ---------------------------------
@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
   output: "standalone",
 
   // -- Dev only: allow hot-reload from local network IPs ------------
-  allowedDevOrigins: ["192.168.88.211"],
+  allowedDevOrigins: ["https://atelierterroirsolime-gyiybtd2n-j-kalvins-projects.vercel.app"],
 
   // -- Image optimization --------------------------------------------
   images: {

@@ -48,10 +48,10 @@ export function mediaUrl(src: string | null | undefined): string | null {
     }
 
     // Détection d'une IP locale ou de localhost
-    const isLocal = 
-      parsed.hostname === 'localhost' || 
-      parsed.hostname === '127.0.0.1' || 
-      parsed.hostname.startsWith('192.168.') || 
+    const isLocal =
+      parsed.hostname === 'https://atelierterroirsolime-gyiybtd2n-j-kalvins-projects.vercel.app' ||
+      parsed.hostname === '127.0.0.1' ||
+      parsed.hostname.startsWith('192.168.') ||
       parsed.hostname.startsWith('10.');
 
     // Pour les domaines en production (hors localhost/IPs), on force HTTPS
