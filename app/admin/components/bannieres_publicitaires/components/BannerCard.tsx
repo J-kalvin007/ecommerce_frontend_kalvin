@@ -229,8 +229,8 @@ function GridCard({ banner, onView, onEdit, onDelete }: Omit<BannerCardProps, "v
           {/* Floating Badge (Bottom) */}
           <div className="absolute bottom-3 left-3 flex items-center gap-1.5 pointer-events-none">
             <div className="flex items-center gap-1.5 rounded-lg bg-black/40 backdrop-blur-md border border-white/20 px-2 py-1 shadow-sm">
-              <LayoutGrid className="h-3 w-3 text-white/90" />
-              <span className="font-mono text-[10px] font-black text-white">
+              <LayoutGrid className="h-3 w-3 text-gray-200" />
+              <span className="font-mono text-[10px] font-black text-gray-200">
                 #{String(banner.position).padStart(2, "0")}
               </span>
             </div>

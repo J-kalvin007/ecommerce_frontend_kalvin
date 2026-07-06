@@ -6,7 +6,7 @@
 
 import type { Metadata } from "next";
 import { RegisterPageView } from "./components/RegisterPageView";
-import { LegacyFooter } from "@/components/layout/Footer";
+import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 // import RegisterClient from "./components/RegisterClient";
 
@@ -21,7 +21,7 @@ export default function RegisterPage() {
     <main>
       <Header />
       <RegisterPageView />
-      <LegacyFooter />
+      <Footer />
     </main>
   )
 }

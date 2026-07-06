@@ -183,7 +183,11 @@ export function LoginForm({
   };
 
   if (!mounted) {
-    return <LoginFormSkeleton />;
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center bg-[#F0EDE6] p-4 md:p-8">
+        <LoginFormSkeleton />
+      </div>
+    );
   }
 
   const atouts = [

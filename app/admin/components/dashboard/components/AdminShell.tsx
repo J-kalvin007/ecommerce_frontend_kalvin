@@ -159,12 +159,18 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
     return <span className="text-xs font-bold text-white">{adminInitial}</span>;
   };
 
+
+
   return (
+
     <>
+
       <div className="min-h-screen bg-white dark:bg-[#121212]">
+
         <AdminHeader onMenuClick={toggleSidebar} />
 
         <div className="flex">
+
           {/* --- Sidebar desktop --- */}
           <aside
             className={cn(
@@ -173,6 +179,72 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
             )}
             style={{ background: SIDEBAR_BG }}
           >
+
+
+
+
+
+
+
+
+
+            {/* Fond gradient forest profond */}
+            <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(145deg, #0A2418 0%, #0D2E1E 35%, #1A4A30 65%, #122C1E 100%)" }}
+              aria-hidden="true"
+            />
+
+            {/* Texture grain */}
+            {/* <div
+              className="pointer-events-none absolute inset-0 opacity-[0.04]"
+              style={{
+                backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")",
+                animation: "promo-grain 8s steps(1) infinite",
+              }}
+              aria-hidden="true"
+            /> */}
+
+            {/* Halo radial jade */}
+            <div
+              className="pointer-events-none absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20"
+              style={{ background: "radial-gradient(circle, #2F9E6F 0%, transparent 70%)", animation: "promo-halo-pulse 6s ease-in-out infinite" }}
+              aria-hidden="true"
+            />
+
+            {/* Orbes decoratifs */}
+            {/* <div
+              className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full opacity-15"
+              style={{ background: "radial-gradient(circle, #2F9E6F, transparent 70%)", animation: "promo-orb-drift 12s ease-in-out infinite" }}
+              aria-hidden="true"
+            /> */}
+
+            {/* <div
+              className="pointer-events-none absolute -right-20 bottom-12 h-56 w-56 rounded-full opacity-10"
+              style={{ background: "radial-gradient(circle, #E8711A, transparent 70%)", animation: "promo-orb-drift 9s ease-in-out 3s infinite reverse" }}
+              aria-hidden="true"
+            /> */}
+
+            {/* Grille fine de profondeur */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.025]"
+              style={{
+                backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
+                backgroundSize: "48px 48px",
+              }}
+              aria-hidden="true"
+            />
+
+
+
+
+
+
+
+
+
+
+
             {/* Bouton collapse/expand flottant */}
             <motion.button
               onClick={() => setCollapsed(!collapsed)}
@@ -188,8 +260,12 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
 
             {/* Logo / marque */}
             <div className="relative flex h-[72px] items-center px-4">
+
+
               {!collapsed ? (
+
                 <Link href="/admin" className="group flex items-center gap-3 cursor-pointer overflow-hidden">
+
                   <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-highlight p-[1.5px] shadow-[0_4px_14px_-4px_rgba(15,23,42,0.35)] transition-transform duration-300 group-hover:scale-105">
                     {/* <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-white">
                       <Image
@@ -210,15 +286,21 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
 
 
                   </div>
+
                   <div className="flex min-w-0 flex-col">
+
                     <span className="truncate text-[13.5px] font-bold leading-none tracking-tight text-gray-100">
                       TABLEAU DE BORD
                     </span>
+
                     <span className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#C9963A]">
                       Espace administration
                     </span>
+
                   </div>
+
                 </Link>
+
               ) : (
                 <Link
                   href="/admin"
@@ -293,10 +375,17 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
             </div>
           </aside>
 
+
+
           {/* --- Sidebar mobile --- */}
           <AnimatePresence>
+
             {mobileOpen && (
+
+
               <>
+
+
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -304,6 +393,8 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
                   className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm lg:hidden"
                   onClick={() => setMobileOpen(false)}
                 />
+
+
                 <motion.aside
                   initial={{ x: "-100%" }}
                   animate={{ x: 0 }}
@@ -312,8 +403,45 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
                   className="fixed left-0 top-0 z-50 flex h-full w-[284px] flex-col shadow-2xl lg:hidden"
                   style={{ background: SIDEBAR_BG }}
                 >
+
+
+
+
+
+
+
+
+                  {/* Grille fine de profondeur */}
+                  <div
+                    className="pointer-events-none absolute inset-0 opacity-[0.025]"
+                    style={{
+                      backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
+                      backgroundSize: "48px 48px",
+                    }}
+                    aria-hidden="true"
+                  />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                   <div className="flex h-[72px] items-center justify-between px-4">
+
                     <Link href="/admin" className="flex items-center gap-3 overflow-hidden">
+
                       <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-highlight p-[1.5px] shadow-[0_4px_14px_-4px_rgba(15,23,42,0.35)]">
                         <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-white">
                           <Image
@@ -326,25 +454,29 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
                           />
                         </div>
                       </div>
+
                       <div className="flex min-w-0 flex-col">
-                        <span className="truncate text-[13.5px] font-bold leading-none tracking-tight text-white">
+                        <span className="truncate text-[14px] font-bold leading-none tracking-tight text-gray-100">
                           TABLEAU DE BORD
                         </span>
                         <span className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#C9963A]">
                           ATELIER DU TERROIR
                         </span>
                       </div>
+
                     </Link>
                     <motion.button
                       whileHover={{ scale: 1.08 }}
                       whileTap={{ scale: 0.92 }}
                       onClick={() => setMobileOpen(false)}
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#16332b] text-white/50 shadow-md transition-colors hover:border-[#C9963A]/50 hover:text-[#C9963A]"
+                      className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-[#16332b] text-gray-100 shadow-md transition-colors hover:border-[#C9963A]/50 hover:text-[#C9963A]"
                       aria-label="Fermer le menu"
                     >
                       <X className="h-4 w-4" />
                     </motion.button>
+
                   </div>
+
                   <div className="mx-4 h-px bg-white/10" />
 
                   <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/10">
@@ -380,7 +512,7 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
                       <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/8 text-white/50 transition-colors group-hover:text-[#C9963A]">
                         <ArrowLeft className="h-3.5 w-3.5" />
                       </span>
-                      <span className="text-[12px] font-semibold text-white/50 transition-colors group-hover:text-[#C9963A]">
+                      <span className="text-[14px] font-semibold text-white/50 transition-colors group-hover:text-[#C9963A]">
                         Retour à l'accueil
                       </span>
                     </Link>
@@ -393,8 +525,8 @@ export default function AdminShell({ activeSection, onSectionChange, children }:
                         {getAvatar()}
                       </div>
                       <div className="min-w-0 flex-1 text-left">
-                        <p className="truncate text-xs font-semibold text-white/90">{adminDisplayName}</p>
-                        <p className="truncate text-[10px] text-white/40 transition-colors group-hover:text-red-400">
+                        <p className="truncate text-[14px] font-semibold text-white/90">{adminDisplayName}</p>
+                        <p className="truncate text-[14px] text-white/40 transition-colors group-hover:text-red-400">
                           Déconnexion
                         </p>
                       </div>

@@ -46,6 +46,8 @@ import {
   Sparkles,
   Receipt,
   BadgeCheck,
+  DollarSign,
+  BadgeDollarSignIcon,
 } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/pannierStore";
@@ -446,11 +448,11 @@ export default function CommandesClient() {
   const stepperProgress = Math.min(1, Math.max(0, (step - 1) / (STEPS.length - 1)));
 
   return (
-    <div className="page-transition relative min-h-screen overflow-hidden pb-20">
+    <div className="page-transition relative min-h-screen bg-white dark:bg-[#121212] overflow-hidden pb-20">
       {/* --------------------------------------------------------------
        *  Halos ambiants — signature visuelle discrète du tunnel premium
        * ------------------------------------------------------------ */}
-      <div
+      {/* <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
@@ -458,7 +460,10 @@ export default function CommandesClient() {
             ? "radial-gradient(45% 35% at 12% 0%, rgba(31,77,63,0.28), transparent 70%), radial-gradient(40% 30% at 100% 10%, rgba(201,168,118,0.08), transparent 70%)"
             : "radial-gradient(45% 35% at 12% 0%, rgba(31,77,63,0.07), transparent 70%), radial-gradient(40% 30% at 100% 10%, rgba(201,168,118,0.10), transparent 70%)",
         }}
-      />
+      /> */}
+
+
+
 
       {/* En-tête Stepper */}
       <div
@@ -497,16 +502,16 @@ export default function CommandesClient() {
             {/* Rail de fond */}
             <div
               aria-hidden
-              className="absolute left-5 right-5 top-5 h-[2px] sm:left-6 sm:right-6"
-              style={{ background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}
+              className="absolute left-10 right-10 top-5 h-[2px] sm:left-12 sm:right-12"
+              style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)" }}
             />
             {/* Fil de progression doré, animé en largeur */}
             <motion.div
               aria-hidden
-              className="absolute left-5 top-5 h-[2px] sm:left-6"
+              className="absolute left-10 top-5 h-[2px] sm:left-12"
               style={{ background: `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_GOLD})` }}
               initial={false}
-              animate={{ width: `calc(${stepperProgress * 100}% - ${stepperProgress > 0 ? 8 : 0}px)` }}
+              animate={{ width: `calc(${stepperProgress * 100}% - ${stepperProgress > 0 ? 32 : 0}px)` }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.6, ease: [0.16, 1, 0.3, 1] }}
             />
 
@@ -555,13 +560,23 @@ export default function CommandesClient() {
         </div>
       </div>
 
+
+
+
+
       <div className="mx-auto max-w-[var(--content-max-width)] px-4 py-10 sm:px-6 lg:px-8">
+
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+
           {/* === Colonne Principale === */}
+
           <div className="lg:col-span-7 xl:col-span-8">
+
             <AnimatePresence mode="wait">
+
               {/* --- ÉTAPE 1 : Informations & livraison --- */}
               {step === 1 && (
+
                 <motion.div
                   key="address"
                   initial={{ opacity: 0, x: -16 }}
@@ -592,33 +607,34 @@ export default function CommandesClient() {
                         <button
                           type="button"
                           onClick={() => setWithDelivery(true)}
-                          className="relative flex flex-col items-center gap-2.5 rounded-2xl border-2 p-4 text-center transition-all duration-300 cursor-pointer hover:-translate-y-0.5"
+                          className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl border-2 p-5 text-center transition-all duration-500 cursor-pointer hover:-translate-y-1"
                           style={{
                             borderColor: withDelivery ? BRAND_FOREST : border,
-                            background: withDelivery ? "rgba(31,77,63,0.06)" : bgElevated,
-                            boxShadow: withDelivery ? "0 8px 24px rgba(31,77,63,0.12)" : "none",
+                            background: withDelivery ? "rgba(31,77,63,0.04)" : bgElevated,
+                            boxShadow: withDelivery ? "0 12px 32px rgba(31,77,63,0.15)" : "none",
                           }}
                         >
+                          <div className="absolute inset-0 bg-gradient-to-br from-transparent to-[#1f4d3f]/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                           {withDelivery && (
                             <motion.div
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
+                              initial={{ scale: 0, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
                               transition={{ type: "spring", stiffness: 400, damping: 18 }}
-                              className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full text-white"
-                              style={{ background: BRAND_FOREST }}
+                              className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full text-white shadow-md"
+                              style={{ background: `linear-gradient(135deg, ${BRAND_FOREST}, #2d7a63)` }}
                             >
-                              <CheckCircle2 className="h-3 w-3" />
+                              <CheckCircle2 className="h-3.5 w-3.5" />
                             </motion.div>
                           )}
                           <div
-                            className="flex h-10 w-10 items-center justify-center rounded-full transition-colors duration-300"
-                            style={{ background: withDelivery ? BRAND_FOREST : isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)" }}
+                            className="flex h-12 w-12 items-center justify-center rounded-full transition-all duration-500 group-hover:scale-110"
+                            style={{ background: withDelivery ? `linear-gradient(135deg, ${BRAND_FOREST}, #2d7a63)` : isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}
                           >
-                            <Truck className="h-5 w-5" style={{ color: withDelivery ? "#fff" : undefined }} />
+                            <Truck className="h-5 w-5" style={{ color: withDelivery ? "#fff" : isDark ? "#aaa" : "#555" }} />
                           </div>
-                          <div>
-                            <p className="text-sm font-bold" style={{ color: withDelivery ? BRAND_FOREST : undefined }}>Livraison</p>
-                            <p className="text-[11px] text-muted">À mon adresse</p>
+                          <div className="relative z-10">
+                            <p className="text-sm font-bold tracking-tight" style={{ color: withDelivery ? BRAND_FOREST : undefined }}>Livraison</p>
+                            <p className="text-[11px] font-medium text-muted mt-0.5">À mon adresse</p>
                           </div>
                         </button>
 
@@ -626,33 +642,34 @@ export default function CommandesClient() {
                         <button
                           type="button"
                           onClick={() => setWithDelivery(false)}
-                          className="relative flex flex-col items-center gap-2.5 rounded-2xl border-2 p-4 text-center transition-all duration-300 cursor-pointer hover:-translate-y-0.5"
+                          className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl border-2 p-5 text-center transition-all duration-500 cursor-pointer hover:-translate-y-1"
                           style={{
                             borderColor: !withDelivery ? BRAND_FOREST : border,
-                            background: !withDelivery ? "rgba(31,77,63,0.06)" : bgElevated,
-                            boxShadow: !withDelivery ? "0 8px 24px rgba(31,77,63,0.12)" : "none",
+                            background: !withDelivery ? "rgba(31,77,63,0.04)" : bgElevated,
+                            boxShadow: !withDelivery ? "0 12px 32px rgba(31,77,63,0.15)" : "none",
                           }}
                         >
+                          <div className="absolute inset-0 bg-gradient-to-br from-transparent to-[#1f4d3f]/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                           {!withDelivery && (
                             <motion.div
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
+                              initial={{ scale: 0, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
                               transition={{ type: "spring", stiffness: 400, damping: 18 }}
-                              className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full text-white"
-                              style={{ background: BRAND_FOREST }}
+                              className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full text-white shadow-md"
+                              style={{ background: `linear-gradient(135deg, ${BRAND_FOREST}, #2d7a63)` }}
                             >
-                              <CheckCircle2 className="h-3 w-3" />
+                              <CheckCircle2 className="h-3.5 w-3.5" />
                             </motion.div>
                           )}
                           <div
-                            className="flex h-10 w-10 items-center justify-center rounded-full transition-colors duration-300"
-                            style={{ background: !withDelivery ? BRAND_FOREST : isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)" }}
+                            className="flex h-12 w-12 items-center justify-center rounded-full transition-all duration-500 group-hover:scale-110"
+                            style={{ background: !withDelivery ? `linear-gradient(135deg, ${BRAND_FOREST}, #2d7a63)` : isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}
                           >
-                            <ShoppingBag className="h-5 w-5" style={{ color: !withDelivery ? "#fff" : undefined }} />
+                            <ShoppingBag className="h-5 w-5" style={{ color: !withDelivery ? "#fff" : isDark ? "#aaa" : "#555" }} />
                           </div>
-                          <div>
-                            <p className="text-sm font-bold" style={{ color: !withDelivery ? BRAND_FOREST : undefined }}>Retrait boutique</p>
-                            <p className="text-[11px] text-muted">Je viens chercher</p>
+                          <div className="relative z-10">
+                            <p className="text-sm font-bold tracking-tight" style={{ color: !withDelivery ? BRAND_FOREST : undefined }}>Retrait boutique</p>
+                            <p className="text-[11px] font-medium text-muted mt-0.5">Je viens chercher</p>
                           </div>
                         </button>
                       </div>
@@ -886,11 +903,11 @@ export default function CommandesClient() {
                     style={{ background: bgElevated, border: `1px solid ${border}` }}
                   >
                     {/* Liseré doré supérieur */}
-                    <div
+                    {/* <div
                       aria-hidden
                       className="absolute inset-x-0 top-0 h-[3px]"
                       style={{ background: `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_GOLD}, ${BRAND_FOREST})` }}
-                    />
+                    /> */}
 
                     {/* Référence commande */}
                     <div
@@ -946,7 +963,7 @@ export default function CommandesClient() {
                             className="flex items-center gap-2 rounded-xl px-4 py-3 text-xs font-semibold text-red-600 dark:text-red-400"
                             style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.18)" }}
                           >
-                            <Sparkles className="h-4 w-4 shrink-0" />
+                            <BadgeDollarSignIcon className="h-4 w-4 shrink-0" />
                             Solde insuffisant — veuillez recharger votre portefeuille
                           </motion.div>
                         )}
@@ -1086,8 +1103,8 @@ export default function CommandesClient() {
                   </div>
                   <ul className="space-y-4">
                     {items.map((item) => (
-                      <li key={item.productId} className="group flex gap-4 transition-transform duration-300 hover:-translate-y-0.5">
-                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-alt shadow-sm">
+                      <li key={item.productId} className="group flex gap-4 transition-transform duration-300 hover:-translate-y-0.5 p-3 rounded-2xl" style={{ border: `1px solid ${border}`, background: isDark ? "rgba(255,255,255,0.02)" : "#fafafa" }}>
+                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-[10px] bg-surface-alt shadow-sm">
                           {(item.image || item.productImage) ? (
                             <Image
                               src={mediaUrl(item.image || item.productImage) || "/placeholder.png"}
@@ -1098,7 +1115,6 @@ export default function CommandesClient() {
                               unoptimized
                               onError={(e) => {
                                 const target = e.currentTarget as HTMLImageElement;
-                                // Si l'image primaire échoue, tenter productImage
                                 if (item.productImage && target.src !== (mediaUrl(item.productImage) || "")) {
                                   target.src = mediaUrl(item.productImage) || "/placeholder.png";
                                 } else {
@@ -1112,13 +1128,15 @@ export default function CommandesClient() {
                             </div>
                           )}
                         </div>
-                        <div className="flex-1 min-w-0 pt-1">
-                          <p className="truncate font-semibold text-sm">{item.name}</p>
-                          <p className="mt-1 text-xs text-muted">Qté: {item.quantity}</p>
+                        <div className="flex flex-1 min-w-0 flex-col justify-center">
+                          <p className="truncate font-bold text-sm tracking-tight">{item.name}</p>
+                          <p className="mt-0.5 text-xs text-muted font-medium">Qté : {item.quantity}</p>
                         </div>
-                        <span className="pt-1 font-bold text-sm">
-                          {formatCurrency(String(parseFloat(item.price) * item.quantity), item.currency)}
-                        </span>
+                        <div className="flex items-center justify-end">
+                          <span className="font-black text-sm tracking-tight" style={{ color: BRAND_FOREST }}>
+                            {formatCurrency(String(parseFloat(item.price) * item.quantity), item.currency)}
+                          </span>
+                        </div>
                       </li>
                     ))}
                   </ul>
@@ -1323,26 +1341,29 @@ function InputField({ label, type = "text", value, onChange, placeholder, requir
   const { resolvedTheme } = useThemeStore();
   const isDark = resolvedTheme === "dark";
 
-  const border = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
-  const inputBg = isDark ? "rgba(255,255,255,0.02)" : "#fcfcfc";
+  const border = isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)";
+  const inputBg = isDark ? "rgba(255,255,255,0.03)" : "#fcfcfc";
 
+  // Floating label style
   return (
-    <div>
-      <label className="mb-1.5 block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300">
-        {label} {required && <span style={{ color: BRAND_FOREST }}>*</span>}
-      </label>
+    <div className="relative w-full">
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
+        placeholder={placeholder || " "}
         required={required}
-        className="w-full h-[45px] rounded-lg px-3.5 text-sm outline-none transition-all duration-200 focus:border-[#1f4d3f] focus:ring-2 focus:ring-[#1f4d3f]/20"
+        className="peer w-full h-[52px] rounded-xl px-4 pt-4 pb-1 text-sm outline-none transition-all duration-300 placeholder-transparent focus:border-[#1f4d3f] focus:ring-2 focus:ring-[#1f4d3f]/20 bg-transparent"
         style={{
           background: inputBg,
-          border: `1px solid ${border}`,
+          border: `1.5px solid ${border}`,
         }}
       />
+      <label 
+        className="absolute left-4 top-1 text-[11px] font-bold text-neutral-500 transition-all duration-300 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-[13px] peer-placeholder-shown:font-semibold peer-placeholder-shown:text-neutral-400 peer-focus:top-1 peer-focus:text-[11px] peer-focus:font-bold peer-focus:text-[#1f4d3f]"
+      >
+        {label} {required && <span style={{ color: BRAND_FOREST }}>*</span>}
+      </label>
     </div>
   );
 }

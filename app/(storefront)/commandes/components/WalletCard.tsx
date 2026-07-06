@@ -166,7 +166,7 @@ function SufficientState({
                 className="text-[10px] font-bold uppercase tracking-[0.18em]"
                 style={{ color: "rgba(255,255,255,0.35)" }}
               >
-                Kalvin Pay
+                Solime Pay
               </p>
               <p className="text-[14px] font-black text-white">
                 Mon Portefeuille
@@ -284,14 +284,14 @@ function InsufficientState({
       style={{ background: bg, border: `1px solid ${border}` }}
     >
       {/* Liseré amber supérieur — signal d'alerte immédiat */}
-      <div
+      {/* <div
         aria-hidden
         className="h-[3px] w-full"
         style={{
           background:
             "linear-gradient(90deg, transparent, #F59E0B80, #F59E0B, #F59E0B80, transparent)",
         }}
-      />
+      /> */}
 
       <div className="p-5 sm:p-6">
 
@@ -316,7 +316,7 @@ function InsufficientState({
                 className="text-[10px] font-bold uppercase tracking-[0.18em]"
                 style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }}
               >
-                Kalvin Pay
+                Solime Pay
               </p>
               <p className="text-[14px] font-black" style={{ color: text }}>
                 Mon Portefeuille

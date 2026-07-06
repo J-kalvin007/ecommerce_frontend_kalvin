@@ -163,7 +163,9 @@ function SidebarNavButton({
   collapsed: boolean;
   onClick: () => void;
 }) {
+
   return (
+
     <motion.button
       onClick={onClick}
       whileTap={{ scale: 0.97 }}
@@ -174,6 +176,9 @@ function SidebarNavButton({
           : "text-white/45 hover:text-white/80"
       )}
     >
+
+
+
       {/* Fond actif — dorée extravagante */}
       {isActive && (
         <motion.span
@@ -187,13 +192,15 @@ function SidebarNavButton({
         />
       )}
 
+
+
       {/* Icône */}
       <span
         className={cn(
           "relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-all duration-200",
           isActive
             ? "bg-white/15 text-white"
-            : "bg-white/5 text-white/40 group-hover:bg-white/10 group-hover:text-white/70"
+            : "bg-white/5 text-[#C9963A]/80 group-hover:bg-white/10 group-hover:text-white/70"
         )}
       >
         <item.icon className="h-[20px] w-[20px]" strokeWidth={isActive ? 2.2 : 1.8} />
@@ -202,13 +209,13 @@ function SidebarNavButton({
       {/* Label + sublabel */}
       {!collapsed && (
         <span className="relative z-10 flex min-w-0 flex-col items-start text-left">
-          <span className="truncate text-[15px] font-bold leading-none tracking-wide">
+          <span className="truncate text-[14px] font-bold leading-none tracking-wide text-gray-100">
             {item.label}
           </span>
           {item.sublabel && (
             <span className={cn(
               "mt-1 truncate text-[11px] font-medium leading-none tracking-wide",
-              isActive ? "text-white/75" : "text-white/40"
+              isActive ? "text-white/75" : "text-gray-100"
             )}>
               {item.sublabel}
             </span>
@@ -522,7 +529,9 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
         {/* ════════════════════════════════════════════════════════════════
             BODY : Sidebar + Main
         ════════════════════════════════════════════════════════════════ */}
+
         <div className="flex">
+
 
           {/* ══ Sidebar desktop ══════════════════════════════════════════ */}
           <aside
@@ -533,6 +542,64 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
             )}
             style={{ background: SIDEBAR_BG }}
           >
+
+
+
+
+            {/* Fond gradient forest profond */}
+            {/* <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(145deg, #0A2418 0%, #0D2E1E 35%, #1A4A30 65%, #122C1E 100%)" }}
+              aria-hidden="true"
+            /> */}
+
+            {/* Texture grain */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.04]"
+              style={{
+                backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")",
+                animation: "promo-grain 8s steps(1) infinite",
+              }}
+              aria-hidden="true"
+            />
+
+            {/* Halo radial jade */}
+            <div
+              className="pointer-events-none absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20"
+              style={{ background: "radial-gradient(circle, #2F9E6F 0%, transparent 70%)", animation: "promo-halo-pulse 6s ease-in-out infinite" }}
+              aria-hidden="true"
+            />
+
+            {/* Orbes decoratifs */}
+            {/* <div
+              className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full opacity-15"
+              style={{ background: "radial-gradient(circle, #2F9E6F, transparent 70%)", animation: "promo-orb-drift 12s ease-in-out infinite" }}
+              aria-hidden="true"
+            /> */}
+
+            <div
+              className="pointer-events-none absolute -right-20 bottom-12 h-56 w-56 rounded-full opacity-10"
+              style={{ background: "radial-gradient(circle, #E8711A, transparent 70%)", animation: "promo-orb-drift 9s ease-in-out 3s infinite reverse" }}
+              aria-hidden="true"
+            />
+
+            {/* Grille fine de profondeur */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.025]"
+              style={{
+                backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
+                backgroundSize: "48px 48px",
+              }}
+              aria-hidden="true"
+            />
+
+
+
+
+
+
+
+
 
             {/* Bouton collapse flottant */}
             <motion.button
@@ -579,7 +646,7 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
             {/* Navigation principale */}
             <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/15">
               {!collapsed && (
-                <p className="px-3 pb-2 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-white/25">
+                <p className="px-3 pb-2 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-gray-100">
                   Navigation
                 </p>
               )}
@@ -635,17 +702,23 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
                         Déconnexion
                       </p>
                     </div>
-                    <LogOut className="h-4 w-4 shrink-0 text-white/25 transition-colors group-hover:text-red-400" />
+                    <LogOut className="h-4 w-4 shrink-0 text-gray-100 transition-colors group-hover:text-red-400" />
                   </>
                 )}
               </motion.button>
             </div>
           </aside>
 
+
+
+
           {/* ══ Sidebar mobile (drawer) ════════════════════════════════ */}
           <AnimatePresence>
+
             {mobileOpen && (
+
               <>
+
                 {/* Overlay */}
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -665,19 +738,95 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
                   className="fixed left-0 top-0 z-50 flex h-full w-[290px] flex-col shadow-2xl lg:hidden"
                   style={{ background: SIDEBAR_BG }}
                 >
+
+
+
+
+
+
+
+
+
+
+
+                  {/* Fond gradient forest profond */}
+                  {/* <div
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(145deg, #0A2418 0%, #0D2E1E 35%, #1A4A30 65%, #122C1E 100%)" }}
+                    aria-hidden="true"
+                  /> */}
+
+                  {/* Texture grain */}
+                  <div
+                    className="pointer-events-none absolute inset-0 opacity-[0.04]"
+                    style={{
+                      backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")",
+                      animation: "promo-grain 8s steps(1) infinite",
+                    }}
+                    aria-hidden="true"
+                  />
+
+                  {/* Halo radial jade */}
+                  <div
+                    className="pointer-events-none absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20"
+                    style={{ background: "radial-gradient(circle, #2F9E6F 0%, transparent 70%)", animation: "promo-halo-pulse 6s ease-in-out infinite" }}
+                    aria-hidden="true"
+                  />
+
+                  {/* Orbes decoratifs */}
+                  {/* <div
+                    className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full opacity-15"
+                    style={{ background: "radial-gradient(circle, #2F9E6F, transparent 70%)", animation: "promo-orb-drift 12s ease-in-out infinite" }}
+                    aria-hidden="true"
+                  /> */}
+                  <div
+                    className="pointer-events-none absolute -right-20 bottom-12 h-56 w-56 rounded-full opacity-10"
+                    style={{ background: "radial-gradient(circle, #E8711A, transparent 70%)", animation: "promo-orb-drift 9s ease-in-out 3s infinite reverse" }}
+                    aria-hidden="true"
+                  />
+
+                  {/* Grille fine de profondeur */}
+                  <div
+                    className="pointer-events-none absolute inset-0 opacity-[0.025]"
+                    style={{
+                      backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
+                      backgroundSize: "48px 48px",
+                    }}
+                    aria-hidden="true"
+                  />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                   {/* Header drawer */}
                   <div className="flex h-[72px] items-center justify-between px-4">
+
                     <Link href="/customer/dashboard_client" className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-white/15 bg-white/10">
-                        <Image src={LOGO_PATH} alt="Logo" width={24} height={24} className="h-6 w-6 object-contain" />
+                      <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-white/15 bg-white/10">
+                        <Image src={LOGO_PATH} alt="Logo" width={28} height={28} className="h-6 w-6 object-contain" />
                       </div>
+
                       <div>
                         <span className="block text-[12.5px] font-bold text-white">MON ESPACE</span>
                         <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#C9963A]/80">
                           Client Premium
                         </span>
                       </div>
+
                     </Link>
+
                     <motion.button
                       whileHover={{ scale: 1.08 }}
                       whileTap={{ scale: 0.92 }}
@@ -687,15 +836,18 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
                     >
                       <X className="h-4 w-4" />
                     </motion.button>
+
                   </div>
 
                   <div className="mx-4 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
 
                   {/* Nav mobile */}
                   <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-                    <p className="px-3 pb-2 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-white/25">
-                      Navigation
+
+                    <p className="px-3 pb-2 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-gray-100">
+                      Navigation client
                     </p>
+
                     {NAV_ITEMS.map((item, idx) => (
                       <motion.div
                         key={item.id}
@@ -712,8 +864,11 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
                             setMobileOpen(false);
                           }}
                         />
+
                       </motion.div>
+
                     ))}
+
                   </nav>
 
                   <div className="mx-4 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
@@ -723,12 +878,12 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
                     <Link
                       href="/"
                       onClick={() => setMobileOpen(false)}
-                      className="group flex w-full items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 transition-all hover:border-[#C9963A]/30 hover:bg-[#C9963A]/10"
+                      className="group flex w-full cursor-pointer items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 transition-all hover:border-[#C9963A]/30 hover:bg-[#C9963A]/10"
                     >
                       <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/8 text-white/45 group-hover:text-[#C9963A]">
                         <ArrowLeft className="h-3.5 w-3.5" />
                       </span>
-                      <span className="text-[12px] font-semibold text-white/45 group-hover:text-[#C9963A]">
+                      <span className="text-[14px] font-semibold text-white/45 group-hover:text-[#C9963A]">
                         Retour à l'accueil
                       </span>
                     </Link>
@@ -741,10 +896,10 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
                         {getAvatar()}
                       </div>
                       <div className="min-w-0 flex-1 text-left">
-                        <p className="truncate text-[12.5px] font-semibold text-white/80">{displayName}</p>
-                        <p className="text-[10px] text-white/35 group-hover:text-red-400">Déconnexion</p>
+                        <p className="truncate text-[14px] font-semibold text-white/80">{displayName}</p>
+                        <p className="text-[14px] text-white/35 group-hover:text-red-400">Déconnexion</p>
                       </div>
-                      <LogOut className="h-4 w-4 text-white/25 group-hover:text-red-400" />
+                      <LogOut className="h-4 w-4 text-gray-100 group-hover:text-red-400" />
                     </button>
                   </div>
                 </motion.aside>
@@ -752,11 +907,16 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
             )}
           </AnimatePresence>
 
+
+
           {/* ══ Contenu principal ════════════════════════════════════════ */}
           <main className="flex-1 min-h-[calc(100vh-68px)] overflow-y-auto">
             {children}
           </main>
+
+
         </div>
+
       </div>
 
       {/* ════════════════════════════════════════════════════════════════
@@ -782,6 +942,9 @@ export default function CustomerShell({ children, activeSection = "dashboard" }:
           }
         }}
       />
+
     </>
+
   );
+
 }

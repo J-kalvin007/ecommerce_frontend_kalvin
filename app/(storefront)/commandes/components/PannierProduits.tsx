@@ -72,7 +72,7 @@ export default function CartDrawer() {
             className="fixed inset-0 z-[100] cursor-pointer bg-[#0D2E1E]/50"
             onClick={() => toggleDrawer(false)}
           />
-          
+
           {/* Drawer ultra-premium */}
           <motion.div
             initial={{ x: "100%", opacity: 0.5, scale: 0.98 }}
@@ -94,7 +94,7 @@ export default function CartDrawer() {
             <div className="relative z-20 flex flex-col border-b border-[#e7dfd2]/60 bg-white/80 backdrop-blur-xl px-7 py-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <motion.div 
+                  <motion.div
                     initial={{ rotate: -10, scale: 0.8 }}
                     animate={{ rotate: 0, scale: 1 }}
                     transition={SPRING_SNAPPY}
@@ -136,24 +136,24 @@ export default function CartDrawer() {
             {/* Items */}
             <div className="relative z-10 flex-1 overflow-y-auto px-7 py-6 custom-scrollbar">
               {items.length === 0 ? (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   transition={{ delay: 0.2, ...SPRING_SMOOTH }}
                   className="flex h-full flex-col items-center justify-center gap-8 text-center"
                 >
                   <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-white shadow-xl shadow-[#e7dfd2]/50 border border-[#e7dfd2]/40">
-                    <motion.div 
+                    <motion.div
                       animate={{ scale: [1, 1.05, 1] }}
                       transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute inset-0 rounded-full border-2 border-[#D4AF37]/20" 
+                      className="absolute inset-0 rounded-full border-2 border-[#D4AF37]/20"
                     />
                     <ShoppingBag className="h-12 w-12 text-[#8a9086]/40" strokeWidth={1} />
                   </div>
                   <div className="space-y-3">
-                    <p className="text-2xl font-display font-bold tracking-tight text-[#1f241c]">L'excellence vous attend</p>
+                    <p className="text-2xl font-display font-bold tracking-tight text-[#1f241c]">Votre panier est vide</p>
                     <p className="text-sm font-medium text-[#8a9086] max-w-[280px] mx-auto leading-relaxed">
-                      Votre panier est vide. Découvrez notre sélection rigoureuse de produits du terroir.
+                      Découvrez notre sélection rigoureuse de produits du terroir.
                     </p>
                   </div>
                   <Link
@@ -161,12 +161,12 @@ export default function CartDrawer() {
                     onClick={() => toggleDrawer(false)}
                     className="group flex cursor-pointer items-center gap-3 rounded-full bg-[#1f4d3f] px-9 py-4 text-sm font-bold text-white shadow-xl shadow-[#1f4d3f]/20 transition-all hover:bg-[#17392f] hover:shadow-2xl hover:-translate-y-1"
                   >
-                    Explorer la collection
+                    Explorer la boutique
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1.5" />
                   </Link>
                 </motion.div>
               ) : (
-                <motion.ul 
+                <motion.ul
                   variants={containerVariants}
                   initial="hidden"
                   animate="show"
@@ -208,7 +208,7 @@ export default function CartDrawer() {
                           })()}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         </div>
-                        
+
                         {/* Info */}
                         <div className="flex flex-1 flex-col justify-between py-1">
                           <div className="flex justify-between items-start gap-3">
@@ -235,7 +235,7 @@ export default function CartDrawer() {
                               <Trash2 className="h-4 w-4" />
                             </motion.button>
                           </div>
-                          
+
                           <div className="flex items-end justify-between mt-4">
                             {/* Quantity controls ultra-premium */}
                             <div className="flex items-center rounded-full border border-[#e7dfd2] bg-white p-0.5 shadow-sm">
@@ -255,7 +255,7 @@ export default function CartDrawer() {
                                 <Plus className="h-3.5 w-3.5" />
                               </button>
                             </div>
-                            
+
                             {/* Price */}
                             <div className="flex flex-col items-end">
                               <span className="text-[11px] font-bold text-[#8a9086] opacity-0 group-hover:opacity-100 transition-opacity">
@@ -276,7 +276,7 @@ export default function CartDrawer() {
 
             {/* Footer — Totals + CTA */}
             {items.length > 0 && (
-              <motion.div 
+              <motion.div
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3, ...SPRING_SMOOTH }}
@@ -284,7 +284,7 @@ export default function CartDrawer() {
               >
                 {/* Liseré Or/Émeraude décoratif */}
                 <div className="absolute left-0 top-0 h-[2px] w-full bg-gradient-to-r from-[#1f4d3f] via-[#D4AF37] to-[#1f4d3f] opacity-80" />
-                
+
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-[15px]">
                     <span className="font-semibold text-[#8a9086]">Sous-total</span>
@@ -295,9 +295,9 @@ export default function CartDrawer() {
                     <span className="text-[12px] font-bold uppercase tracking-widest text-[#D4AF37]">Calculée au paiement</span>
                   </div>
                 </div>
-                
+
                 <div className="my-5 border-t border-dashed border-[#e7dfd2]" />
-                
+
                 <div className="flex items-end justify-between">
                   <span className="text-xl font-bold text-[#1f241c]">Total</span>
                   <span className="text-4xl font-black tracking-tighter text-[#1f4d3f]">

@@ -39,24 +39,24 @@ const STATUS_STYLE: Record<
   string,
   { className: string; dot: string }
 > = {
-  "Réussi":     { className: "text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-400 dark:bg-emerald-500/10 dark:border-emerald-500/30", dot: "bg-emerald-500" },
+  "Réussi": { className: "text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-400 dark:bg-emerald-500/10 dark:border-emerald-500/30", dot: "bg-emerald-500" },
   "En attente": { className: "text-amber-700 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-500/10 dark:border-amber-500/30", dot: "bg-amber-500" },
-  "Échoué":     { className: "text-red-700 bg-red-50 border-red-200 dark:text-red-400 dark:bg-red-500/10 dark:border-red-500/30", dot: "bg-red-500" },
-  "Annulé":     { className: "text-slate-600 bg-slate-50 border-slate-200 dark:text-slate-400 dark:bg-slate-500/10 dark:border-slate-500/30", dot: "bg-slate-400" },
-  "Remboursé":  { className: "text-blue-700 bg-blue-50 border-blue-200 dark:text-blue-400 dark:bg-blue-500/10 dark:border-blue-500/30", dot: "bg-blue-500" },
+  "Échoué": { className: "text-red-700 bg-red-50 border-red-200 dark:text-red-400 dark:bg-red-500/10 dark:border-red-500/30", dot: "bg-red-500" },
+  "Annulé": { className: "text-slate-600 bg-slate-50 border-slate-200 dark:text-slate-400 dark:bg-slate-500/10 dark:border-slate-500/30", dot: "bg-slate-400" },
+  "Remboursé": { className: "text-blue-700 bg-blue-50 border-blue-200 dark:text-blue-400 dark:bg-blue-500/10 dark:border-blue-500/30", dot: "bg-blue-500" },
 };
 
 const DEFAULT_STATUS_STYLE = { className: "text-slate-500 bg-slate-50 border-slate-200", dot: "bg-slate-400" };
 
-/** Détermine l'icône directionnelle selon le type de transaction */
-const getTypeIcon = (typeLabel: string) => {
-  if (typeLabel.toLowerCase().includes("recharge") || typeLabel.toLowerCase().includes("dépôt")) {
+const getTypeIcon = (typeLabel?: any) => {
+  const label = String(typeLabel || "").toLowerCase();
+  if (label.includes("recharge") || label.includes("dépôt")) {
     return <ArrowDownRight className="h-4 w-4 text-emerald-500" />;
   }
-  if (typeLabel.toLowerCase().includes("remboursement")) {
+  if (label.includes("remboursement")) {
     return <RefreshCcw className="h-4 w-4 text-blue-500" />;
   }
-  if (typeLabel.toLowerCase().includes("retrait")) {
+  if (label.includes("retrait")) {
     return <ArrowUpRight className="h-4 w-4 text-orange-500" />;
   }
   return <ArrowUpRight className="h-4 w-4 text-slate-400" />;
@@ -97,15 +97,23 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
   const [page, setPage] = useState(1);
   const { copied, copy } = useCopy();
 
+  const extractLabel = (val: any): string => {
+    if (!val) return "Inconnu";
+    if (typeof val === "object") {
+      return val.label || val.name || val.value || "Inconnu";
+    }
+    return String(val);
+  };
+
   /* Récupérer les types uniques depuis les données */
   const uniqueTypes = useMemo(() => {
-    const types = new Set(transactions.map((t) => t.type_label));
+    const types = new Set(transactions.map((t) => extractLabel(t.type_label)));
     return Array.from(types);
   }, [transactions]);
 
   /* Récupérer les statuts uniques depuis les données */
   const uniqueStatuses = useMemo(() => {
-    const statuses = new Set(transactions.map((t) => t.status_label));
+    const statuses = new Set(transactions.map((t) => extractLabel(t.status_label)));
     return Array.from(statuses);
   }, [transactions]);
 
@@ -114,11 +122,11 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
     return transactions.filter((t) => {
       const searchLower = search.toLowerCase();
       const matchSearch =
-        t.reference_externe.toLowerCase().includes(searchLower) ||
-        (t.order_reference && t.order_reference.toLowerCase().includes(searchLower)) ||
-        t.amount.includes(searchLower);
-      const matchStatus = statusFilter === "all" || t.status_label === statusFilter;
-      const matchType = typeFilter === "all" || t.type_label === typeFilter;
+        (t.reference_externe && String(t.reference_externe).toLowerCase().includes(searchLower)) ||
+        (t.order_reference && String(t.order_reference).toLowerCase().includes(searchLower)) ||
+        (t.amount && String(t.amount).includes(searchLower));
+      const matchStatus = statusFilter === "all" || extractLabel(t.status_label) === statusFilter;
+      const matchType = typeFilter === "all" || extractLabel(t.type_label) === typeFilter;
       return matchSearch && matchStatus && matchType;
     });
   }, [transactions, search, statusFilter, typeFilter]);
@@ -141,12 +149,13 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
     }).format(new Date(iso));
 
   /* Format montant avec couleur */
-  const formatAmount = (amount: string, typeLabel: string) => {
-    const num = parseFloat(amount);
+  const formatAmount = (amount: any, typeLabel?: any) => {
+    const num = parseFloat(String(amount || "0"));
+    const label = String(typeLabel || "").toLowerCase();
     const isPositive =
-      typeLabel.toLowerCase().includes("recharge") ||
-      typeLabel.toLowerCase().includes("remboursement") ||
-      typeLabel.toLowerCase().includes("cashback");
+      label.includes("recharge") ||
+      label.includes("remboursement") ||
+      label.includes("cashback");
 
     return (
       <span
@@ -206,6 +215,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
 
         {/* Filtres type */}
         {uniqueTypes.length > 1 && (
+
           <div className="flex flex-wrap gap-2">
             <span className="text-xs font-medium text-slate-400 self-center">Type :</span>
             {["all", ...uniqueTypes].map((t) => (
@@ -215,7 +225,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                 className={cn(
                   "cursor-pointer rounded-lg px-2.5 py-1 text-xs font-semibold border transition-all",
                   typeFilter === t
-                    ? "bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 border-slate-800 dark:border-slate-200"
+                    ? "bg-slate-800 dark:bg-slate-200 text-gray-100 dark:text-slate-900 border-slate-800 dark:border-slate-200"
                     : "border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
                 )}
               >
@@ -228,16 +238,23 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
 
       {/* Table */}
       <div className="overflow-x-auto">
+
         <table className="w-full min-w-[820px]">
+
           <thead>
+
             <tr className="border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/30">
+
               {["Type", "Client", "Fournisseur", "Montant", "Commande", "Référence externe", "Statut", "Date"].map((h) => (
                 <th key={h} className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-400">
                   {h}
                 </th>
               ))}
+
             </tr>
+
           </thead>
+
           <tbody>
             {paginated.length === 0 ? (
               <tr>
@@ -255,9 +272,10 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                   </div>
                 </td>
               </tr>
+
             ) : (
+
               paginated.map((tx, idx) => {
-                const statusStyle = STATUS_STYLE[tx.status_label] || DEFAULT_STATUS_STYLE;
                 const copyKey = `ref-${tx.id}`;
 
                 return (
@@ -270,14 +288,16 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                   >
                     {/* Type */}
                     <td className="px-5 py-4">
+
                       <div className="flex items-center gap-2">
                         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
-                          {getTypeIcon(tx.type_label)}
+                          {getTypeIcon(extractLabel(tx.type_label))}
                         </div>
                         <span className="text-sm text-slate-700 dark:text-slate-300 font-medium">
-                          {tx.type_label}
+                          {extractLabel(tx.type_label)}
                         </span>
                       </div>
+
                     </td>
 
                     {/* Client */}
@@ -295,13 +315,13 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                     {/* Fournisseur */}
                     <td className="px-5 py-4">
                       <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 text-xs font-semibold text-slate-600 dark:text-slate-400">
-                        {tx.provider_label}
+                        {extractLabel(tx.provider_label)}
                       </span>
                     </td>
 
                     {/* Montant */}
                     <td className="px-5 py-4">
-                      {formatAmount(tx.amount, tx.type_label)}
+                      {formatAmount(tx.amount, extractLabel(tx.type_label))}
                     </td>
 
                     {/* Commande */}
@@ -342,11 +362,11 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                       <span
                         className={cn(
                           "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold",
-                          statusStyle.className
+                          (STATUS_STYLE[extractLabel(tx.status_label)] || DEFAULT_STATUS_STYLE).className
                         )}
                       >
-                        <span className={cn("h-1.5 w-1.5 rounded-full", statusStyle.dot)} />
-                        {tx.status_label}
+                        <span className={cn("h-1.5 w-1.5 rounded-full", (STATUS_STYLE[extractLabel(tx.status_label)] || DEFAULT_STATUS_STYLE).dot)} />
+                        {extractLabel(tx.status_label)}
                       </span>
                     </td>
 

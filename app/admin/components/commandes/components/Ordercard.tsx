@@ -1,11 +1,271 @@
-﻿// app/admin/components/commandes/components/OrderCard.tsx
+// "use client";
+
+// import { useState } from "react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import {
+//   Package, Calendar, ChevronRight, SlidersHorizontal,
+//   ChevronDown, ArrowUpRight
+// } from "lucide-react";
+// import { cn, formatCurrency } from "@/lib/utils";
+// import type { OrderList, OrderStatus } from "@/modeles/commandes";
+// import { ORDER_STATUS_MAP } from "@/modeles/commandes";
+
+// interface OrderCardProps {
+//   order: OrderList;
+//   viewMode: "grid" | "list";
+//   onView: () => void;
+//   onStatusChange: (status: OrderStatus) => void;
+//   isUpdating: boolean;
+// }
+
+// /* -- Status pill ------------------------------------------------ */
+// function StatusPill({ status }: { status: OrderStatus }) {
+//   const cfg = ORDER_STATUS_MAP[status];
+//   if (!cfg) return null;
+//   return (
+//     <span className={cn(
+//       "inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-[11px] font-bold whitespace-nowrap",
+//       cfg.bg, cfg.color, cfg.border
+//     )}>
+//       {cfg.label}
+//     </span>
+//   );
+// }
+
+// /* -- Status quick-change dropdown ------------------------------- */
+// function StatusDropdown({
+//   currentStatus,
+//   isUpdating,
+//   onSelect,
+//   onClose,
+// }: {
+//   currentStatus: OrderStatus;
+//   isUpdating: boolean;
+//   onSelect: (s: OrderStatus) => void;
+//   onClose: () => void;
+// }) {
+//   return (
+//     <motion.div
+//       initial={{ opacity: 0, y: -4, scale: 0.98 }}
+//       animate={{ opacity: 1, y: 0, scale: 1 }}
+//       exit={{ opacity: 0, y: -4, scale: 0.98 }}
+//       transition={{ duration: 0.15 }}
+//       className="absolute right-0 top-full z-[100] mt-1 w-56 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900"
+//     >
+//       <div className="border-b border-slate-100 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-900/50">
+//         <p className="text-[11px] font-bold text-slate-500 uppercase">Changer le statut</p>
+//       </div>
+//       <div className="p-1">
+//         {(Object.keys(ORDER_STATUS_MAP) as OrderStatus[]).map(s => {
+//           const cfg = ORDER_STATUS_MAP[s];
+//           const isCurrent = s === currentStatus;
+//           return (
+//             <button
+//               key={s}
+//               disabled={isCurrent || isUpdating}
+//               onClick={() => { onSelect(s); onClose(); }}
+//               className={cn(
+//                 "flex w-full cursor-pointer items-center justify-between rounded-md px-3 py-2 text-[13px] font-medium transition-colors",
+//                 isCurrent
+//                   ? "cursor-not-allowed opacity-50 bg-slate-50 dark:bg-slate-800/50"
+//                   : "hover:bg-slate-100 dark:hover:bg-slate-800"
+//               )}
+//             >
+//               <span className={cn(isCurrent ? cfg.color : "text-slate-700 dark:text-slate-300")}>{cfg.label}</span>
+//               {isCurrent && <span className="text-[10px] font-semibold text-slate-400">Actuel</span>}
+//             </button>
+//           );
+//         })}
+//       </div>
+//     </motion.div>
+//   );
+// }
+
+// /* -- Main OrderCard --------------------------------------------- */
+// export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating }: OrderCardProps) {
+//   const [showStatus, setShowStatus] = useState(false);
+//   const cfg = ORDER_STATUS_MAP[order.status] ?? ORDER_STATUS_MAP.pending_payment;
+//   const date = new Date(order.created_at).toLocaleDateString("fr-FR", {
+//     day: "2-digit", month: "short", year: "numeric",
+//   });
+//   const itemCount = (order as any).items_count ?? "—";
+
+//   /* -- GRID card ----------------------------------------------- */
+//   if (viewMode === "grid") {
+//     return (
+//       <div
+//         className="group relative flex flex-col rounded-xl border border-slate-200 bg-white transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-[#121212]"
+//       >
+//         <div className="flex flex-1 flex-col gap-4 p-5">
+//           <div className="flex items-center justify-between">
+//             <span className="rounded bg-slate-100 px-2 py-1 font-mono text-xs font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+//               {order.reference}
+//             </span>
+//             <StatusPill status={order.status} />
+//           </div>
+
+//           <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
+//             <span className="flex items-center gap-1.5">
+//               <Calendar className="h-4 w-4" /> {date}
+//             </span>
+//             <span className="font-medium">
+//               {itemCount} article(s)
+//             </span>
+//           </div>
+
+//           <div>
+//             <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Total</p>
+//             <p className="text-xl font-bold text-slate-900 dark:text-white">
+//               {formatCurrency(parseFloat(order.total_final || "0"), "FCFA")}
+//             </p>
+//           </div>
+
+//           <div className="flex gap-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+//             <div>
+//               <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Sous-total</p>
+//               <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{formatCurrency(parseFloat(order.items_total || "0"), "FCFA")}</p>
+//             </div>
+//             <div>
+//               <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Livraison</p>
+//               <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{formatCurrency(parseFloat(order.frais_livraison || "0"), "FCFA")}</p>
+//             </div>
+//           </div>
+
+//           <div className="mt-4 flex items-center justify-between gap-2">
+//             <div className="relative">
+//               <button
+//                 onClick={() => setShowStatus(!showStatus)}
+//                 className="flex items-center cursor-pointer gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+//               >
+//                 <SlidersHorizontal className="h-3.5 w-3.5" />
+//                 Statut
+//                 <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", showStatus && "rotate-180")} />
+//               </button>
+//               <AnimatePresence>
+//                 {showStatus && (
+//                   <StatusDropdown
+//                     currentStatus={order.status}
+//                     isUpdating={isUpdating}
+//                     onSelect={onStatusChange}
+//                     onClose={() => setShowStatus(false)}
+//                   />
+//                 )}
+//               </AnimatePresence>
+//             </div>
+
+//             <button
+//               onClick={() => onView()}
+//               className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-[#0D2E1E] px-4 py-2 text-xs font-semibold text-gray-100 transition-colors hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+//             >
+//               Détails
+//               <ArrowUpRight className="h-3.5 w-3.5" />
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   /* -- LIST card ----------------------------------------------- */
+//   return (
+//     <div
+//       className="group flex flex-col items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white px-5 py-4 transition-shadow hover:shadow-sm sm:flex-row dark:border-slate-800 dark:bg-[#121212]"
+//     >
+//       <div className="flex w-full min-w-0 flex-1 items-center gap-4 sm:w-auto">
+//         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+//           <Package className="h-5 w-5 text-slate-500 dark:text-slate-400" />
+//         </div>
+//         <div className="min-w-0 flex-1">
+//           <div className="flex items-center gap-2">
+//             <p className="font-mono text-sm font-bold text-slate-900 dark:text-white">
+//               {order.reference}
+//             </p>
+//             <StatusPill status={order.status} />
+//           </div>
+//           <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+//             <Calendar className="h-3.5 w-3.5" />
+//             {date}
+//           </p>
+//         </div>
+//       </div>
+
+//       <div className="flex w-full items-center justify-between sm:w-auto sm:gap-6 sm:justify-end">
+//         <div className="text-left sm:text-right">
+//           <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Total</p>
+//           <p className="text-sm font-bold text-slate-900 dark:text-white">
+//             {formatCurrency(parseFloat(order.total_final || "0"), "FCFA")}
+//           </p>
+//         </div>
+
+//         <div className="flex items-center gap-2">
+//           <div className="relative">
+//             <button
+//               onClick={() => setShowStatus(!showStatus)}
+//               className="flex h-9 items-center cursor-pointer gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+//             >
+//               <SlidersHorizontal className="h-3.5 w-3.5" />
+//               <span className="hidden sm:inline">Statut</span>
+//               <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", showStatus && "rotate-180")} />
+//             </button>
+//             <AnimatePresence>
+//               {showStatus && (
+//                 <StatusDropdown
+//                   currentStatus={order.status}
+//                   isUpdating={isUpdating}
+//                   onSelect={onStatusChange}
+//                   onClose={() => setShowStatus(false)}
+//                 />
+//               )}
+//             </AnimatePresence>
+//           </div>
+
+//           <button
+//             onClick={() => onView()}
+//             className="flex h-9 cursor-pointer items-center gap-1.5 rounded-lg bg-[#0D2E1E] px-3 text-xs font-semibold text-gray-100 transition-colors hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+//           >
+//             <span className="hidden sm:inline">Détails</span>
+//             <ChevronRight className="h-3.5 w-3.5" />
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Package, Calendar, ChevronRight, SlidersHorizontal,
-  ChevronDown, ArrowUpRight, Star
+  ChevronDown, ArrowUpRight, Check
 } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import type { OrderList, OrderStatus } from "@/modeles/commandes";
@@ -25,41 +285,41 @@ function StatusPill({ status }: { status: OrderStatus }) {
   if (!cfg) return null;
   return (
     <span className={cn(
-      "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-widest whitespace-nowrap",
+      "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold whitespace-nowrap tracking-wide",
       cfg.bg, cfg.color, cfg.border
     )}>
-      <span className={cn("h-1.5 w-1.5 rounded-full animate-pulse", cfg.color.replace("text-", "bg-"))} />
+      <span className="h-1.5 w-1.5 rounded-full bg-current" />
       {cfg.label}
     </span>
   );
 }
-
 
 /* -- Status quick-change dropdown ------------------------------- */
 function StatusDropdown({
   currentStatus,
   isUpdating,
   onSelect,
-  onClose,
 }: {
   currentStatus: OrderStatus;
   isUpdating: boolean;
   onSelect: (s: OrderStatus) => void;
-  onClose: () => void;
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: -6, scale: 0.96 }}
+      initial={{ opacity: 0, y: -6, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -6, scale: 0.96 }}
-      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-border/60 backdrop-blur-xl"
+      exit={{ opacity: 0, y: -6, scale: 0.97 }}
+      transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+      // On bloque la propagation pour que le clic à l'intérieur du panneau
+      // ne soit jamais intercepté par un élément parent (carte, overlay, etc.)
+      onClick={(e) => e.stopPropagation()}
+      className="absolute right-0 top-[calc(100%+8px)] z-[100] w-60 overflow-hidden rounded-2xl border border-slate-200/80 bg-white/95 shadow-2xl shadow-slate-900/10 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/95"
     >
-      {/* Header */}
-      <div className="border-b border-border/40 px-4 py-3">
-        <p className="text-[10px] font-bold uppercase tracking-widest">Changer le statut</p>
+      <div className="border-b border-slate-100 bg-slate-50/80 px-3.5 py-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+        <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">
+          Changer le statut
+        </p>
       </div>
-      {/* Options */}
       <div className="p-1.5">
         {(Object.keys(ORDER_STATUS_MAP) as OrderStatus[]).map(s => {
           const cfg = ORDER_STATUS_MAP[s];
@@ -67,23 +327,30 @@ function StatusDropdown({
           return (
             <button
               key={s}
+              type="button"
               disabled={isCurrent || isUpdating}
-              onClick={() => { onSelect(s); onClose(); }}
+              onClick={(e) => {
+                // Empêche toute remontée d'événement vers le bouton
+                // "Statut" ou la carte, qui pourrait ré-ouvrir/fermer le panneau.
+                e.stopPropagation();
+                onSelect(s);
+              }}
               className={cn(
-                "group flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold transition-all",
+                "flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2.5 text-[13px] font-semibold transition-colors",
                 isCurrent
-                  ? "cursor-not-allowed opacity-40"
-                  : "hover:bg-white-alt"
+                  ? "cursor-not-allowed opacity-50 bg-slate-50 dark:bg-slate-800/50"
+                  : "hover:bg-slate-100 dark:hover:bg-slate-800"
               )}
             >
-              <span className={cn(
-                "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[10px]",
-                isCurrent ? `${cfg.bg} ${cfg.border}` : "border-border bg-white group-hover:border-primary/30"
-              )}>
-                <span className={cn("h-2 w-2 rounded-full", isCurrent ? cfg.color.replace("text-", "bg-") : "bg-muted-foreground/30 group-hover:bg-primary/50")} />
+              <span className={cn("flex items-center gap-2", isCurrent ? cfg.color : "text-slate-700 dark:text-slate-300")}>
+                <span className={cn("h-1.5 w-1.5 rounded-full", cfg.bg.replace("bg-", "bg-"), "border", cfg.border)} />
+                {cfg.label}
               </span>
-              <span className={cn(isCurrent ? cfg.color : "text-foreground/80")}>{cfg.label}</span>
-              {isCurrent && <span className="ml-auto text-[9px] font-black uppercase tracking-widest text-muted-foreground">Actuel</span>}
+              {isCurrent && (
+                <span className="flex items-center gap-1 text-[10px] font-semibold text-slate-400">
+                  <Check className="h-3 w-3" /> Actuel
+                </span>
+              )}
             </button>
           );
         })}
@@ -95,226 +362,185 @@ function StatusDropdown({
 /* -- Main OrderCard --------------------------------------------- */
 export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating }: OrderCardProps) {
   const [showStatus, setShowStatus] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const cfg = ORDER_STATUS_MAP[order.status] ?? ORDER_STATUS_MAP.pending_payment;
   const date = new Date(order.created_at).toLocaleDateString("fr-FR", {
     day: "2-digit", month: "short", year: "numeric",
   });
   const itemCount = (order as any).items_count ?? "—";
 
+  // Fermeture du panneau de statut au clic en dehors : c'est ce mécanisme
+  // qui manquait auparavant. Sans lui, le panneau restait ouvert et
+  // interceptait silencieusement les clics suivants ("rien ne se passe").
+  useEffect(() => {
+    if (!showStatus) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setShowStatus(false);
+      }
+    }
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setShowStatus(false);
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [showStatus]);
+
+  const handleSelectStatus = (s: OrderStatus) => {
+    setShowStatus(false);
+    onStatusChange(s);
+  };
+
   /* -- GRID card ----------------------------------------------- */
   if (viewMode === "grid") {
     return (
-      <motion.article
+      <motion.div
         layout
-        initial={{ opacity: 0, y: 16, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={{ type: "spring", stiffness: 320, damping: 28 }}
-        className="group relative flex flex-col rounded-3xl border border-border/60 bg-white-elevated shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        className="group relative flex flex-col rounded-2xl border border-slate-200 bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-[#0D2E1E]/20 hover:shadow-xl hover:shadow-slate-900/[0.06] dark:border-slate-800 dark:bg-[#121212] dark:hover:border-slate-700"
       >
-        {/* Top accent bar */}
-        <div className={cn("absolute inset-x-0 top-0 h-px", cfg.bg.replace("/10", ""))} />
-
-        {/* Shimmer on hover */}
-        <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-          <div className="absolute -inset-px rounded-3xl bg-gradient-to-br from-white/5 via-transparent to-transparent" />
-        </div>
-
-        {/* -- Image zone (left column feel: full width top half) -- */}
-        <div className="relative h-36 w-full overflow-hidden rounded-t-[calc(1.5rem-1px)] bg-gradient-to-br from-surface-alt to-surface">
-          {/* Subtle grid texture */}
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 24px,currentColor 24px,currentColor 25px),repeating-linear-gradient(90deg,transparent,transparent 24px,currentColor 24px,currentColor 25px)"
-          }} />
-          {/* Floating icon */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className={cn(
-              "flex h-16 w-16 items-center justify-center rounded-2xl border-2 shadow-lg",
-              cfg.bg, cfg.border
-            )}>
-              <Package className={cn("h-7 w-7", cfg.color)} />
-            </div>
-          </div>
-          {/* Badge overlay — top-left */}
-          <div className="absolute left-3 top-3">
-            <StatusPill status={order.status} />
-          </div>
-          {/* Reference tag — top-right */}
-          <div className="absolute right-3 top-3">
-            <span className="rounded-xl border border-border/50 bg-white-elevated/80 px-2 py-1 font-mono text-[10px] font-bold text-foreground/70 backdrop-blur-sm">
+        <div className="flex flex-1 flex-col gap-4 p-5">
+          <div className="flex items-center justify-between">
+            <span className="rounded-lg bg-slate-100 px-2.5 py-1.5 font-mono text-xs font-bold tracking-wide text-slate-700 dark:bg-slate-800 dark:text-slate-300">
               {order.reference}
             </span>
+            <StatusPill status={order.status} />
           </div>
-        </div>
 
-        {/* -- Info zone -- */}
-        <div className="flex flex-1 flex-col gap-4 p-5">
-          {/* Date + items */}
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1.5">
-              <Calendar className="h-3 w-3" /> {date}
+              <Calendar className="h-4 w-4" /> {date}
             </span>
-            <span className="rounded-lg border border-border/50 bg-white px-2 py-0.5 font-mono text-[10px] font-bold">
-              {itemCount} art.
+            <span className="font-medium">
+              {itemCount} article(s)
             </span>
           </div>
 
-          {/* Amount */}
-          <div className="space-y-0.5">
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total</p>
-            <p className="text-2xl font-black tracking-tight text-foreground">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total</p>
+            <p className="mt-0.5 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
               {formatCurrency(parseFloat(order.total_final || "0"), "FCFA")}
             </p>
           </div>
 
-          {/* Sub-amounts */}
-          <div className="flex gap-4 border-t border-border/30 pt-3 text-xs">
+          <div className="flex gap-4 border-t border-slate-100 pt-4 dark:border-slate-800">
             <div>
-              <p className="text-[10px] font-bold uppercase text-muted-foreground">Articles</p>
-              <p className="font-semibold text-foreground/80">{formatCurrency(parseFloat(order.items_total || "0"), "FCFA")}</p>
+              <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Sous-total</p>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{formatCurrency(parseFloat(order.items_total || "0"), "FCFA")}</p>
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase text-muted-foreground">Livraison</p>
-              <p className="font-semibold text-foreground/80">{formatCurrency(parseFloat(order.frais_livraison || "0"), "FCFA")}</p>
+              <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Livraison</p>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{formatCurrency(parseFloat(order.frais_livraison || "0"), "FCFA")}</p>
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="mt-auto flex items-center justify-between gap-2">
-            {/* Status changer */}
+          <div ref={containerRef} className="mt-4 flex items-center justify-between gap-2">
             <div className="relative">
               <button
-                onClick={() => setShowStatus(!showStatus)}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowStatus(v => !v);
+                }}
+                aria-expanded={showStatus}
                 className={cn(
-                  "flex items-center cursor-pointer gap-1.5 rounded-xl border px-3 py-2 text-[11px] font-bold transition-all",
+                  "flex cursor-pointer items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition-all",
                   showStatus
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-white text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                    ? "border-[#0D2E1E]/30 bg-[#0D2E1E]/5 text-[#0D2E1E] dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+                    : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                 )}
               >
-                <SlidersHorizontal className="h-3 w-3" />
+                <SlidersHorizontal className="h-3.5 w-3.5" />
                 Statut
-                <ChevronDown className={cn("h-3 w-3 transition-transform duration-200", showStatus && "rotate-180")} />
+                <ChevronDown className={cn("h-3.5 w-3.5 transition-transform duration-200", showStatus && "rotate-180")} />
               </button>
               <AnimatePresence>
                 {showStatus && (
                   <StatusDropdown
                     currentStatus={order.status}
                     isUpdating={isUpdating}
-                    onSelect={onStatusChange}
-                    onClose={() => setShowStatus(false)}
+                    onSelect={handleSelectStatus}
                   />
                 )}
               </AnimatePresence>
             </div>
 
-            {/* View button */}
-            <motion.button
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={onView}
-              className="group/btn relative flex cursor-pointer items-center gap-2 overflow-hidden rounded-xl bg-primary px-4 py-2 text-[11px] font-black text-white shadow-md shadow-primary/30 transition-all hover:shadow-lg hover:shadow-primary/40"
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onView();
+              }}
+              className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-[#0D2E1E] px-4 py-2 text-xs font-semibold text-gray-100 shadow-sm transition-all hover:bg-[#123d29] hover:shadow-md active:scale-[0.97] dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-600" />
               Détails
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-            </motion.button>
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </button>
           </div>
         </div>
-      </motion.article>
+      </motion.div>
     );
   }
 
   /* -- LIST card ----------------------------------------------- */
   return (
-    <motion.article
+    <motion.div
       layout
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -6 }}
-      transition={{ type: "spring", stiffness: 350, damping: 32 }}
-      className="group relative rounded-2xl border border-border/60 bg-white-elevated shadow-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/15"
+      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+      className="group flex flex-col items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white px-5 py-4 transition-all duration-300 hover:border-[#0D2E1E]/20 hover:shadow-md hover:shadow-slate-900/[0.05] sm:flex-row dark:border-slate-800 dark:bg-[#121212] dark:hover:border-slate-700"
     >
-      {/* Left accent stripe */}
-      <div className={cn("absolute inset-y-0 left-0 w-0.5 rounded-r-full transition-all duration-300 group-hover:w-1", cfg.bg.replace("/10", ""))} />
-
-      {/* Shimmer */}
-      <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-        <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-white/3 via-transparent to-transparent" />
+      <div className="flex w-full min-w-0 flex-1 items-center gap-4 sm:w-auto">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 transition-colors group-hover:bg-[#0D2E1E]/10 dark:bg-slate-800">
+          <Package className="h-5 w-5 text-slate-500 transition-colors group-hover:text-[#0D2E1E] dark:text-slate-400 dark:group-hover:text-slate-200" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <p className="font-mono text-sm font-bold tracking-wide text-slate-900 dark:text-white">
+              {order.reference}
+            </p>
+            <StatusPill status={order.status} />
+          </div>
+          <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+            <Calendar className="h-3.5 w-3.5" />
+            {date}
+          </p>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:gap-0">
-
-        {/* -- Left: image container + reference + status -- */}
-        <div className="flex items-center gap-4 sm:flex-[2]">
-          {/* Image / icon container */}
-          <div className={cn(
-            "relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-2 shadow-md transition-transform duration-300 group-hover:scale-105",
-            cfg.bg, cfg.border
-          )}>
-            {/* Inner glow */}
-            <div className={cn("absolute inset-0 rounded-2xl opacity-40", cfg.bg)} />
-            <Package className={cn("relative h-6 w-6", cfg.color)} />
-            {/* Sparkle on hover */}
-            <div className="absolute -right-1 -top-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-              <Star className={cn("h-3 w-3", cfg.color)} />
-            </div>
-          </div>
-
-          {/* Reference + Status + Date */}
-          <div className="min-w-0 flex-1 space-y-1.5">
-            <div className="flex flex-wrap items-center gap-2">
-              <p className="font-mono text-sm font-extrabold tracking-tight text-foreground">
-                {order.reference}
-              </p>
-              <StatusPill status={order.status} />
-            </div>
-            <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-              <Calendar className="h-3 w-3 shrink-0" />
-              {date}
-            </p>
-          </div>
+      <div className="flex w-full items-center justify-between sm:w-auto sm:gap-6 sm:justify-end">
+        <div className="text-left sm:text-right">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Total</p>
+          <p className="text-sm font-bold text-slate-900 dark:text-white">
+            {formatCurrency(parseFloat(order.total_final || "0"), "FCFA")}
+          </p>
         </div>
 
-        {/* -- Center: amounts -- */}
-        <div className="flex items-center gap-6 sm:flex-1 sm:justify-center">
-          <div className="text-center">
-            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Articles</p>
-            <p className="mt-0.5 text-sm font-bold text-foreground/80">
-              {formatCurrency(parseFloat(order.items_total || "0"), "FCFA")}
-            </p>
-          </div>
-          <div className="h-8 w-px bg-border/50" />
-          <div className="text-center">
-            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Livraison</p>
-            <p className="mt-0.5 text-sm font-bold text-foreground/80">
-              {formatCurrency(parseFloat(order.frais_livraison || "0"), "FCFA")}
-            </p>
-          </div>
-          <div className="h-8 w-px bg-border/50" />
-          <div className="text-center">
-            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Total</p>
-            <p className="mt-0.5 text-lg font-extrabold text-primary">
-              {formatCurrency(parseFloat(order.total_final || "0"), "FCFA")}
-            </p>
-          </div>
-        </div>
-
-        {/* -- Right: actions -- */}
-        <div className="flex items-center justify-end gap-2 sm:flex-none sm:pl-6">
-          {/* Status dropdown */}
+        <div ref={containerRef} className="flex items-center gap-2">
           <div className="relative">
             <button
-              onClick={() => setShowStatus(!showStatus)}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowStatus(v => !v);
+              }}
+              aria-expanded={showStatus}
               className={cn(
-                "flex h-9 items-center cursor-pointer gap-1.5 rounded-xl border px-3 text-[11px] font-bold transition-all",
+                "flex h-9 items-center cursor-pointer gap-1.5 rounded-xl border px-3 text-xs font-semibold transition-all",
                 showStatus
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border bg-white text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                  ? "border-[#0D2E1E]/30 bg-[#0D2E1E]/5 text-[#0D2E1E] dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+                  : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
               )}
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />
-              Statut
+              <span className="hidden sm:inline">Statut</span>
               <ChevronDown className={cn("h-3.5 w-3.5 transition-transform duration-200", showStatus && "rotate-180")} />
             </button>
             <AnimatePresence>
@@ -322,26 +548,25 @@ export function OrderCard({ order, viewMode, onView, onStatusChange, isUpdating 
                 <StatusDropdown
                   currentStatus={order.status}
                   isUpdating={isUpdating}
-                  onSelect={onStatusChange}
-                  onClose={() => setShowStatus(false)}
+                  onSelect={handleSelectStatus}
                 />
               )}
             </AnimatePresence>
           </div>
 
-          {/* Voir */}
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={onView}
-            className="group/btn relative cursor-pointer flex h-9 items-center gap-1.5 overflow-hidden rounded-xl bg-primary px-4 text-[11px] font-black text-white shadow-md shadow-primary/30 transition-all hover:shadow-lg hover:shadow-primary/40"
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onView();
+            }}
+            className="flex h-9 cursor-pointer items-center gap-1.5 rounded-xl bg-[#0D2E1E] px-3 text-xs font-semibold text-gray-100 shadow-sm transition-all hover:bg-[#123d29] hover:shadow-md active:scale-[0.97] dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-600" />
-            Détails
-            <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5" />
-          </motion.button>
+            <span className="hidden sm:inline">Détails</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </button>
         </div>
       </div>
-    </motion.article>
+    </motion.div>
   );
 }

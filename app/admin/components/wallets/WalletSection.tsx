@@ -51,6 +51,7 @@ import { WalletsTable } from "./components/WalletsTable";
 import { TransactionsTable } from "./components/TransactionsTable";
 import { WalletStatusModal } from "./components/WalletStatusModal";
 import { AdminWithdrawModal } from "./components/AdminWithdrawModal";
+import LoadingKalvin from "@/components/special/loadingKalvin";
 
 /* ============================================================
    Animation Variants Framer Motion
@@ -442,36 +443,54 @@ export default function WalletSection() {
                   "absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-100",
                   kpi.bgGradient
                 )}
+
               />
 
               <div className="relative z-10 flex items-start justify-between">
+
                 <div>
+
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                     {kpi.title}
                   </p>
+
                   {loadingWallets && kpi.title !== "Total transactions" ? (
+
                     <div className="mt-2 h-8 w-32 animate-pulse rounded-lg bg-slate-100 dark:bg-slate-800" />
+
                   ) : loadingTransactions && kpi.title === "Total transactions" ? (
+
                     <div className="mt-2 h-8 w-16 animate-pulse rounded-lg bg-slate-100 dark:bg-slate-800" />
+
                   ) : (
+
                     <p className={cn("mt-1.5 text-2xl font-extrabold tracking-tight", kpi.color)}>
                       {kpi.getValue(stats, wallets)}
                     </p>
+
                   )}
+
                   {kpi.trend && (
                     <p className="mt-1.5 flex items-center gap-1 text-[11px] text-slate-400">
                       <ChevronRight className="h-3 w-3" />
                       {kpi.trend}
                     </p>
                   )}
+
                 </div>
+
                 <div className={cn("flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl", kpi.iconBg)}>
                   <Icon className="h-5 w-5" />
                 </div>
+
               </div>
+
             </motion.div>
+
           );
+
         })}
+
       </motion.div>
 
       {/* ------------------------------------------------------- */}
@@ -547,18 +566,17 @@ export default function WalletSection() {
             {/* Indicateur de chargement */}
             {loadingWallets ? (
               <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1e1e1e] py-20">
-                <div className="relative">
+                {/* <div className="relative">
                   <div className="h-12 w-12 rounded-full border-4 border-primary/20" />
                   <Loader2 className="absolute inset-0 m-auto h-7 w-7 animate-spin text-primary" />
-                </div>
+                </div> */}
                 <div className="text-center">
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                    Chargement des wallets...
-                  </p>
-                  <p className="text-xs text-slate-400">Connexion au backend Django</p>
+                  <LoadingKalvin message="Chargement des wallets..." />
                 </div>
               </div>
+
             ) : (
+
               <>
                 {/* Résumé rapide wallets */}
                 <div className="mb-4 flex flex-wrap gap-3">
@@ -586,10 +604,14 @@ export default function WalletSection() {
                   wallets={wallets}
                   onEditStatus={(wallet) => setWalletToEdit(wallet)}
                 />
+
               </>
             )}
+
           </motion.div>
+
         ) : (
+
           <motion.div
             key="transactions-tab"
             initial={{ opacity: 0, y: 12 }}
@@ -618,23 +640,23 @@ export default function WalletSection() {
 
             {/* Indicateur de chargement */}
             {loadingTransactions ? (
+
               <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1e1e1e] py-20">
-                <div className="relative">
-                  <div className="h-12 w-12 rounded-full border-4 border-primary/20" />
-                  <Loader2 className="absolute inset-0 m-auto h-7 w-7 animate-spin text-primary" />
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                    Chargement des transactions...
-                  </p>
-                  <p className="text-xs text-slate-400">Récupération de l'historique complet</p>
-                </div>
+
+                <LoadingKalvin message="Chargement des transactions..." />
+
               </div>
+
             ) : (
+
               <TransactionsTable transactions={transactions} />
+
             )}
+
           </motion.div>
+
         )}
+
       </AnimatePresence>
 
       {/* ------------------------------------------------------- */}

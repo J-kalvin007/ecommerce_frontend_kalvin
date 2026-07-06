@@ -101,10 +101,10 @@ export default function ResetPasswordConfirmPage({
   params: Promise<{ uid: string; token: string }>;
 }) {
   const router = useRouter();
-  
+
   // Unwrap params using React.use() for Next.js 15+
   const resolvedParams = use(params);
-  
+
   // Ne pas décoder l'uid/token — ils arrivent déjà correctement encodés dans l'URL
   // decodeURIComponent peut corrompre certains caractères valides du token Django
   const uid = resolvedParams.uid ?? '';
@@ -122,7 +122,7 @@ export default function ResetPasswordConfirmPage({
   const [password2, setPassword2] = useState("");
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
-  
+
   const [globalError, setGlobalError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -380,7 +380,7 @@ export default function ResetPasswordConfirmPage({
               value={password1}
               onChange={(e) => {
                 setPassword1(e.target.value);
-                setFieldErrors({...fieldErrors, new_password1: ""});
+                setFieldErrors({ ...fieldErrors, new_password1: "" });
               }}
               disabled={pageState === 'submitting'}
               placeholder="Au moins 8 caractères"
@@ -391,7 +391,7 @@ export default function ResetPasswordConfirmPage({
             <button
               type="button"
               onClick={() => setShowPassword1(!showPassword1)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9aab94] transition hover:text-[#0F2D20]"
+              className="absolute right-4 cursor-pointer top-1/2 -translate-y-1/2 text-[#9aab94] transition hover:text-[#0F2D20]"
             >
               {showPassword1 ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -414,7 +414,7 @@ export default function ResetPasswordConfirmPage({
               value={password2}
               onChange={(e) => {
                 setPassword2(e.target.value);
-                setFieldErrors({...fieldErrors, new_password2: ""});
+                setFieldErrors({ ...fieldErrors, new_password2: "" });
               }}
               disabled={pageState === 'submitting'}
               placeholder="Retapez le mot de passe"
@@ -425,7 +425,7 @@ export default function ResetPasswordConfirmPage({
             <button
               type="button"
               onClick={() => setShowPassword2(!showPassword2)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9aab94] transition hover:text-[#0F2D20]"
+              className="absolute right-4 cursor-pointer top-1/2 -translate-y-1/2 text-[#9aab94] transition hover:text-[#0F2D20]"
             >
               {showPassword2 ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -443,7 +443,7 @@ export default function ResetPasswordConfirmPage({
             disabled={pageState === 'submitting'}
             whileHover={pageState !== 'submitting' ? { scale: 1.012, y: -1 } : {}}
             whileTap={pageState !== 'submitting' ? { scale: 0.988 } : {}}
-            className="relative flex w-full items-center justify-center gap-2.5 overflow-hidden rounded-xl bg-[#0F2D20] py-3.5 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(15,45,32,0.25)] transition disabled:cursor-not-allowed disabled:opacity-60"
+            className="relative cursor-pointer flex w-full items-center justify-center gap-2.5 overflow-hidden rounded-xl bg-[#0F2D20] py-3.5 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(15,45,32,0.25)] transition disabled:cursor-not-allowed disabled:opacity-60"
           >
             <motion.div
               className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent"
@@ -460,7 +460,7 @@ export default function ResetPasswordConfirmPage({
 
         <motion.p variants={fadeUp} className="mt-4 text-center text-sm text-[#8a9685]">
           <Link href="/auth/login" className="group inline-flex items-center gap-1 font-semibold text-[#0F2D20] underline-offset-2 hover:underline">
-            <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
+            <ArrowLeft className="h-3 w-3 cursor-pointer transition-transform group-hover:-translate-x-0.5" />
             Retour à la connexion
           </Link>
         </motion.p>

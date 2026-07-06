@@ -378,7 +378,7 @@ export default function ProfileModal({
                 <motion.div variants={fadeUp} className="flex flex-col items-center space-y-6">
                   <div className="group relative">
                     {/* Halo ambiant pulsé */}
-                    <motion.div
+                    {/* <motion.div
                       aria-hidden
                       className={cn(
                         "absolute -inset-3 rounded-full bg-gradient-to-br opacity-40 blur-2xl",
@@ -386,7 +386,7 @@ export default function ProfileModal({
                       )}
                       animate={{ scale: [1, 1.08, 1], opacity: [0.3, 0.5, 0.3] }}
                       transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    />
+                    /> */}
 
                     {/* Fin reflet rotatif derrière l'avatar */}
                     <motion.div
@@ -834,6 +834,7 @@ export default function ProfileModal({
                             </div>
                           </div>
                           <div className="flex justify-end gap-3 pt-1">
+
                             <motion.button
                               type="button"
                               onClick={() => {
@@ -846,6 +847,7 @@ export default function ProfileModal({
                             >
                               Annuler
                             </motion.button>
+
                             <motion.button
                               type="submit"
                               disabled={isSavingPassword}
@@ -860,10 +862,15 @@ export default function ProfileModal({
                               )}
                               Mettre à jour
                             </motion.button>
+
                           </div>
+
                         </motion.form>
+
                       )}
+
                     </AnimatePresence>
+
                   </motion.div>
 
                   {/* Bouton de déconnexion */}
@@ -877,8 +884,11 @@ export default function ProfileModal({
                     <LogOut className="h-5 w-5 transition-transform duration-300 group-hover:-translate-x-0.5" />
                     SE DÉCONNECTER
                   </motion.button>
+
                 </div>
+
               </motion.div>
+
             </div>
 
             {/* Footer avec informations de session */}

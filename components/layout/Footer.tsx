@@ -113,7 +113,7 @@ function NewsletterToast({
   );
 }
 
-export function LegacyFooter() {
+export function Footer() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [sending, setSending] = useState(false);

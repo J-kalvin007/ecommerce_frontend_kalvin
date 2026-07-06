@@ -6,7 +6,7 @@
 
 import type { Metadata } from "next";
 import { LoginPageView } from "./components/LoginPageView";
-import { LegacyFooter } from "@/components/layout/Footer";
+import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 // import LoginClient from "./components/LoginClient";
 
@@ -23,7 +23,7 @@ export default function LoginPage() {
     <main>
       <Header />
       <LoginPageView />
-      <LegacyFooter />
+      <Footer />
     </main>
   )
 }

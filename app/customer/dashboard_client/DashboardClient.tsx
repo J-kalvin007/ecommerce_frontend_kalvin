@@ -819,7 +819,7 @@ function WalletPhysicalCard({
           >
             Portefeuille
           </p>
-          <p className="mt-0.5 text-[14px] font-bold text-white">Kalvin Pay</p>
+          <p className="mt-0.5 text-[14px] font-bold text-white">Atelier du Terroir</p>
         </div>
 
         {/* Puce EMV stylisée */}

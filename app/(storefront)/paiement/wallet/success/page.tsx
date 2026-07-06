@@ -292,6 +292,8 @@ import { useThemeStore } from "@/store/theme.store";
 // Chargement dynamique de Lottie pour SSR (identique à l'original)
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import successAnimation from "@/public/assets/lottis/success.json";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
 /* ── Constantes — IDENTIQUES à l'original ───────────────────────────────── */
 
@@ -373,7 +375,7 @@ function SuccessWalletContent() {
   /* ── Rendu ─────────────────────────────────────────────────────────────── */
   return (
     <div
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-20"
+      className="relative flex min-h-[calc(100vh-120px)] flex-1 flex-col items-center justify-center overflow-hidden px-4 py-16"
       style={{ background: bg }}
     >
 
@@ -647,11 +649,10 @@ export default function SuccessWalletPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center">
-          <div
-            className="h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
-            style={{ borderColor: `${BRAND_FOREST} transparent transparent transparent` }}
-          />
+        <div className="relative flex min-h-[calc(100vh-120px)] flex-1 flex-col items-center justify-center overflow-hidden px-4 py-16">
+          <div className="relative z-10 w-full max-w-lg">
+            <div className="h-[500px] w-full animate-pulse rounded-3xl bg-black/5 dark:bg-white/5 backdrop-blur-2xl" />
+          </div>
         </div>
       }
     >
