@@ -54,7 +54,7 @@
 //   const resolvedPrimaryImage = primaryImage
 //     ? (primaryImage.startsWith("http")
 //         ? primaryImage
-//         : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${primaryImage.startsWith("/") ? "" : "/"}${primaryImage}`)
+//         : `${process.env.NEXT_PUBLIC_API_URL || "https://ecommerce-atelier-terroir-backtend-prod.onrender.com/"}${primaryImage.startsWith("/") ? "" : "/"}${primaryImage}`)
 //     : null;
 
 //   return (

@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
   output: "standalone",
 
   // -- Dev only: allow hot-reload from local network IPs ------------
-  allowedDevOrigins: ["https://atelierterroirsolime-gyiybtd2n-j-kalvins-projects.vercel.app"],
+  allowedDevOrigins: ["atelierterroirsolime.vercel.app"],
 
   // -- Image optimization --------------------------------------------
   images: {

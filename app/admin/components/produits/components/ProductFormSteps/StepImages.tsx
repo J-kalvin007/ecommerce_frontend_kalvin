@@ -62,7 +62,7 @@ export function StepImages({ uploadedImages, existingImages, onAddImages, onRemo
             {existingImages.map((img) => (
               <div key={img.id} className="group relative aspect-square overflow-hidden rounded-2xl border border-border shadow-sm">
                 <Image
-                  src={img.image.startsWith("http") ? img.image : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${img.image.startsWith("/") ? "" : "/"}${img.image}`}
+                  src={img.image.startsWith("http") ? img.image : `${process.env.NEXT_PUBLIC_API_URL || "https://ecommerce-atelier-terroir-backtend-prod.onrender.com/"}${img.image.startsWith("/") ? "" : "/"}${img.image}`}
                   alt={img.alt_text}
                   fill
                   className="object-cover"

@@ -415,7 +415,7 @@ export default function ClientsSection() {
                   const resolvedImage = user.profile_image
                     ? (user.profile_image.startsWith("http")
                       ? user.profile_image
-                      : `${process.env.NEXT_PUBLIC_API_URL || "https://disclose-blaspheme-pointed.ngrok-free.dev"}${user.profile_image.startsWith("/") ? "" : "/"}${user.profile_image}`)
+                      : `${process.env.NEXT_PUBLIC_API_URL || "https://ecommerce-atelier-terroir-backtend-prod.onrender.com/"}${user.profile_image.startsWith("/") ? "" : "/"}${user.profile_image}`)
                     : null;
 
                   return (

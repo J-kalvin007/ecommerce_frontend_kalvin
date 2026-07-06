@@ -68,7 +68,7 @@ services:
 
     # ── Health-check (mirrors the Dockerfile HEALTHCHECK) ─────────────
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://atelierterroirsolime-gyiybtd2n-j-kalvins-projects.vercel.app/api/health"]
+      test: ["CMD", "curl", "-f", "atelierterroirsolime.vercel.app/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
