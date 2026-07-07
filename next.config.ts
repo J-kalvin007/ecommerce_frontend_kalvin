@@ -13,6 +13,9 @@ import type { NextConfig } from "next";
 const apiUrl = new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://outrage-dealer-entrap.ngrok-free.dev");
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: process.cwd(),
+  },
   // -- Production Docker requirement ---------------------------------
   // Generates .next/standalone/ with a self-contained Node.js server.
   output: "standalone",

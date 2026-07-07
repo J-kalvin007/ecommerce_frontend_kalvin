@@ -19,7 +19,6 @@ import {
   ShieldCheck,
   Wallet,
   PackageSearch,
-
   Shield,
   ShieldCog,
 } from "lucide-react";

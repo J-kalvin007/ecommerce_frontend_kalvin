@@ -1,14 +1,8 @@
-/**
- * Login — Page de connexion
- *
- * @module app/auth/login/page
- */
-
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { LoginPageView } from "./components/LoginPageView";
 import { LegacyFooter } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-// import LoginClient from "./components/LoginClient";
 
 export const metadata: Metadata = {
   title: "Connexion",
@@ -16,14 +10,13 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
-  // return <LoginClient />;
-  // return <LoginPageView />;
-
   return (
     <main>
       <Header />
-      <LoginPageView />
+      <Suspense>
+        <LoginPageView />
+      </Suspense>
       <LegacyFooter />
     </main>
-  )
+  );
 }

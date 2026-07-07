@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import VerifyEmailClient from "./components/VerifyEmailClient";
 import { ContainerFormAuth } from "@/app/auth/components/ContainerFormAuth";
 
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
 export default function VerifyEmailPage() {
   return (
     <ContainerFormAuth>
-      <VerifyEmailClient />
+      <Suspense>
+        <VerifyEmailClient />
+      </Suspense>
     </ContainerFormAuth>
   );
 }
