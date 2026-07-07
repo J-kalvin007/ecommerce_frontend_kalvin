@@ -499,24 +499,28 @@ export default function CommandesClient() {
            *  les pastilles d'étape — la signature visuelle du tunnel.
            * -------------------------------------------------------- */}
           <div className="relative mt-7">
+
             {/* Rail de fond */}
-            <div
+            {/* <div
               aria-hidden
               className="absolute left-10 right-10 top-5 h-[2px] sm:left-12 sm:right-12"
               style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)" }}
-            />
+            /> */}
+
             {/* Fil de progression doré, animé en largeur */}
-            <motion.div
+            {/* <motion.div
               aria-hidden
               className="absolute left-10 top-5 h-[2px] sm:left-12"
               style={{ background: `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_GOLD})` }}
               initial={false}
               animate={{ width: `calc(${stepperProgress * 100}% - ${stepperProgress > 0 ? 32 : 0}px)` }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.6, ease: [0.16, 1, 0.3, 1] }}
-            />
+            /> */}
 
             <div className="relative flex items-center justify-between sm:justify-start sm:gap-8">
+
               {STEPS.map((s) => {
+
                 const isActive = step === s.id;
                 const isDone = step > s.id;
                 return (
@@ -1156,10 +1160,11 @@ export default function CommandesClient() {
                 )}
 
                 {/* Sécurité */}
-                <div className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-500/10 p-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                {/* <div className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-500/10 p-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
                   <Shield className="h-4 w-4" />
                   Transaction protégée par chiffrement 256-bit
-                </div>
+                </div> */}
+
               </motion.div>
             </div>
           )}
@@ -1359,7 +1364,7 @@ function InputField({ label, type = "text", value, onChange, placeholder, requir
           border: `1.5px solid ${border}`,
         }}
       />
-      <label 
+      <label
         className="absolute left-4 top-1 text-[11px] font-bold text-neutral-500 transition-all duration-300 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-[13px] peer-placeholder-shown:font-semibold peer-placeholder-shown:text-neutral-400 peer-focus:top-1 peer-focus:text-[11px] peer-focus:font-bold peer-focus:text-[#1f4d3f]"
       >
         {label} {required && <span style={{ color: BRAND_FOREST }}>*</span>}

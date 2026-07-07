@@ -1,4 +1,4 @@
-﻿
+
 'use client';
 
 import { AlertTriangle, Info, CheckCircle, X, HelpCircle, Trash2 } from 'lucide-react';
@@ -206,6 +206,10 @@ const ConfirmDialog = ({
         {isOpen && (
           <div
             className="gc-cd-root"
+            // ⚠️ CRITICAL: stopPropagation prevents dialog clicks from bubbling through
+            // the React tree to underlying components (e.g. OrderCard status/view buttons).
+            // Without this, clicking Confirm/Cancel would also trigger handlers on cards below.
+            onClick={(e) => e.stopPropagation()}
             style={{
               position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px',
               pointerEvents: 'auto',
@@ -238,6 +242,8 @@ const ConfirmDialog = ({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 16 }}
               transition={{ type: 'spring', stiffness: 320, damping: 26 }}
+              // Extra safety: stop propagation at the card level too
+              onClick={(e) => e.stopPropagation()}
               role="alertdialog"
               aria-modal="true"
               aria-labelledby="gc-cd-title"

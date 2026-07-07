@@ -49,7 +49,6 @@ import {
   DialogDescription,
 } from "@/components/special/ui/Dialog";
 import type { User } from "@/modeles/user";
-import LogoutDialog from "../special/LogoutDialog";
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -90,7 +89,6 @@ export default function ProfileModal({
   const { resolvedTheme: theme } = useThemeStore();
 
   // États locaux
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [toast, setToast] = useState<{
     show: boolean;
     type: "success" | "error" | "info";
@@ -303,17 +301,6 @@ export default function ProfileModal({
       <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent
           className="max-w-5xl overflow-hidden rounded-[28px] border p-0 shadow-2xl ring-1 ring-black/5 bg-white border-black/5 dark:bg-[#121212] dark:border-white/10"
-          onInteractOutside={(e) => {
-            if (showLogoutConfirm) {
-              e.preventDefault();
-            }
-          }}
-          onEscapeKeyDown={(e) => {
-            if (showLogoutConfirm) {
-              e.preventDefault();
-              setShowLogoutConfirm(false);
-            }
-          }}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
@@ -876,7 +863,7 @@ export default function ProfileModal({
                   {/* Bouton de déconnexion */}
                   <motion.button
                     variants={fadeUp}
-                    onClick={() => setShowLogoutConfirm(true)}
+                    onClick={() => onLogout()}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                     className="group flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl border border-error/20 bg-error/5 py-4 text-sm font-bold text-error transition-all duration-300 hover:border-error hover:bg-red-600 hover:text-white"
@@ -917,29 +904,6 @@ export default function ProfileModal({
           </motion.div>
         </DialogContent>
       </Dialog>
-
-      {/* Confirmation de déconnexion */}
-      {/* <ConfirmDialog
-        isOpen={showLogoutConfirm}
-        title="Déconnexion"
-        message="Voulez-vous vraiment vous déconnecter ?"
-        type="warning"
-        confirmText="Se déconnecter"
-        onConfirm={() => {
-          setShowLogoutConfirm(false);
-          onLogout();
-        }}
-        onCancel={() => setShowLogoutConfirm(false)}
-      /> */}
-
-      <LogoutDialog
-        isOpen={showLogoutConfirm}
-        onConfirm={async () => {
-          setShowLogoutConfirm(false);
-          await onLogout();
-        }}
-        onCancel={() => setShowLogoutConfirm(false)}
-      />
 
       {/* Toast */}
       <Toast

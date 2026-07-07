@@ -581,7 +581,7 @@ export function RegisterForm({
                     <button
                       type="button"
                       onClick={() => setShowPassword((v) => !v)}
-                      className="text-[#9aab94] transition hover:text-[#0F2D20]"
+                      className="text-[#9aab94] cursor-pointer transition hover:text-[#0F2D20]"
                       aria-label={showPassword ? "Masquer" : "Afficher"}
                     >
                       <AnimatePresence mode="wait" initial={false}>

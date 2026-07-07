@@ -622,7 +622,7 @@ function SuccessWalletContent() {
         </div>
 
         {/* Badge de sécurité — sous la carte, cohérent avec CommandesClient */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.65, duration: 0.4 }}
@@ -635,7 +635,8 @@ function SuccessWalletContent() {
         >
           <Shield className="h-4 w-4" />
           Transaction protégée par chiffrement 256-bit
-        </motion.div>
+        </motion.div> */}
+
       </motion.div>
     </div>
   );

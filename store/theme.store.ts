@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file store/theme.store.ts
  * @description Store Zustand pour la gestion du thème dark/light/system.
  * - Persistance dans localStorage (clé `gc-theme`)
@@ -37,24 +37,18 @@ interface ThemeState {
 // -----------------------------------------------------------------------------
 
 function getSystemTheme(): ResolvedTheme {
-  if (typeof window === 'undefined') return 'light';
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return 'light'; // Forcé en light pour la production
 }
 
 function resolveTheme(theme: Theme): ResolvedTheme {
-  if (theme === 'system') return getSystemTheme();
-  return theme;
+  return 'light'; // Forcé en light
 }
 
 function applyTheme(resolved: ResolvedTheme): void {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
-  root.setAttribute('data-theme', resolved);
-  if (resolved === 'dark') {
-    root.classList.add('dark');
-  } else {
-    root.classList.remove('dark');
-  }
+  root.setAttribute('data-theme', 'light');
+  root.classList.remove('dark');
 }
 
 // -----------------------------------------------------------------------------
@@ -68,25 +62,15 @@ export const useThemeStore = create<ThemeState>()(
       resolvedTheme: 'light',
 
       setTheme: (theme: Theme) => {
-        const resolved = resolveTheme(theme);
-        applyTheme(resolved);
-        set({ theme, resolvedTheme: resolved });
+        // Désactivé pour la production - Thème light forcé
       },
 
       toggleTheme: () => {
-        const current = get().resolvedTheme;
-        const next: ResolvedTheme = current === 'dark' ? 'light' : 'dark';
-        applyTheme(next);
-        set({ theme: next, resolvedTheme: next });
+        // Désactivé pour la production - Thème light forcé
       },
 
       syncSystemTheme: () => {
-        const { theme } = get();
-        if (theme === 'system') {
-          const resolved = getSystemTheme();
-          applyTheme(resolved);
-          set({ resolvedTheme: resolved });
-        }
+        // Désactivé pour la production - Thème light forcé
       },
     }),
     {
@@ -104,11 +88,11 @@ export const useThemeStore = create<ThemeState>()(
 );
 
 // -----------------------------------------------------------------------------
-// Écoute prefers-color-scheme côté client
+// Écoute prefers-color-scheme côté client (Désactivé)
 // -----------------------------------------------------------------------------
-if (typeof window !== 'undefined') {
-  const mq = window.matchMedia('(prefers-color-scheme: dark)');
-  mq.addEventListener('change', () => {
-    useThemeStore.getState().syncSystemTheme();
-  });
-}
+// if (typeof window !== 'undefined') {
+//   const mq = window.matchMedia('(prefers-color-scheme: dark)');
+//   mq.addEventListener('change', () => {
+//     useThemeStore.getState().syncSystemTheme();
+//   });
+// }

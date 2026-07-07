@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Plus, Edit3, Trash2, Layers, Save, Hash, DollarSign, Package, Weight, CheckCircle2, AlertCircle } from "lucide-react";
 import { formatCurrency, cn } from "@/lib/utils";
 import type { ProductVariantAdmin, ProductDetail } from "@/modeles/produits";
+import Toast from "@/components/special/Toast";
 
 interface VariantForm {
   id?: string;
@@ -61,7 +62,24 @@ export function VariantFormModal({
   const [errors, setErrors] = useState<{ name?: string; price?: string }>({});
   const [localSaving, setLocalSaving] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [toastConfig, setToastConfig] = useState<{show: boolean, message: string, type: 'success' | 'error' | 'info'}>({ show: false, message: '', type: 'info' });
+
+  const getErrorMessage = (err: any) => {
+    if (err.response?.data) {
+      const data = err.response.data;
+      if (typeof data === 'string') return data.replace(/<[^>]*>?/gm, '');
+      if (typeof data === 'object') {
+        const msgs = [];
+        for (const [key, val] of Object.entries(data)) {
+          if (Array.isArray(val)) msgs.push(`${key}: ${val.join(', ')}`);
+          else msgs.push(`${key}: ${val}`);
+        }
+        if (msgs.length > 0) return msgs.join(' | ');
+      }
+    }
+    const msg = err.message || "Une erreur est survenue.";
+    return msg.replace(/Request failed with status code \d+/i, "").trim() || "Erreur serveur";
+  };
 
   const generateSKU = (name: string) => {
     if (!name) return "";
@@ -87,6 +105,7 @@ export function VariantFormModal({
       setEditingId(null);
       setErrors({});
       setDeleteConfirmId(null);
+      setToastConfig({ show: false, message: '', type: 'info' });
     }
   }, [open]);
 
@@ -114,6 +133,7 @@ export function VariantFormModal({
     e.preventDefault();
     if (!validate()) return;
     setLocalSaving(true);
+    setToastConfig({ ...toastConfig, show: false });
     try {
       const payload = {
         name: form.name.trim(),
@@ -125,14 +145,14 @@ export function VariantFormModal({
       };
       if (editingId) {
         await onUpdateVariant(editingId, payload as any);
-        setSuccessMessage("Variante modifiée avec succès !");
+        setToastConfig({ show: true, message: "Variante modifiée avec succès !", type: 'success' });
       } else {
         await onAddVariant(payload as any);
-        setSuccessMessage("Nouvelle variante ajoutée !");
+        setToastConfig({ show: true, message: "Nouvelle variante ajoutée !", type: 'success' });
       }
       reset();
-      // Hide success message after 3 seconds
-      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err: any) {
+      setToastConfig({ show: true, message: getErrorMessage(err), type: 'error' });
     } finally {
       setLocalSaving(false);
     }
@@ -169,21 +189,6 @@ export function VariantFormModal({
                 <h2 className="text-base font-bold text-foreground">Gestion des variantes</h2>
                 <p className="text-xs text-muted-foreground truncate">{product?.name || "Ajoutez des déclinaisons à votre produit"}</p>
               </div>
-              
-              {/* Notification de succès */}
-              <AnimatePresence>
-                {successMessage && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute left-1/2 -translate-x-1/2 top-4 flex items-center gap-2 rounded-full bg-emerald-500/10 px-4 py-1.5 border border-emerald-500/20 text-emerald-600 shadow-sm"
-                  >
-                    <CheckCircle2 className="h-4 w-4" />
-                    <span className="text-xs font-bold">{successMessage}</span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
 
               <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-foreground">
                 <X className="h-4 w-4" />
@@ -221,11 +226,15 @@ export function VariantFormModal({
                       <InputField
                         label="Prix (FCFA) *"
                         icon={DollarSign}
-                        type="number"
-                        step="any"
-                        min="0"
+                        type="text"
+                        inputMode="decimal"
                         value={form.price}
-                        onChange={(e) => setForm({ ...form, price: e.target.value })}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(',', '.');
+                          if (/^\d*\.?\d{0,2}$/.test(val)) {
+                            setForm({ ...form, price: val });
+                          }
+                        }}
                         placeholder="6500"
                         error={errors.price}
                       />
@@ -334,33 +343,36 @@ export function VariantFormModal({
                               )} />
                               <p className="font-bold text-sm text-foreground truncate" title={v.name}>{v.name}</p>
                             </div>
-                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex items-center gap-1 transition-opacity relative z-20">
                               <button
-                                onClick={() => handleEdit(v)}
-                                className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                                type="button"
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleEdit(v); }}
+                                className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-muted-foreground transition-colors hover:bg-primary/20 hover:text-primary shadow-sm cursor-pointer"
                                 title="Modifier"
                               >
-                                <Edit3 className="h-3.5 w-3.5" />
+                                <Edit3 className="h-4 w-4" />
                               </button>
                               {deleteConfirmId === v.id ? (
-                                <div className="absolute right-2 top-2 z-10 flex items-center gap-1 rounded-xl bg-white dark:bg-slate-800 p-1 shadow-lg border border-border">
+                                <div className="absolute right-0 top-0 z-50 flex items-center gap-1 rounded-xl bg-white dark:bg-slate-800 p-1.5 shadow-xl border border-border">
                                   <button
-                                    onClick={() => { onDeleteVariant(v.id); setDeleteConfirmId(null); }}
-                                    className="flex items-center gap-1 rounded-lg bg-red-500 px-2 py-1 text-[10px] font-bold text-white hover:bg-red-600 transition-colors"
+                                    type="button"
+                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDeleteVariant(v.id); setDeleteConfirmId(null); }}
+                                    className="flex items-center gap-1 rounded-lg bg-red-500 px-2.5 py-1.5 text-[11px] font-bold text-white hover:bg-red-600 transition-colors cursor-pointer"
                                   >
-                                    <AlertCircle className="h-3 w-3" /> Confirmer
+                                    <AlertCircle className="h-3.5 w-3.5" /> Confirmer
                                   </button>
-                                  <button onClick={() => setDeleteConfirmId(null)} className="px-2 py-1 rounded-lg text-[10px] font-bold text-muted-foreground hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                                  <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDeleteConfirmId(null); }} className="px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-muted-foreground hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer">
                                     Annuler
                                   </button>
                                 </div>
                               ) : (
                                 <button
-                                  onClick={() => setDeleteConfirmId(v.id)}
-                                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500"
+                                  type="button"
+                                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDeleteConfirmId(v.id); }}
+                                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-muted-foreground transition-colors hover:bg-red-500/20 hover:text-red-500 shadow-sm cursor-pointer"
                                   title="Supprimer"
                                 >
-                                  <Trash2 className="h-3.5 w-3.5" />
+                                  <Trash2 className="h-4 w-4" />
                                 </button>
                               )}
                             </div>
@@ -414,6 +426,13 @@ export function VariantFormModal({
                 Fermer
               </button>
             </div>
+            <Toast
+              show={toastConfig.show}
+              type={toastConfig.type}
+              message={toastConfig.message}
+              onClose={() => setToastConfig(prev => ({ ...prev, show: false }))}
+              position="top-center"
+            />
           </motion.div>
         </div>
       )}

@@ -11,6 +11,7 @@ import { StepReview } from "./ProductFormSteps/StepReview";
 import type { ProductVariantAdmin } from "@/modeles/produits";
 import type { ProductFormErrors, ProductFormState, UploadedProductImage } from "../productsUtils";
 import { motion, AnimatePresence } from "framer-motion";
+import Toast from "@/components/special/Toast";
 import { ChevronLeft, ChevronRight, Save, Star, Stars, X } from "lucide-react";
 
 const steps: Step[] = [
@@ -50,6 +51,24 @@ export function ProductFormModal({
   const [selectedCatId, setSelectedCatId] = useState(selectedCategoryId);
   const [variants, setVariants] = useState(existingVariants);
   const [deletedImageIds, setDeletedImageIds] = useState<string[]>([]);
+  const [toastConfig, setToastConfig] = useState<{show: boolean, message: string, type: 'success' | 'error' | 'info'}>({ show: false, message: '', type: 'info' });
+
+  const getErrorMessage = (err: any) => {
+    if (err.response?.data) {
+      const data = err.response.data;
+      if (typeof data === 'string') return data.replace(/<[^>]*>?/gm, '');
+      if (typeof data === 'object') {
+        const msgs = [];
+        for (const [key, val] of Object.entries(data)) {
+          if (Array.isArray(val)) msgs.push(`${key}: ${val.join(', ')}`);
+          else msgs.push(`${key}: ${val}`);
+        }
+        if (msgs.length > 0) return msgs.join(' | ');
+      }
+    }
+    const msg = err.message || "Une erreur est survenue.";
+    return msg.replace(/Request failed with status code \d+/i, "").trim() || "Erreur serveur";
+  };
 
   // --- Fix critique : re-synchroniser le state quand la modale s'ouvre ---------
   useEffect(() => {
@@ -63,6 +82,7 @@ export function ProductFormModal({
       setCurrentStep(0);
       setCompletedSteps([]);
       setFormErrors({});
+      setToastConfig({ show: false, message: '', type: 'info' });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
@@ -133,8 +153,13 @@ export function ProductFormModal({
 
   const handleFinalSave = async () => {
     if (!validateGeneralStep()) { setCurrentStep(0); return; }
-    await onSave({ ...form, category: selectedCatId, alt_text: altText, deleted_image_ids: deletedImageIds }, uploadedImages, variants);
-    onClose();
+    setToastConfig({ ...toastConfig, show: false });
+    try {
+      await onSave({ ...form, category: selectedCatId, alt_text: altText, deleted_image_ids: deletedImageIds }, uploadedImages, variants);
+      onClose();
+    } catch (err: any) {
+      setToastConfig({ show: true, message: getErrorMessage(err), type: 'error' });
+    }
   };
 
   const handleAddImages = (files: File[]) => {
@@ -297,6 +322,13 @@ export function ProductFormModal({
             </motion.button>
           )}
         </div>
+        <Toast
+          show={toastConfig.show}
+          type={toastConfig.type}
+          message={toastConfig.message}
+          onClose={() => setToastConfig(prev => ({ ...prev, show: false }))}
+          position="top-center"
+        />
       </DialogContent>
     </Dialog>
   );

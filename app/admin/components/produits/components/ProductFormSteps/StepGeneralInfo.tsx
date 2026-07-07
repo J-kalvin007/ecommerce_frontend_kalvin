@@ -163,11 +163,15 @@ export function StepGeneralInfo({
           <div className="relative">
             <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              type="number"
-              step="any"
-              min="0"
+              type="text"
+              inputMode="decimal"
               value={form.price}
-              onChange={(e) => onChange("price", e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value.replace(',', '.');
+                if (/^\d*\.?\d{0,2}$/.test(val)) {
+                  onChange("price", val);
+                }
+              }}
               placeholder="12500"
               error={errors.price}
               style={{ paddingLeft: "2.5rem" }}

@@ -492,7 +492,7 @@ export default function ProductDetailClient({ slug, id }: Props) {
                         >
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                           <p className="text-base sm:text-lg font-black leading-tight tracking-tight text-[#1f241c] mb-2">{variant.name}</p>
-                          
+
                           {variant.weight_grams && (
                             <span className="flex items-center gap-1.5 w-fit rounded-xl bg-[#f3ede2]/80 px-2.5 py-1 text-[11px] font-black uppercase tracking-wider text-[#8b5e34] border border-[#e8dfcf]">
                               <Weight className="h-3.5 w-3.5 opacity-90" />
@@ -504,12 +504,12 @@ export default function ProductDetailClient({ slug, id }: Props) {
                           <div className="my-3 h-px w-full bg-[#e7dfd2]/60" />
 
                           <div className="flex items-center justify-between">
-                             <div className="flex items-center gap-2">
-                                <span className="text-[10px] uppercase tracking-wider font-bold text-[#8a9086]">Prix</span>
-                                <span className="text-base font-black tracking-tight text-[#1f4d3f]">
-                                  {formatCurrency(variant.price, "FCFA")}
-                                </span>
-                             </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] uppercase tracking-wider font-bold text-[#8a9086]">Prix</span>
+                              <span className="text-base font-black tracking-tight text-[#1f4d3f]">
+                                {formatCurrency(variant.price, "FCFA")}
+                              </span>
+                            </div>
                           </div>
 
                           {variant.stock === 0 && (
@@ -674,7 +674,7 @@ export default function ProductDetailClient({ slug, id }: Props) {
                   onClick={() => setIsPurchaseModalOpen(true)}
                   whileHover={{ scale: isOutOfStock ? 1 : 1.02 }}
                   whileTap={{ scale: isOutOfStock ? 1 : 0.98 }}
-                  className="group relative flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#1f4d3f] to-[#123128] px-6 py-4.5 text-base font-bold text-white shadow-[0_16px_40px_rgba(31,77,63,0.28)] transition-all hover:shadow-[0_20px_50px_rgba(31,77,63,0.4)] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="group relative flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#1f4d3f] to-[#123128] px-6 py-4.5 text-base font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {!isOutOfStock && (
                     <motion.div

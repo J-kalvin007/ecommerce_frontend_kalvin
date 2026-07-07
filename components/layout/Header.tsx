@@ -18,8 +18,6 @@ import {
   ShoppingBag,
   User,
   X,
-  Sun,
-  Moon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
@@ -253,24 +251,6 @@ export function Header() {
 
           {/* ---- Actions droite ---- */}
           <div className="flex items-center gap-2">
-            {/* Bouton de thème (conservé et stylé comme les autres boutons) */}
-            <button
-              onClick={toggleTheme}
-              className={cn(
-                "inline-flex cursor-pointer h-10 w-10 items-center justify-center rounded-full transition-colors",
-                heroStyle
-                  ? "border border-white/20 text-white hover:bg-white/10"
-                  : "border border-[#e0cfb9]/70 text-[#52604e] hover:bg-[#f5ecdf]/60 dark:border-[#4a4032] dark:text-[#b8ad8f] dark:hover:bg-[#2d281d]/60"
-              )}
-              aria-label="Changer de thème"
-            >
-              {isDark ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-            </button>
-
             {/* Recherche (visible sm+) */}
             <div ref={searchRef} className="relative hidden sm:block">
               <button

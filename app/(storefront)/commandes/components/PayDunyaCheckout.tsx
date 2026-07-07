@@ -1,4 +1,4 @@
-﻿/**
+/**
  * PayDunyaCheckout — Composant ultra-premium de paiement via PayDunya
  *
  * Corrections apportées :
@@ -32,6 +32,7 @@ import { initiateDirectPayment } from "@/fonctions_api/wallets-paiements.api";
 import { useThemeStore } from "@/store/theme.store";
 import { formatCurrency } from "@/lib/utils";
 import { useUIStore } from "@/store/uiStore";
+import Toast from "@/components/special/Toast";
 
 interface PayDunyaCheckoutProps {
   orderId: string;
@@ -59,11 +60,15 @@ export default function PayDunyaCheckout({
   const setPaymentOrderRef = useUIStore((s) => s.setPaymentOrderRef);
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [toastConfig, setToastConfig] = useState<{ show: boolean; type: "success" | "error" | "info"; message: string }>({
+    show: false,
+    type: "info",
+    message: ""
+  });
 
   const handlePayer = async () => {
     setLoading(true);
-    setError(null);
+    setToastConfig(prev => ({ ...prev, show: false }));
 
     try {
       const payload = {
@@ -88,13 +93,18 @@ export default function PayDunyaCheckout({
         // Redirection dans le MÊME onglet (comportement natif, pas de popup bloquée)
         window.location.href = res.data.payment_url;
       } else {
-        setError(
-          res.error.message ||
-            "Erreur lors de l'initiation du paiement avec PayDunya."
-        );
+        setToastConfig({
+          show: true,
+          type: "error",
+          message: "Le service de paiement est temporairement indisponible. Veuillez réessayer."
+        });
       }
     } catch (err) {
-      setError("Une erreur inattendue est survenue.");
+      setToastConfig({
+        show: true,
+        type: "error",
+        message: "Une erreur inattendue est survenue lors de la connexion au service de paiement."
+      });
     } finally {
       setLoading(false);
     }
@@ -209,27 +219,6 @@ export default function PayDunyaCheckout({
           après le paiement.
         </p>
 
-        {/* Erreur animée */}
-        <AnimatePresence>
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ type: "spring", stiffness: 380, damping: 26 }}
-              className="overflow-hidden"
-            >
-              <div
-                className="flex items-start gap-3 rounded-xl bg-red-500/10 px-4 py-3"
-                style={{ border: "1px solid rgba(239,68,68,0.2)" }}
-              >
-                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
-                <p className="text-sm font-semibold text-red-500">{error}</p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
         {/* -- Bouton principal -- */}
         <button
           onClick={handlePayer}
@@ -273,6 +262,13 @@ export default function PayDunyaCheckout({
           ))}
         </div>
       </div>
+
+      <Toast
+        show={toastConfig.show}
+        type={toastConfig.type}
+        message={toastConfig.message}
+        onClose={() => setToastConfig({ ...toastConfig, show: false })}
+      />
     </div>
   );
 }

@@ -189,8 +189,8 @@ function SuccessCommandeContent() {
       className="relative flex min-h-[calc(100vh-120px)] flex-1 flex-col items-center justify-center overflow-hidden px-4 py-16"
       style={{ background: bg }}
     >
-        {/* ── Halos ambiants — identiques à wallet/success ────────────────── */}
-        {/* <div
+      {/* ── Halos ambiants — identiques à wallet/success ────────────────── */}
+      {/* <div
           aria-hidden
           className="pointer-events-none absolute -top-32 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full blur-3xl"
           style={{ background: "rgba(31,77,63,0.22)" }} />
@@ -199,57 +199,57 @@ function SuccessCommandeContent() {
           className="pointer-events-none absolute -bottom-24 right-0 h-64 w-64 rounded-full blur-3xl"
           style={{ background: "rgba(201,168,118,0.12)" }} /> */}
 
-        {/* ── Orbes flottants ambiants — identiques à wallet/success ───────── */}
-        <FloatingOrbs isDark={isDark} />
+      {/* ── Orbes flottants ambiants — identiques à wallet/success ───────── */}
+      <FloatingOrbs isDark={isDark} />
 
-        {/* ════════════════════════════════════════════════════════════════════
+      {/* ════════════════════════════════════════════════════════════════════
         *  Carte principale — max-w-xl (plus large que wallet pour NextSteps)
         * ════════════════════════════════════════════════════════════════════ */}
-        <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.94 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ type: "spring", stiffness: 260, damping: 22, mass: 0.9 }}
-          className="relative z-10 w-full max-w-xl"
+      <motion.div
+        initial={{ opacity: 0, y: 40, scale: 0.94 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ type: "spring", stiffness: 260, damping: 22, mass: 0.9 }}
+        className="relative z-10 w-full max-w-xl"
+      >
+        <div
+          className="relative overflow-hidden rounded-3xl"
+          style={{
+            background: cardBg,
+            border: `1px solid ${cardBorder}`,
+            backdropFilter: "blur(24px)",
+            boxShadow: isDark
+              ? "0 40px 80px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06)"
+              : "0 40px 80px -20px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,0,0,0.05)",
+          }}
         >
-          <div
-            className="relative overflow-hidden rounded-3xl"
-            style={{
-              background: cardBg,
-              border: `1px solid ${cardBorder}`,
-              backdropFilter: "blur(24px)",
-              boxShadow: isDark
-                ? "0 40px 80px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06)"
-                : "0 40px 80px -20px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,0,0,0.05)",
-            }}
-          >
-            {/* Shimmer de validation (identique à wallet/success) */}
-            <style>{`
+          {/* Shimmer de validation (identique à wallet/success) */}
+          <style>{`
                   @keyframes commandeSweep {
                     0%   { transform: translateX(-110%); }
                     100% { transform: translateX(210%); }
                   }
                 `}</style>
-            <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl" style={{ zIndex: 1 }}>
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  transform: "translateX(-110%)",
-                  animation: "commandeSweep 1.8s cubic-bezier(0.22,1,0.36,1) 0.9s 1 forwards",
-                  background: `linear-gradient(108deg, transparent 30%, rgba(255,255,255,0.14) 46%, rgba(255,255,255,0.26) 52%, transparent 68%)`,
-                }} />
-            </div>
+          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl" style={{ zIndex: 1 }}>
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                transform: "translateX(-110%)",
+                animation: "commandeSweep 1.8s cubic-bezier(0.22,1,0.36,1) 0.9s 1 forwards",
+                background: `linear-gradient(108deg, transparent 30%, rgba(255,255,255,0.14) 46%, rgba(255,255,255,0.26) 52%, transparent 68%)`,
+              }} />
+          </div>
 
-            {/* Liseré doré supérieur — signature Kalvin */}
-            {/* <div
+          {/* Liseré doré supérieur — signature Kalvin */}
+          {/* <div
           aria-hidden
           className="absolute inset-x-0 top-0 z-10 h-1"
           style={{ background: `linear-gradient(90deg, ${BRAND_FOREST}, ${BRAND_GOLD}, ${BRAND_FOREST})` }}
         /> */}
 
-            <div className="relative z-[2] px-8 pb-10 pt-10 text-center">
+          <div className="relative z-[2] px-8 pb-10 pt-10 text-center">
 
-              {/* ── Zone Lottie + TRIPLE COIN RIPPLE (signature visuelle) ───────
+            {/* ── Zone Lottie + TRIPLE COIN RIPPLE (signature visuelle) ───────
         *
         *  3 anneaux au lieu de 2 (vs wallet/success) — amplitude
         *  augmentée pour marquer l'importance supérieure de ce moment.
@@ -258,168 +258,168 @@ function SuccessCommandeContent() {
         *    Anneau 2 : intermédiaire               (220px, 1.6s)
         *    Anneau 3 : interne, rapide, concentré  (150px, 1.0s)
         * ─────────────────────────────────────────────────────────────── */}
-              <div className="relative mx-auto mb-6 flex h-44 w-44 items-center justify-center">
+            <div className="relative mx-auto mb-6 flex h-44 w-44 items-center justify-center">
 
-                {/* Halo ambiant */}
-                <div
-                  aria-hidden
-                  className="absolute inset-0 rounded-full"
-                  style={{ background: `radial-gradient(circle, ${BRAND_GOLD}1e 0%, transparent 70%)` }} />
+              {/* Halo ambiant */}
+              <div
+                aria-hidden
+                className="absolute inset-0 rounded-full"
+                style={{ background: `radial-gradient(circle, ${BRAND_GOLD}1e 0%, transparent 70%)` }} />
 
-                {/* Anneau externe — onde lente, très ample */}
-                <motion.div
-                  aria-hidden
-                  className="absolute rounded-full"
-                  style={{ border: `1px solid ${BRAND_GOLD}90`, pointerEvents: "none" }}
-                  initial={{ width: 88, height: 88, opacity: 0.7 }}
-                  animate={{ width: 320, height: 320, opacity: 0 }}
-                  transition={{ duration: 2.2, ease: "easeOut", delay: 0.4 }} />
+              {/* Anneau externe — onde lente, très ample */}
+              <motion.div
+                aria-hidden
+                className="absolute rounded-full"
+                style={{ border: `1px solid ${BRAND_GOLD}90`, pointerEvents: "none" }}
+                initial={{ width: 88, height: 88, opacity: 0.7 }}
+                animate={{ width: 320, height: 320, opacity: 0 }}
+                transition={{ duration: 2.2, ease: "easeOut", delay: 0.4 }} />
 
-                {/* Anneau intermédiaire */}
-                <motion.div
-                  aria-hidden
-                  className="absolute rounded-full"
-                  style={{ border: `1.5px solid ${BRAND_GOLD}`, pointerEvents: "none" }}
-                  initial={{ width: 88, height: 88, opacity: 0.8 }}
-                  animate={{ width: 230, height: 230, opacity: 0 }}
-                  transition={{ duration: 1.6, ease: "easeOut", delay: 0.6 }} />
+              {/* Anneau intermédiaire */}
+              <motion.div
+                aria-hidden
+                className="absolute rounded-full"
+                style={{ border: `1.5px solid ${BRAND_GOLD}`, pointerEvents: "none" }}
+                initial={{ width: 88, height: 88, opacity: 0.8 }}
+                animate={{ width: 230, height: 230, opacity: 0 }}
+                transition={{ duration: 1.6, ease: "easeOut", delay: 0.6 }} />
 
-                {/* Anneau interne — rapide, concentré */}
-                <motion.div
-                  aria-hidden
-                  className="absolute rounded-full"
-                  style={{ border: `2px solid ${BRAND_GOLD}`, pointerEvents: "none" }}
-                  initial={{ width: 88, height: 88, opacity: 0.95 }}
-                  animate={{ width: 155, height: 155, opacity: 0 }}
-                  transition={{ duration: 1.0, ease: "easeOut", delay: 0.8 }} />
+              {/* Anneau interne — rapide, concentré */}
+              <motion.div
+                aria-hidden
+                className="absolute rounded-full"
+                style={{ border: `2px solid ${BRAND_GOLD}`, pointerEvents: "none" }}
+                initial={{ width: 88, height: 88, opacity: 0.95 }}
+                animate={{ width: 155, height: 155, opacity: 0 }}
+                transition={{ duration: 1.0, ease: "easeOut", delay: 0.8 }} />
 
-                {/* Animation Lottie */}
-                <motion.div
-                  initial={{ scale: 0.6, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 220, damping: 14, delay: 0.1 }}
-                  className="relative z-10 h-full w-full"
-                >
-                  <Lottie
-                    animationData={successAnimation}
-                    loop={false}
-                    autoplay={true}
-                    style={{ width: "100%", height: "100%" }} />
-                </motion.div>
+              {/* Animation Lottie */}
+              <motion.div
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 220, damping: 14, delay: 0.1 }}
+                className="relative z-10 h-full w-full"
+              >
+                <Lottie
+                  animationData={successAnimation}
+                  loop={false}
+                  autoplay={true}
+                  style={{ width: "100%", height: "100%" }} />
+              </motion.div>
+            </div>
+
+            {/* ── En-tête du message ──────────────────────────────────────── */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.28, duration: 0.45 }}
+            >
+              {/* Eyebrow */}
+              <div className="mb-3 flex items-center justify-center gap-2">
+                <Star className="h-3.5 w-3.5" style={{ color: BRAND_GOLD }} />
+                <span className="text-[10.5px] font-black uppercase tracking-[0.22em]" style={{ color: BRAND_GOLD }}>
+                  Commande confirmée
+                </span>
+                <Star className="h-3.5 w-3.5" style={{ color: BRAND_GOLD }} />
               </div>
 
-              {/* ── En-tête du message ──────────────────────────────────────── */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.28, duration: 0.45 }}
-              >
-                {/* Eyebrow */}
-                <div className="mb-3 flex items-center justify-center gap-2">
-                  <Star className="h-3.5 w-3.5" style={{ color: BRAND_GOLD }} />
-                  <span className="text-[10.5px] font-black uppercase tracking-[0.22em]" style={{ color: BRAND_GOLD }}>
-                    Commande confirmée
-                  </span>
-                  <Star className="h-3.5 w-3.5" style={{ color: BRAND_GOLD }} />
-                </div>
+              <h1 className="font-display text-3xl font-black tracking-tight" style={{ color: textPrimary }}>
+                Merci pour votre commande !
+              </h1>
 
-                <h1 className="font-display text-3xl font-black tracking-tight" style={{ color: textPrimary }}>
-                  Merci pour votre commande !
-                </h1>
+              <p className="mx-auto mt-3 max-w-xs text-[14.5px] leading-relaxed" style={{ color: textMuted }}>
+                Votre paiement a été validé. Nous préparons votre commande avec le plus grand soin.
+              </p>
+            </motion.div>
 
-                <p className="mx-auto mt-3 max-w-xs text-[14.5px] leading-relaxed" style={{ color: textMuted }}>
-                  Votre paiement a été validé. Nous préparons votre commande avec le plus grand soin.
-                </p>
-              </motion.div>
-
-              {/* ── Tampon de référence commande (OrderReferenceBadge) ─────────
+            {/* ── Tampon de référence commande (OrderReferenceBadge) ─────────
         *  SIGNATURE SECONDAIRE : la référence "s'imprime" avec un spring
         *  (scale: 1.3 → 0.95 → 1) comme un tampon officiel.
         *  Visible uniquement si la référence est disponible en query param.
         * ─────────────────────────────────────────────────────────────── */}
-              {reference && (
-                <OrderReferenceBadge
-                  reference={reference}
-                  copied={copied}
-                  onCopy={copyReference}
-                  isDark={isDark} />
-              )}
+            {reference && (
+              <OrderReferenceBadge
+                reference={reference}
+                copied={copied}
+                onCopy={copyReference}
+                isDark={isDark} />
+            )}
 
-              {/* ── Mini-timeline "Ce qui arrive ensuite" ──────────────────────
+            {/* ── Mini-timeline "Ce qui arrive ensuite" ──────────────────────
         *  Spécifique à une commande — n'existerait pas sur une recharge.
         *  3 étapes : confirmation (faite) → préparation → livraison.
         * ─────────────────────────────────────────────────────────────── */}
-              <NextStepsStrip isDark={isDark} cardBorder={cardBorder} />
+            <NextStepsStrip isDark={isDark} cardBorder={cardBorder} />
 
-              {/* ── Décompte — ring SVG + barre (identiques à wallet/success) ── */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.45 }}
-                className="my-6 flex flex-col items-center gap-4"
-              >
-                <CircularCountdown
-                  countdown={countdown}
-                  progressRatio={progressRatio}
-                  isDark={isDark}
-                  textMuted={textMuted} />
+            {/* ── Décompte — ring SVG + barre (identiques à wallet/success) ── */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.45 }}
+              className="my-6 flex flex-col items-center gap-4"
+            >
+              <CircularCountdown
+                countdown={countdown}
+                progressRatio={progressRatio}
+                isDark={isDark}
+                textMuted={textMuted} />
 
-                {/* Barre linéaire secondaire */}
-                <div className="w-full max-w-xs">
-                  <div
-                    className="h-1 w-full overflow-hidden rounded-full"
-                    style={{ background: isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)" }}
-                  >
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ background: `linear-gradient(90deg, ${BRAND_FOREST}, #2d7a63)` }}
-                      initial={{ width: "0%" }}
-                      animate={{ width: `${progressRatio * 100}%` }}
-                      transition={{ duration: 0.9, ease: "easeOut" }} />
-                  </div>
+              {/* Barre linéaire secondaire */}
+              <div className="w-full max-w-xs">
+                <div
+                  className="h-1 w-full overflow-hidden rounded-full"
+                  style={{ background: isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)" }}
+                >
+                  <motion.div
+                    className="h-full rounded-full"
+                    style={{ background: `linear-gradient(90deg, ${BRAND_FOREST}, #2d7a63)` }}
+                    initial={{ width: "0%" }}
+                    animate={{ width: `${progressRatio * 100}%` }}
+                    transition={{ duration: 0.9, ease: "easeOut" }} />
                 </div>
-              </motion.div>
+              </div>
+            </motion.div>
 
-              {/* ── CTAs — deux actions (voir commande + continuer achats) ──── */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.55 }}
-                className="space-y-3"
+            {/* ── CTAs — deux actions (voir commande + continuer achats) ──── */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55 }}
+              className="space-y-3"
+            >
+              {/* CTA principal — voir détails commande */}
+              <Link
+                href={targetUrl}
+                className="group flex items-center justify-center gap-2.5 rounded-2xl py-4 font-black text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl"
+                style={{
+                  background: `linear-gradient(135deg, ${BRAND_FOREST}, #2d7a63)`,
+                  boxShadow: `0 10px 32px rgba(31,77,63,0.35)`,
+                }}
               >
-                {/* CTA principal — voir détails commande */}
-                <Link
-                  href={targetUrl}
-                  className="group flex items-center justify-center gap-2.5 rounded-2xl py-4 font-black text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl"
-                  style={{
-                    background: `linear-gradient(135deg, ${BRAND_FOREST}, #2d7a63)`,
-                    boxShadow: `0 10px 32px rgba(31,77,63,0.35)`,
-                  }}
-                >
-                  <CheckCircle2 className="h-5 w-5" strokeWidth={2.5} />
-                  Voir ma commande
-                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
+                <CheckCircle2 className="h-5 w-5" strokeWidth={2.5} />
+                Voir ma commande
+                <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
 
-                {/* CTA secondaire — continuer les achats */}
-                <Link
-                  href="/products"
-                  className="group flex items-center justify-center gap-2 rounded-2xl py-3.5 text-[14px] font-semibold transition-all duration-300 hover:-translate-y-0.5"
-                  style={{
-                    background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
-                    border: `1px solid ${cardBorder}`,
-                    color: textMuted,
-                  }}
-                >
-                  <ShoppingBag className="h-4 w-4" strokeWidth={1.75} style={{ color: BRAND_FOREST }} />
-                  Continuer mes achats
-                </Link>
-              </motion.div>
-            </div>
+              {/* CTA secondaire — continuer les achats */}
+              <Link
+                href="/products"
+                className="group flex items-center justify-center gap-2 rounded-2xl py-3.5 text-[14px] font-semibold transition-all duration-300 hover:-translate-y-0.5"
+                style={{
+                  background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
+                  border: `1px solid ${cardBorder}`,
+                  color: textMuted,
+                }}
+              >
+                <ShoppingBag className="h-4 w-4" strokeWidth={1.75} style={{ color: BRAND_FOREST }} />
+                Continuer mes achats
+              </Link>
+            </motion.div>
           </div>
+        </div>
 
-          {/* Badge de sécurité — sous la carte (identique à wallet/success) */}
-          <motion.div
+        {/* Badge de sécurité — sous la carte (identique à wallet/success) */}
+        {/* <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.4 }}
@@ -432,9 +432,10 @@ function SuccessCommandeContent() {
           >
             <Shield className="h-4 w-4" />
             Transaction protégée par chiffrement 256-bit
-          </motion.div>
-        </motion.div>
-      </div>
+          </motion.div> */}
+
+      </motion.div>
+    </div>
   );
 }
 
